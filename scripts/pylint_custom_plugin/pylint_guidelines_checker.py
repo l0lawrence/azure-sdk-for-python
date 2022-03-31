@@ -7,6 +7,7 @@
 Pylint custom checkers for SDK guidelines: C4717 - C4744
 """
 
+from lib2to3.pytree import Base
 import logging
 import astroid
 from pylint.checkers import BaseChecker
@@ -1916,6 +1917,35 @@ class CheckNamingMismatchGeneratedCode(BaseChecker):
                 logger.debug("Pylint custom checker failed to check if model is aliased.")
                 pass
 
+class CheckReturnType(BaseChecker):
+    __implements__ = IAstroidChecker
+
+    name = "check-return-type"
+    priority = -1
+    msgs = {
+        "C4749": (
+            "Blah",
+            "check-return-type",
+            "Blah.",
+        ),
+    }
+    options = (
+        (
+            "ignore-check-return-type",
+            {
+                "default": False,
+                "type": "yn",
+                "metavar": "<y_or_n>",
+                "help": "Blah.",
+            },
+        ),
+    )
+
+    def __init__(self, linter=None):
+        super(CheckReturnType, self).__init__(linter)
+    
+    def visit_functiondef(self):
+        pass
 
 # if a linter is registered in this function then it will be checked with pylint
 def register(linter):
@@ -1937,6 +1967,7 @@ def register(linter):
     linter.register_checker(CheckNamingMismatchGeneratedCode(linter))
     linter.register_checker(CheckAPIVersion(linter))
     linter.register_checker(CheckEnum(linter))
+    linter.register_checker(CheckReturnType(linter))
 
 
     # disabled by default, use pylint --enable=check-docstrings if you want to use it
