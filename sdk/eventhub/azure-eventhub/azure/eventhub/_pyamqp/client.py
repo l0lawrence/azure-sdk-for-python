@@ -155,6 +155,10 @@ class AMQPClient(object):
         self._receive_settle_mode = kwargs.pop('receive_settle_mode', ReceiverSettleMode.Second)
         self._desired_capabilities = kwargs.pop('desired_capabilities', None)
 
+        # Custom Endpoint
+        self._custom_endpoint_address = kwargs.get('custom_endpoint_address')
+        self._connection_verify = kwargs.get('connection_verify')
+
     def __enter__(self):
         """Run Client in a context manager."""
         self.open()
@@ -234,13 +238,14 @@ class AMQPClient(object):
             self._connection = Connection(
                 "amqps://" + self._hostname,
                 sasl_credential=self._auth.sasl,
-                ssl={'ca_certs':certifi.where()},
+                ssl={'ca_certs':self._connection_verify or certifi.where()},
                 container_id=self._name,
                 max_frame_size=self._max_frame_size,
                 channel_max=self._channel_max,
                 idle_timeout=self._idle_timeout,
                 properties=self._properties,
-                network_trace=self._network_trace
+                network_trace=self._network_trace,
+                custom_endpoint_address = self._custom_endpoint_address,
             )
             self._connection.open()
         if not self._session:

@@ -81,7 +81,7 @@ class Connection(object):
 
     def __init__(self, endpoint, **kwargs):
         # type(str, Any) -> None
-        parsed_url = urlparse(endpoint)
+        parsed_url = urlparse(kwargs.get("custom_endpoint_address") or endpoint)
         self._hostname = parsed_url.hostname
         if parsed_url.port:
             self._port = parsed_url.port
