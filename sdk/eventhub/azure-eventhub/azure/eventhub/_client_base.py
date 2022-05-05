@@ -316,7 +316,11 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             return JWTTokenAuth(
                 self._auth_uri,
                 self._auth_uri,
-                functools.partial(self._credential.get_token, self._auth_uri)
+                functools.partial(self._credential.get_token, self._auth_uri),
+                transport_type=self._config.transport_type,
+                custom_endpoint_hostname=self._config.custom_endpoint_hostname,
+                port=self._config.connection_port,
+                verify=self._config.connection_verify,
             )
         return JWTTokenAuth(
             self._auth_uri,
@@ -370,7 +374,7 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
         while retried_times <= self._config.max_retries:
             mgmt_auth = self._create_auth()
             mgmt_client = AMQPClient(
-                self._address.hostname, auth=mgmt_auth, debug=self._config.network_tracing
+                self._address.hostname, auth=mgmt_auth, debug=self._config.network_tracing, custom_endpoint_address=self._config.custom_endpoint_address,connection_verify=self._config.connection_verify
             )
             try:
                 mgmt_client.open()

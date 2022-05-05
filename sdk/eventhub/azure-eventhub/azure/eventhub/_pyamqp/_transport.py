@@ -130,6 +130,7 @@ def to_host_port(host, port=AMQP_PORT):
         if ':' in host:
             host, port = host.rsplit(':', 1)
             port = int(port)
+    print(host,port)
     return host, port
 
 
@@ -140,7 +141,7 @@ class UnexpectedFrame(Exception):
 class _AbstractTransport(object):
     """Common superclass for TCP and SSL transports."""
 
-    def __init__(self, host, port=AMQP_PORT, connect_timeout=None,
+    def __init__(self, host, port=None, connect_timeout=None,
                  read_timeout=None, write_timeout=None,
                  socket_settings=None, raise_on_initial_eintr=True, **kwargs):
         self.connected = False
@@ -271,6 +272,7 @@ class _AbstractTransport(object):
                 entries = socket.getaddrinfo(
                     host, port, family, socket.SOCK_STREAM, SOL_TCP)
                 entries_num = len(entries)
+                print(entries)
             except socket.gaierror:
                 # we may have depleted all our options
                 if n + 1 >= addr_types_num:
@@ -396,7 +398,8 @@ class _AbstractTransport(object):
 
             channel = struct.unpack('>H', frame_header[6:])[0]
             size = frame_header[0:4]
-            if size == AMQP_FRAME:  # Empty frame or AMQP header negotiation TODO
+            print(size.obj)
+            if size == AMQP_FRAME or size == memoryview(b"HTTP"):  # Empty frame or AMQP header negotiation TODO
                 return frame_header, channel, None
             size = struct.unpack('>I', size)[0]
             offset = frame_header[4]
@@ -440,6 +443,7 @@ class _AbstractTransport(object):
     def receive_frame(self, *args, **kwargs):
         try:
             header, channel, payload = self.read(**kwargs) 
+            print(header, channel, payload)
             if not payload:
                 decoded = decode_empty_frame(header)
             else:
@@ -466,7 +470,7 @@ class _AbstractTransport(object):
 class SSLTransport(_AbstractTransport):
     """Transport that works over SSL."""
 
-    def __init__(self, host, port=AMQPS_PORT, connect_timeout=None, ssl=None, **kwargs):
+    def __init__(self, host, port=None, connect_timeout=None, ssl=None, **kwargs):
         self.sslopts = ssl if isinstance(ssl, dict) else {}
         self._read_buffer = BytesIO()
         super(SSLTransport, self).__init__(
@@ -561,6 +565,7 @@ class SSLTransport(_AbstractTransport):
         nbytes = self._read_buffer.readinto(view)
         toread -= nbytes
         length += nbytes
+        # if toread> 1000: toread=353
         try:
             while toread:
                 try:

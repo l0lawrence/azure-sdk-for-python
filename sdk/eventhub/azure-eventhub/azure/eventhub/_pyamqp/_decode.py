@@ -303,6 +303,8 @@ def decode_frame(data):
 
 def decode_empty_frame(header):
     # type: (memory) -> bytes
+    print(header)
+    print(_HEADER_PREFIX)
     if header[0:4] == _HEADER_PREFIX:
         return 0, header.tobytes()
     if header[5] == 0:

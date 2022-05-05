@@ -161,6 +161,7 @@ class EventHubProducerClient(ClientBase):
             custom_endpoint_address=self._config.custom_endpoint_address,
             connection_verify=self._config.connection_verify,
         )
+        print('Transport type', self._config.transport_type)
         return handler
 
     @classmethod

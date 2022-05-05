@@ -94,12 +94,12 @@ class Connection(object):
         transport = kwargs.get('transport')
         if transport:
             self._transport = transport
-        elif 'sasl_credential' in kwargs:
-            self._transport = SASLTransport(
-                host=parsed_url.netloc,
-                credential=kwargs['sasl_credential'],
-                **kwargs
-            )
+        # elif 'sasl_credential' in kwargs:
+        #     self._transport = SASLTransport(
+        #         host=parsed_url.netloc,
+        #         credential=kwargs['sasl_credential'],
+        #         **kwargs
+        #     )
         else:
             self._transport = Transport(parsed_url.netloc, **kwargs)
 
