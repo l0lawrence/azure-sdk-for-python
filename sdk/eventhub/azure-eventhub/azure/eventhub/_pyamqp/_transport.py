@@ -605,6 +605,7 @@ class SSLTransport(_AbstractTransport):
 
     def negotiate(self):
         with self.block():
+            # Writes AMQP header to custom IP and returns a 400 bad request error
             self.write(TLS_HEADER_FRAME)
             channel, returned_header = self.receive_frame(verify_frame_type=None)
             if returned_header[1] == TLS_HEADER_FRAME:
