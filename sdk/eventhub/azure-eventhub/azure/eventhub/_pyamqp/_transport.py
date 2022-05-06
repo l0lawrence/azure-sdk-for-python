@@ -141,7 +141,7 @@ class UnexpectedFrame(Exception):
 class _AbstractTransport(object):
     """Common superclass for TCP and SSL transports."""
 
-    def __init__(self, host, port=None, connect_timeout=None,
+    def __init__(self, host, port=AMQP_PORT, connect_timeout=None,
                  read_timeout=None, write_timeout=None,
                  socket_settings=None, raise_on_initial_eintr=True, **kwargs):
         self.connected = False
@@ -399,7 +399,7 @@ class _AbstractTransport(object):
             channel = struct.unpack('>H', frame_header[6:])[0]
             size = frame_header[0:4]
             print(size.obj)
-            if size == AMQP_FRAME or size == memoryview(b"HTTP"):  # Empty frame or AMQP header negotiation TODO
+            if size == AMQP_FRAME:  # Empty frame or AMQP header negotiation TODO
                 return frame_header, channel, None
             size = struct.unpack('>I', size)[0]
             offset = frame_header[4]
@@ -470,7 +470,7 @@ class _AbstractTransport(object):
 class SSLTransport(_AbstractTransport):
     """Transport that works over SSL."""
 
-    def __init__(self, host, port=None, connect_timeout=None, ssl=None, **kwargs):
+    def __init__(self, host, port=AMQP_PORT, connect_timeout=None, ssl=None, **kwargs):
         self.sslopts = ssl if isinstance(ssl, dict) else {}
         self._read_buffer = BytesIO()
         super(SSLTransport, self).__init__(
@@ -594,9 +594,11 @@ class SSLTransport(_AbstractTransport):
 
     def _write(self, s):
         """Write a string out to the SSL socket fully."""
+        # this is getting a 400 bad request
         write = self.sock.send
         while s:
             try:
+                # It writes an AMQP header to the socket
                 n = write(s)
             except ValueError:
                 # AG: sock._sslobj might become null in the meantime if the
