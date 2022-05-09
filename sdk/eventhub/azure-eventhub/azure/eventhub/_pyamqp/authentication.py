@@ -125,6 +125,12 @@ class JWTTokenAuth(_CBSAuth):
         :type token_type: str
 
         """
+        self._encoding="UTF-8"
+        parsed = urlparse(uri)  # pylint: disable=no-member
+
+        self.cert_file = kwargs.get("verify")
+        self.hostname = (kwargs.get("custom_endpoint_hostname") or parsed.hostname).encode(self._encoding)
+
         super(JWTTokenAuth, self).__init__(uri, audience, kwargs.pop("kwargs", TOKEN_TYPE_JWT), get_token)
         self.get_token = get_token
 
