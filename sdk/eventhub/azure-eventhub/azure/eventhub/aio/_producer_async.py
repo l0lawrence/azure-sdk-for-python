@@ -40,13 +40,10 @@ class EventHubProducer(
     ConsumerProducerMixin
 ):  # pylint: disable=too-many-instance-attributes
     """A producer responsible for transmitting batches of EventData to a specific Event Hub.
-
     Depending on the options specified at creation, the producer may
     be created to allow event data to be automatically routed to an available partition or specific
     to a partition.
-
     Please use the method `_create_producer` on `EventHubClient` for creating `EventHubProducer`.
-
     :param client: The parent EventHubProducerClient.
     :type client: ~azure.eventhub.aio.EventHubProducerClient
     :param target: The URI of the EventHub to send to.
@@ -99,14 +96,20 @@ class EventHubProducer(
         self._link_properties = {TIMEOUT_SYMBOL: pyamqp_utils.amqp_long_value(int(self._timeout * 1000))}
 
     def _create_handler(self, auth: "JWTTokenAsync") -> None:
+        hostname = self._client._address.hostname,  # pylint: disable=protected-access
+        transport_type = self._client._config.transport_type, # pylint:disable=protected-access
+        if transport_type.name is 'AmqpOverWebsocket':
+            hostname += '/$servicebus/websocket/'
         self._handler = SendClientAsync(
-            self._client._address.hostname,  # pylint: disable=protected-access
+            hostname,
             self._target,
             auth=auth,
             idle_timeout=self._idle_timeout,
             network_trace=self._client._config.network_tracing,  # pylint: disable=protected-access
             retry_policy=self._retry_policy,
             keep_alive_interval=self._keep_alive,
+            transport_type=transport_type,
+            http_proxy=self._client._config.http_proxy, # pylint:disable=protected-access
             client_name=self._name,
             link_properties=self._link_properties,
             properties=create_properties(self._client._config.user_agent),  # pylint: disable=protected-access
@@ -177,7 +180,6 @@ class EventHubProducer(
         """
         Sends an event data and blocks until acknowledgement is
         received or operation times out.
-
         :param event_data: The event to be sent. It can be an EventData object, or iterable of EventData objects
         :type event_data: ~azure.eventhub.common.EventData, Iterator, Generator, list
         :param partition_key: With the given partition_key, event data will land to
@@ -187,7 +189,6 @@ class EventHubProducer(
         :param timeout: The maximum wait time to send the event data.
          If not specified, the default wait time specified when the producer was created will be used.
         :type timeout: float
-
         :raises: ~azure.eventhub.exceptions.AuthenticationError,
                  ~azure.eventhub.exceptions.ConnectError,
                  ~azure.eventhub.exceptions.ConnectionLostError,
