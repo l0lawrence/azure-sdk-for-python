@@ -5,6 +5,7 @@
 import logging
 import uuid
 import time
+import functools
 import threading
 from datetime import timedelta
 from typing import cast, Optional, Tuple, TYPE_CHECKING, Dict, Any, Callable, Union
@@ -20,6 +21,7 @@ except ImportError:
 # from uamqp.message import MessageProperties
 from ._pyamqp.utils import generate_sas_token
 from ._pyamqp.message import Message, Properties
+from ._pyamqp.authentication import JWTTokenAuth
 
 from azure.core.credentials import AccessToken, AzureSasCredential, AzureNamedKeyCredential
 from azure.core.pipeline.policies import RetryMode
@@ -137,7 +139,6 @@ def _parse_conn_str(conn_str, check_case=False):
         shared_access_signature_expiry,
     )
 
-
 def _generate_sas_token(uri, policy, key, expiry=None):
     # type: (str, str, str, Optional[timedelta]) -> AccessToken
     """Create a shared access signiture token as a string literal.
@@ -145,14 +146,14 @@ def _generate_sas_token(uri, policy, key, expiry=None):
     :rtype: str
     """
     if not expiry:
-        expiry = timedelta(hours=1)  # Default to 1 hour.
+        expiry = timedelta(hours=1) # Default to 1 hour.
 
     abs_expiry = int(time.time()) + expiry.seconds
-    encoded_uri = quote_plus(uri).encode("utf-8")  # pylint: disable=no-member
-    encoded_policy = quote_plus(policy).encode("utf-8")  # pylint: disable=no-member
-    encoded_key = key.encode("utf-8")
+    encoded_uri = quote_plus(uri)  # pylint: disable=no-member
+    encoded_policy = quote_plus(policy) # pylint: disable=no-member
+    encoded_key = key
 
-    token = generate_sas_token(encoded_policy, encoded_key, encoded_uri, expiry)
+    token = generate_sas_token(encoded_policy, encoded_key, encoded_uri, abs_expiry)
     return AccessToken(token=token, expires_on=abs_expiry)
 
 def _get_backoff_time(retry_mode, backoff_factor, backoff_max, retried_times):
@@ -335,7 +336,7 @@ class BaseHandler:  # pylint:disable=too-many-instance-attributes
     def _handle_exception(self, exception):
         # type: (BaseException) -> ServiceBusError
         # pylint: disable=protected-access, line-too-long
-        error = _create_servicebus_exception(_LOGGER, exception)
+        error = _create_servicebus_exception(exception)
 
         try:
             # If SessionLockLostError or ServiceBusConnectionError happen when a session receiver is running,
@@ -449,6 +450,34 @@ class BaseHandler:  # pylint:disable=too-many-instance-attributes
                 last_exception,
             )
             raise last_exception
+
+    def _create_auth(self):
+        # type: () -> JWTTokenAuth
+        """
+        Create an ~uamqp.authentication.SASTokenAuth instance to authenticate
+        the session.
+        """
+        try:
+            # ignore mypy's warning because token_type is Optional
+            token_type = self._credential.token_type  # type: ignore
+        except AttributeError:
+            token_type = b"jwt"
+        if token_type == b"servicebus.windows.net:sastoken":
+            return JWTTokenAuth(
+                self._auth_uri,
+                self._auth_uri,
+                functools.partial(self._credential.get_token, self._auth_uri)
+            )
+        return JWTTokenAuth(
+            self._auth_uri,
+            self._auth_uri,
+            functools.partial(self._credential.get_token, JWT_TOKEN_SCOPE),
+            token_type=token_type,
+            timeout=self._config.auth_timeout,
+            custom_endpoint_hostname=self._config.custom_endpoint_hostname,
+            port=self._config.connection_port,
+            verify=self._config.connection_verify,
+        )
 
     def _mgmt_request_response(
         self,

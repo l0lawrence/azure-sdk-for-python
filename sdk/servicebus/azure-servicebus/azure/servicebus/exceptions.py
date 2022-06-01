@@ -18,6 +18,157 @@ _LOGGER = logging.getLogger(__name__)
 
 from azure.core.exceptions import AzureError
 
+def _error_handler(error):
+    """Handle connection and service errors.
+    Called internally when an event has failed to send so we
+    can parse the error to determine whether we should attempt
+    to retry sending the event again.
+    Returns the action to take according to error type.
+    :param error: The error received in the send attempt.
+    :type error: Exception
+    :rtype: ~uamqp.errors.ErrorAction
+    """
+    # if error.condition == b"com.microsoft:server-busy":
+    #     return AMQPErrors.ErrorAction(retry=True, backoff=4)
+    # if error.condition == b"com.microsoft:timeout":
+    #     return AMQPErrors.ErrorAction(retry=True, backoff=2)
+    # if error.condition == b"com.microsoft:operation-cancelled":
+    #     return AMQPErrors.ErrorAction(retry=True)
+    # if error.condition == b"com.microsoft:container-close":
+    #     return AMQPErrors.ErrorAction(retry=True, backoff=4)
+    # if error.condition in _NO_RETRY_CONDITION_ERROR_CODES:
+    #     return AMQPErrors.ErrorAction(retry=False)
+    # return AMQPErrors.ErrorAction(retry=True)
+    pass
+
+
+def _handle_amqp_exception_with_condition(
+    logger, condition, description, exception=None, status_code=None
+):
+    #
+    # handling AMQP Errors that have the condition field or the mgmt handler
+    logger.info(
+        "AMQP error occurred: (%r), condition: (%r), description: (%r).",
+        exception,
+        condition,
+        description,
+    )
+    # if condition == AMQPErrorCodes.NotFound:
+    #     # handle NotFound error code
+    #     error_cls = (
+    #         ServiceBusCommunicationError
+    #         if isinstance(exception, AMQPErrors.AMQPConnectionError)
+    #         else MessagingEntityNotFoundError
+    #     )
+    # elif condition == AMQPErrorCodes.ClientError and "timed out" in str(exception):
+    #     # handle send timeout
+    #     error_cls = OperationTimeoutError
+    # elif condition == AMQPErrorCodes.UnknownError and isinstance(exception, AMQPErrors.AMQPConnectionError):
+    #     error_cls = ServiceBusConnectionError
+    # else:
+    #     # handle other error codes
+    #     error_cls = _ERROR_CODE_TO_ERROR_MAPPING.get(condition, ServiceBusError)
+
+    # error = error_cls(
+    #     message=description,
+    #     error=exception,
+    #     condition=condition,
+    #     status_code=status_code,
+    # )
+    # if condition in _NO_RETRY_CONDITION_ERROR_CODES:
+    #     error._retryable = False  # pylint: disable=protected-access
+    # else:
+    #     error._retryable = True # pylint: disable=protected-access
+
+    # return error
+
+
+def _handle_amqp_exception_without_condition(logger, exception):
+    # error_cls = ServiceBusError
+    # if isinstance(exception, AMQPErrors.AMQPConnectionError):
+    #     logger.info("AMQP Connection error occurred: (%r).", exception)
+    #     error_cls = ServiceBusConnectionError
+    # elif isinstance(exception, AMQPErrors.AuthenticationException):
+    #     logger.info("AMQP Connection authentication error occurred: (%r).", exception)
+    #     error_cls = ServiceBusAuthenticationError
+    # elif isinstance(exception, AMQPErrors.MessageException):
+    #     logger.info("AMQP Message error occurred: (%r).", exception)
+    #     if isinstance(exception, AMQPErrors.MessageAlreadySettled):
+    #         error_cls = MessageAlreadySettled
+    #     elif isinstance(exception, AMQPErrors.MessageContentTooLarge):
+    #         error_cls = MessageSizeExceededError
+    # else:
+        logger.info(
+            "Unexpected AMQP error occurred (%r). Handler shutting down.", exception
+        )
+
+    # error = error_cls(message=str(exception), error=exception)
+    # return error
+
+
+def _handle_amqp_mgmt_error(
+    logger, error_description, condition=None, description=None, status_code=None
+):
+    if description:
+        error_description += " {}.".format(description)
+
+    raise _handle_amqp_exception_with_condition(
+        logger,
+        condition,
+        description=error_description,
+        exception=None,
+        status_code=status_code,
+    )
+
+
+def _create_servicebus_exception(logger, exception):
+    # if isinstance(exception, AMQPErrors.AMQPError):
+    #     try:
+    #         # handling AMQP Errors that have the condition field
+    #         condition = exception.condition
+    #         description = exception.description
+    #         exception = _handle_amqp_exception_with_condition(
+    #             logger, condition, description, exception=exception
+    #         )
+    #     except AttributeError:
+    #         # handling AMQP Errors that don't have the condition field
+    #         exception = _handle_amqp_exception_without_condition(logger, exception)
+    # elif not isinstance(exception, ServiceBusError):
+    #     logger.exception(
+    #         "Unexpected error occurred (%r). Handler shutting down.", exception
+    #     )
+    #     exception = ServiceBusError(
+    #         message="Handler failed: {}.".format(exception), error=exception
+    #     )
+
+    return exception
+
+
+class _ServiceBusErrorPolicy(Exception):
+    def __init__(self, max_retries=3, is_session=False):
+        # self._is_session = is_session
+        # super(_ServiceBusErrorPolicy, self).__init__(
+        #     max_retries=max_retries, on_error=_error_handler
+        # )
+        pass
+
+    def on_unrecognized_error(self, error):
+        # if self._is_session:
+        #     return AMQPErrors.ErrorAction(retry=False)
+        # return super(_ServiceBusErrorPolicy, self).on_unrecognized_error(error)
+        pass
+
+    def on_link_error(self, error):
+        # if self._is_session:
+        #     return AMQPErrors.ErrorAction(retry=False)
+        # return super(_ServiceBusErrorPolicy, self).on_link_error(error)
+        pass
+
+    def on_connection_error(self, error):
+        # if self._is_session:
+        #     return AMQPErrors.ErrorAction(retry=False)
+        # return super(_ServiceBusErrorPolicy, self).on_connection_error(error)
+        pass
 
 class ServiceBusError(AzureError):
     """Base exception for all Service Bus errors which can be used for default error handling.

@@ -16,6 +16,7 @@ from ._pyamqp import (
     SendClient,
     types,
 )
+from ._pyamqp.constants import MAX_FRAME_SIZE_BYTES
 
 from ._base_handler import BaseHandler
 from ._common import mgmt_handlers
@@ -237,6 +238,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
     def _create_handler(self, auth):
         # type: (JWTTokenAuth) -> None
         self._handler = SendClient(
+            self.fully_qualified_namespace,
             self._entity_uri,
             auth=auth,
             debug=self._config.logging_enable,
@@ -249,21 +251,19 @@ class ServiceBusSender(BaseHandler, SenderMixin):
 
     def _open(self):
         # pylint: disable=protected-access
-        if self._running:
-            return
-        if self._handler:
-            self._handler.close()
-
-        auth = None if self._connection else create_authentication(self)
-        self._create_handler(auth)
+        if not self._running:
+            if self._handler:
+                self._handler.close()
+        auth = self._create_auth()
         try:
-            self._handler.open(connection=self._connection)
+            self._create_handler(auth)
+            self._handler.open()
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
             self._max_message_size_on_link = (
                 self._handler.message_handler._link.peer_max_message_size
-                or uamqp.constants.MAX_MESSAGE_LENGTH_BYTES
+                or MAX_FRAME_SIZE_BYTES
             )
         except:
             self._close_handler()
