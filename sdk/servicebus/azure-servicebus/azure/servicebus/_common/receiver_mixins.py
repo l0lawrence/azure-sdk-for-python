@@ -7,7 +7,9 @@ import uuid
 import functools
 from typing import Optional, Callable
 
-from uamqp import Source
+# from uamqp import Source
+from .._pyamqp.endpoints import Source
+
 
 from .message import ServiceBusReceivedMessage
 from .constants import (

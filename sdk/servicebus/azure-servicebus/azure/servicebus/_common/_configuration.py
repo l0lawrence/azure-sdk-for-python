@@ -4,7 +4,8 @@
 # --------------------------------------------------------------------------------------------
 from typing import Optional, Dict, Any
 
-from uamqp.constants import TransportType
+# from uamqp.constants import TransportType
+from .._pyamqp.constants import TransportType
 from azure.core.pipeline.policies import RetryMode
 
 

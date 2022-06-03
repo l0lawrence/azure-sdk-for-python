@@ -83,7 +83,14 @@ SEND_DISPOSITION_REJECT = "rejected"
 AUTH_TYPE_SASL_PLAIN = "AUTH_SASL_PLAIN"
 AUTH_TYPE_CBS = "AUTH_CBS"
 
-
+class MessageState(Enum):
+    WaitingToBeSent = 0
+    WaitingForSendAck = 1
+    SendComplete = 2
+    SendFailed = 3
+    ReceivedUnsettled = 4
+    ReceivedSettled = 5
+    
 class ConnectionState(Enum):
     #: In this state a Connection exists, but nothing has been sent or received. This is the state an
     #: implementation would be in immediately after performing a socket connect or socket accept.
