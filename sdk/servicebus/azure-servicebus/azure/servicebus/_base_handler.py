@@ -19,7 +19,8 @@ except ImportError:
 # import uamqp
 # from uamqp import utils, compat
 # from uamqp.message import MessageProperties
-from ._pyamqp.utils import generate_sas_token
+from ._pyamqp import constants, error as errors, utils as pyamqp_utils
+# from ._pyamqp.utils import generate_sas_token
 from ._pyamqp.message import Message, Properties
 from ._pyamqp.authentication import JWTTokenAuth
 
@@ -154,7 +155,7 @@ def _generate_sas_token(uri, policy, key, expiry=None):
     encoded_policy = quote_plus(policy) # pylint: disable=no-member
     encoded_key = key
 
-    token = generate_sas_token(encoded_policy, encoded_key, encoded_uri, abs_expiry)
+    token = pyamqp_utils.generate_sas_token(encoded_policy, encoded_key, encoded_uri, abs_expiry)
     return AccessToken(token=token, expires_on=abs_expiry)
 
 def _get_backoff_time(retry_mode, backoff_factor, backoff_max, retried_times):
@@ -489,7 +490,7 @@ class BaseHandler:  # pylint:disable=too-many-instance-attributes
         timeout=None,
         **kwargs
     ):
-        # type: (bytes, Any, Callable, bool, Optional[float], Any) -> uamqp.Message
+        # type: (bytes, Any, Callable, bool, Optional[float], Any) -> Message
         """
         Execute an pyamqp management operation.
 
@@ -544,7 +545,7 @@ class BaseHandler:  # pylint:disable=too-many-instance-attributes
         # type: (bytes, Dict[str, Any], Callable, Optional[float], Any) -> Any
         return self._do_retryable_operation(
             self._mgmt_request_response,
-            mgmt_operation=mgmt_operation,
+            mgmt_operation=mgmt_operation.decode(),
             message=message,
             callback=callback,
             timeout=timeout,

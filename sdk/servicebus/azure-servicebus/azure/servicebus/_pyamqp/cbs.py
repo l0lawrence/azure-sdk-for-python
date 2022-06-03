@@ -92,6 +92,7 @@ class CBSAuthenticator(object):
                 CBS_EXPIRATION: expires_on
             }
         )
+        print("here we call on execute complete")
         self._mgmt_link.execute_operation(
             message,
             self._on_execute_operation_complete,
@@ -140,6 +141,8 @@ class CBSAuthenticator(object):
         self._token_status_code = status_code
         self._token_status_description = status_description
 
+        print("this is where cbs state can change here")
+        print(f"my execution status {execute_operation_result.name}")
         if execute_operation_result == ManagementExecuteOperationResult.OK:
             self.auth_state = CbsAuthState.OK
         elif execute_operation_result == ManagementExecuteOperationResult.ERROR:
@@ -162,6 +165,7 @@ class CBSAuthenticator(object):
             put_timeout = check_put_timeout_status(self._auth_timeout, self._token_put_time)
             if put_timeout:
                 self.state = CbsAuthState.TIMEOUT
+        print(f"CBS state is {self.state}")
 
     def _cbs_link_ready(self):
         #CbsState.OPENING
@@ -188,6 +192,7 @@ class CBSAuthenticator(object):
         self.state = CbsState.CLOSED
 
     def update_token(self):
+        print("IN PROGRESS")
         self.auth_state = CbsAuthState.IN_PROGRESS
         access_token = self._auth.get_token()
         self._expires_on = access_token.expires_on
@@ -198,6 +203,7 @@ class CBSAuthenticator(object):
         except AttributeError:
             self._token = access_token.token
         self._token_put_time = int(utc_now().timestamp())
+        print("trying to put token")
         self._put_token(self._token, self._auth.token_type, self._auth.audience, utc_from_timestamp(self._expires_on))
 
     def handle_token(self):

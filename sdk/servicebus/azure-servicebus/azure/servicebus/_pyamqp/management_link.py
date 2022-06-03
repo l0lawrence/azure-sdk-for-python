@@ -202,6 +202,7 @@ class ManagementLink(object):
          to the management request must be received.
         :rtype: None
         """
+        print("Execute a request and wait for a response here")
         timeout = kwargs.get("timeout")
         message.application_properties["operation"] = kwargs.get("operation")
         message.application_properties["type"] = kwargs.get("type")
@@ -209,6 +210,7 @@ class ManagementLink(object):
         try:
             # TODO: namedtuple is immutable, which may push us to re-think about the namedtuple approach for Message
             new_properties = message.properties._replace(message_id=self.next_message_id)
+            print(new_properties)
         except AttributeError:
             new_properties = Properties(message_id=self.next_message_id)
         message = message._replace(properties=new_properties)
@@ -220,6 +222,7 @@ class ManagementLink(object):
         )
 
         on_send_complete = partial(self._on_send_complete, message_delivery)
+        print(on_send_complete)
 
         self._request_link.send_transfer(
             message,

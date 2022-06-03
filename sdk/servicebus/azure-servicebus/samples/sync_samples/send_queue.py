@@ -10,12 +10,21 @@ Example to show sending message(s) to a Service Bus Queue.
 """
 
 import os
+import sys
+import logging
 from azure.servicebus import ServiceBusClient, ServiceBusMessage
 
 
 CONNECTION_STR = os.environ['SERVICE_BUS_CONNECTION_STR']
 QUEUE_NAME = os.environ["SERVICE_BUS_QUEUE_NAME"]
 
+# Create a logger for the 'azure' SDK
+logger = logging.getLogger('servicebus')
+logger.setLevel(logging.DEBUG)
+
+# Configure a console output
+handler = logging.StreamHandler(stream=sys.stdout)
+logger.addHandler(handler)
 
 def send_single_message(sender):
     message = ServiceBusMessage("Single Message")

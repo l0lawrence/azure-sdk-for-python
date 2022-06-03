@@ -19,7 +19,7 @@ SCHEDULEDENQUEUETIMENAME = b"x-opt-scheduled-enqueue-time"
 SEQUENCENUBMERNAME = b"x-opt-sequence-number"
 LOCKTOKENNAME = b"x-opt-lock-token"
 LOCKEDUNTILNAME = b"x-opt-locked-until"
-PARTITIONKEYNAME = b"x-opt-partition-key"
+PARTITIONKEYNAME = b"x-opt--key"
 DEADLETTERSOURCENAME = b"x-opt-deadletter-source"
 DEADLETTERNAME = VENDOR + b":dead-letter"
 ASSOCIATEDLINKPROPERTYNAME = b"associated-link-name"
@@ -80,8 +80,8 @@ MGMT_REQUEST_MAX_MESSAGE_COUNT = "message-count"
 MGMT_REQUEST_MESSAGE = "message"
 MGMT_REQUEST_MESSAGES = "messages"
 MGMT_REQUEST_MESSAGE_ID = "message-id"
-MGMT_REQUEST_PARTITION_KEY = "partition-key"
-MGMT_REQUEST_VIA_PARTITION_KEY = "via-partition-key"
+MGMT_REQUEST_PARTITION_KEY = "-key"
+MGMT_REQUEST_VIA_PARTITION_KEY = "via--key"
 MGMT_REQUEST_DEAD_LETTER_REASON = "deadletter-reason"
 MGMT_REQUEST_DEAD_LETTER_ERROR_DESCRIPTION = "deadletter-description"
 RECEIVER_LINK_DEAD_LETTER_REASON = "DeadLetterReason"
@@ -118,9 +118,9 @@ _BATCH_MESSAGE_OVERHEAD_COST = [5, 8]
 _X_OPT_ENQUEUED_TIME = b"x-opt-enqueued-time"
 _X_OPT_SEQUENCE_NUMBER = b"x-opt-sequence-number"
 _X_OPT_ENQUEUE_SEQUENCE_NUMBER = b"x-opt-enqueue-sequence-number"
-_X_OPT_PARTITION_ID = b"x-opt-partition-id"
-_X_OPT_PARTITION_KEY = b"x-opt-partition-key"
-_X_OPT_VIA_PARTITION_KEY = b"x-opt-via-partition-key"
+_X_OPT_PARTITION_ID = b"x-opt--id"
+_X_OPT_PARTITION_KEY = b"x-opt--key"
+_X_OPT_VIA_PARTITION_KEY = b"x-opt-via--key"
 _X_OPT_LOCKED_UNTIL = b"x-opt-locked-until"
 _X_OPT_LOCK_TOKEN = b"x-opt-lock-token"
 _X_OPT_SCHEDULED_ENQUEUE_TIME = b"x-opt-scheduled-enqueue-time"
@@ -182,8 +182,8 @@ class ServiceBusMessageState(int, Enum):
 
 # To enable extensible string enums for the public facing parameter, and translate to the "real" uamqp constants.
 ServiceBusToAMQPReceiveModeMap = {
-    ServiceBusReceiveMode.PEEK_LOCK: constants.ReceiverSettleMode.First,
-    ServiceBusReceiveMode.RECEIVE_AND_DELETE: constants.ReceiverSettleMode.Second,
+    ServiceBusReceiveMode.PEEK_LOCK: constants.ReceiverSettleMode.Second,
+    ServiceBusReceiveMode.RECEIVE_AND_DELETE: constants.ReceiverSettleMode.First,
 }
 
 
@@ -196,8 +196,8 @@ class ServiceBusSubQueue(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     TRANSFER_DEAD_LETTER = "transferdeadletter"
 
 
-ANNOTATION_SYMBOL_PARTITION_KEY = b"x-opt-partition-key"
-ANNOTATION_SYMBOL_VIA_PARTITION_KEY = b"x-opt-via-partition-key"
+ANNOTATION_SYMBOL_PARTITION_KEY = b"x-opt--key"
+ANNOTATION_SYMBOL_VIA_PARTITION_KEY = b"x-opt-via--key"
 ANNOTATION_SYMBOL_SCHEDULED_ENQUEUE_TIME = b"scheduled_enqueued_time"
 
 ANNOTATION_SYMBOL_KEY_MAP = {

@@ -156,6 +156,7 @@ class SenderLink(Link):
                 condition=ErrorCondition.ClientError,  # TODO: should this be a ClientError?
                 description="Link is not attached."
             )
+        print("GOt here to settled send transfer")
         settled = self.send_settle_mode == SenderSettleMode.Settled
         if self.send_settle_mode == SenderSettleMode.Mixed:
             settled = kwargs.pop('settled', True)

@@ -77,7 +77,7 @@ class SenderMixin(object):
             self.fully_qualified_namespace, self._entity_name
         )
         # Changing EntityURI to be target format 
-        self._entity_uri = "{}/{}".format(
+        self._entity_uri = "amqps://{}/{}".format(
             self.fully_qualified_namespace, self._entity_name
         )
         self._error_policy = _ServiceBusErrorPolicy(
