@@ -151,6 +151,7 @@ class CBSAuthenticator(object):
             self.auth_state = CbsAuthState.ERROR
 
     def _update_status(self):
+        print(f'Checking what our cbs auth state is {self.state}')
         if self.state == CbsAuthState.OK or self.state == CbsAuthState.REFRESH_REQUIRED:
             is_expired, is_refresh_required = check_expiration_and_refresh_status(self._expires_on, self._refresh_window)
             if is_expired:
@@ -163,7 +164,10 @@ class CBSAuthenticator(object):
                 self.state = CbsAuthState.TIMEOUT
 
     def _cbs_link_ready(self):
+        #CbsState.OPENING
+        print(self.state)
         if self.state == CbsState.OPEN:
+            print("open state")
             return True
         if self.state != CbsState.OPEN:
             return False
@@ -199,6 +203,7 @@ class CBSAuthenticator(object):
     def handle_token(self):
         if not self._cbs_link_ready():
             return False
+        print("State is now open, so we try to update status")
         self._update_status()
         if self.auth_state == CbsAuthState.IDLE:
             self.update_token()
@@ -218,6 +223,7 @@ class CBSAuthenticator(object):
                 description="Failed to open CBS authentication link."
             )
         elif self.auth_state == CbsAuthState.ERROR:
+            #Gets here
             raise TokenAuthFailure(
                 self._token_status_code,
                 self._token_status_description,

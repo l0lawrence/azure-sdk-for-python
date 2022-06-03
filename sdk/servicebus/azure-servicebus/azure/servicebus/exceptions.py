@@ -456,7 +456,7 @@ class AutoLockRenewTimeout(ServiceBusError):
 
 def _create_servicebus_exception(exception):
     if isinstance(exception, errors.AuthenticationException):
-        error = ServiceBusAuthenticationError(str(exception), exception)
+        error = ServiceBusAuthenticationError()
     elif isinstance(exception, errors.AMQPLinkError):
         error = ServiceBusConnectionError(str(exception), exception)
     # TODO: do we need MessageHanlderError in amqp any more

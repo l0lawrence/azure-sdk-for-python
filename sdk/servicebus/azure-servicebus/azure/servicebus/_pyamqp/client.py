@@ -162,6 +162,7 @@ class AMQPClient(object):
 
     def __enter__(self):
         """Run Client in a context manager."""
+        print("Context manager open")
         self.open()
         return self
 
@@ -249,20 +250,26 @@ class AMQPClient(object):
                 transport_type=self._transport_type,
                 http_proxy=self._http_proxy
             )
+            print("Open connection")
             self._connection.open()
+            print("Connection has been opened")
         if not self._session:
             self._session = self._connection.create_session(
                 incoming_window=self._incoming_window,
                 outgoing_window=self._outgoing_window
             )
             self._session.begin()
+        print("CBS Authenticator")
         if self._auth.auth_type == AUTH_TYPE_CBS:
+            print(f"session:{self._session},  auth:{self._auth}, timeout:{self._auth_timeout}")
             self._cbs_authenticator = CBSAuthenticator(
                 session=self._session,
                 auth=self._auth,
                 auth_timeout=self._auth_timeout
             )
+            print("trying to open authenticator")
             self._cbs_authenticator.open()
+            print("Did it open?")
         self._shutdown = False
 
     def close(self):
@@ -297,8 +304,10 @@ class AMQPClient(object):
         :rtype: bool
         """
         if self._cbs_authenticator and not self._cbs_authenticator.handle_token():
+            ("in here")
             self._connection.listen(wait=self._socket_timeout)
             return False
+        print("got true")
         return True
 
     def client_ready(self):
@@ -313,6 +322,7 @@ class AMQPClient(object):
             return False
         if not self._client_ready():
             try:
+                print("Listen")
                 self._connection.listen(wait=self._socket_timeout)
             except ValueError:
                 return True
@@ -363,6 +373,7 @@ class AMQPClient(object):
 
             mgmt_link = ManagementOperation(self._session, endpoint=node, **kwargs)
             self._mgmt_links[node] = mgmt_link
+            print("mgmt open")
             mgmt_link.open()
 
             while not mgmt_link.ready():
@@ -486,6 +497,7 @@ class SendClient(AMQPClient):
     def _send_message_impl(self, message, **kwargs):
         timeout = kwargs.pop("timeout", 0)
         expire_time = (time.time() + timeout) if timeout else None
+        print("Open?")
         self.open()
         message_delivery = _MessageDelivery(
             message,
@@ -684,6 +696,7 @@ class ReceiveClient(AMQPClient):
         timeout = time.time() + timeout if timeout else 0
         receiving = True
         batch = []
+        print("recieve on batch")
         self.open()
         while len(batch) < max_batch_size:
             try:

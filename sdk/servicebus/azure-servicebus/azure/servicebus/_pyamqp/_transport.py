@@ -450,13 +450,16 @@ class _AbstractTransport(object):
             return None, None
 
     def send_frame(self, channel, frame, **kwargs):
+        # print("Jump to transport layer and send frame")
         header, performative = encode_frame(frame, **kwargs)
         if performative is None:
             data = header
         else:
             encoded_channel = struct.pack('>H', channel)
             data = header + encoded_channel + performative
+        # print(f"Self write data:{data}")
         self.write(data)
+        # print("wrote data")
 
     def negotiate(self, encode, decode):
         pass
@@ -588,6 +591,7 @@ class SSLTransport(_AbstractTransport):
 
     def _write(self, s):
         """Write a string out to the SSL socket fully."""
+        # print("Send string to socket")
         write = self.sock.send
         while s:
             try:

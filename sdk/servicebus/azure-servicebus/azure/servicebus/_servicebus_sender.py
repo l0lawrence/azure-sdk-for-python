@@ -34,6 +34,7 @@ from ._common.utils import (
     transform_messages_if_needed,
     send_trace_context_manager,
     trace_message,
+    create_properties
 )
 from ._common.constants import (
     REQUEST_RESPONSE_CANCEL_SCHEDULED_MESSAGE_OPERATION,
@@ -75,7 +76,8 @@ class SenderMixin(object):
         self._auth_uri = "sb://{}/{}".format(
             self.fully_qualified_namespace, self._entity_name
         )
-        self._entity_uri = "amqps://{}/{}".format(
+        # Changing EntityURI to be target format 
+        self._entity_uri = "{}/{}".format(
             self.fully_qualified_namespace, self._entity_name
         )
         self._error_policy = _ServiceBusErrorPolicy(
@@ -237,16 +239,25 @@ class ServiceBusSender(BaseHandler, SenderMixin):
 
     def _create_handler(self, auth):
         # type: (JWTTokenAuth) -> None
+        print(self._entity_uri, self.fully_qualified_namespace)
+        transport_type = self._config.transport_type
         self._handler = SendClient(
             self.fully_qualified_namespace,
-            self._entity_uri,
+            self._entity_uri, # thus should be self._target
             auth=auth,
-            debug=self._config.logging_enable,
-            properties=self._properties,
-            error_policy=self._error_policy,
+            transport_type=transport_type,
+            http_proxy=self._config.http_proxy, # pylint:disable=protected-access
+            # keep_alive_interval=self._config._keep_alive,
             client_name=self._name,
-            keep_alive_interval=self._config.keep_alive,
-            encoding=self._config.encoding,
+            properties=create_properties(self._config.user_agent),  # pylint: disable=protected-access
+            # custom_endpoint_address=custom_endpoint_address,
+            # connection_verify=self._client._config.
+            debug=self._config.logging_enable,
+            # properties=self._properties,
+            # error_policy=self._error_policy,
+            # client_name=self._name,
+            # keep_alive_interval=self._config.keep_alive,
+            # encoding=self._config.encoding,
         )
 
     def _open(self):
@@ -257,7 +268,9 @@ class ServiceBusSender(BaseHandler, SenderMixin):
         auth = self._create_auth()
         try:
             self._create_handler(auth)
+            print("Open Handler")
             self._handler.open()
+            print("Opened Handler")
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
