@@ -22,6 +22,7 @@ with servicebus_client:
     with receiver:
         received_msgs = receiver.receive_messages(max_message_count=10, max_wait_time=5)
         for msg in received_msgs:
+            print("MESSAGES")
             print(str(msg))
             receiver.complete_message(msg)
 

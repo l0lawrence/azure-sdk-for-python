@@ -261,7 +261,6 @@ class AMQPClient(object):
             self._session.begin()
         print("CBS Authenticator")
         if self._auth.auth_type == AUTH_TYPE_CBS:
-            print(f"session:{self._session},  auth:{self._auth}, timeout:{self._auth_timeout}")
             self._cbs_authenticator = CBSAuthenticator(
                 session=self._session,
                 auth=self._auth,
@@ -320,6 +319,7 @@ class AMQPClient(object):
         """
         if not self.auth_complete():
             return False
+        print("COMPLETED AUTH")
         if not self._client_ready():
             try:
                 print("Listen")
@@ -440,6 +440,7 @@ class SendClient(AMQPClient):
         return True
 
     def _transfer_message(self, message_delivery, timeout=0):
+        print("Tries to transfer message over link")
         message_delivery.state = MessageDeliveryState.WaitingForSendAck
         on_send_complete = partial(self._on_send_complete, message_delivery)
         delivery = self._link.send_transfer(

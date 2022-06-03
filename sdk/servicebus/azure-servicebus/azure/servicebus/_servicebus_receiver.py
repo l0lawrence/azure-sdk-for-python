@@ -61,6 +61,7 @@ from ._common import mgmt_handlers
 from ._common.receiver_mixins import ReceiverMixin
 from ._common.utils import utc_from_timestamp
 from ._servicebus_session import ServiceBusSession
+from ._pyamqp.authentication import JWTTokenAuth
 
 if TYPE_CHECKING:
     from ._common.auto_lock_renewer import AutoLockRenewer
@@ -69,7 +70,6 @@ if TYPE_CHECKING:
         AzureSasCredential,
         AzureNamedKeyCredential,
     )
-    from ._pyamqp.authentication import JWTTokenAuth
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -341,6 +341,7 @@ class ServiceBusReceiver(
     def _create_handler(self, auth):
         # type: (JWTTokenAuth) -> None
         self._handler = ReceiveClient(
+            self.fully_qualified_namespace,
             self._get_source(),
             auth=auth,
             debug=self._config.logging_enable,
@@ -363,17 +364,58 @@ class ServiceBusReceiver(
         if self._prefetch_count == 1:
             self._handler._message_received = self._enhanced_message_received  # pylint: disable=protected-access
 
+    
+    def _create_auth(self):
+        # type: () -> JWTTokenAuth
+        """
+        Create an ~uamqp.authentication.SASTokenAuth instance to authenticate
+        the session.
+        """
+        try:
+            # ignore mypy's warning because token_type is Optional
+            token_type = self._credential.token_type  # type: ignore
+        except AttributeError:
+            token_type = b"jwt"
+        if token_type == b"servicebus.windows.net:sastoken":
+            return JWTTokenAuth(
+                self._auth_uri,
+                self._auth_uri,
+                functools.partial(self._credential.get_token, self._auth_uri)
+            )
+        return JWTTokenAuth(
+            self._auth_uri,
+            self._auth_uri,
+            functools.partial(self._credential.get_token, JWT_TOKEN_SCOPE),
+            token_type=token_type,
+            timeout=self._config.auth_timeout,
+            custom_endpoint_hostname=self._config.custom_endpoint_hostname,
+            port=self._config.connection_port,
+            verify=self._config.connection_verify,
+        )
+
     def _open(self):
         # pylint: disable=protected-access
-        if self._running:
-            return
-        if self._handler and not self._handler._shutdown:
-            self._handler.close()
+        # if self._running:
+        #     return
+        # if self._handler and not self._handler._shutdown:
+        #     self._handler.close()
 
-        auth = None if self._connection else create_authentication(self)
-        self._create_handler(auth)
+        # auth = None if self._connection else create_authentication(self)
+        # self._create_handler(auth)
+        # try:
+        #     self._handler.open(connection=self._connection)
+        #     while not self._handler.client_ready():
+        #         time.sleep(0.05)
+        #     self._running = True
+        if not self._running:
+            if self._handler:
+                self._handler.close()
+        auth = self._create_auth()
         try:
-            self._handler.open(connection=self._connection)
+            self._create_handler(auth)
+            print("Open Handler")
+            self._handler.open()
+            print("Opened Handler")
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
@@ -400,9 +442,11 @@ class ServiceBusReceiver(
                 else 0
             )
             abs_timeout_ms = (
-                amqp_receive_client._counter.get_current_ms() + timeout_ms
+                # amqp_receive_client._counter.get_current_ms() + timeout_ms
+                timeout_ms
                 if timeout_ms
                 else 0
+                
             )
             batch = []  # type: List[Message]
             while not received_messages_queue.empty() and len(batch) < max_message_count:
@@ -414,7 +458,7 @@ class ServiceBusReceiver(
             # Dynamically issue link credit if max_message_count > 1 when the prefetch_count is the default value 1
             if max_message_count and self._prefetch_count == 1 and max_message_count > 1:
                 link_credit_needed = max_message_count - len(batch)
-                amqp_receive_client.message_handler.reset_link_credit(link_credit_needed)
+                amqp_receive_client._link_credit = link_credit_needed
 
             first_message_received = expired = False
             receiving = True
@@ -422,7 +466,8 @@ class ServiceBusReceiver(
                 while receiving and received_messages_queue.qsize() < max_message_count:
                     if (
                         abs_timeout_ms
-                        and amqp_receive_client._counter.get_current_ms() > abs_timeout_ms
+                        # and 10 > abs_timeout_ms
+                        # and amqp_receive_client._counter.get_current_ms() > abs_timeout_ms
                     ):
                         expired = True
                         break

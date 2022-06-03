@@ -148,14 +148,11 @@ def _generate_sas_token(uri, policy, key, expiry=None):
     :rtype: str
     """
     if not expiry:
-        expiry = timedelta(hours=1) # Default to 1 hour.
+        expiry = timedelta(hours=1)  # Default to 1 hour.
 
     abs_expiry = int(time.time()) + expiry.seconds
-    encoded_uri = quote_plus(uri)  # pylint: disable=no-member
-    encoded_policy = quote_plus(policy) # pylint: disable=no-member
-    encoded_key = key
 
-    token = pyamqp_utils.generate_sas_token(encoded_policy, encoded_key, encoded_uri, abs_expiry)
+    token = pyamqp_utils.generate_sas_token(uri, policy, key, abs_expiry).encode()
     return AccessToken(token=token, expires_on=abs_expiry)
 
 def _get_backoff_time(retry_mode, backoff_factor, backoff_max, retried_times):
@@ -200,7 +197,7 @@ class ServiceBusSharedKeyCredential(object):
         # type: (str, str) -> None
         self.policy = policy
         self.key = key
-        self.token_type = TOKEN_TYPE_SASTOKEN
+        self.token_type =  b"servicebus.windows.net:sastoken"
 
     def get_token(self, *scopes, **kwargs):  # pylint:disable=unused-argument
         # type: (str, Any) -> AccessToken

@@ -92,7 +92,7 @@ class CBSAuthenticator(object):
                 CBS_EXPIRATION: expires_on
             }
         )
-        print("here we call on execute complete")
+        # print("here we call on execute complete")
         self._mgmt_link.execute_operation(
             message,
             self._on_execute_operation_complete,
@@ -141,8 +141,8 @@ class CBSAuthenticator(object):
         self._token_status_code = status_code
         self._token_status_description = status_description
 
-        print("this is where cbs state can change here")
-        print(f"my execution status {execute_operation_result.name}")
+        # print("this is where cbs state can change here")
+        # print(f"my execution status {execute_operation_result.name}")
         if execute_operation_result == ManagementExecuteOperationResult.OK:
             self.auth_state = CbsAuthState.OK
         elif execute_operation_result == ManagementExecuteOperationResult.ERROR:
@@ -154,7 +154,7 @@ class CBSAuthenticator(object):
             self.auth_state = CbsAuthState.ERROR
 
     def _update_status(self):
-        print(f'Checking what our cbs auth state is {self.state}')
+        # print(f'Checking what our cbs auth state is {self.state}')
         if self.state == CbsAuthState.OK or self.state == CbsAuthState.REFRESH_REQUIRED:
             is_expired, is_refresh_required = check_expiration_and_refresh_status(self._expires_on, self._refresh_window)
             if is_expired:
@@ -168,8 +168,7 @@ class CBSAuthenticator(object):
         print(f"CBS state is {self.state}")
 
     def _cbs_link_ready(self):
-        #CbsState.OPENING
-        print(self.state)
+        # print(self.state)
         if self.state == CbsState.OPEN:
             print("open state")
             return True
@@ -192,7 +191,7 @@ class CBSAuthenticator(object):
         self.state = CbsState.CLOSED
 
     def update_token(self):
-        print("IN PROGRESS")
+        # print("IN PROGRESS")
         self.auth_state = CbsAuthState.IN_PROGRESS
         access_token = self._auth.get_token()
         self._expires_on = access_token.expires_on
@@ -200,16 +199,17 @@ class CBSAuthenticator(object):
         self._refresh_window = int(float(expires_in) * 0.1)
         try:
             self._token = access_token.token.decode()
+            print(self._token)
         except AttributeError:
             self._token = access_token.token
         self._token_put_time = int(utc_now().timestamp())
-        print("trying to put token")
+        # print("trying to put token")
         self._put_token(self._token, self._auth.token_type, self._auth.audience, utc_from_timestamp(self._expires_on))
 
     def handle_token(self):
         if not self._cbs_link_ready():
             return False
-        print("State is now open, so we try to update status")
+        # print("State is now open, so we try to update status")
         self._update_status()
         if self.auth_state == CbsAuthState.IDLE:
             self.update_token()

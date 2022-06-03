@@ -90,7 +90,8 @@ class SenderMixin(object):
     def _set_msg_timeout(self, timeout=None, last_exception=None):
         # pylint: disable=protected-access
         if not timeout:
-            self._handler._msg_timeout = 0
+            self._handler._idle_timeout = 0
+            # self._handler._msg_timeout = 0
             return
         if timeout <= 0.0:
             if last_exception:
@@ -99,7 +100,8 @@ class SenderMixin(object):
                 error = OperationTimeoutError(message="Send operation timed out")
             _LOGGER.info("%r send operation timed out. (%r)", self._name, error)
             raise error
-        self._handler._msg_timeout = timeout * 1000  # type: ignore
+        self._handler._idle_timeout = timeout * 1000
+        # self._handler._msg_timeout = timeout * 1000  # type: ignore
 
     @classmethod
     def _build_schedule_request(cls, schedule_time_utc, send_span, *messages):
@@ -275,8 +277,9 @@ class ServiceBusSender(BaseHandler, SenderMixin):
                 time.sleep(0.05)
             self._running = True
             self._max_message_size_on_link = (
-                self._handler.message_handler._link.peer_max_message_size
-                or MAX_FRAME_SIZE_BYTES
+                # self._handler.message_handler._link.peer_max_message_size
+                # or 
+                MAX_FRAME_SIZE_BYTES
             )
         except:
             self._close_handler()
@@ -285,9 +288,10 @@ class ServiceBusSender(BaseHandler, SenderMixin):
     def _send(self, message, timeout=None, last_exception=None):
         # type: (Union[ServiceBusMessage, ServiceBusMessageBatch], Optional[float], Exception) -> None
         self._open()
-        default_timeout = self._handler._msg_timeout  # pylint: disable=protected-access
+        default_timeout = self._handler._idle_timeout #self._handler._msg_timeout  # pylint: disable=protected-access
         try:
             self._set_msg_timeout(timeout, last_exception)
+            #What would this become 
             self._handler.send_message(message.message)
         finally:  # reset the timeout of the handler back to the default value
             self._set_msg_timeout(default_timeout, None)
@@ -433,6 +437,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
                 :caption: Send message.
 
         """
+        print("Trying to send messages")
         if kwargs:
             warnings.warn(f"Unsupported keyword args: {kwargs}")
         self._check_live()
