@@ -442,11 +442,9 @@ class ServiceBusReceiver(
                 else 0
             )
             abs_timeout_ms = (
-                # amqp_receive_client._counter.get_current_ms() + timeout_ms
-                timeout_ms
+                amqp_receive_client._counter.get_current_ms() + timeout_ms
                 if timeout_ms
                 else 0
-                
             )
             batch = []  # type: List[Message]
             while not received_messages_queue.empty() and len(batch) < max_message_count:
@@ -458,7 +456,7 @@ class ServiceBusReceiver(
             # Dynamically issue link credit if max_message_count > 1 when the prefetch_count is the default value 1
             if max_message_count and self._prefetch_count == 1 and max_message_count > 1:
                 link_credit_needed = max_message_count - len(batch)
-                amqp_receive_client._link_credit = link_credit_needed
+                amqp_receive_client.message_handler.reset_link_credit(link_credit_needed)
 
             first_message_received = expired = False
             receiving = True
@@ -466,8 +464,7 @@ class ServiceBusReceiver(
                 while receiving and received_messages_queue.qsize() < max_message_count:
                     if (
                         abs_timeout_ms
-                        # and 10 > abs_timeout_ms
-                        # and amqp_receive_client._counter.get_current_ms() > abs_timeout_ms
+                        and amqp_receive_client._counter.get_current_ms() > abs_timeout_ms
                     ):
                         expired = True
                         break
