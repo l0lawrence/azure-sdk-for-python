@@ -89,7 +89,7 @@ class Connection(object):
     def __init__(self, endpoint, **kwargs):
         # type(str, Any) -> None
         parsed_url = urlparse(endpoint)
-        print(parsed_url)
+        # print(parsed_url)
         self._hostname = parsed_url.hostname
         endpoint = self._hostname
         if parsed_url.port:
@@ -147,7 +147,7 @@ class Connection(object):
 
     def __enter__(self):
         self.open()
-        print("got here")
+        # print("got here")
         return self
 
     def __exit__(self, *args):
@@ -177,24 +177,24 @@ class Connection(object):
         try:
             if not self.state:
                 self._transport.connect()
-                print("we connected to the source")
+                # print("we connected to the source")
                 self._set_state(ConnectionState.START)
             self._transport.negotiate()
-            print("we negotiated with the source")
+            # print("we negotiated with the source")
             self._outgoing_header()
-            print("we sent our outgoing header")
+            # print("we sent our outgoing header")
             self._set_state(ConnectionState.HDR_SENT)
             print("we set our state")
             if not self._allow_pipelined_open:
-                print("we are processing the incoming frame")
+                # print("we are processing the incoming frame")
                 self._process_incoming_frame(*self._read_frame(wait=True))
                 if self.state != ConnectionState.HDR_EXCH:
                     self._disconnect()
                     raise ValueError("Did not receive reciprocal protocol header. Disconnecting.")
             else:
-                print("pipelined_open is set to True")
+                # print("pipelined_open is set to True")
                 self._set_state(ConnectionState.HDR_SENT)
-                print("HDR SENT")
+                # print("HDR SENT")
         except (OSError, IOError, SSLError, socket.error) as exc:
             raise AMQPConnectionError(
                 ErrorCondition.SocketError,
@@ -336,7 +336,7 @@ class Connection(object):
     def _outgoing_open(self):
         # type: () -> None
         """Send an Open frame to negotiate the AMQP connection functionality."""
-        print("Send an OpenFrame")
+        # print("Send an OpenFrame")
         open_frame = OpenFrame(
             container_id=self._container_id,
             hostname=self._hostname,
@@ -349,12 +349,12 @@ class Connection(object):
             desired_capabilities=self._desired_capabilities if self.state == ConnectionState.HDR_EXCH else None,
             properties=self._properties,
         )
-        print("Open Frame Created")
+        # print("Open Frame Created")
         if self._network_trace:
             _LOGGER.info("-> %r", open_frame, extra=self._network_trace_params)
-        print("Sending")
+        # print("Sending")
         self._send_frame(0, open_frame)
-        print("sent Frame")
+        # print("sent Frame")
 
     def _incoming_open(self, channel, frame):
         # type: (int, Tuple[Any, ...]) -> None
@@ -727,9 +727,9 @@ class Connection(object):
         :rtype: None
         """
         self._connect()
-        print("Now we are sending outgoing open")
+        # print("Now we are sending outgoing open")
         self._outgoing_open()
-        print("Outgoing Open done")
+        # print("Outgoing Open done")
         if self.state == ConnectionState.HDR_EXCH:
             self._set_state(ConnectionState.OPEN_SENT)
         elif self.state == ConnectionState.HDR_SENT:

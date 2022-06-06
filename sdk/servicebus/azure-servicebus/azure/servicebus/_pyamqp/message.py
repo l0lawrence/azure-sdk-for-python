@@ -9,7 +9,7 @@ from collections import namedtuple
 from .types import AMQPTypes, FieldDefinition
 from .constants import FIELD, MessageDeliveryState
 from .performatives import _CAN_ADD_DOCSTRING
-from .constants import MessageState
+from .constants import MessageState, MessageDeliveryState
 from .error import MessageAccepted, MessageRejected, MessageReleased, MessageModified
 
 Header = namedtuple(
@@ -339,6 +339,14 @@ if _CAN_ADD_DOCSTRING:
             self.state = MessageState.ReceivedSettled
             return True
         return False
+
+    def _can_settle_message(self):
+        if self.state not in MessageDeliveryState:
+            raise TypeError("Only received messages can be settled.")
+        if self.settled:
+            return False
+        return True
+
 class BatchMessage(Message):
     _code = 0x80013700
 

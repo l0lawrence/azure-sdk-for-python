@@ -109,35 +109,3 @@ class ReceiverLink(Link):
         if self._is_closed:
             raise ValueError("Link already closed.")
         self._outgoing_disposition(delivery_id, delivery_state)
-
-    def _settle_message(self, message_number, response):
-            """Send a settle dispostition for a received message.
-            :param message_number: The delivery number of the message
-            to settle.
-            :type message_number: int
-            :response: The type of disposition to respond with, e.g. whether
-            the message was accepted, rejected or abandoned.
-            :type response: ~uamqp.errors.MessageResponse
-            """
-            print("SETTLING MESSAGE")
-            print(f"Message Number: {message_number},  Response: {response}")
-            if not response or isinstance(response, MessageAlreadySettled):
-                return
-            if isinstance(response, MessageAccepted):
-                self._receiver.settle_accepted_message(message_number)
-            elif isinstance(response, MessageReleased):
-                self._receiver.settle_released_message(message_number)
-            elif isinstance(response, MessageRejected):
-                self._receiver.settle_rejected_message(
-                    message_number,
-                    response.error_condition,
-                    response.error_description,
-                    response.error_info)
-            elif isinstance(response, MessageModified):
-                self._receiver.settle_modified_message(
-                    message_number,
-                    response.failed,
-                    response.undeliverable,
-                    response.annotations)
-            else:
-                raise ValueError("Invalid message response type: {}".format(response))

@@ -165,12 +165,12 @@ class CBSAuthenticator(object):
             put_timeout = check_put_timeout_status(self._auth_timeout, self._token_put_time)
             if put_timeout:
                 self.state = CbsAuthState.TIMEOUT
-        print(f"CBS state is {self.state}")
+        # print(f"CBS state is {self.state}")
 
     def _cbs_link_ready(self):
         # print(self.state)
         if self.state == CbsState.OPEN:
-            print("open state")
+            # print("open state")
             return True
         if self.state != CbsState.OPEN:
             return False
@@ -199,7 +199,7 @@ class CBSAuthenticator(object):
         self._refresh_window = int(float(expires_in) * 0.1)
         try:
             self._token = access_token.token.decode()
-            print(self._token)
+            # print(self._token)
         except AttributeError:
             self._token = access_token.token
         self._token_put_time = int(utc_now().timestamp())

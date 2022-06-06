@@ -80,7 +80,7 @@ class _CBSAuth(object):
         self.sasl = SASLAnonymousCredential()
         self.uri = uri
         self.audience = audience
-        print(f"audience {audience} , uri {uri}")
+        # print(f"audience {audience} , uri {uri}")
         self.token_type = token_type
         self.get_token = get_token
         self.expires_in = kwargs.pop("expires_in", AUTH_DEFAULT_EXPIRATION_SECONDS)
@@ -96,7 +96,7 @@ class _CBSAuth(object):
             expires_in = expires_on - time.time()
             if expires_in < 1:
                 raise ValueError("Token has already expired.")
-        print(f"expires in {expires_in}, expires on {expires_on}")
+        # print(f"expires in {expires_in}, expires on {expires_on}")
         return expires_in, expires_on
 
 
@@ -127,7 +127,7 @@ class JWTTokenAuth(_CBSAuth):
         :type token_type: str
 
         """
-        print(f"audience {audience} , uri {uri}")
+        # print(f"audience {audience} , uri {uri}")
         super(JWTTokenAuth, self).__init__(uri, audience, kwargs.pop("kwargs", TOKEN_TYPE_JWT), get_token)
         self.get_token = get_token
 

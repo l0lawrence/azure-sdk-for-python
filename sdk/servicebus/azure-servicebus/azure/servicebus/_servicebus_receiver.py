@@ -413,9 +413,9 @@ class ServiceBusReceiver(
         auth = self._create_auth()
         try:
             self._create_handler(auth)
-            print("Open Handler")
+            # print("Open Handler")
             self._handler.open()
-            print("Opened Handler")
+            # print("Opened Handler")
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
@@ -429,6 +429,7 @@ class ServiceBusReceiver(
     def _receive(self, max_message_count=None, timeout=None):
         # type: (Optional[int], Optional[float]) -> List[ServiceBusReceivedMessage]
         # pylint: disable=protected-access
+        print("Recieving Called")
         try:
             self._receive_context.set()
             self._open()
@@ -437,15 +438,18 @@ class ServiceBusReceiver(
             received_messages_queue = amqp_receive_client._received_messages
             max_message_count = max_message_count or self._prefetch_count
             timeout_ms = (
-                1000 * (timeout or self._max_wait_time)
+                # 1000 * (timeout or self._max_wait_time)
+                timeout or self._max_wait_time
                 if (timeout or self._max_wait_time)
                 else 0
             )
+            
             abs_timeout_ms = (
                 amqp_receive_client._counter.get_current_ms() + timeout_ms
                 if timeout_ms
                 else 0
             )
+            print("abs timeoit", abs_timeout_ms)
             batch = []  # type: List[Message]
             while not received_messages_queue.empty() and len(batch) < max_message_count:
                 batch.append(received_messages_queue.get())
@@ -456,12 +460,15 @@ class ServiceBusReceiver(
             # Dynamically issue link credit if max_message_count > 1 when the prefetch_count is the default value 1
             if max_message_count and self._prefetch_count == 1 and max_message_count > 1:
                 link_credit_needed = max_message_count - len(batch)
-                amqp_receive_client.message_handler.reset_link_credit(link_credit_needed)
+                # amqp_receive_client.message_handler.reset_link_credit(link_credit_needed)
+                amqp_receive_client._link_credit = link_credit_needed
+                print(f"Link credit Needed {link_credit_needed}")
 
             first_message_received = expired = False
             receiving = True
             while receiving and not expired and len(batch) < max_message_count:
                 while receiving and received_messages_queue.qsize() < max_message_count:
+                    print(f"Counter current ms: {amqp_receive_client._counter.get_current_ms()}")
                     if (
                         abs_timeout_ms
                         and amqp_receive_client._counter.get_current_ms() > abs_timeout_ms
@@ -482,9 +489,11 @@ class ServiceBusReceiver(
                             amqp_receive_client._counter.get_current_ms()
                             + self._further_pull_receive_timeout_ms
                         )
+                        print(f"my current timeout {abs_timeout_ms}")
                 while (
                     not received_messages_queue.empty() and len(batch) < max_message_count
                 ):
+                    print("Received Message queue", received_messages_queue.get())
                     batch.append(received_messages_queue.get())
                     received_messages_queue.task_done()
 
@@ -540,6 +549,7 @@ class ServiceBusReceiver(
     ):
         # type: (ServiceBusReceivedMessage, str, Optional[str], Optional[str]) -> None
         # pylint: disable=protected-access
+        print("Settle Message")
         try:
             if not message._is_deferred_message:
                 try:
@@ -706,21 +716,27 @@ class ServiceBusReceiver(
             raise ValueError("The max_wait_time must be greater than 0.")
         if max_message_count is not None and max_message_count <= 0:
             raise ValueError("The max_message_count must be greater than 0")
+        print(max_wait_time)
         messages = self._do_retryable_operation(
             self._receive,
             max_message_count=max_message_count,
             timeout=max_wait_time,
             operation_requires_timeout=True,
         )
+        print(f"Messages from trying recieve {len(messages)}")
         links = get_receive_links(messages)
+        print(f"Get all links {links}")
+        print(f"Auto lock renewer {self._auto_lock_renewer}")
         with receive_trace_context_manager(self, links=links):
             if (
                 self._auto_lock_renewer
                 and not self._session
                 and self._receive_mode != ServiceBusReceiveMode.RECEIVE_AND_DELETE
             ):
+                print("we are here")
                 for message in messages:
                     self._auto_lock_renewer.register(self, message)
+            print(f"We have this many messages {len(messages)}")
             return messages
 
     def receive_deferred_messages(

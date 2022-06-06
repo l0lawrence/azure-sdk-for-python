@@ -14,6 +14,7 @@ import queue
 from functools import partial
 
 from ._connection import Connection
+from ._counter import TickCounter
 from .message import _MessageDelivery
 from .session import Session
 from .sender import SenderLink
@@ -137,6 +138,9 @@ class AMQPClient(object):
         self._mgmt_links = {}
         self._retry_policy = kwargs.pop("retry_policy", RetryPolicy())
 
+        # Counter
+        self._counter = TickCounter()
+
         # Connection settings
         self._max_frame_size = kwargs.pop('max_frame_size', None) or MAX_FRAME_SIZE_BYTES
         self._channel_max = kwargs.pop('channel_max', None) or 65535
@@ -162,7 +166,7 @@ class AMQPClient(object):
 
     def __enter__(self):
         """Run Client in a context manager."""
-        print("Context manager open")
+        # print("Context manager open")
         self.open()
         return self
 
@@ -250,25 +254,25 @@ class AMQPClient(object):
                 transport_type=self._transport_type,
                 http_proxy=self._http_proxy
             )
-            print("Open connection")
+            # print("Open connection")
             self._connection.open()
-            print("Connection has been opened")
+            # print("Connection has been opened")
         if not self._session:
             self._session = self._connection.create_session(
                 incoming_window=self._incoming_window,
                 outgoing_window=self._outgoing_window
             )
             self._session.begin()
-        print("CBS Authenticator")
+        # print("CBS Authenticator")
         if self._auth.auth_type == AUTH_TYPE_CBS:
             self._cbs_authenticator = CBSAuthenticator(
                 session=self._session,
                 auth=self._auth,
                 auth_timeout=self._auth_timeout
             )
-            print("trying to open authenticator")
+            # print("trying to open authenticator")
             self._cbs_authenticator.open()
-            print("Did it open?")
+            # print("Did it open?")
         self._shutdown = False
 
     def close(self):
@@ -303,10 +307,10 @@ class AMQPClient(object):
         :rtype: bool
         """
         if self._cbs_authenticator and not self._cbs_authenticator.handle_token():
-            ("in here")
+            # ("in here")
             self._connection.listen(wait=self._socket_timeout)
             return False
-        print("got true")
+        # print("got true")
         return True
 
     def client_ready(self):
@@ -319,10 +323,10 @@ class AMQPClient(object):
         """
         if not self.auth_complete():
             return False
-        print("COMPLETED AUTH")
+        # print("COMPLETED AUTH")
         if not self._client_ready():
             try:
-                print("Listen")
+                # print("Listen")
                 self._connection.listen(wait=self._socket_timeout)
             except ValueError:
                 return True
@@ -373,7 +377,7 @@ class AMQPClient(object):
 
             mgmt_link = ManagementOperation(self._session, endpoint=node, **kwargs)
             self._mgmt_links[node] = mgmt_link
-            print("mgmt open")
+            # print("mgmt open")
             mgmt_link.open()
 
             while not mgmt_link.ready():
@@ -440,7 +444,7 @@ class SendClient(AMQPClient):
         return True
 
     def _transfer_message(self, message_delivery, timeout=0):
-        print("Tries to transfer message over link")
+        # print("Tries to transfer message over link")
         message_delivery.state = MessageDeliveryState.WaitingForSendAck
         on_send_complete = partial(self._on_send_complete, message_delivery)
         delivery = self._link.send_transfer(
@@ -498,7 +502,7 @@ class SendClient(AMQPClient):
     def _send_message_impl(self, message, **kwargs):
         timeout = kwargs.pop("timeout", 0)
         expire_time = (time.time() + timeout) if timeout else None
-        print("Open?")
+        # print("Open?")
         self.open()
         message_delivery = _MessageDelivery(
             message,
@@ -628,7 +632,6 @@ class ReceiveClient(AMQPClient):
         self._max_message_size = kwargs.pop('max_message_size', None) or MAX_FRAME_SIZE_BYTES
         self._link_properties = kwargs.pop('link_properties', None)
         self._link_credit = kwargs.pop('link_credit', 300)
-        self._counter = time.clock()
         super(ReceiveClient, self).__init__(hostname, auth=auth, **kwargs)
 
     def _client_ready(self):
@@ -683,9 +686,11 @@ class ReceiveClient(AMQPClient):
         :param message: Received message.
         :type message: ~uamqp.message.Message
         """
+        print("Message Recieved")
         if self._message_received_callback:
             self._message_received_callback(message)
         if not self._streaming_receive:
+            print(f"Put my message {message}")
             self._received_messages.put(message)
         # TODO: do we need settled property for a message?
         #elif not message.settled:
@@ -698,7 +703,7 @@ class ReceiveClient(AMQPClient):
         timeout = time.time() + timeout if timeout else 0
         receiving = True
         batch = []
-        print("recieve on batch")
+        # print("recieve on batch")
         self.open()
         while len(batch) < max_batch_size:
             try:
@@ -720,6 +725,7 @@ class ReceiveClient(AMQPClient):
             cur_queue_size = self._received_messages.qsize()
             # after do_work, check how many new messages have been received since previous iteration
             received = cur_queue_size - before_queue_size
+            print(f"How many messages did we receive: {received}")
             if to_receive_size < max_batch_size and received == 0:
                 # there are already messages in the batch, and no message is received in the current cycle
                 # return what we have
