@@ -241,7 +241,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
 
     def _create_handler(self, auth):
         # type: (JWTTokenAuth) -> None
-        print(self._entity_uri, self.fully_qualified_namespace)
+        # print(self._entity_uri, self.fully_qualified_namespace)
         transport_type = self._config.transport_type
         self._handler = SendClient(
             self.fully_qualified_namespace,
@@ -270,9 +270,9 @@ class ServiceBusSender(BaseHandler, SenderMixin):
         auth = self._create_auth()
         try:
             self._create_handler(auth)
-            print("Open Handler")
+            # print("Open Handler")
             self._handler.open()
-            print("Opened Handler")
+            # print("Opened Handler")
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
@@ -437,7 +437,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
                 :caption: Send message.
 
         """
-        print("Trying to send messages")
+        # print("Trying to send messages")
         if kwargs:
             warnings.warn(f"Unsupported keyword args: {kwargs}")
         self._check_live()

@@ -12,7 +12,7 @@ from ._decode import decode_payload
 from .constants import DEFAULT_LINK_CREDIT, Role
 from .endpoints import Target
 from .link import Link
-from .message import Message, Properties, Header
+from .message import Message, Properties, Header, MessageSettlement
 from .constants import (
     DEFAULT_LINK_CREDIT,
     SessionState,
@@ -49,15 +49,56 @@ class ReceiverLink(Link):
     def _process_incoming_message(self, frame, message):
         # I think this might checking if we are settling messages?? 
         try:
+            # print("PROCESS incoming message on link")
             if self.on_message_received:
-                print(f"On message recieved: {self.on_message_received(message)}")
+                if self.rcv_settle_mode==0:
+                    settler = None
+                else:
+                    settler = functools.partial(self._settle_message, self.delivery_count)
+                wrapped_message = MessageSettlement(
+                    message=message,
+                    encoding="UTF-8",
+                    settler=settler,
+                    delivery_no=self.delivery_count)
+                # print(f"On message recieved: {wrapped_message}")
                 return self.on_message_received(message)
             elif self.on_transfer_received:
-                print(f"On transfer recieved: {self.on_transfer_received(message)}")
+                # print(f"On transfer recieved: {self.on_transfer_received(message)}")
                 return self.on_transfer_received(frame, message)
         except Exception as e:
             _LOGGER.error("Handler function failed with error: %r", e)
         return None
+    
+    def _settle_message(self, message_number, response):
+        """Send a settle dispostition for a received message.
+        :param message_number: The delivery number of the message
+         to settle.
+        :type message_number: int
+        :response: The type of disposition to respond with, e.g. whether
+         the message was accepted, rejected or abandoned.
+        :type response: ~uamqp.errors.MessageResponse
+        """
+        if not response or isinstance(response, errors.MessageAlreadySettled):
+            return
+        if isinstance(response, errors.MessageAccepted):
+            self._receiver.settle_accepted_message(message_number)
+        elif isinstance(response, errors.MessageReleased):
+            self._receiver.settle_released_message(message_number)
+        elif isinstance(response, errors.MessageRejected):
+            self._receiver.settle_rejected_message(
+                message_number,
+                response.error_condition,
+                response.error_description,
+                response.error_info)
+        elif isinstance(response, errors.MessageModified):
+            self._receiver.settle_modified_message(
+                message_number,
+                response.failed,
+                response.undeliverable,
+                response.annotations)
+        else:
+            raise ValueError("Invalid message response type: {}".format(response))
+
 
     def _incoming_attach(self, frame):
         super(ReceiverLink, self)._incoming_attach(frame)

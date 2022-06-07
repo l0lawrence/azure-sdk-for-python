@@ -98,7 +98,7 @@ class SASLTransportMixin():
     def _negotiate(self):
         self.write(SASL_HEADER_FRAME)
         _, returned_header = self.receive_frame()
-        print(returned_header[1])
+        # print(returned_header[1])
         if returned_header[1] != SASL_HEADER_FRAME:
             raise ValueError("Mismatching AMQP header protocol. Expected: {}, received: {}".format(
                 SASL_HEADER_FRAME, returned_header[1]))

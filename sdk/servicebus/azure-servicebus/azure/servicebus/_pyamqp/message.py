@@ -253,6 +253,45 @@ if _CAN_ADD_DOCSTRING:
         here: http://www.amqp.org/specification/1.0/footer.
     """
 
+class BatchMessage(Message):
+    _code = 0x80013700
+
+
+class _MessageDelivery:
+    def __init__(self, message, state=MessageDeliveryState.WaitingToBeSent, expiry=None):
+        self.message = message
+        self.state = state
+        self.expiry = expiry
+        self.reason = None
+        self.delivery = None
+        self.error = None
+
+class MessageSettlement():
+    def __init__(self, message, encoding, settler, delivery_no):
+        self._settler = settler
+        self.state = MessageState.WaitingToBeSent
+        self.idle_time = 0
+        self.retries = 0
+        self._response = None
+        self._settler = None
+        self._encoding = encoding
+        self.delivery_no = delivery_no
+        self.delivery_tag = None
+        self.on_send_complete = None
+        self._delivery_annotations = None
+        self._need_further_parse = False
+
+        if message:
+            if settler:
+                self.state = MessageState.ReceivedUnsettled
+                self._response = None
+            else:
+                self.state = MessageState.ReceivedSettled
+                # self._response = errors.MessageAlreadySettled()
+            self._settler = settler
+
+        
+
     def accept(self):
         """Send a response disposition to the service to indicate that
         a received message has been accepted. If the client is running in PeekLock
@@ -341,21 +380,9 @@ if _CAN_ADD_DOCSTRING:
         return False
 
     def _can_settle_message(self):
+        # print("Can we settle this message?")
         if self.state not in MessageDeliveryState:
             raise TypeError("Only received messages can be settled.")
         if self.settled:
             return False
         return True
-
-class BatchMessage(Message):
-    _code = 0x80013700
-
-
-class _MessageDelivery:
-    def __init__(self, message, state=MessageDeliveryState.WaitingToBeSent, expiry=None):
-        self.message = message
-        self.state = state
-        self.expiry = expiry
-        self.reason = None
-        self.delivery = None
-        self.error = None

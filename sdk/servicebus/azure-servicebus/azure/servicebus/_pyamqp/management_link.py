@@ -119,14 +119,15 @@ class ManagementLink(object):
             return
 
     def _on_message_received(self, message):
-        print("On message received")
+        # print("On message received")
+
         message_properties = message.properties
         correlation_id = message_properties[5]
         response_detail = message.application_properties
 
         status_code = response_detail.get(self._status_code_field)
         status_description = response_detail.get(self._status_description_field)
-
+        # print(f"Status codes {status_code}")
         to_remove_operation = None
         for operation in self._pending_operations:
             if operation.message.properties.message_id == correlation_id:
@@ -143,7 +144,7 @@ class ManagementLink(object):
                 response_detail.get(b'error-condition')
             )
             self._pending_operations.remove(to_remove_operation)
-
+    
     def _on_send_complete(self, message_delivery, reason, state):  # todo: reason is never used, should check spec
         if SEND_DISPOSITION_REJECT in state:
             # sample reject state: {'rejected': [[b'amqp:not-allowed', b"Invalid command 'RE1AD'.", None]]}
@@ -203,7 +204,7 @@ class ManagementLink(object):
          to the management request must be received.
         :rtype: None
         """
-        print("Execute a request and wait for a response here")
+        # print("Execute a request and wait for a response here")
         timeout = kwargs.get("timeout")
         message.application_properties["operation"] = kwargs.get("operation")
         message.application_properties["type"] = kwargs.get("type")
@@ -211,7 +212,7 @@ class ManagementLink(object):
         try:
             # TODO: namedtuple is immutable, which may push us to re-think about the namedtuple approach for Message
             new_properties = message.properties._replace(message_id=self.next_message_id)
-            print(new_properties)
+            # print(new_properties)
         except AttributeError:
             new_properties = Properties(message_id=self.next_message_id)
         message = message._replace(properties=new_properties)
@@ -223,7 +224,7 @@ class ManagementLink(object):
         )
 
         on_send_complete = partial(self._on_send_complete, message_delivery)
-        print(on_send_complete)
+        # print(on_send_complete)
 
         self._request_link.send_transfer(
             message,

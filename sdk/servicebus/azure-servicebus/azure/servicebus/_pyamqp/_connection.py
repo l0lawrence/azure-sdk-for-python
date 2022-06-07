@@ -184,7 +184,7 @@ class Connection(object):
             self._outgoing_header()
             # print("we sent our outgoing header")
             self._set_state(ConnectionState.HDR_SENT)
-            print("we set our state")
+            # print("we set our state")
             if not self._allow_pipelined_open:
                 # print("we are processing the incoming frame")
                 self._process_incoming_frame(*self._read_frame(wait=True))
@@ -229,11 +229,14 @@ class Connection(object):
         :returns: A tuple with the incoming channel number, and the frame in the form or a tuple of performative
          descriptor and field values.
         """
+       
         if self._can_read():
             if wait == False:
+                # print("trying to read my new frame")
                 return self._transport.receive_frame(**kwargs)
             elif wait == True:
                 with self._transport.block():
+                    # print("block trying to read new frame")
                     return self._transport.receive_frame(**kwargs)
             else:
                 with self._transport.block_with_timeout(timeout=wait):
@@ -670,10 +673,15 @@ class Connection(object):
                     description="Connection was already closed."
                 )
                 return
+            # print("Going into for loop")
             for _ in range(batch):
+                # print("Try to read frame")
                 new_frame = self._read_frame(wait=wait, **kwargs)
+                # print(f"My new frame is {new_frame}")
                 if self._process_incoming_frame(*new_frame):
+                    # print("we want to break out here")
                     break
+                # print("we processed frame")
         except (OSError, IOError, SSLError, socket.error) as exc:
             self._error = AMQPConnectionError(
                 ErrorCondition.SocketError,

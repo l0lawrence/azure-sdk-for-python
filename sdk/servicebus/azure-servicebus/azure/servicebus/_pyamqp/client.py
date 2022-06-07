@@ -686,11 +686,11 @@ class ReceiveClient(AMQPClient):
         :param message: Received message.
         :type message: ~uamqp.message.Message
         """
-        print("Message Recieved")
+        # print("Message Recieved")
         if self._message_received_callback:
             self._message_received_callback(message)
         if not self._streaming_receive:
-            print(f"Put my message {message}")
+            # print(f"Put my message {message}")
             self._received_messages.put(message)
         # TODO: do we need settled property for a message?
         #elif not message.settled:
@@ -725,7 +725,7 @@ class ReceiveClient(AMQPClient):
             cur_queue_size = self._received_messages.qsize()
             # after do_work, check how many new messages have been received since previous iteration
             received = cur_queue_size - before_queue_size
-            print(f"How many messages did we receive: {received}")
+            # print(f"How many messages did we receive: {received}")
             if to_receive_size < max_batch_size and received == 0:
                 # there are already messages in the batch, and no message is received in the current cycle
                 # return what we have

@@ -140,8 +140,8 @@ class ReceiverMixin(object):  # pylint: disable=too-many-instance-attributes
     ):
         # type: (ServiceBusReceivedMessage, str, Optional[str], Optional[str]) -> Callable
         # pylint: disable=no-self-use
-        print("Settling message via receiver link")
-        print(f"Settle operation {settle_operation}")
+        # print("Settling message via receiver link")
+        # print(f"Settle operation {settle_operation}")
         if settle_operation == MESSAGE_COMPLETE:
             return functools.partial(message.message.accept)
         if settle_operation == MESSAGE_ABANDON:

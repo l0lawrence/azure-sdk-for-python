@@ -346,7 +346,7 @@ class Session(object):
             self._set_state(SessionState.UNMAPPED)
 
     def create_receiver_link(self, source_address, **kwargs):
-        print("creating recevier link")
+        # print("creating recevier link")
         assigned_handle = self._get_next_output_handle()
         link = ReceiverLink(
             self,
@@ -357,6 +357,7 @@ class Session(object):
             **kwargs)
         self.links[link.name] = link
         self._output_handles[assigned_handle] = link
+        # print(f"my link {link}")
         return link
 
     def create_sender_link(self, target_address, **kwargs):

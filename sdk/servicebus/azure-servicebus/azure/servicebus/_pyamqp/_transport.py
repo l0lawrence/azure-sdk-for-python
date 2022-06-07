@@ -440,6 +440,7 @@ class _AbstractTransport(object):
     def receive_frame(self, *args, **kwargs):
         try:
             header, channel, payload = self.read(**kwargs)
+            # print(f"this is what I read {header} {channel} {payload}")
             if not payload:
                 decoded = decode_empty_frame(header)
             else:
