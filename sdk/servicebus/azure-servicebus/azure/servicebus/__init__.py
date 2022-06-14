@@ -3,8 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
-from uamqp import constants
-
+from ._pyamqp.constants import TransportType
 from ._version import VERSION
 
 __version__ = VERSION
@@ -31,7 +30,7 @@ from ._common._connection_string_parser import (
     ServiceBusConnectionStringProperties,
 )
 
-TransportType = constants.TransportType
+TransportType = TransportType
 
 __all__ = [
     "ServiceBusMessage",

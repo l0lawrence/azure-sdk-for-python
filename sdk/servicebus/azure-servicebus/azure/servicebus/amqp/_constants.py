@@ -5,7 +5,7 @@
 # -------------------------------------------------------------------------
 from enum import Enum
 
-from uamqp import MessageBodyType
+from .._pyamqp.message import Message
 from azure.core import CaseInsensitiveEnumMeta
 
 class AmqpMessageBodyType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -15,7 +15,7 @@ class AmqpMessageBodyType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 AMQP_MESSAGE_BODY_TYPE_MAP = {
-    MessageBodyType.Data.value: AmqpMessageBodyType.DATA,
-    MessageBodyType.Sequence.value: AmqpMessageBodyType.SEQUENCE,
-    MessageBodyType.Value.value: AmqpMessageBodyType.VALUE,
+    Message.data: AmqpMessageBodyType.DATA,
+    Message.sequence: AmqpMessageBodyType.SEQUENCE,
+    Message.value: AmqpMessageBodyType.VALUE,
 }

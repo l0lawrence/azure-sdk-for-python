@@ -29,6 +29,7 @@ from .error import (
     MessageSendFailed,
     RetryPolicy
 )
+from ._counter import TickCounter
 
 from .constants import (
     MessageDeliveryState,
@@ -620,6 +621,7 @@ class ReceiveClient(AMQPClient):
         self._max_message_size = kwargs.pop('max_message_size', None) or MAX_FRAME_SIZE_BYTES
         self._link_properties = kwargs.pop('link_properties', None)
         self._link_credit = kwargs.pop('link_credit', 300)
+        self._counter = TickCounter()
         super(ReceiveClient, self).__init__(hostname, auth=auth, **kwargs)
 
     def _client_ready(self):
