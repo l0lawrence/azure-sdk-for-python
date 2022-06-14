@@ -338,3 +338,97 @@ class ErrorResponse(object):
 
         self.info = info
         self.error = error_info
+
+class MessageResponse(AMQPError):
+
+    def __init__(self, message=None):
+        response = message or "Sending {} disposition.".format(self.__class__.__name__)
+        super(MessageResponse, self).__init__(response)
+
+class MessageAlreadySettled(MessageResponse):
+
+    def __init__(self):
+        response = "Invalid operation: this message is already settled."
+        super(MessageAlreadySettled, self).__init__(response)
+
+    def __reduce__(self):
+        return (self.__class__, ())
+
+
+class MessageAccepted(MessageResponse):
+    pass
+
+
+class MessageRejected(MessageResponse):
+
+    def __init__(self, condition=None, description=None, encoding='UTF-8', info=None):
+        self._encoding = encoding
+        self._info = info
+        if condition:
+            self.error_condition = condition.encode(encoding) if isinstance(condition, six.text_type) else condition
+        else:
+            self.error_condition = b"amqp:internal-error"
+        self.error_description = None
+        if description:
+            self.error_description = description.encode(encoding) if isinstance(description, six.text_type) \
+                else description
+        else:
+            self.error_description = b""
+        if info and not isinstance(info, dict):
+            raise TypeError("Disposition error info must be a dictionary.")
+        self.error_info = utils.data_factory(info, encoding=encoding) if info else None
+        super(MessageRejected, self).__init__()
+
+    def __reduce__(self):
+        return (self.__class__, (self.error_condition, self.error_description, self._encoding, self._info))
+
+
+class MessageReleased(MessageResponse):
+    pass
+
+
+class MessageModified(MessageResponse):
+
+    def __init__(self, failed, undeliverable, annotations=None, encoding='UTF-8'):
+        self.failed = failed
+        self.undeliverable = undeliverable
+        self._encoding = encoding
+        self._annotations = annotations
+        if annotations and not isinstance(annotations, dict):
+            raise TypeError("Disposition annotations must be a dictionary.")
+        self.annotations = utils.data_factory(annotations, encoding=encoding) if annotations else None
+        super(MessageModified, self).__init__()
+
+    def __reduce__(self):
+        return (self.__class__, (self.failed, self.undeliverable, self._annotations, self._encoding))
+
+
+class ErrorResponse(object):
+
+    def __init__(self, error_info=None, condition=None, description=None, info=None):
+        info = None
+        self.condition = condition
+        self.description = description
+        self.info = info
+        self.error = error_info
+        if isinstance(error_info, c_uamqp.cError):
+            self.condition = error_info.condition
+            self.description = error_info.description
+            info = error_info.info
+        elif isinstance(error_info, list) and len(error_info) >= 1:
+            if isinstance(error_info[0], list) and len(error_info[0]) >= 1:
+                self.condition = error_info[0][0]
+                if len(error_info[0]) >= 2:
+                    self.description = error_info[0][1]
+                if len(error_info[0]) >= 3:
+                    info = error_info[0][2]
+        try:
+            self.info = info.value
+        except AttributeError:
+            self.info = info
+
+
+class MessageContentTooLarge(ValueError):
+    def __init__(self):
+        message = "Data set too large for a single message."
+        super(MessageContentTooLarge, self).__init__(message)
