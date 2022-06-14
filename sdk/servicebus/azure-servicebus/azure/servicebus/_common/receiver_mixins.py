@@ -25,7 +25,7 @@ from .constants import (
     MESSAGE_ABANDON,
     MESSAGE_DEFER,
 )
-from ..exceptions import _ServiceBusErrorPolicy, MessageAlreadySettled
+from ..exceptions import MessageAlreadySettled
 from .utils import utc_from_timestamp, utc_now
 
 
@@ -51,9 +51,9 @@ class ReceiverMixin(object):  # pylint: disable=too-many-instance-attributes
         )
 
         self._session_id = kwargs.get("session_id")
-        self._error_policy = _ServiceBusErrorPolicy(
-            max_retries=self._config.retry_total, is_session=bool(self._session_id)
-        )
+        # self._error_policy = _ServiceBusErrorPolicy(
+        #     max_retries=self._config.retry_total, is_session=bool(self._session_id)
+        # )
 
         self._name = "SBReceiver-{}".format(uuid.uuid4())
         self._last_received_sequenced_number = None

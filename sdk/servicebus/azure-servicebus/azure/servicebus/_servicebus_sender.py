@@ -26,7 +26,7 @@ from ._common.message import (
 from .amqp import AmqpAnnotatedMessage
 from .exceptions import (
     OperationTimeoutError,
-    _ServiceBusErrorPolicy,
+  #  _ServiceBusErrorPolicy,
 )
 from ._common.utils import (
     create_authentication,
@@ -76,9 +76,6 @@ class SenderMixin(object):
         )
         self._entity_uri = "amqps://{}/{}".format(
             self.fully_qualified_namespace, self._entity_name
-        )
-        self._error_policy = _ServiceBusErrorPolicy(
-            max_retries=self._config.retry_total
         )
         self._name = "SBSender-{}".format(uuid.uuid4())
         self._max_message_size_on_link = 0
@@ -243,7 +240,6 @@ class ServiceBusSender(BaseHandler, SenderMixin):
             auth=auth,
             debug=self._config.logging_enable,
             properties=self._properties,
-            # error_policy=self._error_policy,
             client_name=self._name,
             # keep_alive_interval=self._config.keep_alive,
             encoding=self._config.encoding,

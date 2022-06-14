@@ -345,7 +345,7 @@ class ServiceBusReceiver(
             auth=auth,
             debug=self._config.logging_enable,
             properties=self._properties,
-            error_policy=self._error_policy,
+            # error_policy=self._error_policy,
             client_name=self._name,
             on_attach=self._on_attach,
             auto_complete=False,
