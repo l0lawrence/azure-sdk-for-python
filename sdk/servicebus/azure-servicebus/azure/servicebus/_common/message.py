@@ -782,6 +782,10 @@ class ServiceBusReceivedMessage(ServiceBusMessage):
 
     def __init__(self, message, receive_mode=ServiceBusReceiveMode.PEEK_LOCK, **kwargs):
         # type: (Message, Union[ServiceBusReceiveMode, str], Any) -> None
+        frame, message = message
+        self.delivery_tag = frame[2]
+        self.delivery_id = frame[1]
+
         super(ServiceBusReceivedMessage, self).__init__(None, message=message)  # type: ignore
         self._settled = receive_mode == ServiceBusReceiveMode.RECEIVE_AND_DELETE
         self._received_timestamp_utc = utc_now()
@@ -1078,8 +1082,8 @@ class ServiceBusReceivedMessage(ServiceBusMessage):
         if self._settled:
             return None
 
-        if self.message.delivery_tag:
-            return uuid.UUID(bytes_le=self.message.delivery_tag)
+        if self.delivery_tag:
+            return uuid.UUID(bytes_le=self.delivery_tag)
 
         delivery_annotations = self._raw_amqp_message.delivery_annotations
         if delivery_annotations:

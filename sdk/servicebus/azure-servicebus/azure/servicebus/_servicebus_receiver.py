@@ -533,7 +533,7 @@ class ServiceBusReceiver(
                         settle_operation,
                         dead_letter_reason=dead_letter_reason,
                         dead_letter_error_description=dead_letter_error_description,
-                    )()
+                    )
                     return
                 except RuntimeError as exception:
                     _LOGGER.info(

@@ -476,8 +476,9 @@ if _CAN_ADD_DOCSTRING:
         this is taken to be the same as first.
     :param bool settled: Indicates deliveries are settled.
         If true, indicates that the referenced deliveries are considered settled by the issuing endpoint.
-    :param bytes state: Indicates state of deliveries.
+    :param state: Indicates state of deliveries.
         Communicates the state of all the deliveries referenced by this disposition.
+    :paramtype state: 
     :param bool batchable: Batchable hint.
         If true, then the issuer is hinting that there is no need for the peer to urgently communicate the impact
         of the updated delivery states. This hint may be used to artificially increase the amount of batching an
