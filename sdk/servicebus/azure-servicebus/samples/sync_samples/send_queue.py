@@ -44,7 +44,7 @@ with servicebus_client:
     sender = servicebus_client.get_queue_sender(queue_name=QUEUE_NAME)
     with sender:
         send_single_message(sender)
-        send_a_list_of_messages(sender)
-        send_batch_message(sender)
+        #send_a_list_of_messages(sender)
+        #send_batch_message(sender)
 
 print("Send message is done.")

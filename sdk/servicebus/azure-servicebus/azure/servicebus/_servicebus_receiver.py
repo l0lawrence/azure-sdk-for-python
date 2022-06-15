@@ -343,7 +343,7 @@ class ServiceBusReceiver(
             self.fully_qualified_namespace,
             self._get_source(),
             auth=auth,
-            debug=self._config.logging_enable,
+            network_trace=self._config.logging_enable,
             properties=self._properties,
             error_policy=self._error_policy,
             client_name=self._name,
