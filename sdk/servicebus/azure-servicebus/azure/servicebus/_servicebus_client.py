@@ -147,7 +147,7 @@ class ServiceBusClient(object): # pylint: disable=client-accepts-api-version-key
         self._connection = Connection(
             hostname=self.fully_qualified_namespace,
             sasl=auth,
-            debug=self._config.logging_enable,
+            nextwork_trace=self._config.logging_enable,
         )
 
     def close(self):

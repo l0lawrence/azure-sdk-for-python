@@ -8,6 +8,7 @@ import functools
 from typing import Optional, Callable
 
 from .._pyamqp.endpoints import Source
+from .._pyamqp.error import AMQPError
 
 from .message import ServiceBusReceivedMessage
 from .constants import (
@@ -139,21 +140,34 @@ class ReceiverMixin(object):  # pylint: disable=too-many-instance-attributes
         # type: (ServiceBusReceivedMessage, str, Optional[str], Optional[str]) -> Callable
         # pylint: disable=no-self-use
         if settle_operation == MESSAGE_COMPLETE:
-            return functools.partial(message.message.accept)
+            self._handler.settle_messages(message.delivery_id, 'accepted')
         if settle_operation == MESSAGE_ABANDON:
-            return functools.partial(message.message.modify, True, False)
+            self._handler.settle_messages(
+                message.delivery_id,
+                'modified',
+                delivery_failed=True,
+                undeliverable_here=False
+            )
         if settle_operation == MESSAGE_DEAD_LETTER:
-            return functools.partial(
-                message.message.reject,
-                condition=DEADLETTERNAME,
-                description=dead_letter_error_description,
-                info={
-                    RECEIVER_LINK_DEAD_LETTER_REASON: dead_letter_reason,
-                    RECEIVER_LINK_DEAD_LETTER_ERROR_DESCRIPTION: dead_letter_error_description,
-                },
+            self._handler.settle_messages(
+                message.delivery_id,
+                'rejected',
+                error=AMQPError(
+                    condition=DEADLETTERNAME,
+                    description=dead_letter_error_description,
+                    info={
+                        RECEIVER_LINK_DEAD_LETTER_REASON: dead_letter_reason,
+                        RECEIVER_LINK_DEAD_LETTER_ERROR_DESCRIPTION: dead_letter_error_description,
+                    }
+                )
             )
         if settle_operation == MESSAGE_DEFER:
-            return functools.partial(message.message.modify, True, True)
+            self._handler.settle_messages(
+                message.delivery_id,
+                'modified',
+                delivery_failed=True,
+                undeliverable_here=True
+            )
         raise ValueError(
             "Unsupported settle operation type: {}".format(settle_operation)
         )
@@ -177,10 +191,10 @@ class ReceiverMixin(object):  # pylint: disable=too-many-instance-attributes
         if self._session:
             message[MGMT_REQUEST_SESSION_ID] = self._session_id
 
-    def _enhanced_message_received(self, message):
+    def _enhanced_message_received(self, frame, message):
         # pylint: disable=protected-access
         self._handler._was_message_received = True
         if self._receive_context.is_set():
-            self._handler._received_messages.put(message)
+            self._handler._received_messages.put((frame, message))
         else:
             message.release()
