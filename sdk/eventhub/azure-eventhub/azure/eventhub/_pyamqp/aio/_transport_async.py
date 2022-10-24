@@ -82,7 +82,6 @@ class AsyncTransportMixin:
             asyncio.IncompleteReadError,
             asyncio.TimeoutError,
         ):
-            # print("receive frame caught tht timeout error")
             return None, None
 
     async def read(self, verify_frame_type=0):
@@ -125,7 +124,6 @@ class AsyncTransportMixin:
                         await self._read(payload_size, buffer=payload)
                     )
             except (TimeoutError, socket.timeout, asyncio.IncompleteReadError):
-                # print("async transport read caught the timeout error")
                 read_frame_buffer.write(self._read_buffer.getvalue())
                 self._read_buffer = read_frame_buffer
                 self._read_buffer.seek(0)
@@ -450,6 +448,7 @@ class WebSocketTransportAsync(
         self.host, self.port = to_host_port(host, port)
         self.ws = None
         self.session = None
+        self.existing_session = None
         self._http_proxy = kwargs.get("http_proxy", None)
         self.connected = False
 
@@ -465,7 +464,7 @@ class WebSocketTransportAsync(
                 http_proxy_host = f"{http_proxy_host}:{http_proxy_port}"
             username = self._http_proxy.get("username", None)
             password = self._http_proxy.get("password", None)
-
+        import aiohttp
         try:
             from aiohttp import ClientSession
             from urllib.parse import urlsplit
@@ -474,8 +473,8 @@ class WebSocketTransportAsync(
                 from aiohttp import BasicAuth
 
                 http_proxy_auth = BasicAuth(login=username, password=password)
-
             self.session = ClientSession()
+            self.existing_session = self.session
             if self._custom_endpoint:
                 url = f"wss://{self._custom_endpoint}"
             else:
@@ -499,10 +498,13 @@ class WebSocketTransportAsync(
             raise ValueError(
                 "Please install aiohttp library to use websocket transport."
             )
+        except aiohttp.client_exceptions.ClientOSError:
+            await self.session.close()
+
 
     async def _read(self, n, buffer=None, **kwargs):  # pylint: disable=unused-argument
         """Read exactly n bytes from the peer."""
-
+        import aiohttp
         length = 0
         view = buffer or memoryview(bytearray(n))
         nbytes = self._read_buffer.readinto(view)
@@ -522,6 +524,8 @@ class WebSocketTransportAsync(
             return view
         except asyncio.TimeoutError as te:
             raise ConnectionError('recv timed out (%s)' % te)
+        except aiohttp.client_exceptions.ClientOSError:
+            await self.session.close()
 
     async def close(self):
         """Do any preliminary work in shutting down the connection."""
@@ -535,7 +539,10 @@ class WebSocketTransportAsync(
         See http://tools.ietf.org/html/rfc5234
         http://tools.ietf.org/html/rfc6455#section-5.2
         """
+        import aiohttp
         try:
             await self.ws.send_bytes(s)
         except asyncio.TimeoutError as te:
             raise ConnectionError('send timed out (%s)' % te)
+        except aiohttp.client_exceptions.ClientOSError:
+            await self.session.close()
