@@ -507,6 +507,13 @@ class WebSocketTransportAsync(
             raise ValueError(
                 "Please install aiohttp library to use websocket transport."
             )
+        except OSError as exc:
+            await self.session.close()
+            raise AuthenticationException(
+                ErrorCondition.SocketError, # TODO: ClientError?
+                description="Failed to authenticate the connection due to exception: " + str(exc),
+                error=exc,
+            )
 
     async def _read(self, n, buffer=None, **kwargs):  # pylint: disable=unused-argument
         """Read exactly n bytes from the peer."""
@@ -530,6 +537,13 @@ class WebSocketTransportAsync(
             return view
         except asyncio.TimeoutError as te:
             raise ConnectionError('recv timed out (%s)' % te)
+        except OSError as exc:
+            await self.session.close()
+            raise AuthenticationException(
+                ErrorCondition.SocketError, # TODO: ClientError?
+                description="Failed to authenticate the connection due to exception: " + str(exc),
+                error=exc,
+            )
 
     async def close(self):
         """Do any preliminary work in shutting down the connection."""
@@ -547,3 +561,10 @@ class WebSocketTransportAsync(
             await self.ws.send_bytes(s)
         except asyncio.TimeoutError as te:
             raise ConnectionError('send timed out (%s)' % te)
+        except OSError as exc:
+            await self.session.close()
+            raise AuthenticationException(
+                ErrorCondition.SocketError, # TODO: ClientError?
+                description="Failed to authenticate the connection due to exception: " + str(exc),
+                error=exc,
+            )
