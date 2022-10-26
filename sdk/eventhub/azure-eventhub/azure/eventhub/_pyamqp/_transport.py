@@ -36,7 +36,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import errno
-from multiprocessing import AuthenticationError
 import re
 import socket
 import ssl
@@ -59,6 +58,7 @@ from .constants import (
     AMQP_WS_SUBPROTOCOL,
 )
 from .error import AuthenticationException, ErrorCondition
+from ..exceptions import AuthenticationError
 
 
 try:
