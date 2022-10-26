@@ -1,0 +1,26 @@
+matrix:
+  image:
+    - dockerfiles/Dockerfile38
+    - dockerfiles/Dockerfile39
+    - dockerfiles/Dockerfile310
+    - dockerfiles/Dockerfile311
+  scenarios:
+    event-async:
+      testTarget: event-async
+    event-sync:
+      testTarget: event-sync
+
+
+# scenarios:
+# - "event-async"
+# - "event-sync"
+# - "batch-async"
+# - "batch-sync"
+# - "bufferedproducerlistsync"
+# - "bufferedproducerasync"
+# - "bufferedproducerlistasync"
+# - "bufferedproducersync"
+# - "syncwebsockets"
+# - "asyncwebsockets"
+# - "sync-batch-web"
+# - "async-batch-web"
