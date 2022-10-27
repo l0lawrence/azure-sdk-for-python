@@ -40,6 +40,7 @@ import struct
 from ssl import SSLError
 from io import BytesIO
 import logging
+from typing import Type
 
 
 
@@ -48,7 +49,7 @@ import certifi
 from .._platform import KNOWN_TCP_OPTS, SOL_TCP
 from .._encode import encode_frame
 from .._decode import decode_frame, decode_empty_frame
-from ..constants import TLS_HEADER_FRAME, WEBSOCKET_PORT, AMQP_WS_SUBPROTOCOL
+from ..constants import DEFAULT_WEBSOCKET_HEARTBEAT_SECONDS, TLS_HEADER_FRAME, WEBSOCKET_PORT, AMQP_WS_SUBPROTOCOL
 from .._transport import (
     AMQP_FRAME,
     get_errno,
@@ -544,6 +545,13 @@ class WebSocketTransportAsync(
                 description="Failed to authenticate the connection due to exception: " + str(exc),
                 error=exc,
             )
+        except TypeError as exc:
+            await self.session.close()
+            raise AuthenticationException(
+                ErrorCondition.SocketError, # TODO: ClientError?
+                description="Failed to read from the socket due to the exception: " + str(exc),
+                error=exc,
+            )
 
     async def close(self):
         """Do any preliminary work in shutting down the connection."""
@@ -568,3 +576,11 @@ class WebSocketTransportAsync(
                 description="Failed to authenticate the connection due to exception: " + str(exc),
                 error=exc,
             )
+        except TypeError as exc:
+            await self.session.close()
+            raise AuthenticationException(
+                ErrorCondition.SocketError, # TODO: ClientError?
+                description="Failed to send to the socket due to the exception: " + str(exc),
+                error=exc,
+            )
+
