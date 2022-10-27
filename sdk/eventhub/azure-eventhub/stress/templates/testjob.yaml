@@ -10,21 +10,21 @@ spec:
     sku: 'd4v4'
   containers:
     - name: python-eh-stress
-      image: {{ .Values.image }}
+      image: {{ .Stress.imageTag }}
       imagePullPolicy: Always
-      # resources:
-      #   requests:
-      #     memory: "64Mi"
-      #     cpu: "2000m"
-      #   limits:
-      #     memory: "2000Mi"
-      #     cpu: "4000m"
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "2000m"
+        limits:
+          memory: "2000Mi"
+          cpu: "4000m"
      
-      {{ if eq .Stress.Scenario "event-async" }}
+      {{ if eq .Stress.testTarget "event-async" }}
       command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200   & python azure_eventhub_consumer_stress_async.py --duration 259200    ']
       {{- end -}}
 
-      {{ if eq .Stress.Scenario "event-sync" }}
+      {{ if eq .Stress.testTarget "event-sync" }}
       command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200    & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
       {{- end -}}
 
