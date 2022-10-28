@@ -497,11 +497,7 @@ class SSLTransport(_AbstractTransport):
 
     def _setup_transport(self):
         """Wrap the socket in an SSL object."""
-        try:
-            self.sock = self._wrap_socket(self.sock, **self.sslopts)
-        except FileNotFoundError as exc:
-            # TODO: invalid connection_verify, should we raise some other error?
-            raise 
+        self.sock = self._wrap_socket(self.sock, **self.sslopts)
         self.sock.do_handshake()
         self._quick_recv = self.sock.recv
 
@@ -557,7 +553,11 @@ class SSLTransport(_AbstractTransport):
         }
 
         # TODO: We need to refactor this.
-        sock = ssl.wrap_socket(**opts)  # pylint: disable=deprecated-method
+        try:
+            sock = ssl.wrap_socket(**opts)  # pylint: disable=deprecated-method
+        except FileNotFoundError as exc:
+            exc.filename = {"ca_certs": ca_certs}
+            raise exc
         # Set SNI headers if supported
         if (
             (server_hostname is not None)
@@ -708,6 +708,18 @@ class WebSocketTransport(_AbstractTransport):
                 description="Failed to authenticate the connection due to exception: " + str(exc),
                 error=exc,
             )
+        except (WebSocketTimeoutException, SSLError, WebSocketConnectionClosedException) as exc:
+            self.close()
+            if isinstance(exc, WebSocketTimeoutException):
+                message = f'send timed out ({str(exc)})' 
+            elif isinstance(exc, SSLError):
+                message = f'send disconnected by SSL ({str(exc)})' 
+            else:
+                message = f'send disconnected ({str(exc)})' 
+            raise ConnectionError(message)
+        except (OSError, IOError, SSLError):
+            self.close()
+            raise
         except ImportError:
             raise ValueError(
                 "Please install websocket-client library to use websocket transport."
@@ -735,6 +747,11 @@ class WebSocketTransport(_AbstractTransport):
             return view
         except WebSocketTimeoutException as wte:
             raise ConnectionError('recv timed out (%s)' % wte)
+
+    def close(self):
+        if self.ws:
+            self._shutdown_transport()
+            self.ws = None
 
     def _shutdown_transport(self):
         # TODO Sync and Async close functions named differently
