@@ -690,36 +690,38 @@ class WebSocketTransport(_AbstractTransport):
             if username or password:
                 http_proxy_auth = (username, password)
         try:
-            from websocket import create_connection, WebSocketAddressException
+            from websocket import WebSocketTimeoutException, WebSocketConnectionClosedException
+            try:
+                from websocket import create_connection, WebSocketAddressException
 
-            self.ws = create_connection(
-                url="wss://{}".format(self._custom_endpoint or self._host),
-                subprotocols=[AMQP_WS_SUBPROTOCOL],
-                timeout=self._connect_timeout,
-                skip_utf8_validation=True,
-                sslopt=self.sslopts,
-                http_proxy_host=http_proxy_host,
-                http_proxy_port=http_proxy_port,
-                http_proxy_auth=http_proxy_auth,
-            )
-        except WebSocketAddressException as exc:
-            raise AuthenticationException(
-                ErrorCondition.SocketError, # TODO: ClientError?
-                description="Failed to authenticate the connection due to exception: " + str(exc),
-                error=exc,
-            )
-        except (WebSocketTimeoutException, SSLError, WebSocketConnectionClosedException) as exc:
-            self.close()
-            if isinstance(exc, WebSocketTimeoutException):
-                message = f'send timed out ({str(exc)})' 
-            elif isinstance(exc, SSLError):
-                message = f'send disconnected by SSL ({str(exc)})' 
-            else:
-                message = f'send disconnected ({str(exc)})' 
-            raise ConnectionError(message)
-        except (OSError, IOError, SSLError):
-            self.close()
-            raise
+                self.ws = create_connection(
+                    url="wss://{}".format(self._custom_endpoint or self._host),
+                    subprotocols=[AMQP_WS_SUBPROTOCOL],
+                    timeout=self._connect_timeout,
+                    skip_utf8_validation=True,
+                    sslopt=self.sslopts,
+                    http_proxy_host=http_proxy_host,
+                    http_proxy_port=http_proxy_port,
+                    http_proxy_auth=http_proxy_auth,
+                )
+            except WebSocketAddressException as exc:
+                raise AuthenticationException(
+                    ErrorCondition.SocketError, # TODO: ClientError?
+                    description="Failed to authenticate the connection due to exception: " + str(exc),
+                    error=exc,
+                )
+            except (WebSocketTimeoutException, SSLError, WebSocketConnectionClosedException) as exc:
+                self.close()
+                if isinstance(exc, WebSocketTimeoutException):
+                    message = f'send timed out ({str(exc)})' 
+                elif isinstance(exc, SSLError):
+                    message = f'send disconnected by SSL ({str(exc)})' 
+                else:
+                    message = f'send disconnected ({str(exc)})' 
+                raise ConnectionError(message)
+            except (OSError, IOError, SSLError):
+                self.close()
+                raise
         except ImportError:
             raise ValueError(
                 "Please install websocket-client library to use websocket transport."
