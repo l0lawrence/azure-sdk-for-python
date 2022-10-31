@@ -1,17 +1,17 @@
 matrix:
   images:
     dockerfile1:
-      image: ./dockerfiles/Dockerfile38
-      imageBuildDir: "../.."
+      image: ./Dockerfile38
+      # imageBuildDir: "../.."
     dockerfile2:
-      image: ./dockerfiles/Dockerfile39
-      imageBuildDir: "../.."
+      image: ./Dockerfile39
+      # imageBuildDir: "../.."
     dockerfile3:
-      image: ./dockerfiles/Dockerfile310
-      imageBuildDir: "../.."
-    dockerfile4:
-      image: ./dockerfiles/Dockerfile311
-      imageBuildDir: "../.."
+      image: ./Dockerfile310
+      # imageBuildDir: "../.."
+    # dockerfile4:
+    #   image: ./Dockerfile311
+      # imageBuildDir: "../.."
   scenarios:
     event-async:
       testTarget: event-async
