@@ -126,29 +126,22 @@ class BufferedProducerDispatcher:
 
         async with self._lock:
 
-            futures = []
+            # futures = []
+            exc_results = {}
             # stop all buffered producers
             for pid, producer in self._buffered_producers.items():
-                futures.append(
-                    (
-                        pid,
-                        asyncio.ensure_future(
-                            producer.stop(
-                                flush=flush,
-                                timeout_time=timeout_time,
-                                raise_error=raise_error,
-                            )
-                        ),
-                    )
-                )
-
-            exc_results = {}
-            # gather results
-            for pid, future in futures:
                 try:
-                    await future
-                except Exception as exc:  # pylint: disable=broad-except
+                    await producer.stop(timeout_time=timeout_time)
+                except Exception as exc:
                     exc_results[pid] = exc
+
+            # exc_results = {}
+            # # gather results
+            # for pid, future in futures:
+            #     try:
+            #         await future
+            #     except Exception as exc:  # pylint: disable=broad-except
+            #         exc_results[pid] = exc
 
             if exc_results:
                 _LOGGER.warning(
