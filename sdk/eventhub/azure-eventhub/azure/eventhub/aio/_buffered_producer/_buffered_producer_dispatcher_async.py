@@ -91,24 +91,30 @@ class BufferedProducerDispatcher:
         # flush all the buffered producer, the method will block until finishes or times out
         async with self._lock:
             futures = []
-            for pid, producer in self._buffered_producers.items():
-                # call each producer's flush method
-                futures.append(
-                    (
-                        pid,
-                        asyncio.ensure_future(
-                            producer.flush(timeout_time=timeout_time)
-                        ),
-                    )
-                )
-
-            # gather results
             exc_results = {}
-            for pid, future in futures:
+            for pid, producer in self._buffered_producers.items():
                 try:
-                    await future
-                except Exception as exc:  # pylint: disable=broad-except
+                    await producer.stop(timeout_time=timeout_time)
+                except Exception as exc:
                     exc_results[pid] = exc
+            # for pid, producer in self._buffered_producers.items():
+            #     # call each producer's flush method
+            #     futures.append(
+            #         (
+            #             pid,
+            #             asyncio.ensure_future(
+            #                 producer.flush(timeout_time=timeout_time)
+            #             ),
+            #         )
+            #     )
+
+            # # gather results
+            # exc_results = {}
+            # for pid, future in futures:
+            #     try:
+            #         await future
+            #     except Exception as exc:  # pylint: disable=broad-except
+            #         exc_results[pid] = exc
 
             if not exc_results:
                 _LOGGER.info("Flushing all partitions succeeded")
