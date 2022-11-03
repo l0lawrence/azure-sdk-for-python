@@ -720,9 +720,11 @@ class EventHubConsumerClient(
 
         """
         async with self._lock:
-            await asyncio.gather(
-                *[p.stop() for p in self._event_processors.values()],
-                return_exceptions=True,
-            )
+            # await asyncio.gather(
+            #     *[p.stop() for p in self._event_processors.values()],
+            #     return_exceptions=True,
+            # )
+            for p in self._event_processors.values():
+                await p.stop()
             self._event_processors = {}
             await super(EventHubConsumerClient, self)._close_async()

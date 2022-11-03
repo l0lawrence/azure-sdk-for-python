@@ -135,7 +135,7 @@ class BufferedProducerDispatcher:
                 except Exception as exc:
                     exc_results[pid] = exc
 
-            # exc_results = {}
+            # exc_results = {}git a
             # # gather results
             # for pid, future in futures:
             #     try:
