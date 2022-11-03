@@ -94,14 +94,16 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
             new_state,
             extra=self.network_trace_params,
         )
-        await asyncio.gather(
-            *[
-                asyncio.ensure_future(
-                    link._on_session_state_change()  # pylint: disable=protected-access
-                )
-                for link in self.links.values()
-            ]
-        )
+        for link in self.links.values():
+           await link._on_session_state_change()
+        # await asyncio.gather(
+        #     *[
+        #         asyncio.ensure_future(
+        #             link._on_session_state_change()  # pylint: disable=protected-access
+        #         )
+        #         for link in self.links.values()
+        #     ]
+        # )
 
     async def _on_connection_state_change(self):
         if self._connection.state in [ConnectionState.CLOSE_RCVD, ConnectionState.END]:
@@ -386,9 +388,9 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
             )
         futures = []
         for link in self._input_handles.values():
-            asyncio.ensure_future(
-                link._incoming_disposition(frame)  # pylint: disable=protected-access
-            )
+            # asyncio.ensure_future(
+            await  link._incoming_disposition(frame)  # pylint: disable=protected-access
+            # )
         await asyncio.gather(*futures)
 
     async def _outgoing_detach(self, frame):
