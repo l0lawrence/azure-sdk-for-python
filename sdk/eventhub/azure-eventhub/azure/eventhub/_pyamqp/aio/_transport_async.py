@@ -75,7 +75,7 @@ class AsyncTransportMixin:
                 decoded = decode_empty_frame(header)
             else:
                 decoded = decode_frame(payload)
-            _LOGGER.info("ICH%d <- %r", channel, decoded)
+            # _LOGGER.info("ICH%d <- %r", channel, decoded)
             return channel, decoded
         except (
             TimeoutError,
