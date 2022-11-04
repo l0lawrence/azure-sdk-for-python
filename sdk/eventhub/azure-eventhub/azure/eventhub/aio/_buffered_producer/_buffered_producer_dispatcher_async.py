@@ -94,7 +94,7 @@ class BufferedProducerDispatcher:
             exc_results = {}
             for pid, producer in self._buffered_producers.items():
                 try:
-                    await producer.stop(timeout_time=timeout_time)
+                    await producer.flush(timeout_time=timeout_time)
                 except Exception as exc:
                     exc_results[pid] = exc
             # for pid, producer in self._buffered_producers.items():
