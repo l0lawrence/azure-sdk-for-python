@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 from __future__ import annotations
+import asyncio
 import logging
 from typing import Dict, List, Callable, Optional, Awaitable, TYPE_CHECKING
 from asyncio import Lock
@@ -89,13 +90,17 @@ class BufferedProducerDispatcher:
     async def flush(self, timeout_time=None):
         # flush all the buffered producer, the method will block until finishes or times out
         async with self._lock:
-            exc_results = {}
+            futures = []
             for pid, producer in self._buffered_producers.items():
                 # call each producer's flush method
-                try:
-                    await producer.flush(timeout_time=timeout_time)
-                except Exception as exc:  # pylint: disable=broad-except
-                    exc_results[pid] = exc
+                futures.append(pid, asyncio.ensure_future(producer.flush(timeout_time=timeout_time)))
+
+            # gather results
+            exc_results = {}
+            try:
+                await asyncio.shield(asyncio.gather(*futures))
+            except Exception as exc:  # pylint: disable=broad-except
+                exc_results[pid] = exc
 
             if not exc_results:
                 _LOGGER.info("Flushing all partitions succeeded")
