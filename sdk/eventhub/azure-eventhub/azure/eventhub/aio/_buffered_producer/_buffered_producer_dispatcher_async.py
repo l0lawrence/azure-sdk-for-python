@@ -93,7 +93,7 @@ class BufferedProducerDispatcher:
             futures = []
             for pid, producer in self._buffered_producers.items():
                 # call each producer's flush method
-                futures.append(pid, asyncio.ensure_future(producer.flush(timeout_time=timeout_time)))
+                futures.append(pid, asyncio.create_task(producer.flush(timeout_time=timeout_time)))
 
             # gather results
             exc_results = {}
