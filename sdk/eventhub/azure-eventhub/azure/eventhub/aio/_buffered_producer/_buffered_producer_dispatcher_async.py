@@ -98,7 +98,7 @@ class BufferedProducerDispatcher:
             # gather results
             exc_results = {}
             try:
-                await asyncio.shield(asyncio.gather(*futures))
+                await asyncio.shield(asyncio.gather(*futures, return_exceptions=True))
             except Exception as exc:  # pylint: disable=broad-except
                 exc_results = exc
 
