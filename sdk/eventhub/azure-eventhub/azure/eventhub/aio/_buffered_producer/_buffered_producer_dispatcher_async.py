@@ -100,7 +100,7 @@ class BufferedProducerDispatcher:
             try:
                 await asyncio.shield(asyncio.gather(*futures))
             except Exception as exc:  # pylint: disable=broad-except
-                exc_results[pid] = exc
+                exc_results = exc
 
             if not exc_results:
                 _LOGGER.info("Flushing all partitions succeeded")
