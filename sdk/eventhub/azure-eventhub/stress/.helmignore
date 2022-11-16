@@ -5,8 +5,4 @@ Dockerfile
 *.py
 __pycache__
 scripts
-<<<<<<< HEAD
 *.txt
-=======
-.txt
->>>>>>> f26f6b5de7b6fcaf1bf8dcba0b81ff0a5c1461c3
