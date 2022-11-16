@@ -1,9 +1,10 @@
-
-git+https://github.com/l0lawrence/azure-sdk-for-python.git@feature_with_unmerged_prs#subdirectory=sdk/eventhub/azure-eventhub&egg=azure-eventhub
+psutil
+azure-eventhub
 azure-eventhub-checkpointstoreblob
 azure-eventhub-checkpointstoreblob-aio
-azure-servicebus==0.50.3
+azure-servicebus==7.8.1
 azure-storage-blob
 azure-identity
 opencensus-ext-azure
 python-dotenv
+websocket-client

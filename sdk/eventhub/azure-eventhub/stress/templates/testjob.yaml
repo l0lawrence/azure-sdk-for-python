@@ -4,7 +4,6 @@ metadata:
   labels:
     testName: "deploy-python-eh-stress"
     testInstance: "eventhub-{{ .Release.Name }}-{{ .Release.Revision }}"
-    # chaos: "true"
 spec:
   nodeSelector:
     sku: 'd4v4'
@@ -13,12 +12,9 @@ spec:
       image: {{ .Stress.imageTag }}
       imagePullPolicy: Always
       resources:
-        requests:
-          memory: "64Mi"
-          cpu: "2000m"
         limits:
           memory: "2000Mi"
-          cpu: "4000m"
+          cpu: "1"
      
       {{ if eq .Stress.testTarget "event-async" }}
       command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200   & python azure_eventhub_consumer_stress_async.py --duration 259200    ']
@@ -28,45 +24,45 @@ spec:
       command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200    & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
       {{- end -}}
 
-      # {{ if eq .Stress.Scenario "batch-async" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200    & python azure_eventhub_consumer_stress_async.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "batch-async" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200    & python azure_eventhub_consumer_stress_async.py --duration 259200   ']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "batch-sync" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200    & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "batch-sync" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200    & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "bufferedproducerlistsync" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "bplistsync" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "bufferedproducerasync" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_async.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "bpasync" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_async.py --duration 259200']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "bufferedproducerlistasync" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_async.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "bplistasync" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_async.py --duration 259200   ']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "bufferedproducersync" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "bpsync" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200  --buffered_mode & python azure_eventhub_consumer_stress_sync.py --duration 259200']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "syncwebsockets" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200 --transport_type 1 & python azure_eventhub_consumer_stress_sync.py --duration 259200 --transport_type 1']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "syncwebsockets" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200 --transport_type 1 & python azure_eventhub_consumer_stress_sync.py --duration 259200 --transport_type 1']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "asyncwebsockets" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200  --transport_type 1 & python azure_eventhub_consumer_stress_async.py --duration 259200 --transport_type 1']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "asyncwebsockets" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200  --transport_type 1 & python azure_eventhub_consumer_stress_async.py --duration 259200 --transport_type 1']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "sync-batch-web" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200 --transport_type 1 & python azure_eventhub_consumer_stress_sync.py --duration 259200 --transport_type 1']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "sync-batch-web" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_sync --duration 259200 --transport_type 1 & python azure_eventhub_consumer_stress_sync.py --duration 259200 --transport_type 1']
+      {{- end -}}
 
-      # {{ if eq .Stress.Scenario "async-batch-web" }}
-      # command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200  --transport_type 1 & python azure_eventhub_consumer_stress_async.py --duration 259200 --transport_type 1']
-      # {{- end -}}
+      {{ if eq .Stress.Scenario "async-batch-web" }}
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_list_async --duration 259200  --transport_type 1 & python azure_eventhub_consumer_stress_async.py --duration 259200 --transport_type 1']
+      {{- end -}}
 
       {{- include "stress-test-addons.container-env" . | nindent 6 }}
 {{- end -}}

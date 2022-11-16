@@ -34,24 +34,20 @@ def handle_exception(error, ignore_send_failure, stress_logger, azure_monitor_me
 
 def on_success(events, pid):
     # sending succeeded
-    # print(events, pid)
     pass
 
 
 def on_error(events, pid, error):
     # sending failed
-    # print(events, pid, error)
     pass
 
 async def on_success_async(events, pid):
     # sending succeeded
-    # print(events, pid)
     pass
 
 
 async def on_error_async(events, pid, error):
     # sending failed
-    # print(events, pid, error)
     pass
 
 
@@ -203,10 +199,10 @@ class StressTestRunner(object):
                     auth_timeout=self.args.auth_timeout,
                     http_proxy=http_proxy,
                     transport_type=transport_type,
-                    # logging_enable=self.args.pyamqp_logging_enable,
+                    logging_enable=self.args.pyamqp_logging_enable,
                     buffered_mode=self.args.buffered_mode,
                     on_success=on_success_async,
-                    on_error=on_error_async,
+                    on_error=on_error_async, 
                     uamqp_transport=self.args.uamqp_mode,
                 **retry_options
                 )
@@ -217,7 +213,7 @@ class StressTestRunner(object):
                     auth_timeout=self.args.auth_timeout,
                     http_proxy=http_proxy,
                     transport_type=transport_type,
-                    # logging_enable=self.args.pyamqp_logging_enable,
+                    logging_enable=self.args.pyamqp_logging_enable,
                     buffered_mode=self.args.buffered_mode,
                     on_success=on_success,
                     on_error=on_error,
@@ -233,7 +229,7 @@ class StressTestRunner(object):
                 auth_timeout=self.args.auth_timeout,
                 http_proxy=http_proxy,
                 transport_type=transport_type,
-                # logging_enable=self.args.pyamqp_logging_enable,
+                logging_enable=self.args.pyamqp_logging_enable,
                 uamqp_transport=self.args.uamqp_mode,
                 **retry_options 
             )
@@ -244,7 +240,7 @@ class StressTestRunner(object):
                 auth_timeout=self.args.auth_timeout,
                 http_proxy=http_proxy,
                 transport_type=transport_type,
-                # logging_enable=self.args.pyamqp_logging_enable,
+                logging_enable=self.args.pyamqp_logging_enable,
                 uamqp_transport=self.args.uamqp_mode,
                 **retry_options
             )
@@ -256,7 +252,7 @@ class StressTestRunner(object):
                     auth_timeout=self.args.auth_timeout,
                     http_proxy=http_proxy,
                     transport_type=transport_type,
-                    # logging_enable=self.args.pyamqp_logging_enable,
+                    logging_enable=self.args.pyamqp_logging_enable,
                     uamqp_transport=self.args.uamqp_mode,
                     **retry_options
                 )
