@@ -95,7 +95,7 @@ class BufferedProducerDispatcher:
             for pid, producer in self._buffered_producers.items():
                 # call each producer's flush method
                 try:
-                    tasks.append(asyncio.create_task(producer.flush(timeout_time=timeout_time)))
+                    tasks.append(asyncio.create_task(producer.flush(timeout_time=timeout_time), name=pid))
                     # await producer.flush(timeout_time=timeout_time)
                 except Exception as exc:  # pylint: disable=broad-except
                     exc_results[pid] = exc
@@ -103,13 +103,11 @@ class BufferedProducerDispatcher:
             try:
                 await asyncio.shield(asyncio.gather(*tasks))
             except (asyncio.CancelledError, Exception) as exc:
-                for pid, task in tasks:
+                for task in tasks:
                     if not task.done():
                         await task
                     await asyncio.sleep(0)
-                    # exc_results[pid] = exc
-                raise
-
+                    exc_results[task.get_name()] = exc
 
             if not exc_results:
                 _LOGGER.info("Flushing all partitions succeeded")
@@ -131,19 +129,18 @@ class BufferedProducerDispatcher:
             # stop all buffered producers
             for pid, producer in self._buffered_producers.items():
                 try:
-                    tasks.append(asyncio.create_task(producer.stop(flush=flush, timeout_time=timeout_time, raise_error=raise_error,)))
+                    tasks.append(asyncio.create_task(producer.stop(flush=flush, timeout_time=timeout_time, raise_error=raise_error,), name=pid))
                 except Exception as exc:  # pylint: disable=broad-except
                     exc_results[pid] = exc
             
             try:
                 await asyncio.shield(asyncio.gather(*tasks))
             except (asyncio.CancelledError, Exception) as exc:
-                for pid, task in tasks:
+                for task in tasks:
                     if not task.done():
                         await task
                     await asyncio.sleep(0)
-                    # exc_results[pid] = exc
-                raise
+                    exc_results[task.get_name()] = exc
 
             if exc_results:
                 _LOGGER.warning(
