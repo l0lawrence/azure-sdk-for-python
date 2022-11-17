@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 from __future__ import annotations
+import asyncio
 import logging
 from typing import Dict, List, Callable, Optional, Awaitable, TYPE_CHECKING
 from asyncio import Lock
@@ -89,13 +90,26 @@ class BufferedProducerDispatcher:
     async def flush(self, timeout_time=None):
         # flush all the buffered producer, the method will block until finishes or times out
         async with self._lock:
+            tasks = []
             exc_results = {}
             for pid, producer in self._buffered_producers.items():
                 # call each producer's flush method
                 try:
-                    await producer.flush(timeout_time=timeout_time)
+                    tasks.append(asyncio.create_task(producer.flush(timeout_time=timeout_time)))
+                    # await producer.flush(timeout_time=timeout_time)
                 except Exception as exc:  # pylint: disable=broad-except
                     exc_results[pid] = exc
+
+            try:
+                await asyncio.shield(asyncio.gather(*tasks))
+            except (asyncio.CancelledError, Exception) as exc:
+                for pid, task in tasks:
+                    if not task.done():
+                        await task
+                    await asyncio.sleep(0)
+                    # exc_results[pid] = exc
+                raise
+
 
             if not exc_results:
                 _LOGGER.info("Flushing all partitions succeeded")
@@ -112,14 +126,24 @@ class BufferedProducerDispatcher:
     async def close(self, *, flush=True, timeout_time=None, raise_error=False):
 
         async with self._lock:
-
+            tasks = []
             exc_results = {}
             # stop all buffered producers
             for pid, producer in self._buffered_producers.items():
                 try:
-                    await producer.stop(flush=flush, timeout_time=timeout_time, raise_error=raise_error,)
+                    tasks.append(asyncio.create_task(producer.stop(flush=flush, timeout_time=timeout_time, raise_error=raise_error,)))
                 except Exception as exc:  # pylint: disable=broad-except
                     exc_results[pid] = exc
+            
+            try:
+                await asyncio.shield(asyncio.gather(*tasks))
+            except (asyncio.CancelledError, Exception) as exc:
+                for pid, task in tasks:
+                    if not task.done():
+                        await task
+                    await asyncio.sleep(0)
+                    # exc_results[pid] = exc
+                raise
 
             if exc_results:
                 _LOGGER.warning(
@@ -132,6 +156,45 @@ class BufferedProducerDispatcher:
                             exc_results.keys(), exc_results
                         )
                     )
+    # async def close(self, *, flush=True, timeout_time=None, raise_error=False):
+
+    #     async with self._lock:
+
+    #         futures = []
+    #         # stop all buffered producers
+    #         for pid, producer in self._buffered_producers.items():
+    #             futures.append(
+    #                 (
+    #                     pid,
+    #                     asyncio.ensure_future(
+    #                         producer.stop(
+    #                             flush=flush,
+    #                             timeout_time=timeout_time,
+    #                             raise_error=raise_error,
+    #                         )
+    #                     ),
+    #                 )
+    #             )
+
+    #         exc_results = {}
+    #         # gather results
+    #         for pid, future in futures:
+    #             try:
+    #                 await future
+    #             except Exception as exc:  # pylint: disable=broad-except
+    #                 exc_results[pid] = exc
+
+    #         if exc_results:
+    #             _LOGGER.warning(
+    #                 "Stopping all partitions failed with result %r.", exc_results
+    #             )
+    #             if raise_error:
+    #                 raise EventHubError(
+    #                     message="Stopping all partitions partially failed, failed partitions are {!r}"
+    #                     " Exception details are {!r}".format(
+    #                         exc_results.keys(), exc_results
+    #                     )
+    #                 )
 
     def get_buffered_event_count(self, pid):
         try:
