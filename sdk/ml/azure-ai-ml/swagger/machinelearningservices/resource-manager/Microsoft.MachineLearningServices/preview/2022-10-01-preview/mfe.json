@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Azure Machine Learning Services",
+    "title": "Azure Machine Learning Workspaces",
     "version": "2022-10-01-preview"
   },
   "host": "management.azure.com",
@@ -64,7 +64,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{codeName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{name}": {
       "delete": {
         "tags": [
           "CodeContainer"
@@ -90,7 +90,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -139,10 +139,7 @@
             "$ref": "./examples/Registry/CodeContainer/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -169,7 +166,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -226,7 +223,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -281,13 +278,10 @@
             "$ref": "./examples/Registry/CodeContainer/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{codeName}/versions": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{name}/versions": {
       "get": {
         "tags": [
           "CodeVersion"
@@ -313,7 +307,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -362,7 +356,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{codeName}/versions/{version}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/codes/{name}/versions/{version}": {
       "delete": {
         "tags": [
           "CodeVersion"
@@ -388,7 +382,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -444,10 +438,7 @@
             "$ref": "./examples/Registry/CodeVersion/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -474,7 +465,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -538,7 +529,7 @@
           },
           {
             "in": "path",
-            "name": "codeName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -600,10 +591,7 @@
             "$ref": "./examples/Registry/CodeVersion/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components": {
@@ -661,7 +649,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{componentName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{name}": {
       "delete": {
         "tags": [
           "ComponentContainer"
@@ -687,7 +675,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -736,10 +724,7 @@
             "$ref": "./examples/Registry/ComponentContainer/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -766,7 +751,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -823,7 +808,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -878,13 +863,10 @@
             "$ref": "./examples/Registry/ComponentContainer/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{componentName}/versions": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{name}/versions": {
       "get": {
         "tags": [
           "ComponentVersion"
@@ -910,7 +892,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -959,7 +941,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{componentName}/versions/{version}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/components/{name}/versions/{version}": {
       "delete": {
         "tags": [
           "ComponentVersion"
@@ -985,7 +967,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -1041,10 +1023,7 @@
             "$ref": "./examples/Registry/ComponentVersion/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -1071,7 +1050,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -1135,7 +1114,7 @@
           },
           {
             "in": "path",
-            "name": "componentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -1197,10 +1176,7 @@
             "$ref": "./examples/Registry/ComponentVersion/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments": {
@@ -1285,7 +1261,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{environmentName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{name}": {
       "delete": {
         "tags": [
           "EnvironmentContainer"
@@ -1311,7 +1287,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -1360,10 +1336,7 @@
             "$ref": "./examples/Registry/EnvironmentContainer/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -1390,7 +1363,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -1447,7 +1420,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -1502,13 +1475,10 @@
             "$ref": "./examples/Registry/EnvironmentContainer/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{environmentName}/versions": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{name}/versions": {
       "get": {
         "tags": [
           "EnvironmentVersion"
@@ -1534,7 +1504,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -1610,7 +1580,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{environmentName}/versions/{version}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/environments/{name}/versions/{version}": {
       "delete": {
         "tags": [
           "EnvironmentVersion"
@@ -1636,7 +1606,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -1692,10 +1662,7 @@
             "$ref": "./examples/Registry/EnvironmentVersion/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -1722,7 +1689,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -1786,7 +1753,7 @@
           },
           {
             "in": "path",
-            "name": "environmentName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -1848,10 +1815,7 @@
             "$ref": "./examples/Registry/EnvironmentVersion/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models": {
@@ -1936,7 +1900,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{modelName}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{name}": {
       "delete": {
         "tags": [
           "ModelContainer"
@@ -1962,7 +1926,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -2011,10 +1975,7 @@
             "$ref": "./examples/Registry/ModelContainer/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -2041,7 +2002,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -2098,7 +2059,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -2153,13 +2114,10 @@
             "$ref": "./examples/Registry/ModelContainer/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{modelName}/versions": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{name}/versions": {
       "get": {
         "tags": [
           "ModelVersion"
@@ -2185,7 +2143,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -2285,7 +2243,7 @@
         }
       }
     },
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{modelName}/versions/{version}": {
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/registries/{registryName}/models/{name}/versions/{version}": {
       "delete": {
         "tags": [
           "ModelVersion"
@@ -2311,7 +2269,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string"
@@ -2367,10 +2325,7 @@
             "$ref": "./examples/Registry/ModelVersion/delete.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
+        "x-ms-long-running-operation": true
       },
       "get": {
         "tags": [
@@ -2397,7 +2352,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name. This is case-sensitive.",
             "required": true,
             "type": "string"
@@ -2461,7 +2416,7 @@
           },
           {
             "in": "path",
-            "name": "modelName",
+            "name": "name",
             "description": "Container name.",
             "required": true,
             "type": "string",
@@ -2523,10 +2478,7 @@
             "$ref": "./examples/Registry/ModelVersion/createOrUpdate.json"
           }
         },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "original-uri"
-        }
+        "x-ms-long-running-operation": true
       }
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.MachineLearningServices/workspaces/{workspaceName}/batchEndpoints": {
@@ -8848,11 +8800,11 @@
     "AutologgerSettings": {
       "description": "Settings for Autologger.",
       "required": [
-        "mlflowAutologger"
+        "mlFlowAutologger"
       ],
       "type": "object",
       "properties": {
-        "mlflowAutologger": {
+        "mlFlowAutologger": {
           "description": "[Required] Indicates whether mlflow autologger is enabled.",
           "$ref": "#/definitions/MLFlowAutologgerState",
           "x-ms-mutability": [

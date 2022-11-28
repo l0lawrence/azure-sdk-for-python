@@ -11,7 +11,6 @@ from azure.ai.ml.entities import WorkspaceConnection
 
 
 @pytest.mark.unittest
-@pytest.mark.core_sdk_test
 class TestWorkspaceConnectionEntity:
     def test_workspace_connection_constructor(self):
         ws_connection = WorkspaceConnection(

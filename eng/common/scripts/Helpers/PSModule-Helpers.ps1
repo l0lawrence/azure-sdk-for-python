@@ -22,9 +22,9 @@ function Update-PSModulePathForCI()
   $modulePaths = $modulePaths.Where({ !$_.StartsWith($hostedAgentModulePath) })
 
   # Add any "az_" paths from the agent which is the lastest set of azure modules
-  $AzModuleCachePath = (Get-ChildItem "$hostedAgentModulePath/az_*" -Attributes Directory) -join $moduleSeperator
-  if ($AzModuleCachePath -and $env:PSModulePath -notcontains $AzModuleCachePath) {
-    $modulePaths += $AzModuleCachePath
+  $AzModuleCachPath = (Get-ChildItem "$hostedAgentModulePath/az_*" -Attributes Directory) -join $moduleSeperator
+  if ($AzModuleCachPath -and $env.PSModulePath -notcontains $AzModuleCachPath) {
+    $modulePaths += $AzModuleCachPath
   }
 
   $env:PSModulePath = $modulePaths -join $moduleSeperator

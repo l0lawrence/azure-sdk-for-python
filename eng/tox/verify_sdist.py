@@ -97,9 +97,10 @@ def verify_sdist_pytyped(
     if os.path.exists(manifest_location):
         with open(manifest_location, "r") as f:
             lines = f.readlines()
-            if not any([include for include in lines if "py.typed" in include]):
+            result = any([include for include in lines if "py.typed" in include])
+
+            if not result:
                 logging.info("Ensure that the MANIFEST.in includes at least one path that leads to a py.typed file.")
-                result = False
 
     pytyped_file_path = os.path.join(pkg_dir, *namespace.split("."), "py.typed")
     if not os.path.exists(pytyped_file_path):

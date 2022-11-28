@@ -28,7 +28,6 @@ def mock_requests_pipeline(mock_machinelearning_client) -> HttpPipeline:
 
 
 @pytest.mark.unittest
-@pytest.mark.data_experiences_test
 class TestDataUtils:
     @patch("azure.ai.ml._utils._data_utils.get_datastore_info")
     @patch("azure.ai.ml._utils._data_utils.get_storage_client")

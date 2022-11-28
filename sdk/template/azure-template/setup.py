@@ -45,6 +45,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -63,12 +64,12 @@ setup(
     ),
     include_package_data=True,
     package_data={
-        'azure.template': ['py.typed'],
+        'pytyped': ['py.typed'],
     },
     install_requires=[
         "azure-core<2.0.0,>=1.10.0",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     project_urls={
         "Bug Reports": "https://github.com/Azure/azure-sdk-for-python/issues",
         "Source": "https://github.com/Azure/azure-sdk-python",

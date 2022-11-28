@@ -12,7 +12,6 @@ from azure.ai.ml.entities._util import load_from_dict
 
 
 @pytest.mark.unittest
-@pytest.mark.production_experiences_test
 class TestRegistrySchema:
     def test_deserialize_from_yaml(self) -> None:
         path = Path("./tests/test_configs/registry/registry_valid.yaml")

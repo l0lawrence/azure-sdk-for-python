@@ -6,7 +6,6 @@ from azure.ai.ml.entities._validation import _ValidationResultBuilder
 
 
 @pytest.mark.unittest
-@pytest.mark.core_sdk_test
 class TestValidation:
     def test_from_validation_error_dict(self) -> None:
         validation_error = ValidationError(

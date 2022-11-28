@@ -6,18 +6,16 @@
 # license information.
 # --------------------------------------------------------------------------
 
-import logging
 import pytest
 from functools import wraps
 from azure.core.exceptions import HttpResponseError
 import sys
-from devtools_testutils import (
-    add_remove_header_sanitizer,
-    add_general_regex_sanitizer,
-    add_oauth_response_sanitizer,
-    add_body_key_sanitizer,
-    test_proxy,
-)
+from devtools_testutils import add_remove_header_sanitizer, add_general_regex_sanitizer, add_oauth_response_sanitizer, add_body_key_sanitizer, test_proxy
+
+# Ignore async tests for Python < 3.6
+collect_ignore_glob = []
+if sys.version_info < (3, 6):
+    collect_ignore_glob.append("*_async.py")
 
 @pytest.fixture(scope="session", autouse=True)
 def add_sanitizers(test_proxy):
@@ -69,18 +67,6 @@ def skip_flaky_test(f):
         try:
             return f(*args, **kwargs)
         except HttpResponseError as error:
-            logger = logging.getLogger("azure")
             if "Invalid request".casefold() in error.message.casefold():
-                pytest.mark.skip("flaky service response: {}".format(error))
-                logger.debug("flaky service response: {}".format(error))
-            elif "Generic error".casefold() in error.message.casefold():
-                pytest.mark.skip("flaky service response: {}".format(error))
-                logger.debug("flaky service response: {}".format(error))
-            elif "Timeout" in error.message.casefold():
-                pytest.mark.skip("flaky service response: {}".format(error))
-                logger.debug("flaky service response: {}".format(error))
-            elif "InvalidImage" in error.message.casefold():
-                pytest.mark.skip("flaky service response: {}".format(error))
-                logger.debug("flaky service response: {}".format(error))
-
+                pytest.mark.skip("flaky service response")
     return wrapper

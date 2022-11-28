@@ -36,10 +36,6 @@ class ConditionNode(ControlFlowNode):
 
         return ConditionNodeSchema(context=context)
 
-    @classmethod
-    def _from_rest_object(cls, obj: dict) -> "ConditionNode":
-        return cls(**obj)
-
     def _to_dict(self) -> Dict:
         return self._dump_for_validation()
 

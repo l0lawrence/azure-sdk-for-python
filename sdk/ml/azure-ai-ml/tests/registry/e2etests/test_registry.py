@@ -13,7 +13,6 @@ import time
 
 @pytest.mark.e2etest
 @pytest.mark.usefixtures("recorded_test")
-@pytest.mark.production_experiences_test
 class TestRegistry(AzureRecordedTestCase):
     @pytest.mark.e2etest
     def test_registry_list_and_get(

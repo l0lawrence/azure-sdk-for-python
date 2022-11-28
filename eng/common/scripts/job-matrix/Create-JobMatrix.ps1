@@ -23,7 +23,7 @@ if (!(Test-Path $ConfigPath)) {
     Write-Error "ConfigPath '$ConfigPath' does not exist."
     exit 1
 }
-$config = GetMatrixConfigFromFile (Get-Content $ConfigPath -Raw)
+$config = GetMatrixConfigFromJson (Get-Content $ConfigPath)
 # Strip empty string filters in order to be able to use azure pipelines yaml join()
 $Filters = $Filters | Where-Object { $_ }
 
@@ -38,7 +38,4 @@ $Filters = $Filters | Where-Object { $_ }
 $serialized = SerializePipelineMatrix $matrix
 
 Write-Output $serialized.pretty
-
-if ($null -ne $env:SYSTEM_TEAMPROJECTID) {
-    Write-Output "##vso[task.setVariable variable=matrix;isOutput=true]$($serialized.compressed)"
-}
+Write-Output "##vso[task.setVariable variable=matrix;isOutput=true]$($serialized.compressed)"

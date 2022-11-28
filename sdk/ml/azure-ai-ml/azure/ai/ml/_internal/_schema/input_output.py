@@ -6,8 +6,8 @@ from marshmallow import fields, post_dump, post_load
 
 from azure.ai.ml._schema import StringTransformedEnum, UnionField, PatchedSchemaMeta
 from azure.ai.ml._schema.component.input_output import InputPortSchema, ParameterSchema
-from azure.ai.ml._schema.core.fields import DumpableEnumField
-from azure.ai.ml._schema.job.input_output_fields_provider import PrimitiveValueField
+from azure.ai.ml._schema.core.fields import DumpableFloatField, DumpableIntegerField, DumpableEnumField
+
 
 SUPPORTED_INTERNAL_PARAM_TYPES = [
     "integer",
@@ -74,9 +74,29 @@ class InternalEnumParameterSchema(ParameterSchema):
         required=True,
         data_key="type",
     )
-    default = PrimitiveValueField()
+    default = UnionField(
+        [
+            DumpableIntegerField(strict=True),
+            # Use DumpableFloatField to avoid '1'(str) serialized to 1.0(float)
+            DumpableFloatField(),
+            # put string schema after Int and Float to make sure they won't dump to string
+            fields.Str(),
+            # fields.Bool comes last since it'll parse anything non-falsy to True
+            fields.Bool(),
+        ],
+    )
     enum = fields.List(
-        PrimitiveValueField(),
+        UnionField(
+            [
+                DumpableIntegerField(strict=True),
+                # Use DumpableFloatField to avoid '1'(str) serialized to 1.0(float)
+                DumpableFloatField(),
+                # put string schema after Int and Float to make sure they won't dump to string
+                fields.Str(),
+                # fields.Bool comes last since it'll parse anything non-falsy to True
+                fields.Bool(),
+            ]
+        ),
         required=True,
     )
 

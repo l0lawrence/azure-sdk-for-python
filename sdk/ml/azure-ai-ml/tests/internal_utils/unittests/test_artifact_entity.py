@@ -4,7 +4,6 @@ from azure.ai.ml.entities._assets import Data
 
 
 @pytest.mark.unittest
-@pytest.mark.core_sdk_test
 class TestArtifactEntity:
     def test_eq_neq(self) -> None:
         data = Data(name="name", version="16", path=".")

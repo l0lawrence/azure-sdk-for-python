@@ -8,21 +8,18 @@ import os
 from pathlib import Path
 
 from testcase import LoadtestingTest, LoadtestingPowerShellPreparer
-from devtools_testutils import recorded_by_proxy, set_bodiless_matcher, set_custom_default_matcher
 
 DISPLAY_NAME = "TestingResource"
 
 
-class TestLoadtestingSmoke(LoadtestingTest):
+class LoadtestingSmokeTest(LoadtestingTest):
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy
-    def test_smoke_create_or_update_test(self, loadtesting_endpoint, loadtesting_test_id, loadtesting_subscription_id):
-        set_bodiless_matcher()
+    def test_smoke_create_or_update_test(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = client.load_test_administration.create_or_update_test(
-            loadtesting_test_id,
+            self.test_id,
             {
-                "resourceId": f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/yashika-rg/providers/Microsoft.LoadTestService/loadtests/loadtestsdk",
+                "resourceId": f"/subscriptions/{self.subscription_id}/resourceGroups/yashika-rg/providers/Microsoft.LoadTestService/loadtests/loadtestsdk",
                 "description": "",
                 "displayName": DISPLAY_NAME,
                 "loadTestConfig": {
@@ -40,40 +37,27 @@ class TestLoadtestingSmoke(LoadtestingTest):
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy
-    def test_upload_test_file(self, loadtesting_endpoint, loadtesting_test_id, loadtesting_file_id):
-        set_custom_default_matcher(
-            compare_bodies=False, excluded_headers="Authorization,Content-Type,x-ms-client-request-id,x-ms-request-id"
-        )
+    def test_upload_test_file(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = client.load_test_administration.upload_test_file(
-            loadtesting_test_id, loadtesting_file_id,
-            open(os.path.join(Path(__file__).resolve().parent, "sample.jmx"), "rb")
+            self.test_id, self.file_id, open(os.path.join(Path(__file__).resolve().parent, "sample.jmx"), "rb")
         )
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy
-    def test_create_or_update_loadtesting_app_components(
-            self,
-            loadtesting_endpoint,
-            loadtesting_test_id,
-            loadtesting_app_component,
-            loadtesting_subscription_id
-    ):
-        set_bodiless_matcher()
+    def test_create_or_update_app_components(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = client.load_test_administration.create_or_update_app_components(
-            loadtesting_app_component,
+            self.app_component,
             {
-                "name": "loadtesting_app_component",
-                "testId": loadtesting_test_id,
+                "name": "app_component",
+                "testId": self.test_id,
                 "value": {
-                    f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo": {
-                        "resourceId": f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo",
+                    f"/subscriptions/{self.subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo": {
+                        "resourceId": f"/subscriptions/{self.subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo",
                         "resourceName": "App-Service-Sample-Demo",
                         "resourceType": "Microsoft.Web/sites",
-                        "subscriptionId": loadtesting_subscription_id,
+                        "subscriptionId": self.subscription_id,
                     }
                 },
             },
@@ -81,14 +65,12 @@ class TestLoadtestingSmoke(LoadtestingTest):
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy
-    def test_create_or_update_test_run(self, loadtesting_endpoint, loadtesting_test_id, loadtesting_test_run_id):
-        set_bodiless_matcher()
+    def test_create_or_update_test_run(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = client.load_test_runs.create_or_update_test(
-            loadtesting_test_run_id,
+            self.test_run_id,
             {
-                "testId": loadtesting_test_id,
+                "testId": self.test_id,
                 "displayName": DISPLAY_NAME,
                 "requestSamplers": [],
                 "errors": [],
@@ -99,12 +81,10 @@ class TestLoadtestingSmoke(LoadtestingTest):
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy
-    def test_get_loadtesting_app_components(self, loadtesting_endpoint, loadtesting_test_id, loadtesting_app_component):
-        set_bodiless_matcher()
+    def test_get_app_components(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
-        result = client.load_test_administration.get_app_components(test_id=loadtesting_test_id)
+        result = client.load_test_administration.get_app_components(test_id=self.test_id)
         assert result is not None
 
-        result = client.load_test_administration.get_app_components(name=loadtesting_app_component)
+        result = client.load_test_administration.get_app_components(name=self.app_component)
         assert result is not None

@@ -19,7 +19,6 @@ from azure.ai.ml.entities import (
 
 
 @pytest.mark.unittest
-@pytest.mark.core_sdk_test
 class TestComputeEntity:
     def test_compute_from_rest(self):
         with open("tests/test_configs/compute/compute-kubernetes.yaml", "r") as f:

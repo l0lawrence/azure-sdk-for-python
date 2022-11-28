@@ -11,8 +11,7 @@ import pytest
 
 from azure_devtools.scenario_tests.utilities import trim_kwargs_from_test_function
 from devtools_testutils.azure_testcase import _is_autorest_v3
-from devtools_testutils import AzureRecordedTestCase
-from devtools_testutils.aio import recorded_by_proxy_async
+from devtools_testutils import AzureTestCase
 from azure.security.attestation.aio import (
     AttestationClient,
     AttestationAdministrationClient,
@@ -137,9 +136,8 @@ _runtime_data = (
 )
 
 
-class TestAsyncAzureAttestation(AzureRecordedTestCase):
+class AsyncAzureAttestationTest(AzureTestCase):
     @AttestationPreparer()
-    @recorded_by_proxy_async
     async def test_shared_getopenidmetadataasync(self, attestation_location_short_name):
         attest_client = self.shared_client(attestation_location_short_name)
         open_id_metadata = await attest_client.get_open_id_metadata()
@@ -156,8 +154,7 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
 
     @pytest.mark.live_test_only
     @AttestationPreparer()
-    async def test_aad_getopenidmetadataasync(self, **kwargs):
-        attestation_aad_url = kwargs.pop("attestation_aad_url")
+    async def test_aad_getopenidmetadataasync(self, attestation_aad_url):
         attest_client = self.create_client(attestation_aad_url)
         open_id_metadata = await attest_client.get_open_id_metadata()
         assert open_id_metadata["response_types_supported"] is not None
@@ -166,8 +163,7 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
 
     @pytest.mark.live_test_only
     @AttestationPreparer()
-    async def test_isolated_getopenidmetadataasync(self, **kwargs):
-        attestation_isolated_url = kwargs.pop("attestation_isolated_url")
+    async def test_isolated_getopenidmetadataasync(self, attestation_isolated_url):
         attest_client = self.create_client(attestation_isolated_url)
         open_id_metadata = await attest_client.get_open_id_metadata()
         assert open_id_metadata["response_types_supported"] is not None
@@ -175,11 +171,9 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
         assert open_id_metadata["issuer"] == attestation_isolated_url
 
     @AttestationPreparer()
-    @recorded_by_proxy_async
     async def test_shared_getsigningcertificatesasync(
-        self, **kwargs
+        self, attestation_location_short_name
     ):
-        attestation_location_short_name = kwargs.pop("attestation_location_short_name")
         attest_client = self.shared_client(attestation_location_short_name)
         signers = await attest_client.get_signing_certificates()
         for signer in signers:
@@ -188,7 +182,6 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
             )
 
     @AttestationPreparer()
-    @recorded_by_proxy_async
     async def test_aad_getsigningcertificatesasync(self, attestation_aad_url):
         # type: (str) -> None
         attest_client = self.create_client(attestation_aad_url)
@@ -199,7 +192,6 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
             )
 
     @AttestationPreparer()
-    @recorded_by_proxy_async
     async def test_isolated_getsigningcertificatesasync(self, attestation_isolated_url):
         # type: (str) -> None
         attest_client = self.create_client(attestation_isolated_url)
@@ -233,7 +225,6 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
 
     @AttestationPreparer()
     @AllInstanceTypes
-    @recorded_by_proxy_async
     async def test_shared_attest_open_enclave(self, **kwargs):
         # type: (str, **Any) -> None
         await self._test_attest_open_enclave(kwargs.pop("instance_url"))
@@ -263,13 +254,11 @@ class TestAsyncAzureAttestation(AzureRecordedTestCase):
 
     @AttestationPreparer()
     @AllInstanceTypes
-    @recorded_by_proxy_async
     async def test_attest_sgx_enclave(self, **kwargs):
         # type: (str, **Any) -> None
         await self._test_attest_sgx_enclave(kwargs.pop("instance_url"))
 
     @AttestationPreparer()
-    @recorded_by_proxy_async
     async def test_tpm_attestation(self, attestation_aad_url):
         # type: (str) -> None
         client = self.create_client(attestation_aad_url)

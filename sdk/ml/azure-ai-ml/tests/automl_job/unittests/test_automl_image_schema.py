@@ -446,7 +446,6 @@ def loaded_image_instance_segmentation_job(
     return job
 
 
-@pytest.mark.automl_test
 @pytest.mark.unittest
 class TestAutoMLImageSchema:
     @pytest.mark.parametrize("run_type", ["single", "sweep", "automode"])

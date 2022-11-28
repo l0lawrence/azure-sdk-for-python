@@ -6,7 +6,9 @@
 
 Follow our quickstart for examples: https://aka.ms/azsdk/python/dpcodegen/python/customize
 """
-from typing import Any, IO, Optional, Union, cast, overload, List, MutableMapping, Coroutine, BinaryIO, Awaitable
+
+from typing import Any, IO, Optional, Union, cast, overload, List, MutableMapping, Coroutine, BinaryIO
+
 from azure.core.exceptions import (
     ClientAuthenticationError,
     HttpResponseError,
@@ -93,14 +95,14 @@ class AppComponentOperations:
     def __init__(self, *args, **kwargs):
         self.__app_component_operations_generated = AppComponentOperationsGenerated(*args, **kwargs)
 
-    async def get_app_components(
+    def get_app_components(
         self,
         *,
         test_run_id: Optional[str] = None,
         test_id: Optional[str] = None,
         name: Optional[str] = None,
         **kwargs: Any,
-    ) -> MutableMapping[str, Any]:
+    ) -> Coroutine[Any, Any, MutableMapping[str, Any]]:
         """Get App Components for a test or a test run by its name.
 
         Get App Components for a test or a test run by its name.
@@ -148,14 +150,14 @@ class AppComponentOperations:
         """
 
         if name is not None:
-            return await self.__app_component_operations_generated.get_app_component_by_name(name=name, **kwargs)
+            return self.__app_component_operations_generated.get_app_component_by_name(name=name, **kwargs)
         else:
-            return await self.__app_component_operations_generated.get_app_component(
+            return self.__app_component_operations_generated.get_app_component(
                 test_run_id=test_run_id, test_id=test_id, **kwargs
             )
 
     @overload
-    async def create_or_update_app_components(
+    def create_or_update_app_components(
         self, name: str, body: JSON, *, content_type: str = "application/merge-patch+json", **kwargs: Any
     ) -> JSON:
         """Associate an App Component (Azure resource) to a test or test run.
@@ -231,7 +233,7 @@ class AppComponentOperations:
         """
 
     @overload
-    async def create_or_update_app_components(
+    def create_or_update_app_components(
         self, name: str, body: IO, *, content_type: str = "application/merge-patch+json", **kwargs: Any
     ) -> JSON:
         """Associate an App Component (Azure resource) to a test or test run.
@@ -281,9 +283,7 @@ class AppComponentOperations:
         """
 
     @distributed_trace
-    async def create_or_update_app_components(
-        self, name: str, body: Union[JSON, IO], **kwargs: Any
-    ) -> MutableMapping[str, Any]:
+    def create_or_update_app_components(self, name: str, body: Union[JSON, IO], **kwargs: Any) -> JSON:
         """Associate an App Component (Azure resource) to a test or test run.
 
         Associate an App Component (Azure resource) to a test or test run.
@@ -329,25 +329,25 @@ class AppComponentOperations:
                     }
                 }
         """
-        return await self.__app_component_operations_generated.create_or_update_app_components(name, body, **kwargs)
+        return self.__app_component_operations_generated.create_or_update_app_components(name, body, **kwargs)
 
-    @distributed_trace
-    async def delete_app_components(  # pylint: disable=inconsistent-return-statements
-        self, name: str, **kwargs: Any
-    ) -> None:
-        """Delete an App Component.
+        @distributed_trace
+        def delete_app_components(  # pylint: disable=inconsistent-return-statements
+            self, name: str, **kwargs: Any
+        ) -> None:
+            """Delete an App Component.
 
-        Delete an App Component.
+            Delete an App Component.
 
-        :param name: Unique name of the App Component, must be a valid URL character ^[a-z0-9_-]*$.
-        Required.
-        :type name: str
-        :return: None
-        :rtype: None
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
+            :param name: Unique name of the App Component, must be a valid URL character ^[a-z0-9_-]*$.
+             Required.
+            :type name: str
+            :return: None
+            :rtype: None
+            :raises ~azure.core.exceptions.HttpResponseError:
+            """
 
-        return await self.__app_component_operations_generated.delete_app_components(name, **kwargs)
+        return self.__app_component_operations_generated.delete_app_components(name, **kwargs)
 
 
 __all__: List[str] = ["TestOperations", "AppComponentOperations"]

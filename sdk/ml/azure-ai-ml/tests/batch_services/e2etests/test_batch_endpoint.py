@@ -11,7 +11,6 @@ from devtools_testutils import AzureRecordedTestCase
 
 
 @pytest.mark.e2etest
-@pytest.mark.production_experience_test
 class TestBatchEndpoint(AzureRecordedTestCase):
     @pytest.mark.skip(
         reason="Tests failing in internal automation due to lack of quota. Cannot record or run in live mode."

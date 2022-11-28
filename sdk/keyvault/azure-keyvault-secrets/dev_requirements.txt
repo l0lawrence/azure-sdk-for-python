@@ -5,4 +5,3 @@
 ../../nspkg/azure-keyvault-nspkg
 aiohttp>=3.0
 parameterized>=0.7.3
-python-dateutil>=2.8.0

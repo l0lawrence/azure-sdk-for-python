@@ -11,10 +11,7 @@ import logging
 
 from azure_devtools.scenario_tests import AzureTestError, ReservedResourceNameError
 
-try:
-    from azure.mgmt.resource import ResourceManagementClient
-except ImportError:
-    pass
+from azure.mgmt.resource import ResourceManagementClient
 
 from . import AzureMgmtPreparer
 from .sanitizers import add_general_regex_sanitizer

@@ -11,7 +11,6 @@ from .._util import _DSL_TIMEOUT_SECOND
 
 @pytest.mark.timeout(_DSL_TIMEOUT_SECOND)
 @pytest.mark.unittest
-@pytest.mark.pipeline_test
 class TestAttrDict:
     def test_attr_dict(self):
         obj = _AttrDict()

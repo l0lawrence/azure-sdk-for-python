@@ -16,7 +16,6 @@ components_dir = tests_root_dir / "test_configs/components/"
 
 @pytest.mark.timeout(_COMPONENT_TIMEOUT_SECOND)
 @pytest.mark.unittest
-@pytest.mark.pipeline_test
 class TestPipelineComponentEntity:
     def test_inline_helloworld_pipeline_component(self) -> None:
         component_path = "./tests/test_configs/components/helloworld_inline_pipeline_component.yml"

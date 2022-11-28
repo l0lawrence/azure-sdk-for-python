@@ -15,134 +15,6 @@ import msrest.serialization
 from ._azure_machine_learning_workspaces_enums import *
 
 
-class WorkspaceConnectionPropertiesV2(msrest.serialization.Model):
-    """WorkspaceConnectionPropertiesV2.
-
-    You probably want to use the sub-classes and not this class directly. Known
-    sub-classes are: AccessKeyAuthTypeWorkspaceConnectionProperties, ManagedIdentityAuthTypeWorkspaceConnectionProperties, NoneAuthTypeWorkspaceConnectionProperties, PATAuthTypeWorkspaceConnectionProperties, SASAuthTypeWorkspaceConnectionProperties, ServicePrincipalAuthTypeWorkspaceConnectionProperties, UsernamePasswordAuthTypeWorkspaceConnectionProperties.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
-    :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
-    :ivar target:
-    :vartype target: str
-    :ivar value: Value details of the workspace connection.
-    :vartype value: str
-    :ivar value_format: format for the workspace connection value. Possible values include: "JSON".
-    :vartype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-    """
-
-    _validation = {
-        'auth_type': {'required': True},
-    }
-
-    _attribute_map = {
-        'auth_type': {'key': 'authType', 'type': 'str'},
-        'category': {'key': 'category', 'type': 'str'},
-        'target': {'key': 'target', 'type': 'str'},
-        'value': {'key': 'value', 'type': 'str'},
-        'value_format': {'key': 'valueFormat', 'type': 'str'},
-    }
-
-    _subtype_map = {
-        'auth_type': {'AccessKey': 'AccessKeyAuthTypeWorkspaceConnectionProperties', 'ManagedIdentity': 'ManagedIdentityAuthTypeWorkspaceConnectionProperties', 'None': 'NoneAuthTypeWorkspaceConnectionProperties', 'PAT': 'PATAuthTypeWorkspaceConnectionProperties', 'SAS': 'SASAuthTypeWorkspaceConnectionProperties', 'ServicePrincipal': 'ServicePrincipalAuthTypeWorkspaceConnectionProperties', 'UsernamePassword': 'UsernamePasswordAuthTypeWorkspaceConnectionProperties'}
-    }
-
-    def __init__(
-        self,
-        *,
-        category: Optional[str] = None,
-        target: Optional[str] = None,
-        value: Optional[str] = None,
-        value_format: Optional[Union[str, "ValueFormat"]] = None,
-        **kwargs
-    ):
-        """
-        :keyword category: Category of the connection.
-        :paramtype category: str
-        :keyword target:
-        :paramtype target: str
-        :keyword value: Value details of the workspace connection.
-        :paramtype value: str
-        :keyword value_format: format for the workspace connection value. Possible values include:
-         "JSON".
-        :paramtype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-        """
-        super(WorkspaceConnectionPropertiesV2, self).__init__(**kwargs)
-        self.auth_type = None  # type: Optional[str]
-        self.category = category
-        self.target = target
-        self.value = value
-        self.value_format = value_format
-
-
-class AccessKeyAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
-    """AccessKeyAuthTypeWorkspaceConnectionProperties.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
-    :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
-    :ivar target:
-    :vartype target: str
-    :ivar value: Value details of the workspace connection.
-    :vartype value: str
-    :ivar value_format: format for the workspace connection value. Possible values include: "JSON".
-    :vartype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-    :ivar credentials:
-    :vartype credentials: ~azure.mgmt.machinelearningservices.models.WorkspaceConnectionAccessKey
-    """
-
-    _validation = {
-        'auth_type': {'required': True},
-    }
-
-    _attribute_map = {
-        'auth_type': {'key': 'authType', 'type': 'str'},
-        'category': {'key': 'category', 'type': 'str'},
-        'target': {'key': 'target', 'type': 'str'},
-        'value': {'key': 'value', 'type': 'str'},
-        'value_format': {'key': 'valueFormat', 'type': 'str'},
-        'credentials': {'key': 'credentials', 'type': 'WorkspaceConnectionAccessKey'},
-    }
-
-    def __init__(
-        self,
-        *,
-        category: Optional[str] = None,
-        target: Optional[str] = None,
-        value: Optional[str] = None,
-        value_format: Optional[Union[str, "ValueFormat"]] = None,
-        credentials: Optional["WorkspaceConnectionAccessKey"] = None,
-        **kwargs
-    ):
-        """
-        :keyword category: Category of the connection.
-        :paramtype category: str
-        :keyword target:
-        :paramtype target: str
-        :keyword value: Value details of the workspace connection.
-        :paramtype value: str
-        :keyword value_format: format for the workspace connection value. Possible values include:
-         "JSON".
-        :paramtype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-        :keyword credentials:
-        :paramtype credentials: ~azure.mgmt.machinelearningservices.models.WorkspaceConnectionAccessKey
-        """
-        super(AccessKeyAuthTypeWorkspaceConnectionProperties, self).__init__(category=category, target=target, value=value, value_format=value_format, **kwargs)
-        self.auth_type = 'AccessKey'  # type: str
-        self.credentials = credentials
-
-
 class DatastoreCredentials(msrest.serialization.Model):
     """Base definition for datastore credentials.
 
@@ -398,7 +270,6 @@ class Compute(msrest.serialization.Model):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -423,6 +294,7 @@ class Compute(msrest.serialization.Model):
         *,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -430,6 +302,9 @@ class Compute(msrest.serialization.Model):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
         super(Compute, self).__init__(**kwargs)
         self.compute_type = None  # type: Optional[str]
@@ -441,7 +316,7 @@ class Compute(msrest.serialization.Model):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class AKS(Compute, AKSSchema):
@@ -490,7 +365,6 @@ class AKS(Compute, AKSSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -513,6 +387,7 @@ class AKS(Compute, AKSSchema):
         properties: Optional["AKSSchemaProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -522,8 +397,11 @@ class AKS(Compute, AKSSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(AKS, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(AKS, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'AKS'  # type: str
         self.compute_location = None
@@ -534,7 +412,7 @@ class AKS(Compute, AKSSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class AksComputeSecretsProperties(msrest.serialization.Model):
@@ -955,7 +833,6 @@ class AmlCompute(Compute, AmlComputeSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -978,6 +855,7 @@ class AmlCompute(Compute, AmlComputeSchema):
         properties: Optional["AmlComputeProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -987,8 +865,11 @@ class AmlCompute(Compute, AmlComputeSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(AmlCompute, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(AmlCompute, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'AmlCompute'  # type: str
         self.compute_location = None
@@ -999,7 +880,7 @@ class AmlCompute(Compute, AmlComputeSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class AmlComputeNodeInformation(msrest.serialization.Model):
@@ -1864,34 +1745,34 @@ class AutologgerSettings(msrest.serialization.Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar mlflow_autologger: Required. [Required] Indicates whether mlflow autologger is enabled.
+    :ivar ml_flow_autologger: Required. [Required] Indicates whether mlflow autologger is enabled.
      Possible values include: "Enabled", "Disabled".
-    :vartype mlflow_autologger: str or
+    :vartype ml_flow_autologger: str or
      ~azure.mgmt.machinelearningservices.models.MLFlowAutologgerState
     """
 
     _validation = {
-        'mlflow_autologger': {'required': True},
+        'ml_flow_autologger': {'required': True},
     }
 
     _attribute_map = {
-        'mlflow_autologger': {'key': 'mlflowAutologger', 'type': 'str'},
+        'ml_flow_autologger': {'key': 'mlFlowAutologger', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
-        mlflow_autologger: Union[str, "MLFlowAutologgerState"],
+        ml_flow_autologger: Union[str, "MLFlowAutologgerState"],
         **kwargs
     ):
         """
-        :keyword mlflow_autologger: Required. [Required] Indicates whether mlflow autologger is
+        :keyword ml_flow_autologger: Required. [Required] Indicates whether mlflow autologger is
          enabled. Possible values include: "Enabled", "Disabled".
-        :paramtype mlflow_autologger: str or
+        :paramtype ml_flow_autologger: str or
          ~azure.mgmt.machinelearningservices.models.MLFlowAutologgerState
         """
         super(AutologgerSettings, self).__init__(**kwargs)
-        self.mlflow_autologger = mlflow_autologger
+        self.ml_flow_autologger = ml_flow_autologger
 
 
 class JobBaseProperties(ResourceBase):
@@ -5939,7 +5820,6 @@ class ComputeInstance(Compute, ComputeInstanceSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -5962,6 +5842,7 @@ class ComputeInstance(Compute, ComputeInstanceSchema):
         properties: Optional["ComputeInstanceProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -5971,8 +5852,11 @@ class ComputeInstance(Compute, ComputeInstanceSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(ComputeInstance, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(ComputeInstance, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'ComputeInstance'  # type: str
         self.compute_location = None
@@ -5983,7 +5867,7 @@ class ComputeInstance(Compute, ComputeInstanceSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class ComputeInstanceApplication(msrest.serialization.Model):
@@ -6016,34 +5900,6 @@ class ComputeInstanceApplication(msrest.serialization.Model):
         super(ComputeInstanceApplication, self).__init__(**kwargs)
         self.display_name = display_name
         self.endpoint_uri = endpoint_uri
-
-
-class ComputeInstanceAutologgerSettings(msrest.serialization.Model):
-    """Specifies settings for autologger.
-
-    :ivar mlflow_autologger: Indicates whether mlflow autologger is enabled for notebooks. Possible
-     values include: "Enabled", "Disabled".
-    :vartype mlflow_autologger: str or ~azure.mgmt.machinelearningservices.models.MlflowAutologger
-    """
-
-    _attribute_map = {
-        'mlflow_autologger': {'key': 'mlflowAutologger', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        mlflow_autologger: Optional[Union[str, "MlflowAutologger"]] = None,
-        **kwargs
-    ):
-        """
-        :keyword mlflow_autologger: Indicates whether mlflow autologger is enabled for notebooks.
-         Possible values include: "Enabled", "Disabled".
-        :paramtype mlflow_autologger: str or
-         ~azure.mgmt.machinelearningservices.models.MlflowAutologger
-        """
-        super(ComputeInstanceAutologgerSettings, self).__init__(**kwargs)
-        self.mlflow_autologger = mlflow_autologger
 
 
 class ComputeInstanceConnectivityEndpoints(msrest.serialization.Model):
@@ -6419,16 +6275,10 @@ class ComputeInstanceProperties(msrest.serialization.Model):
      value: "Shared".
     :vartype application_sharing_policy: str or
      ~azure.mgmt.machinelearningservices.models.ApplicationSharingPolicy
-    :ivar autologger_settings: Specifies settings for autologger.
-    :vartype autologger_settings:
-     ~azure.mgmt.machinelearningservices.models.ComputeInstanceAutologgerSettings
     :ivar ssh_settings: Specifies policy and settings for SSH access.
     :vartype ssh_settings: ~azure.mgmt.machinelearningservices.models.ComputeInstanceSshSettings
     :ivar custom_services: List of Custom Services added to the compute.
     :vartype custom_services: list[~azure.mgmt.machinelearningservices.models.CustomService]
-    :ivar os_image_metadata: Returns metadata about the operating system image for this compute
-     instance.
-    :vartype os_image_metadata: ~azure.mgmt.machinelearningservices.models.ImageMetadata
     :ivar connectivity_endpoints: Describes all connectivity endpoints available for this
      ComputeInstance.
     :vartype connectivity_endpoints:
@@ -6478,7 +6328,6 @@ class ComputeInstanceProperties(msrest.serialization.Model):
     """
 
     _validation = {
-        'os_image_metadata': {'readonly': True},
         'connectivity_endpoints': {'readonly': True},
         'applications': {'readonly': True},
         'created_by': {'readonly': True},
@@ -6496,10 +6345,8 @@ class ComputeInstanceProperties(msrest.serialization.Model):
         'vm_size': {'key': 'vmSize', 'type': 'str'},
         'subnet': {'key': 'subnet', 'type': 'ResourceId'},
         'application_sharing_policy': {'key': 'applicationSharingPolicy', 'type': 'str'},
-        'autologger_settings': {'key': 'autologgerSettings', 'type': 'ComputeInstanceAutologgerSettings'},
         'ssh_settings': {'key': 'sshSettings', 'type': 'ComputeInstanceSshSettings'},
         'custom_services': {'key': 'customServices', 'type': '[CustomService]'},
-        'os_image_metadata': {'key': 'osImageMetadata', 'type': 'ImageMetadata'},
         'connectivity_endpoints': {'key': 'connectivityEndpoints', 'type': 'ComputeInstanceConnectivityEndpoints'},
         'applications': {'key': 'applications', 'type': '[ComputeInstanceApplication]'},
         'created_by': {'key': 'createdBy', 'type': 'ComputeInstanceCreatedBy'},
@@ -6524,7 +6371,6 @@ class ComputeInstanceProperties(msrest.serialization.Model):
         vm_size: Optional[str] = None,
         subnet: Optional["ResourceId"] = None,
         application_sharing_policy: Optional[Union[str, "ApplicationSharingPolicy"]] = "Shared",
-        autologger_settings: Optional["ComputeInstanceAutologgerSettings"] = None,
         ssh_settings: Optional["ComputeInstanceSshSettings"] = None,
         custom_services: Optional[List["CustomService"]] = None,
         compute_instance_authorization_type: Optional[Union[str, "ComputeInstanceAuthorizationType"]] = "personal",
@@ -6546,9 +6392,6 @@ class ComputeInstanceProperties(msrest.serialization.Model):
          value: "Shared".
         :paramtype application_sharing_policy: str or
          ~azure.mgmt.machinelearningservices.models.ApplicationSharingPolicy
-        :keyword autologger_settings: Specifies settings for autologger.
-        :paramtype autologger_settings:
-         ~azure.mgmt.machinelearningservices.models.ComputeInstanceAutologgerSettings
         :keyword ssh_settings: Specifies policy and settings for SSH access.
         :paramtype ssh_settings: ~azure.mgmt.machinelearningservices.models.ComputeInstanceSshSettings
         :keyword custom_services: List of Custom Services added to the compute.
@@ -6576,10 +6419,8 @@ class ComputeInstanceProperties(msrest.serialization.Model):
         self.vm_size = vm_size
         self.subnet = subnet
         self.application_sharing_policy = application_sharing_policy
-        self.autologger_settings = autologger_settings
         self.ssh_settings = ssh_settings
         self.custom_services = custom_services
-        self.os_image_metadata = None
         self.connectivity_endpoints = None
         self.applications = None
         self.created_by = None
@@ -6816,24 +6657,15 @@ class ComputeStartStopSchedule(msrest.serialization.Model):
 
     Variables are only populated by the server, and will be ignored when sending a request.
 
-    :ivar id: A system assigned id for the schedule.
+    :ivar id: Schedule id.
     :vartype id: str
     :ivar provisioning_status: The current deployment state of schedule. Possible values include:
      "Completed", "Provisioning", "Failed".
     :vartype provisioning_status: str or
      ~azure.mgmt.machinelearningservices.models.ProvisioningStatus
-    :ivar status: Is the schedule enabled or disabled?. Possible values include: "Enabled",
-     "Disabled".
-    :vartype status: str or ~azure.mgmt.machinelearningservices.models.ScheduleStatus
-    :ivar action: [Required] The compute power action. Possible values include: "Start", "Stop".
+    :ivar action: The compute power action. Possible values include: "Start", "Stop".
     :vartype action: str or ~azure.mgmt.machinelearningservices.models.ComputePowerAction
-    :ivar trigger_type: Possible values include: "Recurrence", "Cron".
-    :vartype trigger_type: str or ~azure.mgmt.machinelearningservices.models.TriggerType
-    :ivar recurrence: The workflow trigger recurrence for ComputeStartStop schedule type.
-    :vartype recurrence: ~azure.mgmt.machinelearningservices.models.Recurrence
-    :ivar cron: The workflow trigger cron for ComputeStartStop schedule type.
-    :vartype cron: ~azure.mgmt.machinelearningservices.models.Cron
-    :ivar schedule: [Deprecated] Not used any more.
+    :ivar schedule:
     :vartype schedule: ~azure.mgmt.machinelearningservices.models.ScheduleBase
     """
 
@@ -6845,48 +6677,27 @@ class ComputeStartStopSchedule(msrest.serialization.Model):
     _attribute_map = {
         'id': {'key': 'id', 'type': 'str'},
         'provisioning_status': {'key': 'provisioningStatus', 'type': 'str'},
-        'status': {'key': 'status', 'type': 'str'},
         'action': {'key': 'action', 'type': 'str'},
-        'trigger_type': {'key': 'triggerType', 'type': 'str'},
-        'recurrence': {'key': 'recurrence', 'type': 'Recurrence'},
-        'cron': {'key': 'cron', 'type': 'Cron'},
         'schedule': {'key': 'schedule', 'type': 'ScheduleBase'},
     }
 
     def __init__(
         self,
         *,
-        status: Optional[Union[str, "ScheduleStatus"]] = None,
         action: Optional[Union[str, "ComputePowerAction"]] = None,
-        trigger_type: Optional[Union[str, "TriggerType"]] = None,
-        recurrence: Optional["Recurrence"] = None,
-        cron: Optional["Cron"] = None,
         schedule: Optional["ScheduleBase"] = None,
         **kwargs
     ):
         """
-        :keyword status: Is the schedule enabled or disabled?. Possible values include: "Enabled",
-         "Disabled".
-        :paramtype status: str or ~azure.mgmt.machinelearningservices.models.ScheduleStatus
-        :keyword action: [Required] The compute power action. Possible values include: "Start", "Stop".
+        :keyword action: The compute power action. Possible values include: "Start", "Stop".
         :paramtype action: str or ~azure.mgmt.machinelearningservices.models.ComputePowerAction
-        :keyword trigger_type: Possible values include: "Recurrence", "Cron".
-        :paramtype trigger_type: str or ~azure.mgmt.machinelearningservices.models.TriggerType
-        :keyword recurrence: The workflow trigger recurrence for ComputeStartStop schedule type.
-        :paramtype recurrence: ~azure.mgmt.machinelearningservices.models.Recurrence
-        :keyword cron: The workflow trigger cron for ComputeStartStop schedule type.
-        :paramtype cron: ~azure.mgmt.machinelearningservices.models.Cron
-        :keyword schedule: [Deprecated] Not used any more.
+        :keyword schedule:
         :paramtype schedule: ~azure.mgmt.machinelearningservices.models.ScheduleBase
         """
         super(ComputeStartStopSchedule, self).__init__(**kwargs)
         self.id = None
         self.provisioning_status = None
-        self.status = status
         self.action = action
-        self.trigger_type = trigger_type
-        self.recurrence = recurrence
-        self.cron = cron
         self.schedule = schedule
 
 
@@ -6994,51 +6805,6 @@ class CosmosDbSettings(msrest.serialization.Model):
         """
         super(CosmosDbSettings, self).__init__(**kwargs)
         self.collections_throughput = collections_throughput
-
-
-class Cron(msrest.serialization.Model):
-    """The workflow trigger cron for ComputeStartStop schedule type.
-
-    :ivar start_time: The start time in yyyy-MM-ddTHH:mm:ss format.
-    :vartype start_time: str
-    :ivar time_zone: Specifies time zone in which the schedule runs.
-     TimeZone should follow Windows time zone format. Refer:
-     https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/default-time-zones?view=windows-11.
-    :vartype time_zone: str
-    :ivar expression: [Required] Specifies cron expression of schedule.
-     The expression should follow NCronTab format.
-    :vartype expression: str
-    """
-
-    _attribute_map = {
-        'start_time': {'key': 'startTime', 'type': 'str'},
-        'time_zone': {'key': 'timeZone', 'type': 'str'},
-        'expression': {'key': 'expression', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        start_time: Optional[str] = None,
-        time_zone: Optional[str] = "UTC",
-        expression: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        :keyword start_time: The start time in yyyy-MM-ddTHH:mm:ss format.
-        :paramtype start_time: str
-        :keyword time_zone: Specifies time zone in which the schedule runs.
-         TimeZone should follow Windows time zone format. Refer:
-         https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/default-time-zones?view=windows-11.
-        :paramtype time_zone: str
-        :keyword expression: [Required] Specifies cron expression of schedule.
-         The expression should follow NCronTab format.
-        :paramtype expression: str
-        """
-        super(Cron, self).__init__(**kwargs)
-        self.start_time = start_time
-        self.time_zone = time_zone
-        self.expression = expression
 
 
 class TriggerBase(msrest.serialization.Model):
@@ -7757,7 +7523,6 @@ class Databricks(Compute, DatabricksSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -7780,6 +7545,7 @@ class Databricks(Compute, DatabricksSchema):
         properties: Optional["DatabricksProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -7789,8 +7555,11 @@ class Databricks(Compute, DatabricksSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(Databricks, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(Databricks, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'Databricks'  # type: str
         self.compute_location = None
@@ -7801,7 +7570,7 @@ class Databricks(Compute, DatabricksSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class DatabricksComputeSecretsProperties(msrest.serialization.Model):
@@ -8095,7 +7864,6 @@ class DataFactory(Compute):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -8116,6 +7884,7 @@ class DataFactory(Compute):
         *,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -8123,8 +7892,11 @@ class DataFactory(Compute):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(DataFactory, self).__init__(description=description, resource_id=resource_id, **kwargs)
+        super(DataFactory, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, **kwargs)
         self.compute_type = 'DataFactory'  # type: str
 
 
@@ -8202,7 +7974,6 @@ class DataLakeAnalytics(Compute, DataLakeAnalyticsSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -8225,6 +7996,7 @@ class DataLakeAnalytics(Compute, DataLakeAnalyticsSchema):
         properties: Optional["DataLakeAnalyticsSchemaProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -8235,8 +8007,11 @@ class DataLakeAnalytics(Compute, DataLakeAnalyticsSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(DataLakeAnalytics, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(DataLakeAnalytics, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'DataLakeAnalytics'  # type: str
         self.compute_location = None
@@ -8247,7 +8022,7 @@ class DataLakeAnalytics(Compute, DataLakeAnalyticsSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class DataLakeAnalyticsSchemaProperties(msrest.serialization.Model):
@@ -10967,7 +10742,6 @@ class HDInsight(Compute, HDInsightSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -10990,6 +10764,7 @@ class HDInsight(Compute, HDInsightSchema):
         properties: Optional["HDInsightProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -10999,8 +10774,11 @@ class HDInsight(Compute, HDInsightSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(HDInsight, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(HDInsight, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'HDInsight'  # type: str
         self.compute_location = None
@@ -11011,7 +10789,7 @@ class HDInsight(Compute, HDInsightSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class HDInsightProperties(msrest.serialization.Model):
@@ -11809,49 +11587,6 @@ class ImageLimitSettings(msrest.serialization.Model):
         self.max_concurrent_trials = max_concurrent_trials
         self.max_trials = max_trials
         self.timeout = timeout
-
-
-class ImageMetadata(msrest.serialization.Model):
-    """Returns metadata about the operating system image for this compute instance.
-
-    :ivar current_image_version: Specifies the current operating system image version this compute
-     instance is running on.
-    :vartype current_image_version: str
-    :ivar latest_image_version: Specifies the latest available operating system image version.
-    :vartype latest_image_version: str
-    :ivar is_latest_os_image_version: Specifies whether this compute instance is running on the
-     latest operating system image.
-    :vartype is_latest_os_image_version: bool
-    """
-
-    _attribute_map = {
-        'current_image_version': {'key': 'currentImageVersion', 'type': 'str'},
-        'latest_image_version': {'key': 'latestImageVersion', 'type': 'str'},
-        'is_latest_os_image_version': {'key': 'isLatestOsImageVersion', 'type': 'bool'},
-    }
-
-    def __init__(
-        self,
-        *,
-        current_image_version: Optional[str] = None,
-        latest_image_version: Optional[str] = None,
-        is_latest_os_image_version: Optional[bool] = None,
-        **kwargs
-    ):
-        """
-        :keyword current_image_version: Specifies the current operating system image version this
-         compute instance is running on.
-        :paramtype current_image_version: str
-        :keyword latest_image_version: Specifies the latest available operating system image version.
-        :paramtype latest_image_version: str
-        :keyword is_latest_os_image_version: Specifies whether this compute instance is running on the
-         latest operating system image.
-        :paramtype is_latest_os_image_version: bool
-        """
-        super(ImageMetadata, self).__init__(**kwargs)
-        self.current_image_version = current_image_version
-        self.latest_image_version = latest_image_version
-        self.is_latest_os_image_version = is_latest_os_image_version
 
 
 class ImageModelDistributionSettings(msrest.serialization.Model):
@@ -14649,7 +14384,6 @@ class Kubernetes(Compute, KubernetesSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -14672,6 +14406,7 @@ class Kubernetes(Compute, KubernetesSchema):
         properties: Optional["KubernetesProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -14681,8 +14416,11 @@ class Kubernetes(Compute, KubernetesSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(Kubernetes, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(Kubernetes, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'Kubernetes'  # type: str
         self.compute_location = None
@@ -14693,7 +14431,7 @@ class Kubernetes(Compute, KubernetesSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class OnlineDeploymentProperties(EndpointDeploymentPropertiesBase):
@@ -15888,17 +15626,84 @@ class ManagedIdentity(IdentityConfiguration):
         self.resource_id = resource_id
 
 
+class WorkspaceConnectionPropertiesV2(msrest.serialization.Model):
+    """WorkspaceConnectionPropertiesV2.
+
+    You probably want to use the sub-classes and not this class directly. Known
+    sub-classes are: ManagedIdentityAuthTypeWorkspaceConnectionProperties, NoneAuthTypeWorkspaceConnectionProperties, PATAuthTypeWorkspaceConnectionProperties, SASAuthTypeWorkspaceConnectionProperties, UsernamePasswordAuthTypeWorkspaceConnectionProperties.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
+    :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
+    :ivar target:
+    :vartype target: str
+    :ivar value: Value details of the workspace connection.
+    :vartype value: str
+    :ivar value_format: format for the workspace connection value. Possible values include: "JSON".
+    :vartype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
+    """
+
+    _validation = {
+        'auth_type': {'required': True},
+    }
+
+    _attribute_map = {
+        'auth_type': {'key': 'authType', 'type': 'str'},
+        'category': {'key': 'category', 'type': 'str'},
+        'target': {'key': 'target', 'type': 'str'},
+        'value': {'key': 'value', 'type': 'str'},
+        'value_format': {'key': 'valueFormat', 'type': 'str'},
+    }
+
+    _subtype_map = {
+        'auth_type': {'ManagedIdentity': 'ManagedIdentityAuthTypeWorkspaceConnectionProperties', 'None': 'NoneAuthTypeWorkspaceConnectionProperties', 'PAT': 'PATAuthTypeWorkspaceConnectionProperties', 'SAS': 'SASAuthTypeWorkspaceConnectionProperties', 'UsernamePassword': 'UsernamePasswordAuthTypeWorkspaceConnectionProperties'}
+    }
+
+    def __init__(
+        self,
+        *,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
+        target: Optional[str] = None,
+        value: Optional[str] = None,
+        value_format: Optional[Union[str, "ValueFormat"]] = None,
+        **kwargs
+    ):
+        """
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
+        :keyword target:
+        :paramtype target: str
+        :keyword value: Value details of the workspace connection.
+        :paramtype value: str
+        :keyword value_format: format for the workspace connection value. Possible values include:
+         "JSON".
+        :paramtype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
+        """
+        super(WorkspaceConnectionPropertiesV2, self).__init__(**kwargs)
+        self.auth_type = None  # type: Optional[str]
+        self.category = category
+        self.target = target
+        self.value = value
+        self.value_format = value_format
+
+
 class ManagedIdentityAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
     """ManagedIdentityAuthTypeWorkspaceConnectionProperties.
 
     All required parameters must be populated in order to send to Azure.
 
     :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
     :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
     :ivar target:
     :vartype target: str
     :ivar value: Value details of the workspace connection.
@@ -15926,7 +15731,7 @@ class ManagedIdentityAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPr
     def __init__(
         self,
         *,
-        category: Optional[str] = None,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
         target: Optional[str] = None,
         value: Optional[str] = None,
         value_format: Optional[Union[str, "ValueFormat"]] = None,
@@ -15934,8 +15739,9 @@ class ManagedIdentityAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPr
         **kwargs
     ):
         """
-        :keyword category: Category of the connection.
-        :paramtype category: str
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
         :keyword target:
         :paramtype target: str
         :keyword value: Value details of the workspace connection.
@@ -17373,11 +17179,11 @@ class NoneAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2)
     All required parameters must be populated in order to send to Azure.
 
     :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
     :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
     :ivar target:
     :vartype target: str
     :ivar value: Value details of the workspace connection.
@@ -17401,15 +17207,16 @@ class NoneAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2)
     def __init__(
         self,
         *,
-        category: Optional[str] = None,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
         target: Optional[str] = None,
         value: Optional[str] = None,
         value_format: Optional[Union[str, "ValueFormat"]] = None,
         **kwargs
     ):
         """
-        :keyword category: Category of the connection.
-        :paramtype category: str
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
         :keyword target:
         :paramtype target: str
         :keyword value: Value details of the workspace connection.
@@ -18453,11 +18260,11 @@ class PATAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
     All required parameters must be populated in order to send to Azure.
 
     :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
     :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
     :ivar target:
     :vartype target: str
     :ivar value: Value details of the workspace connection.
@@ -18485,7 +18292,7 @@ class PATAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
     def __init__(
         self,
         *,
-        category: Optional[str] = None,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
         target: Optional[str] = None,
         value: Optional[str] = None,
         value_format: Optional[Union[str, "ValueFormat"]] = None,
@@ -18493,8 +18300,9 @@ class PATAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
         **kwargs
     ):
         """
-        :keyword category: Category of the connection.
-        :paramtype category: str
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
         :keyword target:
         :paramtype target: str
         :keyword value: Value details of the workspace connection.
@@ -19243,65 +19051,6 @@ class RandomSamplingAlgorithm(SamplingAlgorithm):
         self.sampling_algorithm_type = 'Random'  # type: str
         self.rule = rule
         self.seed = seed
-
-
-class Recurrence(msrest.serialization.Model):
-    """The workflow trigger recurrence for ComputeStartStop schedule type.
-
-    :ivar frequency: [Required] The frequency to trigger schedule. Possible values include:
-     "Minute", "Hour", "Day", "Week", "Month".
-    :vartype frequency: str or ~azure.mgmt.machinelearningservices.models.RecurrenceFrequency
-    :ivar interval: [Required] Specifies schedule interval in conjunction with frequency.
-    :vartype interval: int
-    :ivar start_time: The start time in yyyy-MM-ddTHH:mm:ss format.
-    :vartype start_time: str
-    :ivar time_zone: Specifies time zone in which the schedule runs.
-     TimeZone should follow Windows time zone format. Refer:
-     https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/default-time-zones?view=windows-11.
-    :vartype time_zone: str
-    :ivar schedule: [Required] The recurrence schedule.
-    :vartype schedule: ~azure.mgmt.machinelearningservices.models.RecurrenceSchedule
-    """
-
-    _attribute_map = {
-        'frequency': {'key': 'frequency', 'type': 'str'},
-        'interval': {'key': 'interval', 'type': 'int'},
-        'start_time': {'key': 'startTime', 'type': 'str'},
-        'time_zone': {'key': 'timeZone', 'type': 'str'},
-        'schedule': {'key': 'schedule', 'type': 'RecurrenceSchedule'},
-    }
-
-    def __init__(
-        self,
-        *,
-        frequency: Optional[Union[str, "RecurrenceFrequency"]] = None,
-        interval: Optional[int] = None,
-        start_time: Optional[str] = None,
-        time_zone: Optional[str] = "UTC",
-        schedule: Optional["RecurrenceSchedule"] = None,
-        **kwargs
-    ):
-        """
-        :keyword frequency: [Required] The frequency to trigger schedule. Possible values include:
-         "Minute", "Hour", "Day", "Week", "Month".
-        :paramtype frequency: str or ~azure.mgmt.machinelearningservices.models.RecurrenceFrequency
-        :keyword interval: [Required] Specifies schedule interval in conjunction with frequency.
-        :paramtype interval: int
-        :keyword start_time: The start time in yyyy-MM-ddTHH:mm:ss format.
-        :paramtype start_time: str
-        :keyword time_zone: Specifies time zone in which the schedule runs.
-         TimeZone should follow Windows time zone format. Refer:
-         https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/default-time-zones?view=windows-11.
-        :paramtype time_zone: str
-        :keyword schedule: [Required] The recurrence schedule.
-        :paramtype schedule: ~azure.mgmt.machinelearningservices.models.RecurrenceSchedule
-        """
-        super(Recurrence, self).__init__(**kwargs)
-        self.frequency = frequency
-        self.interval = interval
-        self.start_time = start_time
-        self.time_zone = time_zone
-        self.schedule = schedule
 
 
 class RecurrenceSchedule(msrest.serialization.Model):
@@ -20204,11 +19953,11 @@ class SASAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
     All required parameters must be populated in order to send to Azure.
 
     :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
     :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
     :ivar target:
     :vartype target: str
     :ivar value: Value details of the workspace connection.
@@ -20236,7 +19985,7 @@ class SASAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
     def __init__(
         self,
         *,
-        category: Optional[str] = None,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
         target: Optional[str] = None,
         value: Optional[str] = None,
         value_format: Optional[Union[str, "ValueFormat"]] = None,
@@ -20244,8 +19993,9 @@ class SASAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
         **kwargs
     ):
         """
-        :keyword category: Category of the connection.
-        :paramtype category: str
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
         :keyword target:
         :paramtype target: str
         :keyword value: Value details of the workspace connection.
@@ -20464,14 +20214,12 @@ class Schedule(Resource):
 class ScheduleBase(msrest.serialization.Model):
     """ScheduleBase.
 
-    :ivar id: A system assigned id for the schedule.
+    :ivar id:
     :vartype id: str
-    :ivar provisioning_status: The current deployment state of schedule. Possible values include:
-     "Completed", "Provisioning", "Failed".
+    :ivar provisioning_status: Possible values include: "Completed", "Provisioning", "Failed".
     :vartype provisioning_status: str or
      ~azure.mgmt.machinelearningservices.models.ScheduleProvisioningState
-    :ivar status: Is the schedule enabled or disabled?. Possible values include: "Enabled",
-     "Disabled".
+    :ivar status: Possible values include: "Enabled", "Disabled".
     :vartype status: str or ~azure.mgmt.machinelearningservices.models.ScheduleStatus
     """
 
@@ -20490,14 +20238,12 @@ class ScheduleBase(msrest.serialization.Model):
         **kwargs
     ):
         """
-        :keyword id: A system assigned id for the schedule.
+        :keyword id:
         :paramtype id: str
-        :keyword provisioning_status: The current deployment state of schedule. Possible values
-         include: "Completed", "Provisioning", "Failed".
+        :keyword provisioning_status: Possible values include: "Completed", "Provisioning", "Failed".
         :paramtype provisioning_status: str or
          ~azure.mgmt.machinelearningservices.models.ScheduleProvisioningState
-        :keyword status: Is the schedule enabled or disabled?. Possible values include: "Enabled",
-         "Disabled".
+        :keyword status: Possible values include: "Enabled", "Disabled".
         :paramtype status: str or ~azure.mgmt.machinelearningservices.models.ScheduleStatus
         """
         super(ScheduleBase, self).__init__(**kwargs)
@@ -20623,7 +20369,7 @@ class ScheduleResourceArmPaginatedResult(msrest.serialization.Model):
 class ScriptReference(msrest.serialization.Model):
     """Script reference.
 
-    :ivar script_source: The storage source of the script: workspace.
+    :ivar script_source: The storage source of the script: inline, workspace.
     :vartype script_source: str
     :ivar script_data: The location of scripts in the mounted volume.
     :vartype script_data: str
@@ -20650,7 +20396,7 @@ class ScriptReference(msrest.serialization.Model):
         **kwargs
     ):
         """
-        :keyword script_source: The storage source of the script: workspace.
+        :keyword script_source: The storage source of the script: inline, workspace.
         :paramtype script_source: str
         :keyword script_data: The location of scripts in the mounted volume.
         :paramtype script_data: str
@@ -20721,70 +20467,6 @@ class ServiceManagedResourcesSettings(msrest.serialization.Model):
         """
         super(ServiceManagedResourcesSettings, self).__init__(**kwargs)
         self.cosmos_db = cosmos_db
-
-
-class ServicePrincipalAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionPropertiesV2):
-    """ServicePrincipalAuthTypeWorkspaceConnectionProperties.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
-    :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
-    :ivar target:
-    :vartype target: str
-    :ivar value: Value details of the workspace connection.
-    :vartype value: str
-    :ivar value_format: format for the workspace connection value. Possible values include: "JSON".
-    :vartype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-    :ivar credentials:
-    :vartype credentials:
-     ~azure.mgmt.machinelearningservices.models.WorkspaceConnectionServicePrincipal
-    """
-
-    _validation = {
-        'auth_type': {'required': True},
-    }
-
-    _attribute_map = {
-        'auth_type': {'key': 'authType', 'type': 'str'},
-        'category': {'key': 'category', 'type': 'str'},
-        'target': {'key': 'target', 'type': 'str'},
-        'value': {'key': 'value', 'type': 'str'},
-        'value_format': {'key': 'valueFormat', 'type': 'str'},
-        'credentials': {'key': 'credentials', 'type': 'WorkspaceConnectionServicePrincipal'},
-    }
-
-    def __init__(
-        self,
-        *,
-        category: Optional[str] = None,
-        target: Optional[str] = None,
-        value: Optional[str] = None,
-        value_format: Optional[Union[str, "ValueFormat"]] = None,
-        credentials: Optional["WorkspaceConnectionServicePrincipal"] = None,
-        **kwargs
-    ):
-        """
-        :keyword category: Category of the connection.
-        :paramtype category: str
-        :keyword target:
-        :paramtype target: str
-        :keyword value: Value details of the workspace connection.
-        :paramtype value: str
-        :keyword value_format: format for the workspace connection value. Possible values include:
-         "JSON".
-        :paramtype value_format: str or ~azure.mgmt.machinelearningservices.models.ValueFormat
-        :keyword credentials:
-        :paramtype credentials:
-         ~azure.mgmt.machinelearningservices.models.WorkspaceConnectionServicePrincipal
-        """
-        super(ServicePrincipalAuthTypeWorkspaceConnectionProperties, self).__init__(category=category, target=target, value=value, value_format=value_format, **kwargs)
-        self.auth_type = 'ServicePrincipal'  # type: str
-        self.credentials = credentials
 
 
 class ServicePrincipalDatastoreCredentials(DatastoreCredentials):
@@ -22016,7 +21698,6 @@ class SynapseSpark(Compute):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -22038,6 +21719,7 @@ class SynapseSpark(Compute):
         *,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         properties: Optional["SynapseSparkProperties"] = None,
         **kwargs
     ):
@@ -22046,10 +21728,13 @@ class SynapseSpark(Compute):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         :keyword properties:
         :paramtype properties: ~azure.mgmt.machinelearningservices.models.SynapseSparkProperties
         """
-        super(SynapseSpark, self).__init__(description=description, resource_id=resource_id, **kwargs)
+        super(SynapseSpark, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, **kwargs)
         self.compute_type = 'SynapseSpark'  # type: str
         self.properties = properties
 
@@ -24266,11 +23951,11 @@ class UsernamePasswordAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionP
     All required parameters must be populated in order to send to Azure.
 
     :ivar auth_type: Required. Authentication type of the connection target.Constant filled by
-     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS",
-     "ServicePrincipal", "AccessKey".
+     server. Possible values include: "PAT", "ManagedIdentity", "UsernamePassword", "None", "SAS".
     :vartype auth_type: str or ~azure.mgmt.machinelearningservices.models.ConnectionAuthType
-    :ivar category: Category of the connection.
-    :vartype category: str
+    :ivar category: Category of the connection. Possible values include: "PythonFeed",
+     "ContainerRegistry", "Git".
+    :vartype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
     :ivar target:
     :vartype target: str
     :ivar value: Value details of the workspace connection.
@@ -24298,7 +23983,7 @@ class UsernamePasswordAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionP
     def __init__(
         self,
         *,
-        category: Optional[str] = None,
+        category: Optional[Union[str, "ConnectionCategory"]] = None,
         target: Optional[str] = None,
         value: Optional[str] = None,
         value_format: Optional[Union[str, "ValueFormat"]] = None,
@@ -24306,8 +23991,9 @@ class UsernamePasswordAuthTypeWorkspaceConnectionProperties(WorkspaceConnectionP
         **kwargs
     ):
         """
-        :keyword category: Category of the connection.
-        :paramtype category: str
+        :keyword category: Category of the connection. Possible values include: "PythonFeed",
+         "ContainerRegistry", "Git".
+        :paramtype category: str or ~azure.mgmt.machinelearningservices.models.ConnectionCategory
         :keyword target:
         :paramtype target: str
         :keyword value: Value details of the workspace connection.
@@ -24396,7 +24082,6 @@ class VirtualMachine(Compute, VirtualMachineSchema):
         'modified_on': {'readonly': True},
         'provisioning_errors': {'readonly': True},
         'is_attached_compute': {'readonly': True},
-        'disable_local_auth': {'readonly': True},
     }
 
     _attribute_map = {
@@ -24419,6 +24104,7 @@ class VirtualMachine(Compute, VirtualMachineSchema):
         properties: Optional["VirtualMachineSchemaProperties"] = None,
         description: Optional[str] = None,
         resource_id: Optional[str] = None,
+        disable_local_auth: Optional[bool] = None,
         **kwargs
     ):
         """
@@ -24429,8 +24115,11 @@ class VirtualMachine(Compute, VirtualMachineSchema):
         :paramtype description: str
         :keyword resource_id: ARM resource id of the underlying compute.
         :paramtype resource_id: str
+        :keyword disable_local_auth: Opt-out of local authentication and ensure customers can use only
+         MSI and AAD exclusively for authentication.
+        :paramtype disable_local_auth: bool
         """
-        super(VirtualMachine, self).__init__(description=description, resource_id=resource_id, properties=properties, **kwargs)
+        super(VirtualMachine, self).__init__(description=description, resource_id=resource_id, disable_local_auth=disable_local_auth, properties=properties, **kwargs)
         self.properties = properties
         self.compute_type = 'VirtualMachine'  # type: str
         self.compute_location = None
@@ -24441,7 +24130,7 @@ class VirtualMachine(Compute, VirtualMachineSchema):
         self.resource_id = resource_id
         self.provisioning_errors = None
         self.is_attached_compute = None
-        self.disable_local_auth = None
+        self.disable_local_auth = disable_local_auth
 
 
 class VirtualMachineImage(msrest.serialization.Model):
@@ -25134,38 +24823,6 @@ class Workspace(Resource):
         self.scheduled_purge_date = None
 
 
-class WorkspaceConnectionAccessKey(msrest.serialization.Model):
-    """WorkspaceConnectionAccessKey.
-
-    :ivar access_key_id:
-    :vartype access_key_id: str
-    :ivar secret_access_key:
-    :vartype secret_access_key: str
-    """
-
-    _attribute_map = {
-        'access_key_id': {'key': 'accessKeyId', 'type': 'str'},
-        'secret_access_key': {'key': 'secretAccessKey', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        access_key_id: Optional[str] = None,
-        secret_access_key: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        :keyword access_key_id:
-        :paramtype access_key_id: str
-        :keyword secret_access_key:
-        :paramtype secret_access_key: str
-        """
-        super(WorkspaceConnectionAccessKey, self).__init__(**kwargs)
-        self.access_key_id = access_key_id
-        self.secret_access_key = secret_access_key
-
-
 class WorkspaceConnectionManagedIdentity(msrest.serialization.Model):
     """WorkspaceConnectionManagedIdentity.
 
@@ -25311,45 +24968,6 @@ class WorkspaceConnectionPropertiesV2BasicResourceArmPaginatedResult(msrest.seri
         super(WorkspaceConnectionPropertiesV2BasicResourceArmPaginatedResult, self).__init__(**kwargs)
         self.value = value
         self.next_link = None
-
-
-class WorkspaceConnectionServicePrincipal(msrest.serialization.Model):
-    """WorkspaceConnectionServicePrincipal.
-
-    :ivar client_id:
-    :vartype client_id: str
-    :ivar client_secret:
-    :vartype client_secret: str
-    :ivar tenant_id:
-    :vartype tenant_id: str
-    """
-
-    _attribute_map = {
-        'client_id': {'key': 'clientId', 'type': 'str'},
-        'client_secret': {'key': 'clientSecret', 'type': 'str'},
-        'tenant_id': {'key': 'tenantId', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        tenant_id: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        :keyword client_id:
-        :paramtype client_id: str
-        :keyword client_secret:
-        :paramtype client_secret: str
-        :keyword tenant_id:
-        :paramtype tenant_id: str
-        """
-        super(WorkspaceConnectionServicePrincipal, self).__init__(**kwargs)
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.tenant_id = tenant_id
 
 
 class WorkspaceConnectionSharedAccessSignature(msrest.serialization.Model):

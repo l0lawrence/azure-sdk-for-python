@@ -12,38 +12,23 @@ from azure.ai.ml.entities._util import _general_copy
 from azure.ai.ml.entities._validation import MutableValidationResult, _ValidationResultBuilder
 
 ADDITIONAL_INCLUDES_SUFFIX = "additional_includes"
-PLACEHOLDER_FILE_NAME = "_placeholder_spec.yaml"
 
 
 class _AdditionalIncludes:
     def __init__(self, code_path: Union[None, str], yaml_path: str):
-        self.__yaml_path = yaml_path
+        self.__yaml_path = Path(yaml_path)
         self.__code_path = code_path
 
         self._tmp_code_path = None
-        self.__includes = None
-
-    @property
-    def _includes(self):
-        if not self._additional_includes_file_path.is_file():
-            return []
-        if self.__includes is None:
+        self._includes = None
+        if self._additional_includes_file_path.is_file():
             with open(self._additional_includes_file_path, "r") as f:
                 lines = f.readlines()
-                self.__includes = [line.strip() for line in lines if len(line.strip()) > 0]
-        return self.__includes
-
-    @property
-    def with_includes(self):
-        return len(self._includes) != 0
+                self._includes = [line.strip() for line in lines if len(line.strip()) > 0]
 
     @property
     def _yaml_path(self) -> Path:
-        if self.__yaml_path is None:
-            # if yaml path is not specified, use a not created
-            # temp file name
-            return Path.cwd() / PLACEHOLDER_FILE_NAME
-        return Path(self.__yaml_path)
+        return self.__yaml_path
 
     @property
     def _code_path(self) -> Path:
@@ -71,9 +56,9 @@ class _AdditionalIncludes:
             shutil.copytree(src, dst)
 
     def _validate(self) -> MutableValidationResult:
-        validation_result = _ValidationResultBuilder.success()
-        if not self.with_includes:
-            return validation_result
+        # pylint: disable=too-many-return-statements
+        if self._includes is None:
+            return _ValidationResultBuilder.success()
         for additional_include in self._includes:
             include_path = self._additional_includes_file_path.parent / additional_include
             # if additional include has not supported characters, resolve will fail and raise OSError
@@ -81,18 +66,15 @@ class _AdditionalIncludes:
                 src_path = include_path.resolve()
             except OSError:
                 error_msg = f"Failed to resolve additional include {additional_include} for {self._yaml_name}."
-                validation_result.append_error(message=error_msg)
-                continue
+                return _ValidationResultBuilder.from_single_message(error_msg)
 
             if not src_path.exists():
                 error_msg = f"Unable to find additional include {additional_include} for {self._yaml_name}."
-                validation_result.append_error(message=error_msg)
-                continue
+                return _ValidationResultBuilder.from_single_message(error_msg)
 
             if len(src_path.parents) == 0:
                 error_msg = f"Root directory is not supported for additional includes for {self._yaml_name}."
-                validation_result.append_error(message=error_msg)
-                continue
+                return _ValidationResultBuilder.from_single_message(error_msg)
 
             dst_path = Path(self._code_path) / src_path.name
             if dst_path.is_symlink():
@@ -102,12 +84,11 @@ class _AdditionalIncludes:
                         f"A symbolic link already exists for additional include {additional_include} "
                         f"for {self._yaml_name}."
                     )
-                    validation_result.append_error(message=error_msg)
-                    continue
+                    return _ValidationResultBuilder.from_single_message(error_msg)
             elif dst_path.exists():
                 error_msg = f"A file already exists for additional include {additional_include} for {self._yaml_name}."
-                validation_result.append_error(message=error_msg)
-        return validation_result
+                return _ValidationResultBuilder.from_single_message(error_msg)
+        return _ValidationResultBuilder.success()
 
     def resolve(self) -> None:
         """Resolve code and potential additional includes.
@@ -116,7 +97,7 @@ class _AdditionalIncludes:
         original real code path; otherwise, create a tmp folder and copy
         all files under real code path and additional includes to it.
         """
-        if not self.with_includes:
+        if self._includes is None:
             return
         tmp_folder_path = Path(tempfile.mkdtemp())
         # code can be either file or folder, as additional includes exists, need to copy to temporary folder

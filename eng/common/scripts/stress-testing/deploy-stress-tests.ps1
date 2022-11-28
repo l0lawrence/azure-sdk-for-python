@@ -24,15 +24,7 @@ param(
     [string]$Namespace,
 
     # Override remote stress-test-addons with local on-disk addons for development
-    [System.IO.FileInfo]$LocalAddonsPath,
-
-    # Matrix generation parameters
-    [Parameter(Mandatory=$False)][string]$MatrixFileName,
-    [Parameter(Mandatory=$False)][string]$MatrixSelection,
-    [Parameter(Mandatory=$False)][string]$MatrixDisplayNameFilter,
-    [Parameter(Mandatory=$False)][array]$MatrixFilters,
-    [Parameter(Mandatory=$False)][array]$MatrixReplace,
-    [Parameter(Mandatory=$False)][array]$MatrixNonSparseParameters
+    [System.IO.FileInfo]$LocalAddonsPath
 )
 
 . $PSScriptRoot/stress-test-deployment-lib.ps1

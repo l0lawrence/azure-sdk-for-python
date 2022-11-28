@@ -17,7 +17,6 @@ class DummySchema(Schema):
 
 
 @pytest.mark.unittest
-@pytest.mark.production_experience_test
 class TestScaleSettingsSchema:
     def test_default_scale_settings(self, mock_workspace_scope: OperationScope) -> None:
         schema = DummySchema()

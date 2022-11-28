@@ -14,7 +14,6 @@ from azure.core.exceptions import (
     HttpResponseError,
     ResourceExistsError,
     ResourceNotFoundError,
-    ResourceNotModifiedError,
     map_error,
 )
 from azure.core.pipeline import PipelineResponse
@@ -42,10 +41,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
     async def analyze_conversation(self, task: JSON, *, content_type: str = "application/json", **kwargs: Any) -> JSON:
         """Analyzes the input conversation utterance.
 
-        See
-        https://learn.microsoft.com/rest/api/language/conversation-analysis-runtime/analyze-conversation
-        for more information.
-
         :param task: A single conversational task to execute. Required.
         :type task: JSON
         :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
@@ -66,12 +61,12 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                     "analysisInput": {
                         "conversationItem": {
                             "id": "str",  # The ID of a conversation item. Required.
-                            "participantId": "str",  # The participant ID of a
-                              conversation item. Required.
                             "language": "str",  # Optional. The override language of a
                               conversation item in BCP 47 language representation.
                             "modality": "str",  # Optional. Enumeration of supported
                               conversational modalities. Known values are: "transcript" and "text".
+                            "participantId": "str",  # The participant ID of a
+                              conversation item. Required.
                             "role": "str"  # Optional. The role of the participant. Known
                               values are: "agent", "customer", and "generic".
                         }
@@ -80,11 +75,11 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                     "parameters": {
                         "deploymentName": "str",  # The name of the deployment to use.
                           Required.
-                        "projectName": "str",  # The name of the project to use. Required.
                         "directTarget": "str",  # Optional. The name of a target project to
                           forward the request to.
                         "isLoggingEnabled": bool,  # Optional. If true, the service will keep
                           the query for further review.
+                        "projectName": "str",  # The name of the project to use. Required.
                         "stringIndexType": "TextElements_v8",  # Optional. Default value is
                           "TextElements_v8". Specifies the method used to interpret string offsets. Set
                           to "UnicodeCodePoint" for Python strings. Known values are:
@@ -106,51 +101,12 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                 analyze_conversation_task_result = {
                     "kind": "ConversationResult",
                     "result": {
-                        "prediction": base_prediction,
-                        "query": "str",  # The conversation utterance given by the caller.
-                          Required.
-                        "detectedLanguage": "str"  # Optional. The system detected language
+                        "detectedLanguage": "str",  # Optional. The system detected language
                           for the query in BCP 47 language representation..
+                        "prediction": base_prediction,
+                        "query": "str"  # The conversation utterance given by the caller.
+                          Required.
                     }
-                }
-
-                # JSON input template for discriminator value "Conversation":
-                base_prediction = {
-                    "entities": [
-                        {
-                            "category": "str",  # The entity category. Required.
-                            "confidenceScore": 0.0,  # The entity confidence score.
-                              Required.
-                            "length": 0,  # The length of the text. Required.
-                            "offset": 0,  # The starting index of this entity in the
-                              query. Required.
-                            "text": "str",  # The predicted entity text. Required.
-                            "extraInformation": [
-                                base_extra_information
-                            ],
-                            "resolutions": [
-                                base_resolution
-                            ]
-                        }
-                    ],
-                    "intents": [
-                        {
-                            "category": "str",  # A predicted class. Required.
-                            "confidenceScore": 0.0  # The confidence score of the class
-                              from 0.0 to 1.0. Required.
-                        }
-                    ],
-                    "projectKind": "Conversation",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
-                }
-
-                # JSON input template for discriminator value "Orchestration":
-                base_prediction = {
-                    "intents": {
-                        "str": target_intent_result
-                    },
-                    "projectKind": "Orchestration",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
                 }
 
                 # response body for status code(s): 200
@@ -160,10 +116,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
     @overload
     async def analyze_conversation(self, task: IO, *, content_type: str = "application/json", **kwargs: Any) -> JSON:
         """Analyzes the input conversation utterance.
-
-        See
-        https://learn.microsoft.com/rest/api/language/conversation-analysis-runtime/analyze-conversation
-        for more information.
 
         :param task: A single conversational task to execute. Required.
         :type task: IO
@@ -183,51 +135,12 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                 analyze_conversation_task_result = {
                     "kind": "ConversationResult",
                     "result": {
-                        "prediction": base_prediction,
-                        "query": "str",  # The conversation utterance given by the caller.
-                          Required.
-                        "detectedLanguage": "str"  # Optional. The system detected language
+                        "detectedLanguage": "str",  # Optional. The system detected language
                           for the query in BCP 47 language representation..
+                        "prediction": base_prediction,
+                        "query": "str"  # The conversation utterance given by the caller.
+                          Required.
                     }
-                }
-
-                # JSON input template for discriminator value "Conversation":
-                base_prediction = {
-                    "entities": [
-                        {
-                            "category": "str",  # The entity category. Required.
-                            "confidenceScore": 0.0,  # The entity confidence score.
-                              Required.
-                            "length": 0,  # The length of the text. Required.
-                            "offset": 0,  # The starting index of this entity in the
-                              query. Required.
-                            "text": "str",  # The predicted entity text. Required.
-                            "extraInformation": [
-                                base_extra_information
-                            ],
-                            "resolutions": [
-                                base_resolution
-                            ]
-                        }
-                    ],
-                    "intents": [
-                        {
-                            "category": "str",  # A predicted class. Required.
-                            "confidenceScore": 0.0  # The confidence score of the class
-                              from 0.0 to 1.0. Required.
-                        }
-                    ],
-                    "projectKind": "Conversation",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
-                }
-
-                # JSON input template for discriminator value "Orchestration":
-                base_prediction = {
-                    "intents": {
-                        "str": target_intent_result
-                    },
-                    "projectKind": "Orchestration",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
                 }
 
                 # response body for status code(s): 200
@@ -237,10 +150,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
     @distributed_trace_async
     async def analyze_conversation(self, task: Union[JSON, IO], **kwargs: Any) -> JSON:
         """Analyzes the input conversation utterance.
-
-        See
-        https://learn.microsoft.com/rest/api/language/conversation-analysis-runtime/analyze-conversation
-        for more information.
 
         :param task: A single conversational task to execute. Is either a model type or a IO type.
          Required.
@@ -261,62 +170,18 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                 analyze_conversation_task_result = {
                     "kind": "ConversationResult",
                     "result": {
-                        "prediction": base_prediction,
-                        "query": "str",  # The conversation utterance given by the caller.
-                          Required.
-                        "detectedLanguage": "str"  # Optional. The system detected language
+                        "detectedLanguage": "str",  # Optional. The system detected language
                           for the query in BCP 47 language representation..
+                        "prediction": base_prediction,
+                        "query": "str"  # The conversation utterance given by the caller.
+                          Required.
                     }
-                }
-
-                # JSON input template for discriminator value "Conversation":
-                base_prediction = {
-                    "entities": [
-                        {
-                            "category": "str",  # The entity category. Required.
-                            "confidenceScore": 0.0,  # The entity confidence score.
-                              Required.
-                            "length": 0,  # The length of the text. Required.
-                            "offset": 0,  # The starting index of this entity in the
-                              query. Required.
-                            "text": "str",  # The predicted entity text. Required.
-                            "extraInformation": [
-                                base_extra_information
-                            ],
-                            "resolutions": [
-                                base_resolution
-                            ]
-                        }
-                    ],
-                    "intents": [
-                        {
-                            "category": "str",  # A predicted class. Required.
-                            "confidenceScore": 0.0  # The confidence score of the class
-                              from 0.0 to 1.0. Required.
-                        }
-                    ],
-                    "projectKind": "Conversation",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
-                }
-
-                # JSON input template for discriminator value "Orchestration":
-                base_prediction = {
-                    "intents": {
-                        "str": target_intent_result
-                    },
-                    "projectKind": "Orchestration",
-                    "topIntent": "str"  # Optional. The intent with the highest score.
                 }
 
                 # response body for status code(s): 200
                 response == analyze_conversation_task_result
         """
-        error_map = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
-            304: ResourceNotModifiedError,
-        }
+        error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -367,12 +232,7 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
         return cast(JSON, deserialized)
 
     async def _conversation_analysis_initial(self, task: Union[JSON, IO], **kwargs: Any) -> Optional[JSON]:
-        error_map = {
-            401: ClientAuthenticationError,
-            404: ResourceNotFoundError,
-            409: ResourceExistsError,
-            304: ResourceNotModifiedError,
-        }
+        error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -439,9 +299,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
         Submit a collection of conversations for analysis. Specify one or more unique tasks to be
         executed.
 
-        See https://learn.microsoft.com/rest/api/language/analyze-conversation/submit-job for more
-        information.
-
         :param task: The collection of conversations to analyze and one or more tasks to execute.
          Required.
         :type task: JSON
@@ -469,30 +326,16 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                             conversation
                         ]
                     },
+                    "displayName": "str",  # Optional. Optional display name for the analysis
+                      job.
                     "tasks": [
                         analyze_conversation_lro_task
-                    ],
-                    "displayName": "str"  # Optional. Optional display name for the analysis job.
+                    ]
                 }
 
                 # response body for status code(s): 200
                 response == {
                     "createdDateTime": "2020-02-20 00:00:00",  # Required.
-                    "jobId": "str",  # Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
-                    "status": "str",  # The status of the task at the mentioned last update time.
-                      Required. Known values are: "notStarted", "running", "succeeded", "failed",
-                      "cancelled", "cancelling", and "partiallyCompleted".
-                    "tasks": {
-                        "completed": 0,  # Count of tasks completed successfully. Required.
-                        "failed": 0,  # Count of tasks that failed. Required.
-                        "inProgress": 0,  # Count of tasks in progress currently. Required.
-                        "total": 0,  # Total count of tasks submitted as part of the job.
-                          Required.
-                        "items": [
-                            analyze_conversation_job_result
-                        ]
-                    },
                     "displayName": "str",  # Optional.
                     "errors": [
                         {
@@ -505,8 +348,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                               "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
                               "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
                               "Warning".
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
                             "details": [
                                 ...
                             ],
@@ -519,36 +360,45 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                                   "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
                                   "InvalidDocumentBatch", "UnsupportedLanguageCode", and
                                   "InvalidCountryHint".
-                                "message": "str",  # Error message. Required.
                                 "details": {
                                     "str": "str"  # Optional. Error details.
                                 },
                                 "innererror": ...,
+                                "message": "str",  # Error message. Required.
                                 "target": "str"  # Optional. Error target.
                             },
+                            "message": "str",  # A human-readable representation of the
+                              error. Required.
                             "target": "str"  # Optional. The target of the error.
                         }
                     ],
                     "expirationDateTime": "2020-02-20 00:00:00",  # Optional.
+                    "jobId": "str",  # Required.
+                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
                     "nextLink": "str",  # Optional.
                     "statistics": {
                         "conversationsCount": 0,  # Number of conversations submitted in the
                           request. Required.
-                        "documentsCount": 0,  # Number of documents submitted in the request.
-                          Required.
                         "erroneousConversationsCount": 0,  # Number of invalid documents.
                           This includes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "erroneousDocumentsCount": 0,  # Number of invalid documents. This
-                          includes empty, over-size limit or non-supported languages documents.
-                          Required.
                         "transactionsCount": 0,  # Number of transactions for the request.
                           Required.
-                        "validConversationsCount": 0,  # Number of conversations documents.
+                        "validConversationsCount": 0  # Number of conversations documents.
                           This excludes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "validDocumentsCount": 0  # Number of valid documents. This excludes
-                          empty, over-size limit or non-supported languages documents. Required.
+                    },
+                    "status": "str",  # Required. Known values are: "notStarted", "running",
+                      "succeeded", "partiallyCompleted", "failed", "cancelled", and "cancelling".
+                    "tasks": {
+                        "completed": 0,  # Count of tasks completed successfully. Required.
+                        "failed": 0,  # Count of tasks that failed. Required.
+                        "inProgress": 0,  # Count of tasks in progress currently. Required.
+                        "items": [
+                            analyze_conversation_job_result
+                        ],
+                        "total": 0  # Total count of tasks submitted as part of the job.
+                          Required.
                     }
                 }
         """
@@ -561,9 +411,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
 
         Submit a collection of conversations for analysis. Specify one or more unique tasks to be
         executed.
-
-        See https://learn.microsoft.com/rest/api/language/analyze-conversation/submit-job for more
-        information.
 
         :param task: The collection of conversations to analyze and one or more tasks to execute.
          Required.
@@ -588,21 +435,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                 # response body for status code(s): 200
                 response == {
                     "createdDateTime": "2020-02-20 00:00:00",  # Required.
-                    "jobId": "str",  # Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
-                    "status": "str",  # The status of the task at the mentioned last update time.
-                      Required. Known values are: "notStarted", "running", "succeeded", "failed",
-                      "cancelled", "cancelling", and "partiallyCompleted".
-                    "tasks": {
-                        "completed": 0,  # Count of tasks completed successfully. Required.
-                        "failed": 0,  # Count of tasks that failed. Required.
-                        "inProgress": 0,  # Count of tasks in progress currently. Required.
-                        "total": 0,  # Total count of tasks submitted as part of the job.
-                          Required.
-                        "items": [
-                            analyze_conversation_job_result
-                        ]
-                    },
                     "displayName": "str",  # Optional.
                     "errors": [
                         {
@@ -615,8 +447,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                               "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
                               "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
                               "Warning".
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
                             "details": [
                                 ...
                             ],
@@ -629,36 +459,45 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                                   "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
                                   "InvalidDocumentBatch", "UnsupportedLanguageCode", and
                                   "InvalidCountryHint".
-                                "message": "str",  # Error message. Required.
                                 "details": {
                                     "str": "str"  # Optional. Error details.
                                 },
                                 "innererror": ...,
+                                "message": "str",  # Error message. Required.
                                 "target": "str"  # Optional. Error target.
                             },
+                            "message": "str",  # A human-readable representation of the
+                              error. Required.
                             "target": "str"  # Optional. The target of the error.
                         }
                     ],
                     "expirationDateTime": "2020-02-20 00:00:00",  # Optional.
+                    "jobId": "str",  # Required.
+                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
                     "nextLink": "str",  # Optional.
                     "statistics": {
                         "conversationsCount": 0,  # Number of conversations submitted in the
                           request. Required.
-                        "documentsCount": 0,  # Number of documents submitted in the request.
-                          Required.
                         "erroneousConversationsCount": 0,  # Number of invalid documents.
                           This includes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "erroneousDocumentsCount": 0,  # Number of invalid documents. This
-                          includes empty, over-size limit or non-supported languages documents.
-                          Required.
                         "transactionsCount": 0,  # Number of transactions for the request.
                           Required.
-                        "validConversationsCount": 0,  # Number of conversations documents.
+                        "validConversationsCount": 0  # Number of conversations documents.
                           This excludes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "validDocumentsCount": 0  # Number of valid documents. This excludes
-                          empty, over-size limit or non-supported languages documents. Required.
+                    },
+                    "status": "str",  # Required. Known values are: "notStarted", "running",
+                      "succeeded", "partiallyCompleted", "failed", "cancelled", and "cancelling".
+                    "tasks": {
+                        "completed": 0,  # Count of tasks completed successfully. Required.
+                        "failed": 0,  # Count of tasks that failed. Required.
+                        "inProgress": 0,  # Count of tasks in progress currently. Required.
+                        "items": [
+                            analyze_conversation_job_result
+                        ],
+                        "total": 0  # Total count of tasks submitted as part of the job.
+                          Required.
                     }
                 }
         """
@@ -669,9 +508,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
 
         Submit a collection of conversations for analysis. Specify one or more unique tasks to be
         executed.
-
-        See https://learn.microsoft.com/rest/api/language/analyze-conversation/submit-job for more
-        information.
 
         :param task: The collection of conversations to analyze and one or more tasks to execute. Is
          either a model type or a IO type. Required.
@@ -696,21 +532,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                 # response body for status code(s): 200
                 response == {
                     "createdDateTime": "2020-02-20 00:00:00",  # Required.
-                    "jobId": "str",  # Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
-                    "status": "str",  # The status of the task at the mentioned last update time.
-                      Required. Known values are: "notStarted", "running", "succeeded", "failed",
-                      "cancelled", "cancelling", and "partiallyCompleted".
-                    "tasks": {
-                        "completed": 0,  # Count of tasks completed successfully. Required.
-                        "failed": 0,  # Count of tasks that failed. Required.
-                        "inProgress": 0,  # Count of tasks in progress currently. Required.
-                        "total": 0,  # Total count of tasks submitted as part of the job.
-                          Required.
-                        "items": [
-                            analyze_conversation_job_result
-                        ]
-                    },
                     "displayName": "str",  # Optional.
                     "errors": [
                         {
@@ -723,8 +544,6 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                               "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
                               "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
                               "Warning".
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
                             "details": [
                                 ...
                             ],
@@ -737,36 +556,45 @@ class ConversationAnalysisClientOperationsMixin(MixinABC):
                                   "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
                                   "InvalidDocumentBatch", "UnsupportedLanguageCode", and
                                   "InvalidCountryHint".
-                                "message": "str",  # Error message. Required.
                                 "details": {
                                     "str": "str"  # Optional. Error details.
                                 },
                                 "innererror": ...,
+                                "message": "str",  # Error message. Required.
                                 "target": "str"  # Optional. Error target.
                             },
+                            "message": "str",  # A human-readable representation of the
+                              error. Required.
                             "target": "str"  # Optional. The target of the error.
                         }
                     ],
                     "expirationDateTime": "2020-02-20 00:00:00",  # Optional.
+                    "jobId": "str",  # Required.
+                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # Required.
                     "nextLink": "str",  # Optional.
                     "statistics": {
                         "conversationsCount": 0,  # Number of conversations submitted in the
                           request. Required.
-                        "documentsCount": 0,  # Number of documents submitted in the request.
-                          Required.
                         "erroneousConversationsCount": 0,  # Number of invalid documents.
                           This includes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "erroneousDocumentsCount": 0,  # Number of invalid documents. This
-                          includes empty, over-size limit or non-supported languages documents.
-                          Required.
                         "transactionsCount": 0,  # Number of transactions for the request.
                           Required.
-                        "validConversationsCount": 0,  # Number of conversations documents.
+                        "validConversationsCount": 0  # Number of conversations documents.
                           This excludes empty, over-size limit or non-supported languages documents.
                           Required.
-                        "validDocumentsCount": 0  # Number of valid documents. This excludes
-                          empty, over-size limit or non-supported languages documents. Required.
+                    },
+                    "status": "str",  # Required. Known values are: "notStarted", "running",
+                      "succeeded", "partiallyCompleted", "failed", "cancelled", and "cancelling".
+                    "tasks": {
+                        "completed": 0,  # Count of tasks completed successfully. Required.
+                        "failed": 0,  # Count of tasks that failed. Required.
+                        "inProgress": 0,  # Count of tasks in progress currently. Required.
+                        "items": [
+                            analyze_conversation_job_result
+                        ],
+                        "total": 0  # Total count of tasks submitted as part of the job.
+                          Required.
                     }
                 }
         """

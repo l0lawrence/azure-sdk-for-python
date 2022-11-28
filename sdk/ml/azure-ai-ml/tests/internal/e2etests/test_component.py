@@ -55,7 +55,6 @@ def bodiless_matching(test_proxy):
     "recorded_test", "enable_internal_components", "mock_code_hash", "mock_asset_name", "mock_component_hash"
 )
 @pytest.mark.e2etest
-@pytest.mark.pipeline_test
 class TestComponent(AzureRecordedTestCase):
     @pytest.mark.parametrize(
         "yaml_path",

@@ -18,7 +18,6 @@ components_dir = tests_root_dir / "test_configs/components/"
 
 @pytest.mark.timeout(_COMPONENT_TIMEOUT_SECOND)
 @pytest.mark.unittest
-@pytest.mark.pipeline_test
 class TestComponentValidate:
     def test_component_name_validate(self):
         invalid_component_names = [

@@ -251,7 +251,7 @@ class ComputeInstanceState(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     UNUSABLE = "Unusable"
 
 class ComputePowerAction(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
-    """[Required] The compute power action.
+    """The compute power action.
     """
 
     START = "Start"
@@ -294,8 +294,14 @@ class ConnectionAuthType(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     USERNAME_PASSWORD = "UsernamePassword"
     NONE = "None"
     SAS = "SAS"
-    SERVICE_PRINCIPAL = "ServicePrincipal"
-    ACCESS_KEY = "AccessKey"
+
+class ConnectionCategory(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
+    """Category of the connection
+    """
+
+    PYTHON_FEED = "PythonFeed"
+    CONTAINER_REGISTRY = "ContainerRegistry"
+    GIT = "Git"
 
 class ContainerType(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
 
@@ -768,13 +774,6 @@ class MLAssistConfigurationType(with_metaclass(CaseInsensitiveEnumMeta, str, Enu
     ENABLED = "Enabled"
     DISABLED = "Disabled"
 
-class MlflowAutologger(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
-    """Indicates whether mlflow autologger is enabled for notebooks.
-    """
-
-    ENABLED = "Enabled"
-    DISABLED = "Disabled"
-
 class MLFlowAutologgerState(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     """Enum to determine the state of mlflow autologger.
     """
@@ -1120,8 +1119,6 @@ class ScheduleListViewType(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     ALL = "All"
 
 class ScheduleProvisioningState(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
-    """The current deployment state of schedule.
-    """
 
     COMPLETED = "Completed"
     PROVISIONING = "Provisioning"
@@ -1137,8 +1134,6 @@ class ScheduleProvisioningStatus(with_metaclass(CaseInsensitiveEnumMeta, str, En
     CANCELED = "Canceled"
 
 class ScheduleStatus(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
-    """Is the schedule enabled or disabled?
-    """
 
     ENABLED = "Enabled"
     DISABLED = "Disabled"

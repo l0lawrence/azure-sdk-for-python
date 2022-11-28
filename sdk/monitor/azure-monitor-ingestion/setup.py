@@ -80,7 +80,6 @@ setup(
         'azure',
         'azure.monitor',
     ]),
-    include_package_data=True,
     install_requires=[
         'msrest>=0.6.19',
         'azure-core<2.0.0,>=1.24.0',

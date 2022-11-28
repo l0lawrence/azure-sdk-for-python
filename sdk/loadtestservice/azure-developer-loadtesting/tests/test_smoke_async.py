@@ -6,28 +6,19 @@
 # -------------------------------------------------------------------------
 from testcase import LoadtestingPowerShellPreparer
 from testcase_async import LoadtestingAsyncTest
-from devtools_testutils.aio import recorded_by_proxy_async
-from devtools_testutils import set_bodiless_matcher
 import os
 
 DISPLAY_NAME = "TestingResource"  # display name
 
 
-class TestLoadtestingSmokeAsync(LoadtestingAsyncTest):
+class LoadtestingSmokeAsyncTest(LoadtestingAsyncTest):
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy_async
-    async def test_smoke_create_or_update_test(
-        self,
-        loadtesting_endpoint,
-        loadtesting_test_id,
-        loadtesting_subscription_id
-    ):
-        set_bodiless_matcher()
+    async def test_smoke_create_or_update_test(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = await client.load_test_administration.create_or_update_test(
-            loadtesting_test_id,
+            self.test_id,
             {
-                "resourceId": f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/yashika-rg/providers/Microsoft.LoadTestService/loadtests/loadtestsdk",
+                "resourceId": f"/subscriptions/{self.subscription_id}/resourceGroups/yashika-rg/providers/Microsoft.LoadTestService/loadtests/loadtestsdk",
                 "description": "",
                 "displayName": DISPLAY_NAME,
                 "loadTestConfig": {
@@ -45,27 +36,19 @@ class TestLoadtestingSmokeAsync(LoadtestingAsyncTest):
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy_async
-    async def test_create_or_update_app_components(
-        self,
-        loadtesting_endpoint,
-        loadtesting_test_id,
-        loadtesting_app_component,
-        loadtesting_subscription_id
-    ):
-        set_bodiless_matcher()
+    async def test_create_or_update_app_components(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
         result = await client.load_test_administration.create_or_update_app_components(
-            loadtesting_app_component,
+            self.app_component,
             {
                 "name": "app_component",
-                "testId": loadtesting_test_id,
+                "testId": self.test_id,
                 "value": {
-                    f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo": {
-                        "resourceId": f"/subscriptions/{loadtesting_subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo",
+                    f"/subscriptions/{self.subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo": {
+                        "resourceId": f"/subscriptions/{self.subscription_id}/resourceGroups/App-Service-Sample-Demo-rg/providers/Microsoft.Web/sites/App-Service-Sample-Demo",
                         "resourceName": "App-Service-Sample-Demo",
                         "resourceType": "Microsoft.Web/sites",
-                        "subscriptionId": loadtesting_subscription_id,
+                        "subscriptionId": self.subscription_id,
                     }
                 },
             },
@@ -73,17 +56,10 @@ class TestLoadtestingSmokeAsync(LoadtestingAsyncTest):
         assert result is not None
 
     @LoadtestingPowerShellPreparer()
-    @recorded_by_proxy_async
-    async def test_get_app_components(
-        self,
-        loadtesting_endpoint,
-        loadtesting_test_id,
-        loadtesting_app_component
-    ):
-        set_bodiless_matcher()
+    async def test_get_app_components(self, loadtesting_endpoint):
         client = self.create_client(endpoint=loadtesting_endpoint)
-        result = await client.load_test_administration.get_app_components(test_id=loadtesting_test_id)
+        result = await client.load_test_administration.get_app_components(test_id=self.test_id)
         assert result is not None
 
-        result = await client.load_test_administration.get_app_components(name=loadtesting_app_component)
+        result = client.load_test_administration.get_app_components(name=self.app_component)
         assert result is not None

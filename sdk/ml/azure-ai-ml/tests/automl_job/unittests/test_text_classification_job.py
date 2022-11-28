@@ -27,7 +27,6 @@ from azure.ai.ml.entities._job.automl.nlp.text_classification_job import TextCla
 from azure.ai.ml.sweep import BanditPolicy, Choice, Uniform
 
 
-@pytest.mark.automl_test
 @pytest.mark.unittest
 class TestAutoMLTextClassificationJob:
     """Tests for AutoML NLP Text Classification Job."""

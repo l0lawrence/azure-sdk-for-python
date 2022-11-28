@@ -27,7 +27,6 @@ def mock_component_operation(
 
 @pytest.mark.timeout(_COMPONENT_TIMEOUT_SECOND)
 @pytest.mark.unittest
-@pytest.mark.pipeline_test
 class TestComponentOperation:
     def test_create(self, mock_component_operation: ComponentOperations) -> None:
         task = {

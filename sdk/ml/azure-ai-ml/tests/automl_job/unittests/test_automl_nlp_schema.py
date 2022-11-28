@@ -299,7 +299,6 @@ def _load_automl_job_from_path(
     return job
 
 
-@pytest.mark.automl_test
 @pytest.mark.unittest
 class TestAutoMLNLPSchema:
     @pytest.mark.parametrize("run_type", ["single", "sweep"])
