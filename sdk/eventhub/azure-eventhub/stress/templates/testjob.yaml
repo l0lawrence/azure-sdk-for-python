@@ -14,7 +14,7 @@ spec:
       resources:
         limits:
           memory: "2000Mi"
-          cpu: "1"
+          cpu: "2"
      
       {{ if eq .Stress.testTarget "event-async" }}
       command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200   & python azure_eventhub_consumer_stress_async.py --duration 259200    ']
