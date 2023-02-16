@@ -15,29 +15,28 @@ import time
 import hmac
 import hashlib
 import base64
-from urllib.parse import quote as url_parse_quote
-from typing import TYPE_CHECKING
+try:
+    from urllib.parse import quote as url_parse_quote
+except ImportError:
+    from urllib import pathname2url as url_parse_quote
 
 from azure.core.credentials import AccessToken
 from azure.eventhub.aio import EventHubProducerClient
 from azure.eventhub import EventData
 
-if TYPE_CHECKING:
-    from azure.eventhub import EventDataBatch
 
-
-def generate_sas_token(uri: str, sas_name: str, sas_value: str, token_ttl: int) -> str:
+def generate_sas_token(uri, sas_name, sas_value, token_ttl):
     """Performs the signing and encoding needed to generate a sas token from a sas key."""
     sas = sas_value.encode('utf-8')
     expiry = str(int(time.time() + token_ttl))
     string_to_sign = (uri + '\n' + expiry).encode('utf-8')
     signed_hmac_sha256 = hmac.HMAC(sas, string_to_sign, hashlib.sha256)
     signature = url_parse_quote(base64.b64encode(signed_hmac_sha256.digest()))
-    return f'SharedAccessSignature sr={uri}&sig={signature}&se={expiry}&skn={sas_name}'
+    return 'SharedAccessSignature sr={}&sig={}&se={}&skn={}'.format(uri, signature, expiry, sas_name)
 
 
 class CustomizedSASCredential(object):
-    def __init__(self, token: str, expiry: float) -> None:
+    def __init__(self, token, expiry):
         """
         :param str token: The token string
         :param float expiry: The epoch timestamp
@@ -64,7 +63,7 @@ SAS_KEY = os.environ['EVENT_HUB_SAS_KEY']
 
 
 async def create_with_sas_token():
-    uri = f"sb://{FULLY_QUALIFIED_NAMESPACE}/{EVENTHUB_NAME}"
+    uri = "sb://{}/{}".format(FULLY_QUALIFIED_NAMESPACE, EVENTHUB_NAME)
     token_ttl = 3000  # seconds
     sas_token = generate_sas_token(uri, SAS_POLICY, SAS_KEY, token_ttl)
     # end of creating a SAS token
@@ -84,4 +83,4 @@ async def create_with_sas_token():
 
 start_time = time.time()
 asyncio.run(create_with_sas_token())
-print(f"Send messages in {time.time() - start_time} seconds.")
+print("Send messages in {} seconds.".format(time.time() - start_time))

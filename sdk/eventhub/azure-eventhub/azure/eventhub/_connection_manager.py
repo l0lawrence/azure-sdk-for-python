@@ -4,7 +4,7 @@
 # --------------------------------------------------------------------------------------------
 
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Union, Any, runtime_checkable
+from typing import TYPE_CHECKING, Optional, Union
 from threading import Lock
 from enum import Enum
 
@@ -17,15 +17,15 @@ if TYPE_CHECKING:
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
         from uamqp import Connection as uamqp_Connection
     except ImportError:
-        pass
+        uamqp_JWTTokenAuth = None
+        uamqp_Connection = None
     from ._transport._base import AmqpTransport
 
-    # try:
-    from typing_extensions import Protocol
-    # except ImportError:
-    #     Protocol = object
+    try:
+        from typing_extensions import Protocol
+    except ImportError:
+        Protocol = object  # type: ignore
 
-    @runtime_checkable
     class ConnectionManager(Protocol):
         def get_connection(
             self,
@@ -93,13 +93,15 @@ class _SharedConnectionManager(object):  # pylint:disable=too-many-instance-attr
                 )
             return self._conn
 
-    def close_connection(self) -> None:
+    def close_connection(self):
+        # type: () -> None
         with self._lock:
             if self._conn:
                 self._amqp_transport.close_connection(self._conn)
             self._conn = None
 
-    def reset_connection_if_broken(self) -> None:
+    def reset_connection_if_broken(self):
+        # type: () -> None
         with self._lock:
             conn_state = self._amqp_transport.get_connection_state(self._conn)
             if self._conn and conn_state in self._amqp_transport.CONNECTION_CLOSING_STATES:
@@ -119,15 +121,18 @@ class _SeparateConnectionManager(object):
     ) -> None:
         return None
 
-    def close_connection(self) -> None:
+    def close_connection(self):
+        # type: () -> None
         pass
 
-    def reset_connection_if_broken(self) -> None:
+    def reset_connection_if_broken(self):
+        # type: () -> None
         pass
 
 
-def get_connection_manager(**kwargs: Any) -> Union[_SharedConnectionManager, _SeparateConnectionManager]:
-    connection_mode: _ConnectionMode = kwargs.get("connection_mode", _ConnectionMode.SeparateConnection)
+def get_connection_manager(**kwargs):
+    # type: (...) -> 'ConnectionManager'
+    connection_mode = kwargs.get("connection_mode", _ConnectionMode.SeparateConnection)  # type: ignore
     if connection_mode == _ConnectionMode.ShareConnection:
         return _SharedConnectionManager(**kwargs)
     return _SeparateConnectionManager(**kwargs)

@@ -17,7 +17,6 @@ from typing import (
     Optional,
     List,
     Awaitable,
-    cast
 )
 
 from ._eventprocessor.event_processor import EventProcessor
@@ -160,7 +159,7 @@ class EventHubConsumerClient(
         self._checkpoint_store = kwargs.pop("checkpoint_store", None)
         self._load_balancing_interval = kwargs.pop("load_balancing_interval", None)
         if self._load_balancing_interval is None:
-            self._load_balancing_interval = 10.0
+            self._load_balancing_interval = 10
         self._partition_ownership_expiration_interval = kwargs.pop(
             "partition_ownership_expiration_interval", None
         )
@@ -186,7 +185,7 @@ class EventHubConsumerClient(
             **kwargs,
         )
         self._lock = asyncio.Lock(**self._internal_kwargs)
-        self._event_processors: Dict[Tuple[str, str], EventProcessor] = dict()
+        self._event_processors = dict()  # type: Dict[Tuple[str, str], EventProcessor]
 
     async def __aenter__(self):
         return self
@@ -212,7 +211,7 @@ class EventHubConsumerClient(
         source_url = "amqps://{}{}/ConsumerGroups/{}/Partitions/{}".format(
             self._address.hostname, self._address.path, consumer_group, partition_id
         )
-        handler = EventHubConsumer(
+        handler = EventHubConsumer( # type: ignore
             self,
             source_url,
             on_event_received=on_event_received,
@@ -411,7 +410,7 @@ class EventHubConsumerClient(
                 error_handler=on_error,
                 partition_initialize_handler=on_partition_initialize,
                 partition_close_handler=on_partition_close,
-                load_balancing_interval=cast(float, self._load_balancing_interval),
+                load_balancing_interval=self._load_balancing_interval,
                 load_balancing_strategy=self._load_balancing_strategy,
                 partition_ownership_expiration_interval=self._partition_ownership_expiration_interval,
                 initial_event_position=starting_position

@@ -7,7 +7,7 @@ from __future__ import annotations
 import asyncio
 import time
 import logging
-from typing import Union, cast, TYPE_CHECKING
+from typing import Union, cast, TYPE_CHECKING, List
 
 from ..._pyamqp import constants, error as errors
 from ..._pyamqp.aio import AMQPClientAsync, SendClientAsync, ReceiveClientAsync

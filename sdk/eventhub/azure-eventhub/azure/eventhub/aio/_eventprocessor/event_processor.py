@@ -107,8 +107,8 @@ class EventProcessor(
         self._load_balancing_strategy = (
             load_balancing_strategy or LoadBalancingStrategy.GREEDY
         )
-        self._tasks: Dict[str, asyncio.Task] = {}
-        self._partition_contexts: Dict[str, PartitionContext] = {}
+        self._tasks = {}  # type: Dict[str, asyncio.Task]
+        self._partition_contexts = {}  # type: Dict[str, PartitionContext]
         self._owner_level = owner_level
         if checkpoint_store and self._owner_level is None:
             self._owner_level = 0
@@ -120,9 +120,9 @@ class EventProcessor(
         self._internal_kwargs = get_dict_with_loop_if_needed(loop)
         self._running = False
 
-        self._consumers: Dict[str, EventHubConsumer] = {}
+        self._consumers = {}  # type: Dict[str, EventHubConsumer]
         self._ownership_manager = OwnershipManager(
-            self._eventhub_client,
+            cast("EventHubConsumerClient", self._eventhub_client),
             self._consumer_group,
             self._id,
             self._checkpoint_store,
@@ -280,7 +280,7 @@ class EventProcessor(
             event_received_callback = partial(
                 self._on_event_received, partition_context
             )
-            self._consumers[partition_id] = self.create_consumer( 
+            self._consumers[partition_id] = self.create_consumer(  # type: ignore
                 partition_id,
                 initial_event_position,
                 event_position_inclusive,
@@ -330,7 +330,7 @@ class EventProcessor(
                     await self._process_error(partition_context, error)
                     break
         finally:
-            await asyncio.shield(self._close_consumer(partition_context)) # type: ignore[reportUnboundVariable]
+            await asyncio.shield(self._close_consumer(partition_context))
 
     async def start(self) -> None:
         """Start the EventProcessor.

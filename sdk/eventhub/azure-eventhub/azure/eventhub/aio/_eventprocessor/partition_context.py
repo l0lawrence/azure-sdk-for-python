@@ -28,13 +28,13 @@ class PartitionContext(object):
         eventhub_name: str,
         consumer_group: str,
         partition_id: str,
-        checkpoint_store: Optional[CheckpointStore] = None,
+        checkpoint_store: CheckpointStore = None,
     ) -> None:
         self.fully_qualified_namespace = fully_qualified_namespace
         self.partition_id = partition_id
         self.eventhub_name = eventhub_name
         self.consumer_group = consumer_group
-        self._last_received_event: Optional["EventData"] = None
+        self._last_received_event = None  # type: Optional[EventData]
         self._checkpoint_store = checkpoint_store
 
     @property

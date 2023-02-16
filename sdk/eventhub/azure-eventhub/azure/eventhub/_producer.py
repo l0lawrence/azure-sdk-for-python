@@ -39,7 +39,9 @@ if TYPE_CHECKING:
         from uamqp.constants import MessageSendResult as uamqp_MessageSendResult
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:
-        pass
+        uamqp_MessageSendResult = None
+        uamqp_SendClient = None
+        uamqp_JWTTokenAuth = None
     from ._pyamqp.client import SendClient
     from ._pyamqp.message import BatchMessage
     from ._pyamqp.authentication import JWTTokenAuth
@@ -186,7 +188,6 @@ class EventHubProducer(
         span: Optional["AbstractSpan"],
         partition_key: Optional[AnyStr],
     ) -> Union[EventData, EventDataBatch]:
-        wrapper_event_data: Union[EventData, EventDataBatch]
         if isinstance(event_data, (EventData, AmqpAnnotatedMessage)):
             outgoing_event_data = transform_outbound_single_message(
                 event_data, EventData, self._amqp_transport.to_outgoing_amqp_message
@@ -225,13 +226,13 @@ class EventHubProducer(
                     raise ValueError(
                         "The partition_key does not match the one of the EventDataBatch"
                     )
-                wrapper_event_data = event_data  
+                wrapper_event_data = event_data  # type:ignore
             else:
                 if partition_key:
                     event_data = _set_partition_key(
                         event_data, partition_key, self._amqp_transport
                     )
-                wrapper_event_data = EventDataBatch._from_batch(  # pylint: disable=protected-access
+                wrapper_event_data = EventDataBatch._from_batch(  # type: ignore  # pylint: disable=protected-access
                     event_data, self._amqp_transport, partition_key=partition_key
                 )
         return wrapper_event_data

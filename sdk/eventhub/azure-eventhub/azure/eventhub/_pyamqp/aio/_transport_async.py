@@ -40,7 +40,6 @@ import struct
 from ssl import SSLError
 from io import BytesIO
 import logging
-from typing import cast, Union
 
 
 
@@ -68,7 +67,6 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class AsyncTransportMixin:
-
     async def receive_frame(self, timeout=None, **kwargs):
         try:
             header, channel, payload = await asyncio.wait_for(
@@ -87,7 +85,7 @@ class AsyncTransportMixin:
         ):
             return None, None
 
-    async def read(self: Union["AsyncTransportMixin", "AsyncTransport"], verify_frame_type=0):
+    async def read(self, verify_frame_type=0):
         async with self.socket_lock:
             read_frame_buffer = BytesIO()
             try:
@@ -219,7 +217,7 @@ class AsyncTransportMixin:
         ctx = ssl.create_default_context(**ctx_options)
         ctx.verify_mode = ssl.CERT_REQUIRED
         ctx.load_verify_locations(cafile=certifi.where())
-        ctx.check_hostname = cast(bool, check_hostname)
+        ctx.check_hostname = check_hostname
         return ctx
 
 
@@ -240,7 +238,7 @@ class AsyncTransport(
         **kwargs,  # pylint: disable=unused-argument
     ):
         self.connected = False
-        self.sock: Union[socket.socket, Any] = None
+        self.sock = None
         self.reader = None
         self.writer = None
         self.raise_on_initial_eintr = raise_on_initial_eintr
@@ -511,7 +509,7 @@ class WebSocketTransportAsync(
         if username or password:
             from aiohttp import BasicAuth
 
-            http_proxy_auth = BasicAuth(login=cast(str, username), password=cast(str, password))
+            http_proxy_auth = BasicAuth(login=username, password=password)
 
         self.session = ClientSession()
         if self._custom_endpoint:
@@ -578,10 +576,9 @@ class WebSocketTransportAsync(
     async def close(self):
         """Do any preliminary work in shutting down the connection."""
         async with self.socket_lock:
-            if self.ws is not None:
-                await self.ws.close()
-                await self.session.close()
-                self.connected = False
+            await self.ws.close()
+            await self.session.close()
+            self.connected = False
 
     async def _write(self, s):
         """Completely write a string (byte array) to the peer.
@@ -589,5 +586,4 @@ class WebSocketTransportAsync(
         See http://tools.ietf.org/html/rfc5234
         http://tools.ietf.org/html/rfc6455#section-5.2
         """
-        if self.ws is not None:
-            await self.ws.send_bytes(s)
+        await self.ws.send_bytes(s)

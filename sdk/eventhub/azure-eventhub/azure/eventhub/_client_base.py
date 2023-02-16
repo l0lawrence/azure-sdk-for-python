@@ -9,7 +9,7 @@ import uuid
 import time
 import functools
 import collections
-from typing import Any, Dict, Tuple, List, Optional, TYPE_CHECKING, cast, Union, Callable
+from typing import Any, Dict, Tuple, List, Optional, TYPE_CHECKING, cast, Union
 try:
     from typing import TypeAlias    # type: ignore
 except ImportError:
@@ -28,7 +28,7 @@ from azure.core.pipeline.policies import RetryMode
 try:
     from ._transport._uamqp_transport import UamqpTransport
 except ImportError:
-    UamqpTransport = None
+    UamqpTransport = None   # type: ignore
 from ._transport._pyamqp_transport import PyamqpTransport
 from .exceptions import ClientClosedError
 from ._configuration import Configuration
@@ -47,45 +47,29 @@ from ._constants import (
 
 if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
-    from ._producer_client import EventHubProducerClient
-    from ._consumer_client import EventHubConsumerClient
-    from ._transport._base import AmqpTransport
     try:
-        from uamqp import (   # pylint:disable=unused-import
-            Message as uamqp_Message,
-            ReceiveClient as uamqp_ReceiveClient,
-            SendClient as uamqp_SendClient
-        )
-        from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth   # pylint:disable=unused-import
+        from uamqp import Message as uamqp_Message
+        from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:
-        pass
+        uamqp_Message = None
+        uamqp_JWTTokenAuth = None
     from ._pyamqp.message import Message
     from ._pyamqp.authentication import JWTTokenAuth
-    from ._pyamqp import SendClient, ReceiveClient
 
 _LOGGER = logging.getLogger(__name__)
 _Address = collections.namedtuple("_Address", "hostname path")
 
 
-def _parse_conn_str(
-    conn_str: str,
-    **kwargs: Any
-    ) -> Tuple[
-        str,
-        Optional[str],
-        Optional[str],
-        str,
-        Optional[str],
-        Optional[int]
-    ]:
+def _parse_conn_str(conn_str, **kwargs):
+    # type: (str, Any) -> Tuple[str, Optional[str], Optional[str], str, Optional[str], Optional[int]]
     endpoint = None
     shared_access_key_name = None
     shared_access_key = None
-    entity_path: Optional[str] = None
-    shared_access_signature: Optional[str] = None
+    entity_path = None  # type: Optional[str]
+    shared_access_signature = None  # type: Optional[str]
     shared_access_signature_expiry = None
-    eventhub_name: Optional[str] = kwargs.pop("eventhub_name", None)
-    check_case: bool = kwargs.pop("check_case", False)
+    eventhub_name = kwargs.pop("eventhub_name", None)  # type: Optional[str]
+    check_case = kwargs.pop("check_case", False)  # type: bool
     conn_settings = core_parse_connection_string(
         conn_str, case_sensitive_keys=check_case
     )
@@ -113,7 +97,7 @@ def _parse_conn_str(
         try:
             # Expiry can be stored in the "se=<timestamp>" clause of the token. ('&'-separated key-value pairs)
             shared_access_signature_expiry = int(
-                shared_access_signature.split("se=")[1].split("&")[0]
+                shared_access_signature.split("se=")[1].split("&")[0]  # type: ignore
             )
         except (
             IndexError,
@@ -131,7 +115,7 @@ def _parse_conn_str(
     parsed = urlparse(endpoint)
     if not parsed.netloc:
         raise ValueError("Invalid Endpoint on the Connection String.")
-    host = parsed.netloc.strip()
+    host = cast(str, parsed.netloc.strip())
 
     if any([shared_access_key, shared_access_key_name]) and not all(
         [shared_access_key, shared_access_key_name]
@@ -161,7 +145,8 @@ def _parse_conn_str(
     )
 
 
-def _generate_sas_token(uri: str, policy: str, key: str, expiry: Optional[timedelta] = None) -> AccessToken:
+def _generate_sas_token(uri, policy, key, expiry=None):
+    # type: (str, str, str, Optional[timedelta]) -> AccessToken
     """Create a shared access signature token as a string literal.
     :returns: SAS token as string literal.
     :rtype: str
@@ -174,8 +159,8 @@ def _generate_sas_token(uri: str, policy: str, key: str, expiry: Optional[timede
     token = generate_sas_token(uri, policy, key, abs_expiry)
     return AccessToken(token=token, expires_on=abs_expiry)
 
-
-def _build_uri(address: str, entity: Optional[str]) -> str:
+def _build_uri(address, entity):
+    # type: (str, Optional[str]) -> str
     parsed = urlparse(address)
     if parsed.path:
         return address
@@ -200,14 +185,14 @@ class EventHubSharedKeyCredential(object):
     :param str key: The shared access key.
     """
 
-    def __init__(self, policy: str, key: str) -> None:
+    def __init__(self, policy, key):
+        # type: (str, str) -> None
         self.policy = policy
         self.key = key
         self.token_type = b"servicebus.windows.net:sastoken"
 
-    def get_token(
-        self, *scopes: str, **kwargs: Any   # pylint:disable=unused-argument
-    ) -> AccessToken:
+    def get_token(self, *scopes, **kwargs):  # pylint:disable=unused-argument
+        # type: (str, Any) -> AccessToken
         if not scopes:
             raise ValueError("No token scope provided.")
         return _generate_sas_token(scopes[0], self.policy, self.key)
@@ -220,13 +205,13 @@ class EventhubAzureNamedKeyTokenCredential(object):
     :type credential: ~azure.core.credentials.AzureNamedKeyCredential
     """
 
-    def __init__(self, azure_named_key_credential: AzureNamedKeyCredential) -> None:
+    def __init__(self, azure_named_key_credential):
+        # type: (AzureNamedKeyCredential) -> None
         self._credential = azure_named_key_credential
         self.token_type = b"servicebus.windows.net:sastoken"
 
-    def get_token(
-        self, *scopes: str, **kwargs: Any   # pylint:disable=unused-argument
-    ) -> AccessToken:
+    def get_token(self, *scopes, **kwargs):  # pylint:disable=unused-argument
+        # type: (str, Any) -> AccessToken
         if not scopes:
             raise ValueError("No token scope provided.")
         name, key = self._credential.named_key
@@ -240,7 +225,8 @@ class EventHubSASTokenCredential(object):
     :param int expiry: The epoch timestamp
     """
 
-    def __init__(self, token: str, expiry: int) -> None:
+    def __init__(self, token, expiry):
+        # type: (str, int) -> None
         """
         :param str token: The shared access token string
         :param float expiry: The epoch timestamp
@@ -249,9 +235,8 @@ class EventHubSASTokenCredential(object):
         self.expiry = expiry
         self.token_type = b"servicebus.windows.net:sastoken"
 
-    def get_token(
-        self, *scopes: str, **kwargs: Any  # pylint:disable=unused-argument
-    ) -> AccessToken:
+    def get_token(self, *scopes, **kwargs):  # pylint:disable=unused-argument
+        # type: (str, Any) -> AccessToken
         """
         This method is automatically called when token is about to expire.
         """
@@ -266,7 +251,8 @@ class EventhubAzureSasTokenCredential(object):
     :type azure_sas_credential: ~azure.core.credentials.AzureSasCredential
     """
 
-    def __init__(self, azure_sas_credential: AzureSasCredential) -> None:
+    def __init__(self, azure_sas_credential):
+        # type: (AzureSasCredential) -> None
         """The shared access token credential used for authentication
          when AzureSasCredential is provided.
 
@@ -276,9 +262,8 @@ class EventhubAzureSasTokenCredential(object):
         self._credential = azure_sas_credential
         self.token_type = b"servicebus.windows.net:sastoken"
 
-    def get_token(
-        self, *scopes: str, **kwargs: Any   # pylint:disable=unused-argument
-    ) -> AccessToken:
+    def get_token(self, *scopes, **kwargs):  # pylint:disable=unused-argument
+        # type: (str, Any) -> AccessToken
         """
         This method is automatically called when token is about to expire.
         """
@@ -309,7 +294,7 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
         uamqp_transport = kwargs.pop("uamqp_transport", False)
         if uamqp_transport and not UamqpTransport:
             raise ValueError("To use the uAMQP transport, please install `uamqp>=1.6.0,<2.0.0`.")
-        self._amqp_transport: Union[UamqpTransport, PyamqpTransport] = kwargs.pop("amqp_transport", UamqpTransport if uamqp_transport else PyamqpTransport)
+        self._amqp_transport = kwargs.pop("amqp_transport", UamqpTransport if uamqp_transport else PyamqpTransport)
 
         self.eventhub_name = eventhub_name
         if not eventhub_name:
@@ -317,14 +302,12 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
         path = "/" + eventhub_name if eventhub_name else ""
         self._address = _Address(hostname=fully_qualified_namespace, path=path)
         self._container_id = CONTAINER_PREFIX + str(uuid.uuid4())[:8]
-        self._credential: Union[EventHubSharedKeyCredential, TokenCredential]
         if isinstance(credential, AzureSasCredential):
             self._credential = EventhubAzureSasTokenCredential(credential)
         elif isinstance(credential, AzureNamedKeyCredential):
-            self._credential = EventhubAzureNamedKeyTokenCredential(credential)
+            self._credential = EventhubAzureNamedKeyTokenCredential(credential)  # type: ignore
         else:
-            self._credential = credential
-
+            self._credential = credential  # type: ignore
         self._keep_alive = kwargs.get("keep_alive", 30)
         self._auto_reconnect = kwargs.get("auto_reconnect", True)
         self._auth_uri = f"sb://{self._address.hostname}{self._address.path}"
@@ -341,7 +324,8 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
         self._idle_timeout = kwargs.get("idle_timeout", None)
 
     @staticmethod
-    def _from_connection_string(conn_str: str, **kwargs: Any) -> Dict[str, Any]:
+    def _from_connection_string(conn_str, **kwargs):
+        # type: (str, Any) -> Dict[str, Any]
         host, policy, key, entity, token, token_expiry = _parse_conn_str(
             conn_str, **kwargs
         )
@@ -353,7 +337,7 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             kwargs["credential"] = EventHubSharedKeyCredential(policy, key)
         return kwargs
 
-    def _create_auth(self) -> Union["uamqp_JWTTokenAuth", JWTTokenAuth]:
+    def _create_auth(self) -> Union[uamqp_JWTTokenAuth, JWTTokenAuth]:
         """
         Create an ~uamqp.authentication.SASTokenAuth instance
          to authenticate the session.
@@ -379,16 +363,14 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             update_token=False,
         )
 
-    def _close_connection(self) -> None:
+    def _close_connection(self):
+        # type: () -> None
         self._conn_manager.reset_connection_if_broken()
 
     def _backoff(
-        self,
-        retried_times: int,
-        last_exception: Exception,
-        timeout_time: Optional[int] = None,
-        entity_name: Optional[str] = None
-    ) -> None:
+        self, retried_times, last_exception, timeout_time=None, entity_name=None
+    ):
+        # type: (int, Exception, Optional[int], Optional[str]) -> None
         entity_name = entity_name or self._container_id
         backoff = _get_backoff_time(
             self._config.retry_mode,
@@ -414,7 +396,7 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             raise last_exception
 
     def _management_request(
-        self, mgmt_msg: Union["uamqp_Message", Message], op_type: bytes
+        self, mgmt_msg: Union[uamqp_Message, Message], op_type: bytes
     ) -> Any:
         # pylint:disable=assignment-from-none
         retried_times = 0
@@ -496,10 +478,12 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             ]
         return output
 
-    def _get_partition_ids(self) -> List[str]:
+    def _get_partition_ids(self):
+        # type:() -> List[str]
         return self._get_eventhub_properties()["partition_ids"]
 
-    def _get_partition_properties(self, partition_id: str) -> Dict[str, Any]:
+    def _get_partition_properties(self, partition_id):
+        # type:(str) -> Dict[str, Any]
         mgmt_msg = self._amqp_transport.build_message(
             application_properties={
                 "name": self.eventhub_name,
@@ -507,7 +491,7 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             }
         )
         response = self._management_request(mgmt_msg, op_type=MGMT_PARTITION_OPERATION)
-        partition_info: Dict[bytes, Any] = response.value
+        partition_info = response.value  # type: Dict[bytes, Any]
         output = {}
         if partition_info:
             output["eventhub_name"] = partition_info[b"name"].decode("utf-8")
@@ -527,7 +511,8 @@ class ClientBase(object):  # pylint:disable=too-many-instance-attributes
             )
         return output
 
-    def _close(self) -> None:
+    def _close(self):
+        # type:() -> None
         self._conn_manager.close_connection()
 
 
@@ -542,7 +527,6 @@ class ConsumerProducerMixin(object):
         pass
 
     def _check_closed(self):
-        self._name: str
         if self.closed:
             raise ClientClosedError(
                 f"{self._name} has been closed. Please create a new one to handle event data."
@@ -551,9 +535,6 @@ class ConsumerProducerMixin(object):
     def _open(self):
         """Open the EventHubConsumer/EventHubProducer using the supplied connection."""
         # pylint: disable=protected-access
-        self._handler: Union["uamqp_SendClient", "uamqp_ReceiveClient", SendClient, ReceiveClient]
-        self._client: Union["EventHubProducerClient", "EventHubConsumerClient"]
-        self._amqp_transport: Union[UamqpTransport, PyamqpTransport]
         if not self.running:
             if self._handler:
                 self._handler.close()
@@ -625,7 +606,8 @@ class ConsumerProducerMixin(object):
                     )
                     raise last_exception
 
-    def close(self) -> None:
+    def close(self):
+        # type:() -> None
         """
         Close down the handler. If the handler has already closed,
         this will be a no op.

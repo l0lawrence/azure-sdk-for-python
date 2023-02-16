@@ -32,7 +32,9 @@ if TYPE_CHECKING:
         from uamqp.constants import MessageSendResult as uamqp_MessageSendResult
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAsync
     except ImportError:
-        pass
+        uamqp_MessageSendResult = None
+        uamqp_SendClientAsync = None
+        uamqp_JWTTokenAsync = None
 
     from .._pyamqp.aio._client_async import SendClientAsync
     from .._pyamqp.aio._authentication_async import JWTTokenAuthAsync
@@ -97,7 +99,7 @@ class EventHubProducer(
         )
         self._reconnect_backoff = 1
         self._name = "EHProducer-{}".format(uuid.uuid4())
-        self._unsent_events: List[Any] = []
+        self._unsent_events = []  # type: List[Any]
         self._error = None
         if partition:
             self._target += "/Partitions/" + partition
@@ -212,13 +214,13 @@ class EventHubProducer(
                     raise ValueError(
                         "The partition_key does not match the one of the EventDataBatch"
                     )
-                wrapper_event_data = event_data
+                wrapper_event_data = event_data  # type:ignore
             else:
                 if partition_key:
                     event_data = _set_partition_key(
                         event_data, partition_key, self._amqp_transport
                     )
-                wrapper_event_data = EventDataBatch._from_batch(  # pylint: disable=protected-access
+                wrapper_event_data = EventDataBatch._from_batch(  # type: ignore  # pylint: disable=protected-access
                     event_data, self._amqp_transport, partition_key
                 )
         return wrapper_event_data

@@ -22,18 +22,13 @@ from hashlib import sha256
 from hmac import HMAC
 import asyncio
 from urllib.parse import urlencode, quote_plus
-from typing import TYPE_CHECKING, Optional, Tuple, List
-from uamqp import ReceiveClient, Source # type: ignore
-from uamqp.errors import LinkRedirect # type: ignore
+from uamqp import ReceiveClient, Source
+from uamqp.errors import LinkRedirect
 
 from azure.eventhub.aio import EventHubConsumerClient
 
-if TYPE_CHECKING:
-    from azure.eventhub.aio import PartitionContext
-    from azure.eventhub import EventData
 
-
-def generate_sas_token(uri: str, policy: str, key: str, expiry: Optional[float]=None) -> str:
+def generate_sas_token(uri, policy, key, expiry=None):
     """Create a shared access signiture token as a string literal.
     :returns: SAS token as string literal.
     :rtype: str
@@ -53,7 +48,7 @@ def generate_sas_token(uri: str, policy: str, key: str, expiry: Optional[float]=
     return 'SharedAccessSignature ' + urlencode(result)
 
 
-def parse_iot_conn_str(iothub_conn_str: str):
+def parse_iot_conn_str(iothub_conn_str):
     hostname = None
     shared_access_key_name = None
     shared_access_key = None
@@ -70,7 +65,7 @@ def parse_iot_conn_str(iothub_conn_str: str):
     return hostname, shared_access_key_name, shared_access_key
 
 
-def convert_iothub_to_eventhub_conn_str(iothub_conn_str: str):
+def convert_iothub_to_eventhub_conn_str(iothub_conn_str):
     hostname, shared_access_key_name, shared_access_key = parse_iot_conn_str(iothub_conn_str)
     iot_hub_name = hostname.split(".")[0]
     operation = '/messages/events/ConsumerGroups/{}/Partitions/{}'.format('$Default', 0)
@@ -92,24 +87,32 @@ def convert_iothub_to_eventhub_conn_str(iothub_conn_str: str):
             # between the port and 'ConsumerGroups'.
             # (ex. "...servicebus.windows.net:12345/<Event Hub name>/ConsumerGroups/...").
             # The regex matches string ':<digits>/', then any characters, then the string '/ConsumerGroups'.
-            iot_hub_name = re.search(":\d+\/.*/ConsumerGroups", str(redirect.address)).group(0).split("/")[1] # type: ignore
-        return f"Endpoint=sb://{fully_qualified_name}/;SharedAccessKeyName={shared_access_key_name};SharedAccessKey={shared_access_key};EntityPath={iot_hub_name}"
+            iot_hub_name = re.search(":\d+\/.*/ConsumerGroups", str(redirect.address)).group(0).split("/")[1]
+        return "Endpoint=sb://{}/;SharedAccessKeyName={};SharedAccessKey={};EntityPath={}".format(
+            fully_qualified_name,
+            shared_access_key_name,
+            shared_access_key,
+            iot_hub_name
+        )
     except Exception as exp:
         raise ValueError(
-            f"{iothub_conn_str} is not an invalid IoT Hub connection string. The underlying exception is {exp}"
+            "{} is not an invalid IoT Hub connection string. The underlying exception is {}".format(
+                iothub_conn_str,
+                exp,
+            )
         )
 
 
-async def receive_events_from_iothub(iothub_conn_str: str) -> None:
+async def receive_events_from_iothub(iothub_conn_str):
     """Convert the iot hub connection string to the built-in eventhub connection string
     and receive events from the eventhub
     """
     eventhub_conn_str = convert_iothub_to_eventhub_conn_str(iothub_conn_str)
     consumer_client = EventHubConsumerClient.from_connection_string(eventhub_conn_str, consumer_group="$Default")
 
-    async def on_event_batch(partition_context: PartitionContext, events: List[EventData]):
+    async def on_event_batch(partition_context, events):
         # put your code here
-        print(f"received {len(events)} events from partition {partition_context.partition_id}")
+        print("received {} events from partition {}".format(len(events), partition_context.partition_id))
 
     async with consumer_client:
         await consumer_client.receive_batch(

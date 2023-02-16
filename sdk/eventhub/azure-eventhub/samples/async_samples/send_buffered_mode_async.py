@@ -12,29 +12,25 @@ Examples to show sending events in buffered mode to an Event Hub asynchronously.
 import time
 import asyncio
 import os
-from typing import TYPE_CHECKING, Optional
 
 from azure.eventhub.aio import EventHubProducerClient
 from azure.eventhub import EventData
-
-if TYPE_CHECKING:
-    from azure.eventhub import EventDataBatch
 
 CONNECTION_STR = os.environ['EVENT_HUB_CONN_STR']
 EVENTHUB_NAME = os.environ['EVENT_HUB_NAME']
 
 
-async def on_success(events, pid: Optional[str]) -> None:
+async def on_success(events, pid):
     # sending succeeded
     print(events, pid)
 
 
-async def on_error(events, pid: Optional[str], error: Exception) -> None:
+async def on_error(events, pid, error):
     # sending failed
     print(events, pid, error)
 
 
-async def run() -> None:
+async def run():
 
     producer = EventHubProducerClient.from_connection_string(
         conn_str=CONNECTION_STR,
@@ -49,11 +45,11 @@ async def run() -> None:
         # single events will be batched automatically
         for i in range(10):
             # the method returning indicates the event has been enqueued to the buffer
-            await producer.send_event(EventData(f'Single data {i}'))
+            await producer.send_event(EventData('Single data {}'.format(i)))
 
         batch = await producer.create_batch()
         for i in range(10):
-            batch.add(EventData(f'Single data in batch {i}'))
+            batch.add(EventData('Single data in batch {}'.format(i)))
         # alternatively, you can enqueue an EventDataBatch object to the buffer
         await producer.send_batch(batch)
 
@@ -62,4 +58,4 @@ async def run() -> None:
 
 start_time = time.time()
 asyncio.run(run())
-print(f"Send messages in {time.time() - start_time} seconds.")
+print("Send messages in {} seconds.".format(time.time() - start_time))

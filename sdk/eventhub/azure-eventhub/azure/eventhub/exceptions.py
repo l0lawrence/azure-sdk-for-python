@@ -2,7 +2,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
-from __future__ import annotations
 
 class EventHubError(Exception):
     """Represents an error occurred in the client.
@@ -20,19 +19,19 @@ class EventHubError(Exception):
         self.error = None
         self.message = message
         self.details = details
-        if self.details and isinstance(details, Exception):
+        if details and isinstance(details, Exception):
             try:
-                condition = details.condition.value.decode("UTF-8") # type: ignore[reportGeneralTypeIssues]
+                condition = details.condition.value.decode("UTF-8")
             except AttributeError:
                 try:
-                    condition = details.condition.decode("UTF-8") # type: ignore[reportGeneralTypeIssues]
+                    condition = details.condition.decode("UTF-8")
                 except AttributeError:
                     condition = None
             if condition:
                 _, _, self.error = condition.partition(":")
                 self.message += "\nError: {}".format(self.error)
             try:
-                self._parse_error(details.description) # type: ignore[reportGeneralTypeIssues]
+                self._parse_error(details.description)
                 for detail in self.details:
                     self.message += "\n{}".format(detail)
             except:  # pylint: disable=bare-except

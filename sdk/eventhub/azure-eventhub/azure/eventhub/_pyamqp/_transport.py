@@ -33,7 +33,7 @@
 # -------------------------------------------------------------------------
 
 
-from __future__ import absolute_import, unicode_literals, annotations
+from __future__ import absolute_import, unicode_literals
 
 import errno
 import re
@@ -45,7 +45,6 @@ from contextlib import contextmanager
 from io import BytesIO
 import logging
 from threading import Lock
-from typing import Union, Tuple, List, Any, Optional, cast
 
 import certifi
 
@@ -60,12 +59,11 @@ from .constants import (
 )
 from .error import AuthenticationException, ErrorCondition
 
-frame_typing = Union[Tuple[int, bytes], Tuple[int, List]]
 
 try:
     import fcntl
 except ImportError:  # pragma: no cover
-    fcntl = None     # noqa
+    fcntl = None    # type: ignore  # noqa
 
 def set_cloexec(fd, cloexec):  # noqa
     """Set flag to close fd after exec."""
@@ -147,7 +145,7 @@ class UnexpectedFrame(Exception):
     pass
 
 
-class TransportBase(object):  # pylint: disable=too-many-instance-attributes
+class _AbstractTransport(object):  # pylint: disable=too-many-instance-attributes
     """Common superclass for TCP and SSL transports."""
 
     def __init__(
@@ -163,7 +161,7 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
     ):
         self._quick_recv = None
         self.connected = False
-        self.sock: Optional[socket.socket] = None
+        self.sock = None
         self.raise_on_initial_eintr = raise_on_initial_eintr
         self._read_buffer = BytesIO()
         self.host, self.port = to_host_port(host, port)
@@ -201,7 +199,7 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
         if timeout is None:
             yield self.sock
         else:
-            sock = cast(socket.socket, self.sock)
+            sock = self.sock
             prev = sock.gettimeout()
             if prev != timeout:
                 sock.settimeout(timeout)
@@ -226,7 +224,7 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
     @contextmanager
     def block(self):
         bocking_timeout = None
-        sock = cast(socket.socket, self.sock)
+        sock = self.sock
         prev = sock.gettimeout()
         if prev != bocking_timeout:
             sock.settimeout(bocking_timeout)
@@ -329,7 +327,6 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
                     return
 
     def _init_socket(self, socket_settings, read_timeout):
-        self.sock = cast(socket.socket, self.sock)
         self.sock.settimeout(None)  # set socket back to blocking mode
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
         self._set_socket_options(socket_settings)
@@ -375,7 +372,6 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
         if socket_settings:
             tcp_opts.update(socket_settings)
         for opt, val in tcp_opts.items():
-            self.sock = cast(socket.socket, self.sock)
             self.sock.setsockopt(SOL_TCP, opt, val)
 
     def _read(self, n, initial=False, buffer=None, _errnos=None):
@@ -479,7 +475,7 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
                     self.connected = False
                 raise
 
-    def receive_frame(self, **kwargs) -> Tuple[Optional[int], Optional[frame_typing]] :
+    def receive_frame(self, **kwargs):
         try:
             header, channel, payload = self.read(**kwargs)
             if not payload:
@@ -503,7 +499,7 @@ class TransportBase(object):  # pylint: disable=too-many-instance-attributes
         pass
 
 
-class SSLTransport(TransportBase):
+class SSLTransport(_AbstractTransport):
     """Transport that works over SSL."""
 
     def __init__(
@@ -527,12 +523,12 @@ class SSLTransport(TransportBase):
         return self._wrap_socket_sni(sock, **sslopts)
 
     def _wrap_context(  # pylint: disable=no-self-use
-        self, sock, sslopts, **ctx_options
+        self, sock, sslopts, check_hostname=None, **ctx_options
     ):
         ctx = ssl.create_default_context(**ctx_options)
         ctx.verify_mode = ssl.CERT_REQUIRED
         ctx.load_verify_locations(cafile=certifi.where())
-        # ctx.check_hostname = check_hostname
+        ctx.check_hostname = check_hostname
         return ctx.wrap_socket(sock, **sslopts)
 
     def _wrap_socket_sni(  # pylint: disable=no-self-use
@@ -623,7 +619,6 @@ class SSLTransport(TransportBase):
         try:
             while toread:
                 try:
-                    self.sock = cast(socket.socket, self.sock)
                     nbytes = self.sock.recv_into(view[length:])
                 except socket.error as exc:
                     # ssl.sock.read may cause a SSLerror without errno
@@ -649,7 +644,6 @@ class SSLTransport(TransportBase):
 
     def _write(self, s):
         """Write a string out to the SSL socket fully."""
-        self.sock = cast(socket.socket, self.sock)
         write = self.sock.send
         while s:
             try:
@@ -668,19 +662,18 @@ class SSLTransport(TransportBase):
         with self.block():
             self.write(TLS_HEADER_FRAME)
             _, returned_header = self.receive_frame(verify_frame_type=None)
-            if returned_header !=None:
-                if returned_header[1] == TLS_HEADER_FRAME:
-                    raise ValueError(
-                        f"""Mismatching TLS header protocol. Expected: {TLS_HEADER_FRAME!r},"""
-                        """received: {returned_header[1]!r}"""
-                    )
+            if returned_header[1] == TLS_HEADER_FRAME:
+                raise ValueError(
+                    f"""Mismatching TLS header protocol. Expected: {TLS_HEADER_FRAME!r},"""
+                    """received: {returned_header[1]!r}"""
+                )
 
 
 def Transport(host, transport_type, connect_timeout=None, ssl_opts=True, **kwargs):
     """Create transport.
 
     Given a few parameters from the Connection constructor,
-    select and create a subclass of TransportBase.
+    select and create a subclass of _AbstractTransport.
     """
     if transport_type == TransportType.AmqpOverWebsocket:
         transport = WebSocketTransport
@@ -689,7 +682,7 @@ def Transport(host, transport_type, connect_timeout=None, ssl_opts=True, **kwarg
     return transport(host, connect_timeout=connect_timeout, ssl_opts=ssl_opts, **kwargs)
 
 
-class WebSocketTransport(TransportBase):
+class WebSocketTransport(_AbstractTransport):
     def __init__(
         self,
         host,
@@ -745,7 +738,7 @@ class WebSocketTransport(TransportBase):
                 error=exc,
             )
         # TODO: resolve pylance error when type: ignore is removed below, issue #22051
-        except (WebSocketTimeoutException, SSLError, WebSocketConnectionClosedException) as exc: 
+        except (WebSocketTimeoutException, SSLError, WebSocketConnectionClosedException) as exc:    # type: ignore
             self.close()
             raise ConnectionError("Websocket failed to establish connection: %r" % exc) from exc
         except (OSError, IOError, SSLError) as e:
@@ -755,16 +748,15 @@ class WebSocketTransport(TransportBase):
 
     def _read(self, n, initial=False, buffer=None, _errnos=None):  # pylint: disable=unused-argument
         """Read exactly n bytes from the peer."""
-        from websocket import WebSocketTimeoutException, WebSocket
-        view = buffer or memoryview(bytearray(n))
+        from websocket import WebSocketTimeoutException
         try:
             length = 0
+            view = buffer or memoryview(bytearray(n))
             nbytes = self._read_buffer.readinto(view)
             length += nbytes
             n -= nbytes
             try:
                 while n:
-                    self.ws = cast(WebSocket, self.ws)
                     data = self.ws.recv()
                     if len(data) <= n:
                         view[length : length + len(data)] = data
@@ -801,9 +793,8 @@ class WebSocketTransport(TransportBase):
         See http://tools.ietf.org/html/rfc5234
         http://tools.ietf.org/html/rfc6455#section-5.2
         """
-        from websocket import WebSocketConnectionClosedException, WebSocketTimeoutException, WebSocket
+        from websocket import WebSocketConnectionClosedException, WebSocketTimeoutException
         try:
-            self.ws = cast(WebSocket, self.ws)
             self.ws.send_binary(s)
         except AttributeError:
             raise IOError("Websocket connection has already been closed.")

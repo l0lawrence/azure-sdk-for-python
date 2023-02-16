@@ -37,11 +37,10 @@ from ._connection_manager_async import get_connection_manager
 try:
     from ._transport._uamqp_transport_async import UamqpTransportAsync
 except ImportError:
-    UamqpTransportAsync = None
+    UamqpTransportAsync = None  # type: ignore
 from ._transport._pyamqp_transport_async import PyamqpTransportAsync
 
 if TYPE_CHECKING:
-    from ._transport._uamqp_transport_async import UamqpTransportAsync
     from .._pyamqp.message import Message
     from .._pyamqp.aio import AMQPClientAsync
     from .._pyamqp.aio._authentication_async import JWTTokenAuthAsync
@@ -52,11 +51,22 @@ if TYPE_CHECKING:
             AMQPClientAsync as uamqp_AMQPClientAsync,
         )
     except ImportError:
-        pass
+        uamqp_authentication = None
+        uamqp_Message = None
+        uamqp_AMQPClientAsync = None
     from azure.core.credentials_async import AsyncTokenCredential
 
-    from typing_extensions import Protocol
+    CredentialTypes = Union[
+        "EventHubSharedKeyCredential",
+        AsyncTokenCredential,
+        AzureSasCredential,
+        AzureNamedKeyCredential,
+    ]
 
+    try:
+        from typing_extensions import Protocol
+    except ImportError:
+        Protocol = object  # type: ignore
 
     class AbstractConsumerProducer(Protocol):
         @property
@@ -90,7 +100,8 @@ if TYPE_CHECKING:
             pass
 
         @property
-        def running(self) -> bool:
+        def running(self):
+            # type: () -> bool
             """Whether the consumer or producer is running"""
 
         @running.setter
@@ -99,13 +110,6 @@ if TYPE_CHECKING:
 
         def _create_handler(self, auth: Union[uamqp_authentication.JWTTokenAsync, JWTTokenAuthAsync]) -> None:
             pass
-
-    CredentialTypes = Union[
-        "EventHubSharedKeyCredential",
-        AsyncTokenCredential,
-        AzureSasCredential,
-        AzureNamedKeyCredential,
-    ]
 
     _MIXIN_BASE = AbstractConsumerProducer
 else:
@@ -201,19 +205,20 @@ class EventhubAzureSasTokenCredentialAsync(object):
         signature, expiry = parse_sas_credential(self._credential)
         return AccessToken(signature, expiry)
 
+
 class ClientBaseAsync(ClientBase):
     def __init__(
         self,
         fully_qualified_namespace: str,
         eventhub_name: str,
-        credential: CredentialTypes,
+        credential: "CredentialTypes",
         **kwargs: Any
     ) -> None:
         self._internal_kwargs = get_dict_with_loop_if_needed(kwargs.get("loop", None))
         uamqp_transport = kwargs.get("uamqp_transport", False)
         if uamqp_transport and not UamqpTransportAsync:
             raise ValueError("To use the uAMQP transport, please install `uamqp>=1.6.0,<2.0.0`.")
-        self._amqp_transport: Union[UamqpTransportAsync, PyamqpTransportAsync] = UamqpTransportAsync if uamqp_transport else PyamqpTransportAsync
+        self._amqp_transport = UamqpTransportAsync if uamqp_transport else PyamqpTransportAsync
         if isinstance(credential, AzureSasCredential):
             self._credential = EventhubAzureSasTokenCredentialAsync(credential)  # type: ignore
         elif isinstance(credential, AzureNamedKeyCredential):
@@ -405,8 +410,8 @@ class ClientBaseAsync(ClientBase):
         response = await self._management_request_async(
             mgmt_msg, op_type=MGMT_PARTITION_OPERATION
         )
-        partition_info: Dict[bytes, Union[bytes, int]] = response.value
-        output: Dict[str, Any] = {}
+        partition_info = response.value  # type: Dict[bytes, Union[bytes, int]]
+        output = {}  # type: Dict[str, Any]
         if partition_info:
             output["eventhub_name"] = cast(bytes, partition_info[b"name"]).decode(
                 "utf-8"

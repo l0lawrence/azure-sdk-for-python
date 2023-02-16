@@ -20,8 +20,6 @@ from .._common import EventDataBatch, EventData
 
 if TYPE_CHECKING:
     from ._client_base_async import CredentialTypes
-    from .._transport._base import AmqpTransport
-    from ._transport._base_async import AmqpTransportAsync
 
 SendEventTypes = List[Union[EventData, AmqpAnnotatedMessage]]
 
@@ -179,18 +177,18 @@ class EventHubProducerClient(
             network_tracing=kwargs.pop("logging_enable", False),
             **kwargs
         )
-        self._producers: Dict[str, Optional[EventHubProducer]] = {
+        self._producers = {
             ALL_PARTITIONS: self._create_producer()
-        }
+        }  # type: Dict[str, Optional[EventHubProducer]]
         self._lock = asyncio.Lock(
             **self._internal_kwargs
         )  # sync the creation of self._producers
         self._max_message_size_on_link = 0
-        self._partition_ids: Optional[List[str]] = None
+        self._partition_ids = None  # Optional[List[str]]
         self._buffered_mode = buffered_mode
         self._on_success = on_success
         self._on_error = on_error
-        self._buffered_producer_dispatcher: Optional[BufferedProducerDispatcher] = None
+        self._buffered_producer_dispatcher = None
         self._max_buffer_length = max_buffer_length
         self._max_wait_time = max_wait_time
         if self._buffered_mode:
@@ -225,21 +223,20 @@ class EventHubProducerClient(
 
     async def _buffered_send(self, events, **kwargs):
         try:
-            self._buffered_producer_dispatcher = cast(BufferedProducerDispatcher, self._buffered_producer_dispatcher)
             await self._buffered_producer_dispatcher.enqueue_events(events, **kwargs)
         except AttributeError:
             await self._get_partitions()
             await self._get_max_message_size()
             self._buffered_producer_dispatcher = BufferedProducerDispatcher(
-                cast(List[str], self._partition_ids),
-                cast(Callable[["SendEventTypes", Optional[str]], Awaitable[None]], self._on_success),
-                cast(Callable[["SendEventTypes", Optional[str], Exception], Awaitable[None]], self._on_error),
+                self._partition_ids,
+                self._on_success,
+                self._on_error,
                 self._create_producer,
                 self.eventhub_name,
                 self._max_message_size_on_link,
-                max_wait_time=cast(float, self._max_wait_time),
-                max_buffer_length=cast(int, self._max_buffer_length),
-                amqp_transport=cast(AmqpTransportAsync, self._amqp_transport)
+                max_wait_time=self._max_wait_time,
+                max_buffer_length=self._max_buffer_length,
+                amqp_transport=self._amqp_transport
             )
             await self._buffered_producer_dispatcher.enqueue_events(events, **kwargs)
 
@@ -285,7 +282,7 @@ class EventHubProducerClient(
 
     async def _buffered_send_event(self, event, **kwargs):
         partition_key = kwargs.get("partition_key")
-        set_event_partition_key(event, partition_key, cast(AmqpTransport, self._amqp_transport))
+        set_event_partition_key(event, partition_key, self._amqp_transport)
         timeout = kwargs.get("timeout")
         timeout_time = time.time() + timeout if timeout else None
         await self._buffered_send(
@@ -297,8 +294,8 @@ class EventHubProducerClient(
 
     async def _get_partitions(self) -> None:
         if not self._partition_ids:
-            self._partition_ids = await self.get_partition_ids()
-            for p_id in self._partition_ids:
+            self._partition_ids = await self.get_partition_ids()  # type: ignore
+            for p_id in cast(List[str], self._partition_ids):
                 self._producers[p_id] = None
 
     async def _get_max_message_size(self) -> None:
@@ -310,7 +307,7 @@ class EventHubProducerClient(
                 )._open_with_retry()
                 self._max_message_size_on_link = (
                     self._amqp_transport.get_remote_max_message_size(
-                        cast(
+                        cast(  # type: ignore
                         EventHubProducer, self._producers[ALL_PARTITIONS]
                         )._handler
                     )
@@ -354,7 +351,7 @@ class EventHubProducerClient(
             self._config.send_timeout if send_timeout is None else send_timeout
         )
 
-        handler = EventHubProducer(
+        handler = EventHubProducer( # type: ignore
             self,
             target,
             partition=partition_id,

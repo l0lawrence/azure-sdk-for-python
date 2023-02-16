@@ -12,40 +12,41 @@ An example to show receiving events from an Event Hub for a period of time async
 import asyncio
 import os
 import time
-from typing import TYPE_CHECKING, Optional
 from azure.eventhub.aio import EventHubConsumerClient
-
-if TYPE_CHECKING:
-    from azure.eventhub.aio import PartitionContext
-    from azure.eventhub import EventData, CloseReason
 
 CONNECTION_STR = os.environ["EVENT_HUB_CONN_STR"]
 EVENTHUB_NAME = os.environ['EVENT_HUB_NAME']
 RECEIVE_DURATION = 15
 
 
-async def on_event(partition_context: PartitionContext, event: Optional[EventData]) -> None:
+async def on_event(partition_context, event):
     # Put your code here.
-    print(f"Received event from partition: {partition_context.partition_id}.")
+    print("Received event from partition: {}.".format(partition_context.partition_id))
     await partition_context.update_checkpoint(event)
 
 
-async def on_partition_initialize(partition_context: PartitionContext) -> None:
+async def on_partition_initialize(partition_context):
     # Put your code here.
-    print(f"Partition: {partition_context.partition_id} has been initialized.")
+    print("Partition: {} has been initialized.".format(partition_context.partition_id))
 
 
-async def on_partition_close(partition_context: PartitionContext, reason: CloseReason) -> None:
+async def on_partition_close(partition_context, reason):
     # Put your code here.
-    print(f"Partition: {partition_context.partition_id} has been closed, reason for closing: {reason}.")
+    print("Partition: {} has been closed, reason for closing: {}.".format(
+        partition_context.partition_id,
+        reason
+    ))
 
 
-async def on_error(partition_context: PartitionContext, error: Exception) -> None:
+async def on_error(partition_context, error):
     # Put your code here. partition_context can be None in the on_error callback.
     if partition_context:
-        print(f"An exception: {partition_context.partition_id} occurred during receiving from Partition: {error}.")
+        print("An exception: {} occurred during receiving from Partition: {}.".format(
+            partition_context.partition_id,
+            error
+        ))
     else:
-        print(f"An exception: {error} occurred during the load balance process.")
+        print("An exception: {} occurred during the load balance process.".format(error))
 
 
 async def main():
@@ -55,7 +56,7 @@ async def main():
         eventhub_name=EVENTHUB_NAME
     )
 
-    print(f'Consumer will keep receiving for {RECEIVE_DURATION} seconds, start time is {time.time()}.')
+    print('Consumer will keep receiving for {} seconds, start time is {}.'.format(RECEIVE_DURATION, time.time()))
 
     async with client:
         task = asyncio.ensure_future(
@@ -70,7 +71,7 @@ async def main():
         await asyncio.sleep(RECEIVE_DURATION)
     await task
 
-    print(f'Consumer has stopped receiving, end time is {time.time()}.')
+    print('Consumer has stopped receiving, end time is {}.'.format(time.time()))
 
 
 if __name__ == '__main__':

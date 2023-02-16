@@ -19,7 +19,6 @@ from typing import (
     List,
     TYPE_CHECKING,
     cast,
-    Mapping
 )
 from typing_extensions import TypedDict
 
@@ -59,16 +58,14 @@ from ._pyamqp.message import Message as pyamqp_Message
 from ._transport._pyamqp_transport import PyamqpTransport
 
 if TYPE_CHECKING:
-    from ._transport._uamqp_transport import UamqpTransport
-    from uamqp import Message, BatchMessage
-    # try:
-    #     from uamqp import (  # pylint: disable=unused-import
-    #         Message,    # not importing as uamqp_Message, b/c type is exposed to user
-    #         BatchMessage,
-    #     )
-    # except ImportError:
-    #     Message = None
-    #     BatchMessage = None
+    try:
+        from uamqp import (  # pylint: disable=unused-import
+            Message,    # not importing as uamqp_Message, b/c type is exposed to user
+            BatchMessage,
+        )
+    except ImportError:
+        Message = None
+        BatchMessage = None
     from ._transport._base import AmqpTransport
 
 MessageContent = TypedDict("MessageContent", {"content": bytes, "content_type": str})
@@ -128,19 +125,22 @@ class EventData(object):
         self,
         body: Optional[Union[str, bytes, List[AnyStr]]] = None,
     ) -> None:
-        self._last_enqueued_event_properties: Dict[str, Any] = {}
-        self._sys_properties: Optional[Dict[bytes, Any]] = None
+        self._last_enqueued_event_properties = {}  # type: Dict[str, Any]
+        self._sys_properties = None  # type: Optional[Dict[bytes, Any]]
         if body is None:
             raise ValueError("EventData cannot be None.")
 
         # Internal usage only for transforming AmqpAnnotatedMessage to outgoing EventData
-        self._raw_amqp_message = AmqpAnnotatedMessage(
+        self._raw_amqp_message = AmqpAnnotatedMessage(  # type: ignore
             data_body=body, annotations={}, application_properties={}
         )
         self._uamqp_message: Optional[Union[LegacyMessage, "Message"]] = None
-        self._message: Union["Message", pyamqp_Message] = None
+        self._message: Union["Message", pyamqp_Message] = None  # type: ignore
         self._raw_amqp_message.header = AmqpMessageHeader()
         self._raw_amqp_message.properties = AmqpMessageProperties()
+        self.message_id = None
+        self.content_type = None
+        self.correlation_id = None
 
     def __repr__(self) -> str:
         # pylint: disable=bare-except
@@ -204,7 +204,7 @@ class EventData(object):
             raise TypeError("`body_type` must be `AmqpMessageBodyType.DATA`.")
         content = bytearray()
         for c in self.body:  # type: ignore
-            content += c
+            content += c  # type: ignore
         content_type = cast(str, self.content_type)
         return {"content": bytes(content), "content_type": content_type}
 
@@ -297,18 +297,18 @@ class EventData(object):
     def sequence_number(self) -> Optional[int]:
         """The sequence number of the event.
 
-        :rtype: int or None
+        :rtype: int
         """
-        return cast(Dict[Union[str, bytes], Any], self._raw_amqp_message.annotations).get(PROP_SEQ_NUMBER, None)
+        return self._raw_amqp_message.annotations.get(PROP_SEQ_NUMBER, None)
 
     @property
     def offset(self) -> Optional[str]:
         """The offset of the event.
 
-        :rtype: str or None
+        :rtype: str
         """
         try:
-            return cast(Dict[Union[str, bytes], Any], self._raw_amqp_message.annotations)[PROP_OFFSET].decode("UTF-8")
+            return self._raw_amqp_message.annotations[PROP_OFFSET].decode("UTF-8")
         except (KeyError, AttributeError):
             return None
 
@@ -316,9 +316,9 @@ class EventData(object):
     def enqueued_time(self) -> Optional[datetime.datetime]:
         """The enqueued timestamp of the event.
 
-        :rtype: datetime.datetime or None
+        :rtype: datetime.datetime
         """
-        timestamp = cast(Dict[Union[str, bytes], Any], self._raw_amqp_message.annotations).get(PROP_TIMESTAMP, None)
+        timestamp = self._raw_amqp_message.annotations.get(PROP_TIMESTAMP, None)
         if timestamp:
             return utc_from_timestamp(float(timestamp) / 1000)
         return None
@@ -327,9 +327,9 @@ class EventData(object):
     def partition_key(self) -> Optional[bytes]:
         """The partition key of the event.
 
-        :rtype: bytes or None
+        :rtype: bytes
         """
-        return cast(Dict[Union[str, bytes], Any], self._raw_amqp_message.annotations).get(PROP_PARTITION_KEY, None)
+        return self._raw_amqp_message.annotations.get(PROP_PARTITION_KEY, None)
 
     @property
     def properties(self) -> Dict[Union[str, bytes], Any]:
@@ -337,10 +337,10 @@ class EventData(object):
 
         :rtype: dict
         """
-        return cast(Dict[Union[str, bytes], Any], self._raw_amqp_message.application_properties)
+        return self._raw_amqp_message.application_properties
 
     @properties.setter
-    def properties(self, value: Dict[Union[str, bytes], Any]) -> None:
+    def properties(self, value: Dict[Union[str, bytes], Any]):
         """Application-defined properties on the event.
 
         :param dict value: The application properties for the EventData.
@@ -383,7 +383,7 @@ class EventData(object):
                     value = getattr(self._raw_amqp_message.properties, prop_name, None)
                     if value:
                         self._sys_properties[key] = value
-            self._sys_properties.update(cast(Mapping[bytes, Any], self._raw_amqp_message.annotations))
+            self._sys_properties.update(self._raw_amqp_message.annotations)
         return self._sys_properties
 
     @property
@@ -457,12 +457,12 @@ class EventData(object):
         if not self._raw_amqp_message.properties:
             return None
         try:
-            return cast(bytes, self._raw_amqp_message.properties.content_type).decode("UTF-8")
+            return self._raw_amqp_message.properties.content_type.decode("UTF-8")
         except (AttributeError, UnicodeDecodeError):
             return self._raw_amqp_message.properties.content_type
 
     @content_type.setter
-    def content_type(self, value: Optional[str]) -> None:
+    def content_type(self, value: str) -> None:
         if not self._raw_amqp_message.properties:
             self._raw_amqp_message.properties = AmqpMessageProperties()
         self._raw_amqp_message.properties.content_type = value
@@ -477,12 +477,12 @@ class EventData(object):
         if not self._raw_amqp_message.properties:
             return None
         try:
-            return cast(bytes, self._raw_amqp_message.properties.correlation_id).decode("UTF-8")
+            return self._raw_amqp_message.properties.correlation_id.decode("UTF-8")
         except (AttributeError, UnicodeDecodeError):
             return self._raw_amqp_message.properties.correlation_id
 
     @correlation_id.setter
-    def correlation_id(self, value: Optional[str]) -> None:
+    def correlation_id(self, value: str) -> None:
         if not self._raw_amqp_message.properties:
             self._raw_amqp_message.properties = AmqpMessageProperties()
         self._raw_amqp_message.properties.correlation_id = value
@@ -499,12 +499,12 @@ class EventData(object):
         if not self._raw_amqp_message.properties:
             return None
         try:
-            return cast(bytes, self._raw_amqp_message.properties.message_id).decode("UTF-8")
+            return self._raw_amqp_message.properties.message_id.decode("UTF-8")
         except (AttributeError, UnicodeDecodeError):
             return self._raw_amqp_message.properties.message_id
 
     @message_id.setter
-    def message_id(self, value: Optional[str]) -> None:
+    def message_id(self, value: str) -> None:
         if not self._raw_amqp_message.properties:
             self._raw_amqp_message.properties = AmqpMessageProperties()
         self._raw_amqp_message.properties.message_id = value
@@ -542,7 +542,7 @@ class EventDataBatch(object):
         partition_key: Optional[Union[str, bytes]] = None,
         **kwargs,
     ) -> None:
-        self._amqp_transport: Union[UamqpTransport, PyamqpTransport] = kwargs.pop("amqp_transport", PyamqpTransport)
+        self._amqp_transport = kwargs.pop("amqp_transport", PyamqpTransport)
 
         if partition_key and not isinstance(partition_key, (str, bytes)):
             _LOGGER.info(

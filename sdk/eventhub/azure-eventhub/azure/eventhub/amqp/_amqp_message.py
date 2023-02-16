@@ -44,7 +44,8 @@ class AmqpAnnotatedMessage(object):
     :paramtype delivery_annotations: Optional[Dict]
     """
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs):
+        # type: (Any) -> None
         self._encoding = kwargs.pop("encoding", "UTF-8")
         self._data_body: Optional[Union[str, bytes, List[Union[str, bytes]]]] = None
         self._sequence_body: Optional[List[Any]] = None
@@ -163,10 +164,10 @@ class AmqpAnnotatedMessage(object):
         self._delivery_annotations = message.delivery_annotations if message.delivery_annotations else {}
         self._application_properties = message.application_properties if message.application_properties else {}
         if message.data:
-            self._data_body = list(message.data)
+            self._data_body = cast(List, list(message.data))
             self._body_type = AmqpMessageBodyType.DATA
         elif message.sequence:
-            self._sequence_body = list(message.sequence)
+            self._sequence_body = cast(List, list(message.sequence))
             self._body_type = AmqpMessageBodyType.SEQUENCE
         else:
             self._value_body = message.value
@@ -181,7 +182,7 @@ class AmqpAnnotatedMessage(object):
         :rtype: Any
         """
         if self._body_type == AmqpMessageBodyType.DATA: # pylint:disable=no-else-return
-            return (i for i in cast(List, self._data_body)) 
+            return (i for i in cast(List, self._data_body)) # type: ignore
         elif self._body_type == AmqpMessageBodyType.SEQUENCE:
             return (i for i in cast(List, self._sequence_body))
         elif self._body_type == AmqpMessageBodyType.VALUE:

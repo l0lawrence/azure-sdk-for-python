@@ -33,12 +33,12 @@ class ManagementOperation(object):
             "amqpSession": self._session.name,
             "amqpLink": None
         }
-        self._mgmt_link: ManagementLink = self._session.create_request_response_link_pair(
+        self._mgmt_link = self._session.create_request_response_link_pair(
             endpoint=endpoint,
             on_amqp_management_open_complete=self._on_amqp_management_open_complete,
             on_amqp_management_error=self._on_amqp_management_error,
             **kwargs
-        )
+        )  # type: ManagementLink
         self._responses = {}
         self._mgmt_error = None
 
@@ -109,7 +109,7 @@ class ManagementOperation(object):
 
         if self._mgmt_error:
             self._responses.pop(operation_id)
-            raise self._mgmt_error  # type: ignore[reportGeneralTypeIssues] # pylint: disable=raising-bad-type
+            raise self._mgmt_error  # pylint: disable=raising-bad-type
 
         response = self._responses.pop(operation_id)
         return response
@@ -120,7 +120,7 @@ class ManagementOperation(object):
 
     async def ready(self):
         try:
-            raise self._mgmt_error  # type: ignore[reportGeneralTypeIssues] # pylint: disable=raising-bad-type
+            raise self._mgmt_error  # pylint: disable=raising-bad-type
         except TypeError:
             pass
 

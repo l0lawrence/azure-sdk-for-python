@@ -8,7 +8,7 @@ import time
 import uuid
 import logging
 from collections import deque
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Any, Deque, Union, cast, List
+from typing import TYPE_CHECKING, Callable, Dict, Optional, Any, Deque, Union, cast
 
 from ._common import EventData
 from ._client_base import ConsumerProducerMixin
@@ -21,7 +21,6 @@ from ._constants import (
 )
 
 if TYPE_CHECKING:
-    import datetime
     from ._pyamqp import types
     from ._pyamqp.message import Message
     from ._pyamqp.authentication import JWTTokenAuth
@@ -32,7 +31,10 @@ if TYPE_CHECKING:
         from uamqp.types import AMQPType as uamqp_AMQPType
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:
-        pass
+        uamqp_ReceiveClient = None
+        uamqp_Message = None
+        uamqp_AMQPType = None
+        uamqp_JWTTokenAuth = None
     from ._consumer_client import EventHubConsumerClient
 
 
@@ -94,7 +96,7 @@ class EventHubConsumer(
         self.handler_ready = False
 
         self._amqp_transport = kwargs.pop("amqp_transport")
-        self._on_event_received = kwargs[ #Callable[[EventData], None]
+        self._on_event_received: Callable[[EventData], None] = kwargs[
             "on_event_received"
         ]
         self._client = client
@@ -141,7 +143,7 @@ class EventHubConsumer(
         source = self._amqp_transport.create_source(
             self._source,
             self._offset,
-            event_position_selector(cast(Union[int, str, datetime.datetime], self._offset), self._offset_inclusive),
+            event_position_selector(self._offset, self._offset_inclusive),
         )
         desired_capabilities = (
             [RECEIVER_RUNTIME_METRIC_SYMBOL]

@@ -190,11 +190,11 @@ class EventHubProducerClient(
             network_tracing=kwargs.get("logging_enable"),
             **kwargs
         )
-        self._producers: Dict[str, Optional[EventHubProducer]] = {
+        self._producers = {
             ALL_PARTITIONS: self._create_producer()
-        }
+        }  # type: Dict[str, Optional[EventHubProducer]]
         self._max_message_size_on_link = 0
-        self._partition_ids: Optional[List[str]] = None
+        self._partition_ids = None  # Optional[List[str]]
         self._lock = threading.Lock()
         self._buffered_mode = buffered_mode
         self._on_success = on_success
@@ -240,20 +240,19 @@ class EventHubProducerClient(
 
     def _buffered_send(self, events, **kwargs):
         try:
-            self._buffered_producer_dispatcher = cast(BufferedProducerDispatcher, self._buffered_producer_dispatcher)
             self._buffered_producer_dispatcher.enqueue_events(events, **kwargs)
         except AttributeError:
             self._get_partitions()
             self._get_max_message_size()
             self._buffered_producer_dispatcher = BufferedProducerDispatcher(
-                cast(List[str], self._partition_ids),
-                cast(Callable[[SendEventTypes, Optional[str]], None], self._on_success),
-                cast(Callable[[SendEventTypes, Optional[str], Exception], None], self._on_error),
+                self._partition_ids,
+                self._on_success,
+                self._on_error,
                 self._create_producer,
                 self.eventhub_name,
                 self._max_message_size_on_link,
-                max_wait_time=cast(float, self._max_wait_time),
-                max_buffer_length=cast(int, self._max_buffer_length),
+                max_wait_time=self._max_wait_time,
+                max_buffer_length=self._max_buffer_length,
                 executor=self._executor,
                 amqp_transport=self._amqp_transport,
             )
@@ -312,14 +311,16 @@ class EventHubProducerClient(
             timeout_time=timeout_time,
         )
 
-    def _get_partitions(self) -> None:
+    def _get_partitions(self):
+        # type: () -> None
         if not self._partition_ids:
             _LOGGER.debug("Populating partition IDs so producers can be started.")
-            self._partition_ids = self.get_partition_ids()
-            for p_id in self._partition_ids:
+            self._partition_ids = self.get_partition_ids()  # type: ignore
+            for p_id in cast(List[str], self._partition_ids):
                 self._producers[p_id] = None
 
-    def _get_max_message_size(self) -> None:
+    def _get_max_message_size(self):
+        # type: () -> None
         # pylint: disable=protected-access,line-too-long
         with self._lock:
             if not self._max_message_size_on_link:
@@ -333,11 +334,8 @@ class EventHubProducerClient(
                     or self._amqp_transport.MAX_MESSAGE_LENGTH_BYTES
                 )
 
-    def _start_producer(
-        self,
-        partition_id: str,
-        send_timeout: Optional[Union[int, float]]
-    ) -> None:
+    def _start_producer(self, partition_id, send_timeout):
+        # type: (str, Optional[Union[int, float]]) -> None
         with self._lock:
             self._get_partitions()
             if (
@@ -361,11 +359,8 @@ class EventHubProducerClient(
                     send_timeout=send_timeout,
                 )
 
-    def _create_producer(
-        self,
-        partition_id: Optional[str] = None,
-        send_timeout: Optional[Union[int, float]] = None
-    ) -> EventHubProducer:
+    def _create_producer(self, partition_id=None, send_timeout=None):
+        # type: (Optional[str], Optional[Union[int, float]]) -> EventHubProducer
         target = "amqps://{}{}".format(self._address.hostname, self._address.path)
         send_timeout = (
             self._config.send_timeout if send_timeout is None else send_timeout
@@ -531,11 +526,8 @@ class EventHubProducerClient(
         )
         return cls(**constructor_args)
 
-    def send_event(
-        self,
-        event_data: Union[EventData, AmqpAnnotatedMessage],
-        **kwargs: Any
-    ) -> None:
+    def send_event(self, event_data, **kwargs):
+        # type: (Union[EventData, AmqpAnnotatedMessage], Any) -> None
         """
         Sends an event data.
         By default, the method will block until acknowledgement is received or operation times out.
@@ -604,11 +596,8 @@ class EventHubProducerClient(
             else:
                 raise
 
-    def send_batch(
-        self,
-        event_data_batch: Union[EventDataBatch, SendEventTypes],
-        **kwargs: Any
-    ) -> None:
+    def send_batch(self, event_data_batch, **kwargs):
+        # type: (Union[EventDataBatch, SendEventTypes], Any) -> None
         # pylint: disable=protected-access
         """
         Sends a batch of event data.
@@ -711,7 +700,8 @@ class EventHubProducerClient(
             else:
                 raise
 
-    def create_batch(self, **kwargs: Any) -> EventDataBatch:
+    def create_batch(self, **kwargs):
+        # type:(Any) -> EventDataBatch
         """Create an EventDataBatch object with the max size of all content being constrained by max_size_in_bytes.
 
         The max_size_in_bytes should be no greater than the max allowed message size defined by the service.
@@ -762,7 +752,8 @@ class EventHubProducerClient(
 
         return event_data_batch
 
-    def get_eventhub_properties(self) -> Dict[str, Any]:
+    def get_eventhub_properties(self):
+        # type:() -> Dict[str, Any]
         """Get properties of the Event Hub.
 
         Keys in the returned dictionary include:
@@ -776,7 +767,8 @@ class EventHubProducerClient(
         """
         return super(EventHubProducerClient, self)._get_eventhub_properties()
 
-    def get_partition_ids(self) -> List[str]:
+    def get_partition_ids(self):
+        # type:() -> List[str]
         """Get partition IDs of the Event Hub.
 
         :rtype: list[str]
@@ -784,7 +776,8 @@ class EventHubProducerClient(
         """
         return super(EventHubProducerClient, self)._get_partition_ids()
 
-    def get_partition_properties(self, partition_id: str) -> Dict[str, Any]:
+    def get_partition_properties(self, partition_id):
+        # type:(str) -> Dict[str, Any]
         """Get properties of the specified partition.
 
         Keys in the properties dictionary include:

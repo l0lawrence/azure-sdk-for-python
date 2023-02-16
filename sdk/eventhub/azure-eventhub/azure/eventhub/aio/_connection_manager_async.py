@@ -18,10 +18,13 @@ if TYPE_CHECKING:
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAuthAsync
         from uamqp.async_ops import ConnectionAsync as uamqp_ConnectionAsync
     except ImportError:
-        pass
+        uamqp_JWTTokenAuthAsync = None
+        uamqp_ConnectionAsync = None
 
-    from typing_extensions import Protocol
- 
+    try:
+        from typing_extensions import Protocol
+    except ImportError:
+        Protocol = object  # type: ignore
 
     class ConnectionManager(Protocol):
         async def get_connection(
@@ -120,8 +123,8 @@ class _SeparateConnectionManager(object):
         pass
 
 
-def get_connection_manager(**kwargs) -> Union[_SharedConnectionManager, _SeparateConnectionManager]:
-    connection_mode = kwargs.get("connection_mode", _ConnectionMode.SeparateConnection)
+def get_connection_manager(**kwargs) -> "ConnectionManager":
+    connection_mode = kwargs.get("connection_mode", _ConnectionMode.SeparateConnection)  # type: ignore
     if connection_mode == _ConnectionMode.ShareConnection:
         return _SharedConnectionManager(**kwargs)
     return _SeparateConnectionManager(**kwargs)

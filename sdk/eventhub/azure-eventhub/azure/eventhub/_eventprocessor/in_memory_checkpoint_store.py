@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # -----------------------------------------------------------------------------------
-from typing import Dict, Any, Iterable, Optional, Union, cast
+from typing import Dict, Any, Iterable, Optional, Union
 import time
 import uuid
 import logging
@@ -13,10 +13,13 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class _TrieNode(object):
-    def __init__(self, value: str, is_leaf: bool):
+    def __init__(self, value, is_leaf):
         self.value = value
         self.is_leaf = is_leaf
-        self.children: Union[Dict[str, Any], None] = None if is_leaf else {}
+        if is_leaf:
+            self.children = None
+        else:
+            self.children = {}
 
     def __contains__(self, item):
         if self.is_leaf:
@@ -26,13 +29,11 @@ class _TrieNode(object):
     def get(self, key):
         if self.is_leaf:
             raise ValueError("Please don't get a child from a leaf TrieNode")
-        self.children = cast(Dict[str,Any], self.children)
         return self.children.get(key)
 
     def put(self, key, value):
         if self.is_leaf:
             raise ValueError("Please don't put a value to a leaf TrieNode")
-        self.children = cast(Dict[str, Any], self.children)
         self.children[key] = value
 
 

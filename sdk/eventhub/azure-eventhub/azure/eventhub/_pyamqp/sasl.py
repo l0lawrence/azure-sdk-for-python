@@ -7,7 +7,6 @@
 from ._transport import SSLTransport, WebSocketTransport, AMQPS_PORT
 from .constants import SASLCode, SASL_HEADER_FRAME, WEBSOCKET_PORT
 from .performatives import SASLInit
-from typing import Union
 
 
 _SASL_FRAME_TYPE = b"\x01"
@@ -62,7 +61,7 @@ class SASLExternalCredential(object):
 
 
 class SASLTransportMixin:
-    def _negotiate(self: Union[SSLTransport, WebSocketTransport]):
+    def _negotiate(self):
         self.write(SASL_HEADER_FRAME)
         _, returned_header = self.receive_frame()
         if returned_header[1] != SASL_HEADER_FRAME:

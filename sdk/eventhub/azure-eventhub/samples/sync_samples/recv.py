@@ -9,37 +9,40 @@
 An example to show receiving events from an Event Hub.
 """
 import os
-from typing import TYPE_CHECKING, Optional
 from azure.eventhub import EventHubConsumerClient
-if TYPE_CHECKING:
-    from azure.eventhub import PartitionContext, EventData, CloseReason
 
 CONNECTION_STR = os.environ["EVENT_HUB_CONN_STR"]
 EVENTHUB_NAME = os.environ['EVENT_HUB_NAME']
 
 
-def on_event(partition_context: PartitionContext, event: Optional[EventData]) -> None:
+def on_event(partition_context, event):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
-    print(f"Received event from partition: {partition_context.partition_id}.")
+    print("Received event from partition: {}.".format(partition_context.partition_id))
 
 
-def on_partition_initialize(partition_context: PartitionContext) -> None:
+def on_partition_initialize(partition_context):
     # Put your code here.
-    print(f"Partition: {partition_context.partition_id} has been initialized.")
+    print("Partition: {} has been initialized.".format(partition_context.partition_id))
 
 
-def on_partition_close(partition_context: PartitionContext, reason: CloseReason) -> None:
+def on_partition_close(partition_context, reason):
     # Put your code here.
-    print(f"Partition: {partition_context.partition_id} has been closed, reason for closing: {reason}.")
+    print("Partition: {} has been closed, reason for closing: {}.".format(
+        partition_context.partition_id,
+        reason
+    ))
 
 
-def on_error(partition_context: PartitionContext, error: Exception) -> None:
+def on_error(partition_context, error):
     # Put your code here. partition_context can be None in the on_error callback.
     if partition_context:
-        print(f"An exception: {partition_context.partition_id} occurred during receiving from Partition: {error}.")
+        print("An exception: {} occurred during receiving from Partition: {}.".format(
+            partition_context.partition_id,
+            error
+        ))
     else:
-        print(f"An exception: {error} occurred during the load balance process.")
+        print("An exception: {} occurred during the load balance process.".format(error))
 
 
 if __name__ == '__main__':

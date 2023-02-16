@@ -11,11 +11,8 @@ Example to show streaming sending events with different options to an Event Hub.
 
 import time
 import os
-from typing import TYPE_CHECKING
-from azure.eventhub import EventHubProducerClient, EventData
 
-if TYPE_CHECKING:
-    from azure.eventhub import EventDataBatch
+from azure.eventhub import EventHubProducerClient, EventData
 
 CONNECTION_STR = os.environ['EVENT_HUB_CONN_STR']
 EVENTHUB_NAME = os.environ['EVENT_HUB_NAME']
@@ -31,7 +28,7 @@ to_send_message_cnt = 500
 bytes_per_message = 256
 
 with producer:
-    event_data_batch: EventDataBatch = producer.create_batch()
+    event_data_batch = producer.create_batch()
     for i in range(to_send_message_cnt):
         event_data = EventData('D' * bytes_per_message)
         try:
@@ -43,4 +40,4 @@ with producer:
     if len(event_data_batch) > 0:
         producer.send_batch(event_data_batch)
 
-print(f"Send messages in {time.time() - start_time} seconds.")
+print("Send messages in {} seconds.".format(time.time() - start_time))

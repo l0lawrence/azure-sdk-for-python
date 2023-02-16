@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     try:
         from uamqp import types as uamqp_types
     except ImportError:
-        pass
+        uamqp_types = None
 
 class AmqpTransport(ABC):   # pylint: disable=too-many-public-methods
     """
