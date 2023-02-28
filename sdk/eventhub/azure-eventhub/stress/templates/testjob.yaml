@@ -4,6 +4,7 @@ metadata:
   labels:
     testName: "deploy-python-eh-stress"
     testInstance: "eventhub-{{ .Release.Name }}-{{ .Release.Revision }}"
+    chaos: "{{ default false .Stress.chaos }}"
 spec:
   containers:
     - name: python-eh-stress
@@ -15,11 +16,11 @@ spec:
           cpu: "1"
      
       {{ if eq .Stress.testTarget "event-async" }}
-      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200   & python azure_eventhub_consumer_stress_async.py --duration 259200    ']
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200 --pyamqp_logging_enable  & python azure_eventhub_consumer_stress_async.py --duration 259200  --pyamqp_logging_enable  ']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "event-sync" }}
-      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200    & python azure_eventhub_consumer_stress_sync.py --duration 259200   ']
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200   --pyamqp_logging_enable & python azure_eventhub_consumer_stress_sync.py --duration 259200  --pyamqp_logging_enable ']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "batch-async" }}
@@ -65,3 +66,38 @@ spec:
       {{- include "stress-test-addons.container-env" . | nindent 6 }}
 {{- end -}}
 
+
+{{- include "stress-test-addons.chaos-wrapper.tpl" (list . "stress.network-chaos") -}}
+{{- define "stress.network-chaos" -}}
+# basically: every 15 minutes do 30s of network loss
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+spec:
+  schedule: "*/15 * * * *"
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: 1
+  type: NetworkChaos
+  networkChaos:
+    selector:
+      namespaces:
+        - "{{ .Release.Namespace }}"
+      labelSelectors:
+        scenario: {{ .Stress.Scenario }}
+    mode: all
+    action: loss
+    duration: 30s
+    loss:
+      loss: '100'
+      correlation: '100'
+    direction: to
+    target:
+      selector:
+        namespaces:
+          - {{ .Release.Namespace }}
+        labelSelectors:
+          scenario: {{ .Stress.Scenario }}
+      mode: all
+    externalTargets:
+      - {{ .Stress.BaseName }}.servicebus.windows.net
+{{- end -}}
