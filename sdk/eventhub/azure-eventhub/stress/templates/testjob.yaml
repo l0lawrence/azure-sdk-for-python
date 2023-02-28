@@ -16,11 +16,11 @@ spec:
           cpu: "1"
      
       {{ if eq .Stress.testTarget "event-async" }}
-      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200 --pyamqp_logging_enable  & python azure_eventhub_consumer_stress_async.py --duration 259200  --pyamqp_logging_enable  ']
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_async --duration 259200 --pyamqp_logging_enable --print_console & python azure_eventhub_consumer_stress_async.py --duration 259200  --pyamqp_logging_enable --print_console ']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "event-sync" }}
-      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200   --pyamqp_logging_enable & python azure_eventhub_consumer_stress_sync.py --duration 259200  --pyamqp_logging_enable ']
+      command: ['bash', '-c', 'python azure_eventhub_producer_stress.py -m stress_send_sync --duration 259200   --pyamqp_logging_enable --print_console & python azure_eventhub_consumer_stress_sync.py --duration 259200  --pyamqp_logging_enable --print_console']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "batch-async" }}
@@ -73,7 +73,7 @@ spec:
 kind: Schedule
 apiVersion: chaos-mesh.org/v1alpha1
 spec:
-  schedule: "*/15 * * * *"
+  schedule: "*/5 * * * *"
   startingDeadlineSeconds: null
   concurrencyPolicy: Forbid
   historyLimit: 1
@@ -83,7 +83,7 @@ spec:
       namespaces:
         - "{{ .Release.Namespace }}"
       labelSelectors:
-        scenario: {{ .Stress.Scenario }}
+        scenario: {{ .Stress.testTarget }}
     mode: all
     action: loss
     duration: 30s
@@ -96,7 +96,7 @@ spec:
         namespaces:
           - {{ .Release.Namespace }}
         labelSelectors:
-          scenario: {{ .Stress.Scenario }}
+          scenario: {{ .Stress.testTarget }}
       mode: all
     externalTargets:
       - {{ .Stress.BaseName }}.servicebus.windows.net
