@@ -73,9 +73,9 @@ spec:
 kind: Schedule
 apiVersion: chaos-mesh.org/v1alpha1
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/1 * * * *"
   startingDeadlineSeconds: null
-  concurrencyPolicy: Forbid
+  concurrencyPolicy: Allow
   historyLimit: 1
   type: NetworkChaos
   networkChaos:
@@ -83,10 +83,10 @@ spec:
       namespaces:
         - "{{ .Release.Namespace }}"
       labelSelectors:
-        scenario: {{ .Stress.testTarget }}
+        scenario: {{ .Stress.Scenario }}
     mode: all
     action: loss
-    duration: 30s
+    duration: 10s
     loss:
       loss: '100'
       correlation: '100'
@@ -96,7 +96,7 @@ spec:
         namespaces:
           - {{ .Release.Namespace }}
         labelSelectors:
-          scenario: {{ .Stress.testTarget }}
+          scenario: {{ .Stress.Scenario }}
       mode: all
     externalTargets:
       - {{ .Stress.BaseName }}.servicebus.windows.net
