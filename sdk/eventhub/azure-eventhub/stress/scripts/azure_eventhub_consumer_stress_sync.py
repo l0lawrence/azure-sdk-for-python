@@ -170,7 +170,7 @@ def on_error(partition_context, exception):
 
 def create_client(args):
     if args.storage_conn_str:
-        checkpoint_store = StressTestCheckpointStore(args.storage_conn_str, args.storage_container_name, args.storage_key, request_latency=10)
+        checkpoint_store = StressTestCheckpointStore(args.storage_conn_str, args.storage_container_name, args.storage_key, request_latency=30)
         # checkpoint_store = BlobCheckpointStore.from_connection_string(args.storage_conn_str, args.storage_container_name)
     else:
         checkpoint_store = None
