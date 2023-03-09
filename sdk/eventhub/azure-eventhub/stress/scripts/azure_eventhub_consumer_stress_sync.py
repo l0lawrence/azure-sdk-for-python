@@ -20,6 +20,7 @@ from azure.eventhub import EventHubConsumerClient, TransportType, EventHubShared
 from logger import get_logger
 from process_monitor import ProcessMonitor
 from app_insights_metric import AzureMonitorMetric
+from stress_checkpointstore import StressTestCheckpointStore
 
 ENV_FILE = os.environ.get('ENV_FILE')
 load_dotenv(dotenv_path=ENV_FILE, override=True)
@@ -83,6 +84,7 @@ parser.add_argument("--aad_secret", help="AAD secret")
 parser.add_argument("--aad_tenant_id", help="AAD tenant id")
 parser.add_argument("--storage_conn_str", help="conn str of storage blob to store ownership and checkpoint data")
 parser.add_argument("--storage_container_name", help="storage container name to store ownership and checkpoint data")
+parser.add_argument("--storage_key", help="storage key to store ownership and checkpoint data")
 parser.add_argument("--pyamqp_logging_enable", help="pyamqp logging enable", action="store_true")
 parser.add_argument("--print_console", help="print to console", action="store_true")
 parser.add_argument("--log_filename", help="log file name", type=str)
@@ -168,7 +170,8 @@ def on_error(partition_context, exception):
 
 def create_client(args):
     if args.storage_conn_str:
-        checkpoint_store = BlobCheckpointStore.from_connection_string(args.storage_conn_str, args.storage_container_name)
+        checkpoint_store = StressTestCheckpointStore(args.storage_conn_str, args.storage_container_name, args.storage_key, request_latency=10)
+        # checkpoint_store = BlobCheckpointStore.from_connection_string(args.storage_conn_str, args.storage_container_name)
     else:
         checkpoint_store = None
 
