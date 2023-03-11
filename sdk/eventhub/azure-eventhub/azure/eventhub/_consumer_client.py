@@ -152,7 +152,7 @@ class EventHubConsumerClient(
         **kwargs  # type: Any
     ):
         # type: (...) -> None
-
+        self._metric = kwargs.pop("metric", None)
         self._checkpoint_store = kwargs.pop("checkpoint_store", None)
         self._load_balancing_interval = kwargs.pop("load_balancing_interval", None)
         if self._load_balancing_interval is None:
@@ -350,6 +350,7 @@ class EventHubConsumerClient(
             initial_event_position_inclusive = kwargs.pop(
                 "starting_position_inclusive", False
             )
+            kwargs["metric"] = self._metric
             event_processor = EventProcessor(
                 self,
                 self._consumer_group,

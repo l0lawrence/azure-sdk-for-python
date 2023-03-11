@@ -36,7 +36,8 @@ class OwnershipManager(object):  # pylint:disable=too-many-instance-attributes
         checkpoint_store: Optional[CheckpointStore],
         ownership_timeout: float,
         load_balancing_strategy: LoadBalancingStrategy,
-        partition_id: Optional[str]
+        partition_id: Optional[str],
+        metric: Optional[Any]
     ):
         self.cached_parition_ids = []  # type: List[str]
         self.owned_partitions = []  # type: Iterable[Dict[str, Any]]
@@ -51,6 +52,7 @@ class OwnershipManager(object):  # pylint:disable=too-many-instance-attributes
         self.ownership_timeout = ownership_timeout
         self.load_balancing_strategy = load_balancing_strategy
         self.partition_id = partition_id
+        self.metric = metric
 
     def claim_ownership(self) -> List[str]:
         """Claims ownership for this EventProcessor"""
@@ -69,13 +71,27 @@ class OwnershipManager(object):  # pylint:disable=too-many-instance-attributes
         if self.checkpoint_store is None:
             return self.cached_parition_ids
 
+
+        time1 = time.time()
         ownership_list = self.checkpoint_store.list_ownership(
             self.fully_qualified_namespace, self.eventhub_name, self.consumer_group
         )
+        time2 = time.time()
+
+        time3=time.time()
         to_claim = self._balance_ownership(ownership_list, self.cached_parition_ids)
+        time4=time.time()
+
+        time5=time.time()
         self.owned_partitions = (
             self.checkpoint_store.claim_ownership(to_claim) if to_claim else []
         )
+        time6=time.time()
+
+        print(self.metric)
+        print(time2-time1)
+        self.metric.record_checkpoint_time(time2-time1, time4-time3, time6-time5)
+
         return [x["partition_id"] for x in self.owned_partitions]
 
     def release_ownership(self, partition_id: str) -> None:

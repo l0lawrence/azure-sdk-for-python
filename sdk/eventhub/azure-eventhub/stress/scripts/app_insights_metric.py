@@ -31,10 +31,50 @@ class AzureMonitorMetric:
         error_measure_name = "Errors " + self.name
         error_measure_desc = "The number of errors happened while running the test for " + self.desc if self.desc else None
 
+        checkpoint_measure_name = "CheckpointMeasureListOwnership " + self.name
+        checkpoint_measure_desc = "The list ownership time " + self.desc if self.desc else None
+
+        checkpoint_measure_name2 = "CheckpointMeasureBalanceOwnership " + self.name
+        checkpoint_measure_desc2 = "The Balance ownership time " + self.desc if self.desc else None
+
+        checkpoint_measure_name3 = "CheckpointMeasureClaimOwnership " + self.name
+        checkpoint_measure_desc3 = "The claim ownership time " + self.desc if self.desc else None
+
+        self.checkpoint_measure = measure_module.MeasureFloat(checkpoint_measure_name, checkpoint_measure_desc)
+        self.checkpoint_measure2 = measure_module.MeasureFloat(checkpoint_measure_name2, checkpoint_measure_desc2)
+        self.checkpoint_measure3 = measure_module.MeasureFloat(checkpoint_measure_name3, checkpoint_measure_desc3)
+
+
         self.events_measure = measure_module.MeasureInt(events_measure_name, events_measure_desc, "events")
         self.memory_measure = measure_module.MeasureFloat(memory_measure_name, memory_measure_desc)
         self.cpu_measure = measure_module.MeasureFloat(cpu_measure_name, cpu_measure_desc)
         self.error_measure = measure_module.MeasureInt(error_measure_name, error_measure_desc)
+
+        self.checkpoint_measure_view = view_module.View(
+            checkpoint_measure_name,
+            checkpoint_measure_desc,
+            [],
+            self.checkpoint_measure,
+            aggregation_module.LastValueAggregation()
+        )
+
+        self.checkpoint_measure_view2 = view_module.View(
+            checkpoint_measure_name2,
+            checkpoint_measure_desc2,
+            [],
+            self.checkpoint_measure2,
+            aggregation_module.LastValueAggregation()
+        )
+
+        self.checkpoint_measure_view3 = view_module.View(
+            checkpoint_measure_name3,
+            checkpoint_measure_desc3,
+            [],
+            self.checkpoint_measure3,
+            aggregation_module.LastValueAggregation()
+        )
+
+
 
         self.events_measure_view = view_module.View(
             events_measure_name,
@@ -68,6 +108,10 @@ class AzureMonitorMetric:
             aggregation_module.CountAggregation()
         )
 
+        self.view_manager.register_view(self.checkpoint_measure_view)
+        self.view_manager.register_view(self.checkpoint_measure_view2)
+        self.view_manager.register_view(self.checkpoint_measure_view3)
+
         self.view_manager.register_view(self.events_measure_view)
         self.view_manager.register_view(self.memory_measure_view)
         self.view_manager.register_view(self.cpu_measure_view)
@@ -87,3 +131,9 @@ class AzureMonitorMetric:
         self.azure_logger.exception(
             "Error happened when running {}: {}. Extra info: {}".format(self.name, repr(error), extra)
         )
+
+    def record_checkpoint_time(self, checkpoint_usage1, checkpoint_usage2, checkpoint_usage3, **kwargs):
+        self.mmap.measure_float_put(self.checkpoint_measure, checkpoint_usage1)
+        self.mmap.measure_float_put(self.checkpoint_measure2, checkpoint_usage2)
+        self.mmap.measure_float_put(self.checkpoint_measure3, checkpoint_usage3)
+        self.mmap.record()

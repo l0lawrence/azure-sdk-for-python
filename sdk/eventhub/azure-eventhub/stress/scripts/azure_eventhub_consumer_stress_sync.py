@@ -9,6 +9,7 @@ import argparse
 import threading
 import os
 import logging
+import multiprocessing
 from collections import defaultdict
 from functools import partial
 from dotenv import load_dotenv
@@ -165,13 +166,14 @@ def on_event_batch_received(process_monitor, partition_context, event_batch):
 
 
 def on_error(partition_context, exception):
+    # print(exception)
     azure_metric_monitor.record_error(exception, extra="partition: {}".format(partition_context.partition_id))
 
 
 def create_client(args):
     if args.storage_conn_str:
-        checkpoint_store = StressTestCheckpointStore(args.storage_conn_str, args.storage_container_name, args.storage_key, request_latency=30)
-        # checkpoint_store = BlobCheckpointStore.from_connection_string(args.storage_conn_str, args.storage_container_name)
+        # checkpoint_store = StressTestCheckpointStore(args.storage_conn_str, args.storage_container_name, args.storage_key, request_latency=10)
+        checkpoint_store = BlobCheckpointStore.from_connection_string(args.storage_conn_str, args.storage_container_name)
     else:
         checkpoint_store = None
 
@@ -197,6 +199,8 @@ def create_client(args):
             transport_type=transport_type,
             logging_enable=args.pyamqp_logging_enable,
             uamqp_transport=args.uamqp_mode,
+            metric=azure_metric_monitor
+
         )
     elif args.conn_str:
         client = EventHubConsumerClientTest.from_connection_string(
@@ -210,6 +214,7 @@ def create_client(args):
             transport_type=transport_type,
             logging_enable=args.pyamqp_logging_enable,
             uamqp_transport=args.uamqp_mode,
+            metric=azure_metric_monitor
         )
     elif args.hostname:
         client = EventHubConsumerClientTest(
@@ -224,6 +229,8 @@ def create_client(args):
             transport_type=transport_type,
             logging_enable=args.pyamqp_logging_enable,
             uamqp_transport=args.uamqp_mode,
+            metric=azure_metric_monitor
+
         )
     elif args.aad_client_id:
         credential = ClientSecretCredential(args.tenant_id, args.aad_client_id, args.aad_secret)
@@ -239,6 +246,7 @@ def create_client(args):
             transport_type=transport_type,
             logging_enable=args.pyamqp_logging_enable,
             uamqp_transport=args.uamqp_mode,
+            metric=azure_metric_monitor
         )
 
     return client
@@ -270,11 +278,11 @@ def run(args):
         if args.parallel_recv_cnt and args.parallel_recv_cnt > 1:
             clients = [create_client(args) for _ in range(args.parallel_recv_cnt)]
             threads = [
-                threading.Thread(
+                multiprocessing.Process(
                     target=clients[i].receive_batch if args.max_batch_size else clients[i].receive,
                     args=(on_event_batch_received_with_process_monitor if args.max_batch_size else on_event_received_with_process_monitor,),
                     kwargs=kwargs_dict,
-                    daemon=True
+                    # daemon=True
                 ) for i in range(args.parallel_recv_cnt)
             ]
         else:

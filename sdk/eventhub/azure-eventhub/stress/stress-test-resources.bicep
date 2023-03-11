@@ -60,7 +60,7 @@ resource eventHubsNamespace_eventHubName_eventHubAuthRuleName 'Microsoft.EventHu
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccount_var
-  location: location
+  location: 'australiasoutheast'
   sku: {
     name: 'Standard_LRS'
     tier: 'Standard'

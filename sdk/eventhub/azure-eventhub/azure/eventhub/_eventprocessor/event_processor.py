@@ -120,6 +120,7 @@ class EventProcessor(
             self._ownership_timeout,
             self._load_balancing_strategy,
             self._partition_id,
+            kwargs.pop("metric", None)
         )
 
     def __repr__(self) -> str:

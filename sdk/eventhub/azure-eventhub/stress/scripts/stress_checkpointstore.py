@@ -92,6 +92,7 @@ class StressTestCheckpointStore(BlobCheckpointStore):
             request_patch=request_patch,
             **kwargs
         )
+        print("IN Checkpoint")
         super().__init__(
             blob_account_url,
             container_name,
