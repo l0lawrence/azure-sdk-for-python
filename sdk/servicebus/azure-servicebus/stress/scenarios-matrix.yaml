@@ -1,7 +1,7 @@
-displayNames:
 matrix:
   image:
     - Dockerfile
   scenarios:
-    sbStress:
-      testTarget: servicebus
+    queue:
+      testTarget: queue
+      chaos: "true"

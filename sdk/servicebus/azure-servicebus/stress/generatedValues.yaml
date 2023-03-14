@@ -1,0 +1,7 @@
+scenarios:
+- testTarget: queue
+  chaos: "true"
+  image: Dockerfile
+  Scenario: Dockerfile-queue
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/sbchaosllaw/python-servicebus-stress-test/dockerfile:llawrence
+
