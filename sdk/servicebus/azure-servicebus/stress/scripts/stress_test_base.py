@@ -20,15 +20,15 @@ except ImportError:
 from azure.servicebus import ServiceBusMessage, ServiceBusMessageBatch
 from azure.servicebus.exceptions import MessageAlreadySettled
 
-
-import logger
+from logger import get_logger
 from app_insights_metric import AbstractMonitorMetric
 from process_monitor import ProcessMonitor
 
 LOGFILE_NAME = "stress-test.log"
 PRINT_CONSOLE = True
 
-_logger = logger.get_base_logger(LOGFILE_NAME, "stress_test", logging.WARN)
+# _logger = logger.get_base_logger(LOGFILE_NAME, "stress_test", logging.INFO)
+_logger = get_logger(None, "stress_test", level=logging.INFO, print_console=PRINT_CONSOLE)
 
 
 class ReceiveType:
@@ -44,10 +44,10 @@ class StressTestResults(object):
         self.time_elapsed = None
         self.state_by_sender = {}
         self.state_by_receiver = {}
+        self.actual_size = 0
 
     def __repr__(self):
         return str(vars(self))
-
 
 class StressTestRunnerState(object):
     """Per-runner state, e.g. if you spawn 3 senders each will have this as their state object,
@@ -60,6 +60,7 @@ class StressTestRunnerState(object):
         self.memory_bytes = None
         self.timestamp = None
         self.exceptions = []
+        self.actual_size = 0
 
     def __repr__(self):
         return str(vars(self))
@@ -81,15 +82,16 @@ class StressTestRunner:
         self,
         senders,
         receivers,
+        admin_client,
         duration=timedelta(minutes=15),
         receive_type=ReceiveType.push,
         send_batch_size=None,
         message_size=10,
         max_wait_time=10,
-        send_delay=0.01,
+        send_delay=1.0,
         receive_delay=0,
         should_complete_messages=True,
-        max_message_count=1,
+        max_message_count=10,
         send_session_id=None,
         fail_on_exception=True,
         azure_monitor_metric=None,
@@ -97,6 +99,7 @@ class StressTestRunner:
     ):
         self.senders = senders
         self.receivers = receivers
+        self.admin_client = admin_client
         self.duration = duration
         self.receive_type = receive_type
         self.message_size = message_size
@@ -123,7 +126,7 @@ class StressTestRunner:
 
         self._duration_override = None
         for arg in sys.argv:
-            if arg.startswith("--stress_test_duration_seconds="):
+            if arg.startswith("--duration="):
                 self._duration_override = timedelta(seconds=int(arg.split("=")[1]))
 
         self._should_stop = False
@@ -194,10 +197,8 @@ class StressTestRunner:
     def _send(self, sender, end_time):
         self._schedule_interval_logger(end_time, "Sender " + str(self))
         try:
-            _logger.info("STARTING SENDER")
             with sender:
                 while end_time > datetime.utcnow() and not self._should_stop:
-                    _logger.info("SENDING")
                     try:
                         message = self._construct_message()
                         if self.send_session_id != None:
@@ -213,6 +214,11 @@ class StressTestRunner:
                         else:
                             self._state.total_sent += 1 # send single message
                         self.on_send(self._state, message, sender)
+                        # Check content of queue with Admin Client
+                        queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                        message_count = queue_properties.total_message_count
+                        self._state.actual_size += message_count
+                        # _logger.info("Actual size of queue: {}".format(message_count))
                     except Exception as e:
                         _logger.exception("Exception during send: {}".format(e))
                         self.azure_monitor_metric.record_error(e)
@@ -232,7 +238,12 @@ class StressTestRunner:
         try:
             with receiver:
                 while end_time > datetime.utcnow() and not self._should_stop:
-                    _logger.info("RECEIVE LOOP")
+                    # _logger.info("RECEIVE LOOP")
+                     # Check content of queue with Admin Client
+                    queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                    message_count = queue_properties.total_message_count
+                    self._state.actual_size += message_count
+                    # _logger.info("Actual size of queue: {}".format(message_count))
                     try:
                         if self.receive_type == ReceiveType.pull:
                             batch = receiver.receive_messages(
@@ -253,6 +264,8 @@ class StressTestRunner:
                                     receiver.complete_message(message)
                             except MessageAlreadySettled:  # It may have been settled in the plugin callback.
                                 pass
+
+
                             self._state.total_received += 1
                             # TODO: Get EnqueuedTimeUtc out of broker properties and calculate latency. Should properties/app properties be mostly None?
                             if end_time <= datetime.utcnow():
@@ -279,8 +292,12 @@ class StressTestRunner:
             raise
 
     def run(self):
+
         start_time = datetime.utcnow()
+        if isinstance(self.duration, int):
+            self.duration = timedelta(seconds=self.duration)
         end_time = start_time + (self._duration_override or self.duration)
+
         with self.process_monitor:
             with concurrent.futures.ThreadPoolExecutor(max_workers=4) as proc_pool:
                 _logger.info("STARTING PROC POOL")
@@ -313,12 +330,15 @@ class StressTestRunner:
                         self.receivers, concurrent.futures.as_completed(receivers)
                     )
                 }
-                _logger.info("got receiver results")
+                _logger.info("Got receiver results")
                 result.total_sent = sum(
                     [r.total_sent for r in result.state_by_sender.values()]
                 )
                 result.total_received = sum(
                     [r.total_received for r in result.state_by_receiver.values()]
+                )
+                result.actual_size = sum(
+                    [r.actual_size for r in result.state_by_receiver.values()]
                 )
                 result.time_elapsed = end_time - start_time
                 _logger.critical("Stress test completed.  Results:\n{}".format(result))
@@ -368,7 +388,6 @@ class StressTestRunnerAsync(StressTestRunner):
             _logger.info("STARTING SENDER")
             async with sender:
                 while end_time > datetime.utcnow() and not self._should_stop:
-                    _logger.info("SENDING")
                     try:
                         message = self._construct_message()
                         if self.send_session_id != None:
@@ -478,6 +497,9 @@ class StressTestRunnerAsync(StressTestRunner):
             )
             result.total_received = sum(
                 [r.total_received for r in result.state_by_receiver.values()]
+            )
+            result.actual_size = sum(
+                [r.actual_size for r in result.state_by_receiver.values()]
             )
             result.time_elapsed = end_time - start_time
             _logger.critical("Stress test completed.  Results:\n{}".format(result))

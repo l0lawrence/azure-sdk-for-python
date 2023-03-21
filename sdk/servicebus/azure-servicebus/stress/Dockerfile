@@ -8,4 +8,4 @@ WORKDIR /app
 COPY ./scripts /app/stress/scripts
 
 WORKDIR /app/stress/scripts
-RUN pip3 install -r dev_requirements.txt
+RUN pip install -r dev_requirements.txt

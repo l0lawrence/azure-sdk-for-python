@@ -4,7 +4,7 @@ metadata:
   labels:
     testName: "deploy-python-sb-stress"
     testInstance: "servicebus-{{ .Release.Name }}-{{ .Release.Revision }}"
-    chaos: "true"
+    chaos: "{{ default false .Stress.chaos }}"
 spec:
   containers:
     - name: python-sb-stress
@@ -16,7 +16,11 @@ spec:
           cpu: "1"
 
       {{ if eq .Stress.testTarget "queue" }}
-      command: ['bash', '-c', 'python test_stress_queues.py']
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive --duration 300000 --logging-enable']
+      {{- end -}}
+
+      {{ if eq .Stress.testTarget "queuepull" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_pull_receive --duration 300000 --logging-enable']
       {{- end -}}
 
       {{- include "stress-test-addons.container-env" . | nindent 6 }}

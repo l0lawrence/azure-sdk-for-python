@@ -1,7 +1,12 @@
 scenarios:
-- testTarget: queue
-  chaos: "true"
-  image: Dockerfile
+- image: Dockerfile
+  testTarget: queue
   Scenario: Dockerfile-queue
-  imageTag: stresspgs7b6dif73rup6.azurecr.io/sbchaosllaw/python-servicebus-stress-test/dockerfile:llawrence
+  chaos: "false"
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/lladmin/python-servicebus-stress-test/dockerfile:llawrence
+- image: Dockerfile
+  testTarget: queuepull
+  Scenario: Dockerfile-queuepull
+  chaos: "false"
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/lladmin/python-servicebus-stress-test/dockerfile:llawrence
 

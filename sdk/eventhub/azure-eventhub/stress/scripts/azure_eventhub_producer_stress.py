@@ -54,9 +54,9 @@ async def on_error_async(events, pid, error):
 def stress_send_sync(producer: EventHubProducerClient, args, stress_logger, azure_monitor_metric):
     try:
         batch = producer.create_batch(partition_id=args.send_partition_id, partition_key=args.send_partition_key)
-        while True:
-            event_data = EventData(body=b"D" * args.payload)
-            batch.add(event_data)
+        # while True:
+        #     event_data = EventData(body=b"D" * args.payload)
+        #     batch.add(event_data)
     except ValueError:
         try:
             producer.send_batch(batch)

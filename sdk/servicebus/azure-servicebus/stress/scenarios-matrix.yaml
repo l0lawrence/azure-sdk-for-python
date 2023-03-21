@@ -4,4 +4,7 @@ matrix:
   scenarios:
     queue:
       testTarget: queue
-      chaos: "true"
+      chaos: "false"
+    queuepull:
+      testTarget: queuepull
+      chaos: "false"
