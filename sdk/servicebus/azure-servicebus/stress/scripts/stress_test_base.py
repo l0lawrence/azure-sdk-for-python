@@ -215,9 +215,7 @@ class StressTestRunner:
                             self._state.total_sent += 1 # send single message
                         self.on_send(self._state, message, sender)
                         # Check content of queue with Admin Client
-                        queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                        message_count = queue_properties.total_message_count
-                        self._state.actual_size += message_count
+
                         # _logger.info("Actual size of queue: {}".format(message_count))
                     except Exception as e:
                         _logger.exception("Exception during send: {}".format(e))
@@ -225,6 +223,9 @@ class StressTestRunner:
                         self._state.exceptions.append(e)
                         if self.fail_on_exception:
                             raise
+                    queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                    message_count = queue_properties.total_message_count
+                    self._state.actual_size += message_count
                     time.sleep(self.send_delay)
             self._state.timestamp = datetime.utcnow()
             return self._state
@@ -235,15 +236,10 @@ class StressTestRunner:
 
     def _receive(self, receiver, end_time):
         self._schedule_interval_logger(end_time, "Receiver " + str(self))
+        delivery_ids = []
         try:
             with receiver:
                 while end_time > datetime.utcnow() and not self._should_stop:
-                    # _logger.info("RECEIVE LOOP")
-                     # Check content of queue with Admin Client
-                    queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                    message_count = queue_properties.total_message_count
-                    self._state.actual_size += message_count
-                    # _logger.info("Actual size of queue: {}".format(message_count))
                     try:
                         if self.receive_type == ReceiveType.pull:
                             batch = receiver.receive_messages(
@@ -265,7 +261,12 @@ class StressTestRunner:
                             except MessageAlreadySettled:  # It may have been settled in the plugin callback.
                                 pass
 
-
+                            if message.delivery_id not in delivery_ids:
+                                delivery_ids.append(message.delivery_id)
+                            else:
+                                _logger.warning(f"Received duplicate message: {message} with count {message.delivery_count}")
+                                raise Exception(f"Received duplicate message: {message}")
+                            
                             self._state.total_received += 1
                             # TODO: Get EnqueuedTimeUtc out of broker properties and calculate latency. Should properties/app properties be mostly None?
                             if end_time <= datetime.utcnow():
@@ -283,7 +284,14 @@ class StressTestRunner:
                         self.azure_monitor_metric.record_error(e)
                         if self.fail_on_exception:
                             raise
-            self._state.timestamp = datetime.utcnow()
+                self._state.timestamp = datetime.utcnow()
+                queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                message_count = queue_properties.scheduled_message_count
+                _logger.info(f"Message Count:{message_count}")
+                _logger.info(f"DeadLetter Count:{queue_properties.dead_letter_message_count}")
+                _logger.info(f"Active Message Count:{queue_properties.active_message_count}")
+                _logger.info(f"Transfer Message Count:{queue_properties.transfer_message_count}")
+                _logger.info(f"Transfer DeadLetter Count:{queue_properties.transfer_dead_letter_message_count}")
             return self._state
         except Exception as e:
             self.azure_monitor_metric.record_error(e)
@@ -318,6 +326,7 @@ class StressTestRunner:
                     if each in receivers:
                         result.state_by_receiver[each] = each.result()
                 # TODO: do as_completed in one batch to provide a way to short-circuit on failure.
+
                 result.state_by_sender = {
                     s: f.result()
                     for s, f in zip(

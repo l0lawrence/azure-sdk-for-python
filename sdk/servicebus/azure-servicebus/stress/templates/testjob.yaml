@@ -16,11 +16,11 @@ spec:
           cpu: "1"
 
       {{ if eq .Stress.testTarget "queue" }}
-      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive --duration 300000 --logging-enable']
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive --duration 30000 --logging-enable']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "queuepull" }}
-      command: ['bash', '-c', 'python test_stress_queues.py --method send_pull_receive --duration 300000 --logging-enable']
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_pull_receive --duration 30000 --logging-enable']
       {{- end -}}
 
       {{- include "stress-test-addons.container-env" . | nindent 6 }}
@@ -39,7 +39,7 @@ spec:
     labelSelectors:
       testInstance: "servicebus-{{ .Release.Name }}-{{ .Release.Revision }}"
       chaos: "true"
-  schedule: "*/1 * * * *"
+  schedule: "*/5 * * * *"
   startingDeadlineSeconds: null
   concurrencyPolicy: Allow
   historyLimit: 1
@@ -53,7 +53,7 @@ spec:
         chaos: "true"
     mode: all
     action: loss
-    duration: 10s
+    duration: 20s
     loss:
       loss: '100'
       correlation: '100'
