@@ -4,7 +4,25 @@ matrix:
   scenarios:
     queue:
       testTarget: queue
-      chaos: "true"
     queuepull:
       testTarget: queuepull
-      chaos: "true"
+    batch:
+      testTarget: batch
+    sendreceiveslow:
+      testTarget: send_receive_slow
+    receivedelete:
+      testTarget: receive_delete
+    unsettledmessage:
+      testTarget: unsettled_message
+    largebatch:
+      testTarget: large_batch
+    pullreceivetimeout:
+      testTarget: pull_receive_timeout
+    longrenew:
+      testTarget: long_renew
+    queuepeek:
+      testTarget: queue_peek
+    queueclosereopen:
+      testTarget: queue_close_reopen
+    droppedmessages:
+      testTarget: dropped_messages
