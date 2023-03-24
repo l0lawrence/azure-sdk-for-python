@@ -2,8 +2,8 @@
 {{- define "stress.python-sb-stress" -}}
 metadata:
   labels:
-    testName: "deploy-python-sb-stress"
-    testInstance: "servicebus-{{ .Release.Name }}-{{ .Release.Revision }}"
+    testName: "py-sb-stress"
+    testInstance: "sb-{{ .Release.Name }}-{{ .Release.Revision }}"
     chaos: "{{ default false .Stress.chaos }}"
 spec:
   containers:
@@ -16,11 +16,47 @@ spec:
           cpu: "1"
 
       {{ if eq .Stress.testTarget "queue" }}
-      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive --duration 30000 --logging-enable']
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive --duration 300000 --logging-enable']
       {{- end -}}
 
       {{ if eq .Stress.testTarget "queuepull" }}
-      command: ['bash', '-c', 'python test_stress_queues.py --method send_pull_receive --duration 30000 --logging-enable']
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_pull_receive --duration 300000 --logging-enable']
+      {{- end -}}
+
+      {{ if eq .Stress.testTarget "batch" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive_batch --duration 300000 --logging-enable']
+      {{- end -}}
+
+      {{ if eq .Stress.testTarget "send_receive_slow" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method send_receive_slow --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "receive_delete" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method receive_delete --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "unsettled_message" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method unsettled_message --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "large_batch" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method large_batch --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "pull_receive_timeout" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method pull_receive_timeout --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "long_renew" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method long_renew --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "long_renew_session" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method long_renew_session --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "queue_peek" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method queue_peek --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "queue_close_reopen" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method queue_close_reopen --duration 300000 --logging-enable']
+      {{- end -}}
+      {{ if eq .Stress.testTarget "dropped_messages" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method dropped_messages --duration 300000 --logging-enable']
+
       {{- end -}}
 
       {{- include "stress-test-addons.container-env" . | nindent 6 }}

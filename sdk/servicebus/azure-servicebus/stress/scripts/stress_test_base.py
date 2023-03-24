@@ -285,13 +285,13 @@ class StressTestRunner:
                         if self.fail_on_exception:
                             raise
                 self._state.timestamp = datetime.utcnow()
-                queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                message_count = queue_properties.scheduled_message_count
-                _logger.info(f"Message Count:{message_count}")
-                _logger.info(f"DeadLetter Count:{queue_properties.dead_letter_message_count}")
-                _logger.info(f"Active Message Count:{queue_properties.active_message_count}")
-                _logger.info(f"Transfer Message Count:{queue_properties.transfer_message_count}")
-                _logger.info(f"Transfer DeadLetter Count:{queue_properties.transfer_dead_letter_message_count}")
+                # queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                # message_count = queue_properties.scheduled_message_count
+                # _logger.info(f"Message Count:{message_count}")
+                # _logger.info(f"DeadLetter Count:{queue_properties.dead_letter_message_count}")
+                # _logger.info(f"Active Message Count:{queue_properties.active_message_count}")
+                # _logger.info(f"Transfer Message Count:{queue_properties.transfer_message_count}")
+                # _logger.info(f"Transfer DeadLetter Count:{queue_properties.transfer_dead_letter_message_count}")
             return self._state
         except Exception as e:
             self.azure_monitor_metric.record_error(e)
