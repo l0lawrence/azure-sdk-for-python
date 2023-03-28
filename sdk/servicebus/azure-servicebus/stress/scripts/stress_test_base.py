@@ -28,7 +28,7 @@ LOGFILE_NAME = "stress-test.log"
 PRINT_CONSOLE = True
 
 # _logger = logger.get_base_logger(LOGFILE_NAME, "stress_test", logging.INFO)
-_logger = get_logger(None, "stress_test", level=logging.INFO, print_console=PRINT_CONSOLE)
+_logger = get_logger(None, "stress_test", level=logging.WARNING, print_console=PRINT_CONSOLE)
 
 
 class ReceiveType:

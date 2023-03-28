@@ -54,7 +54,7 @@ def test_stress_queue_batch_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
         SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-                                    receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+                                    receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=5)],
                                     admin_client = sb_admin_client,
                                     duration=args.duration,
                                     send_batch_size=5,
@@ -73,7 +73,7 @@ def test_stress_queue_slow_send_and_receive(args):
                                     admin_client = sb_admin_client,
                                     # duration=timedelta(seconds=3501*3),
                                     duration=args.duration,
-                                    send_delay=3500,
+                                    send_delay=(args.duration/3),
                                     azure_monitor_metric=AzureMonitorMetric("test_stress_queue_slow_send_and_receive")
                                     )
 
