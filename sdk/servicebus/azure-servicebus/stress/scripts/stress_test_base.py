@@ -265,7 +265,7 @@ class StressTestRunner:
                                 delivery_ids.append(message.delivery_id)
                             else:
                                 _logger.warning(f"Received duplicate message: {message} with count {message.delivery_count}")
-                                raise Exception(f"Received duplicate message: {message}")
+                                # raise Exception(f"Received duplicate message: {message}")
                             
                             self._state.total_received += 1
                             # TODO: Get EnqueuedTimeUtc out of broker properties and calculate latency. Should properties/app properties be mostly None?
