@@ -164,7 +164,7 @@ class StressTestRunner:
         """Allows user to transform message payload before sending it."""
         return payload
 
-    def _schedule_interval_logger(self, end_time, description="", interval_seconds=30):
+    def _schedule_interval_logger(self, end_time, description="", interval_seconds=60):
         def _do_interval_logging():
             if end_time > datetime.utcnow() and not self._should_stop:
                 self._state.populate_process_stats()
@@ -223,9 +223,9 @@ class StressTestRunner:
                         self._state.exceptions.append(e)
                         if self.fail_on_exception:
                             raise
-                    queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                    message_count = queue_properties.total_message_count
-                    self._state.actual_size += message_count
+                    # queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
+                    # message_count = queue_properties.total_message_count
+                    # self._state.actual_size += message_count
                     time.sleep(self.send_delay)
             self._state.timestamp = datetime.utcnow()
             return self._state
@@ -261,10 +261,10 @@ class StressTestRunner:
                             except MessageAlreadySettled:  # It may have been settled in the plugin callback.
                                 pass
 
-                            if message.delivery_id not in delivery_ids:
-                                delivery_ids.append(message.delivery_id)
-                            else:
-                                _logger.warning(f"Received duplicate message: {message} with count {message.delivery_count}")
+                            # if message.delivery_id not in delivery_ids:
+                            #     delivery_ids.append(message.delivery_id)
+                            # else:
+                            #     _logger.warning(f"Received duplicate message: {message} with count {message.delivery_count}")
                                 # raise Exception(f"Received duplicate message: {message}")
                             
                             self._state.total_received += 1
@@ -360,11 +360,12 @@ class StressTestRunnerAsync(StressTestRunner):
         senders,
         receivers,
         duration=timedelta(minutes=15),
+        admin_client=None,
         receive_type=ReceiveType.push,
         send_batch_size=None,
         message_size=10,
         max_wait_time=10,
-        send_delay=0.01,
+        send_delay=1.00,
         receive_delay=0,
         should_complete_messages=True,
         max_message_count=1,
@@ -377,6 +378,7 @@ class StressTestRunnerAsync(StressTestRunner):
             senders,
             receivers,
             duration=duration,
+            admin_client=admin_client,
             receive_type=receive_type,
             send_batch_size=send_batch_size,
             message_size=message_size,
@@ -407,7 +409,10 @@ class StressTestRunnerAsync(StressTestRunner):
                             self.process_monitor.cpu_usage_percent,
                             self.process_monitor.memory_usage_percent,
                         )
-                        self._state.total_sent += self.send_batch_size
+                        if self.send_batch_size:
+                            self._state.total_sent += self.send_batch_size
+                        else:
+                            self._state.total_sent += 1
                         self.on_send(self._state, message, sender)
                     except Exception as e:
                         _logger.exception("Exception during send: {}".format(e))
@@ -482,6 +487,8 @@ class StressTestRunnerAsync(StressTestRunner):
 
     async def run_async(self):
         start_time = datetime.utcnow()
+        if isinstance(self.duration, int):
+            self.duration = timedelta(seconds=self.duration)
         end_time = start_time + (self._duration_override or self.duration)
         send_tasks = [
             asyncio.create_task(self._send_async(sender, end_time))
