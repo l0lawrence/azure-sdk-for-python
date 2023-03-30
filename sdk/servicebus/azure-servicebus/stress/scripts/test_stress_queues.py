@@ -32,8 +32,8 @@ def test_stress_queue_send_and_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_send_and_pull_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
@@ -47,8 +47,8 @@ def test_stress_queue_send_and_pull_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_batch_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
@@ -93,8 +93,8 @@ def test_stress_queue_receive_and_delete(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_unsettled_messages(args):
     sb_client = ServiceBusClient.from_connection_string(
@@ -111,8 +111,8 @@ def test_stress_queue_unsettled_messages(args):
     result = stress_test.run()
     # This test is prompted by reports of an issue where enough unsettled messages saturate a service-side cache
     # and prevent further receipt.
-    # assert(result.total_sent > 2500)
-    # assert(result.total_received > 2500)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_receive_large_batch_size(args):
     sb_client = ServiceBusClient.from_connection_string(
@@ -126,8 +126,8 @@ def test_stress_queue_receive_large_batch_size(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 # Cannot be defined at local scope due to pickling into multiproc runner.
 class ReceiverTimeoutStressTestRunner(StressTestRunner):
@@ -152,8 +152,8 @@ def test_stress_queue_pull_receive_timeout(args):
         )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 class LongRenewStressTestRunner(StressTestRunner):
     def on_receive(self, state, received_message, receiver):
@@ -176,8 +176,8 @@ def test_stress_queue_long_renew_send_and_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 class LongSessionRenewStressTestRunner(StressTestRunner):
     def on_receive(self, state, received_message, receiver):
@@ -204,8 +204,9 @@ def test_stress_queue_long_renew_session_send_and_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
+
 
 class Peekon_receiveStressTestRunner(StressTestRunner):
     def on_receive_batch(self, state, received_message, receiver):
@@ -227,7 +228,8 @@ def test_stress_queue_peek_messages(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
     # TODO: This merits better validation, to be implemented alongside full metric spread.
 
 
@@ -259,8 +261,8 @@ def test_stress_queue_close_and_reopen(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 # This test validates that all individual messages are received contiguously over a long time period.
 # (e.g. not dropped for whatever reason, not sent, or not received)
@@ -306,8 +308,8 @@ def test_stress_queue_check_for_dropped_messages(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 if __name__ == '__main__':
     load_dotenv(dotenv_path=ENV_FILE, override=True)
