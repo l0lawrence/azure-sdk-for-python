@@ -11,7 +11,7 @@ import pytest
 from dotenv import load_dotenv
 from argparse import ArgumentParser
 
-from azure.servicebus import AutoLockRenewer, ServiceBusClient
+from azure.servicebus import AutoLockRenewer, ServiceBusClient, TransportType
 from azure.servicebus.management import ServiceBusAdministrationClient
 from azure.servicebus._common.constants import ServiceBusReceiveMode
 from app_insights_metric import AzureMonitorMetric
@@ -23,7 +23,7 @@ ENV_FILE = os.environ.get('ENV_FILE')
 
 def test_stress_queue_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=5)],
                                     admin_client = sb_admin_client,
@@ -37,7 +37,7 @@ def test_stress_queue_send_and_receive(args):
 
 def test_stress_queue_send_and_pull_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
                                     admin_client = sb_admin_client,
@@ -52,7 +52,7 @@ def test_stress_queue_send_and_pull_receive(args):
 
 def test_stress_queue_batch_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=5)],
                                     admin_client = sb_admin_client,
@@ -62,12 +62,12 @@ def test_stress_queue_batch_send_and_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_slow_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
                                     admin_client = sb_admin_client,
@@ -78,12 +78,12 @@ def test_stress_queue_slow_send_and_receive(args):
                                     )
 
     result = stress_test.run()
-    # assert(result.total_sent > 0)
-    # assert(result.total_received > 0)
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
 
 def test_stress_queue_receive_and_delete(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE)],
                                     admin_client = sb_admin_client,
@@ -98,7 +98,7 @@ def test_stress_queue_receive_and_delete(args):
 
 def test_stress_queue_unsettled_messages(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
                                     admin_client = sb_admin_client,
@@ -116,7 +116,7 @@ def test_stress_queue_unsettled_messages(args):
 
 def test_stress_queue_receive_large_batch_size(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=50)],
                                     admin_client = sb_admin_client,
@@ -139,7 +139,7 @@ class ReceiverTimeoutStressTestRunner(StressTestRunner):
 
 def test_stress_queue_pull_receive_timeout(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = ReceiverTimeoutStressTestRunner(
         senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
         receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
@@ -164,7 +164,7 @@ class LongRenewStressTestRunner(StressTestRunner):
 
 def test_stress_queue_long_renew_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = LongRenewStressTestRunner(
                                     senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
@@ -189,7 +189,7 @@ class LongSessionRenewStressTestRunner(StressTestRunner):
 
 def test_stress_queue_long_renew_session_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     session_id = 'test_stress_queue_long_renew_send_and_receive'
 
     stress_test = LongSessionRenewStressTestRunner(
@@ -215,7 +215,7 @@ class Peekon_receiveStressTestRunner(StressTestRunner):
 
 def test_stress_queue_peek_messages(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = Peekon_receiveStressTestRunner(
                                     senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
@@ -248,7 +248,7 @@ class RestartHandlerStressTestRunner(StressTestRunner):
 
 def test_stress_queue_close_and_reopen(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = RestartHandlerStressTestRunner(
                                     senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
@@ -296,7 +296,7 @@ class DroppedMessageCheckerStressTestRunner(StressTestRunner):
 
 def test_stress_queue_check_for_dropped_messages(args):
     sb_client = ServiceBusClient.from_connection_string(
-        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE)
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = DroppedMessageCheckerStressTestRunner(
                                     senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
                                     receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
@@ -329,10 +329,14 @@ if __name__ == '__main__':
     parser.add_argument("--max_wait_time", type=int, default=10)
     parser.add_argument("--max_message_count", type=int, default=1)
     parser.add_argument("--uamqp_mode", type=bool, default=False)
+    parser.add_argument("--transport", action="store_true")
 
     args, _ = parser.parse_known_args()
 
-    print(args.conn_str)
+    if args.transport:
+        TRANSPORT_TYPE= TransportType.AmqpOverWebsocket
+    else:
+        TRANSPORT_TYPE= TransportType.Amqp
 
     SERVICE_BUS_CONNECTION_STR = args.conn_str
     SERVICEBUS_QUEUE_NAME= args.queue_name

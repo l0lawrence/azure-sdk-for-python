@@ -4,3 +4,4 @@ psutil
 pytest
 azure-servicebus==7.9.0b1
 python-dotenv
+websocket-client

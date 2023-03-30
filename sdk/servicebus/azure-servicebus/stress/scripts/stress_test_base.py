@@ -164,7 +164,7 @@ class StressTestRunner:
         """Allows user to transform message payload before sending it."""
         return payload
 
-    def _schedule_interval_logger(self, end_time, description="", interval_seconds=60):
+    def _schedule_interval_logger(self, end_time, description="", interval_seconds=240):
         def _do_interval_logging():
             if end_time > datetime.utcnow() and not self._should_stop:
                 self._state.populate_process_stats()
