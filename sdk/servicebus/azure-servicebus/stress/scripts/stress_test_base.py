@@ -58,6 +58,7 @@ class StressTestRunnerState(object):
         self.total_received = 0
         self.cpu_percent = None
         self.memory_bytes = None
+        self.memory_percent = None
         self.timestamp = None
         self.exceptions = []
         self.actual_size = 0
@@ -65,11 +66,12 @@ class StressTestRunnerState(object):
     def __repr__(self):
         return str(vars(self))
 
-    def populate_process_stats(self):
+    def populate_process_stats(self, monitor):
         self.timestamp = datetime.utcnow()
         try:
             self.cpu_percent = psutil.cpu_percent()
-            self.memory_bytes = psutil.virtual_memory().total
+            self.memory_bytes = psutil.virtual_memory().percent
+            self.memory_percent = monitor.memory_usage_percent
         except NameError:
             return  # psutil was not installed, fall back to simply not capturing these stats.
 
@@ -167,7 +169,7 @@ class StressTestRunner:
     def _schedule_interval_logger(self, end_time, description="", interval_seconds=240):
         def _do_interval_logging():
             if end_time > datetime.utcnow() and not self._should_stop:
-                self._state.populate_process_stats()
+                self._state.populate_process_stats(self.process_monitor)
                 _logger.critical(
                     "{} RECURRENT STATUS: {}".format(description, self._state)
                 )
@@ -214,9 +216,7 @@ class StressTestRunner:
                         else:
                             self._state.total_sent += 1 # send single message
                         self.on_send(self._state, message, sender)
-                        # Check content of queue with Admin Client
-
-                        # _logger.info("Actual size of queue: {}".format(message_count))
+          
                     except Exception as e:
                         _logger.exception("Exception during send: {}".format(e))
                         self.azure_monitor_metric.record_error(e)
@@ -261,12 +261,6 @@ class StressTestRunner:
                             except MessageAlreadySettled:  # It may have been settled in the plugin callback.
                                 pass
 
-                            # if message.delivery_id not in delivery_ids:
-                            #     delivery_ids.append(message.delivery_id)
-                            # else:
-                            #     _logger.warning(f"Received duplicate message: {message} with count {message.delivery_count}")
-                                # raise Exception(f"Received duplicate message: {message}")
-                            
                             self._state.total_received += 1
                             # TODO: Get EnqueuedTimeUtc out of broker properties and calculate latency. Should properties/app properties be mostly None?
                             if end_time <= datetime.utcnow():
@@ -285,13 +279,6 @@ class StressTestRunner:
                         if self.fail_on_exception:
                             raise
                 self._state.timestamp = datetime.utcnow()
-                # queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                # message_count = queue_properties.scheduled_message_count
-                # _logger.info(f"Message Count:{message_count}")
-                # _logger.info(f"DeadLetter Count:{queue_properties.dead_letter_message_count}")
-                # _logger.info(f"Active Message Count:{queue_properties.active_message_count}")
-                # _logger.info(f"Transfer Message Count:{queue_properties.transfer_message_count}")
-                # _logger.info(f"Transfer DeadLetter Count:{queue_properties.transfer_dead_letter_message_count}")
             return self._state
         except Exception as e:
             self.azure_monitor_metric.record_error(e)
