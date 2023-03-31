@@ -25,7 +25,7 @@ def test_stress_queue_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
         SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
     stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-                                    receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=5)],
+                                    receivers = [sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
                                     admin_client = sb_admin_client,
                                     duration=args.duration,
                                     azure_monitor_metric=AzureMonitorMetric("test_stress_queue_send_and_receive")
