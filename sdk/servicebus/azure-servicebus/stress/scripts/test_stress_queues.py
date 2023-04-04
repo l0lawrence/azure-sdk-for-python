@@ -65,6 +65,23 @@ def test_stress_queue_batch_send_and_receive(args):
     print(f"Total send {result.total_sent}")
     print(f"Total received {result.total_received}")
 
+def test_stress_queue_batch_send_and_receive_u(args):
+    sb_client = ServiceBusClient.from_connection_string(
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
+    uamqp_sb_client = ServiceBusClient.from_connection_string(
+        SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE, uamqp_transport=True)
+    stress_test = StressTestRunner(senders = [sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
+                                    receivers = [uamqp_sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=5)],
+                                    admin_client = sb_admin_client,
+                                    duration=args.duration,
+                                    send_batch_size=5,
+                                    azure_monitor_metric=AzureMonitorMetric("test_stress_queue_batch_send_and_receive")
+                                    )
+
+    result = stress_test.run()
+    print(f"Total send {result.total_sent}")
+    print(f"Total received {result.total_received}")
+
 def test_stress_queue_slow_send_and_receive(args):
     sb_client = ServiceBusClient.from_connection_string(
         SERVICE_BUS_CONNECTION_STR, logging_enable=LOGGING_ENABLE, transport_type=TRANSPORT_TYPE)
@@ -316,7 +333,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--conn_str", help="ServiceBus connection string",
         default=os.environ.get('SERVICE_BUS_CONNECTION_STR'))
-    parser.add_argument("--queue_name", help="The queue name.", default='testQueue')
+    parser.add_argument("--queue_name", help="The queue name.", default=os.environ.get('QUEUE_NAME'))
     parser.add_argument("--method", type=str)
     parser.add_argument("--duration", type=int, default=259200)
     parser.add_argument("--logging_enable", action="store_true")
@@ -328,7 +345,7 @@ if __name__ == '__main__':
     parser.add_argument("--receive-type", type=str, default="pull")
     parser.add_argument("--max_wait_time", type=int, default=10)
     parser.add_argument("--max_message_count", type=int, default=1)
-    parser.add_argument("--uamqp_mode", type=bool, default=False)
+    parser.add_argument("--uamqp_mode", action="store_true")
     parser.add_argument("--transport", action="store_true")
 
     args, _ = parser.parse_known_args()
@@ -350,6 +367,8 @@ if __name__ == '__main__':
         test_stress_queue_send_and_pull_receive(args)
     elif args.method == "send_receive_batch":
         test_stress_queue_batch_send_and_receive(args)
+    elif args.method == "uamqp":
+        test_stress_queue_batch_send_and_receive_u(args)
     elif args.method == "send_receive_slow":
         test_stress_queue_slow_send_and_receive(args)
     elif args.method == "receive_delete":

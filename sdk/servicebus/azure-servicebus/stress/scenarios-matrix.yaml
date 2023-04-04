@@ -26,6 +26,8 @@ matrix:
       testTarget: batchw
     abatchw:
       testTarget: abatchw
+    queueuamqp:
+      testTarget: queueuamqp
 
     # sendreceiveslow:
     #   testTarget: send_receive_slow

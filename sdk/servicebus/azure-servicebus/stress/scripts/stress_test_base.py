@@ -28,7 +28,7 @@ LOGFILE_NAME = "stress-test.log"
 PRINT_CONSOLE = True
 
 # _logger = logger.get_base_logger(LOGFILE_NAME, "stress_test", logging.INFO)
-_logger = get_logger(None, "stress_test", level=logging.WARNING, print_console=PRINT_CONSOLE)
+_logger = get_logger(None, "stress_test", level=logging.INFO, print_console=PRINT_CONSOLE)
 
 
 class ReceiveType:
@@ -61,7 +61,6 @@ class StressTestRunnerState(object):
         self.memory_percent = None
         self.timestamp = None
         self.exceptions = []
-        self.actual_size = 0
 
     def __repr__(self):
         return str(vars(self))
@@ -166,7 +165,7 @@ class StressTestRunner:
         """Allows user to transform message payload before sending it."""
         return payload
 
-    def _schedule_interval_logger(self, end_time, description="", interval_seconds=240):
+    def _schedule_interval_logger(self, end_time, description="", interval_seconds=5):
         def _do_interval_logging():
             if end_time > datetime.utcnow() and not self._should_stop:
                 self._state.populate_process_stats(self.process_monitor)
@@ -223,9 +222,6 @@ class StressTestRunner:
                         self._state.exceptions.append(e)
                         if self.fail_on_exception:
                             raise
-                    # queue_properties = self.admin_client.get_queue_runtime_properties('testQueue')
-                    # message_count = queue_properties.total_message_count
-                    # self._state.actual_size += message_count
                     time.sleep(self.send_delay)
             self._state.timestamp = datetime.utcnow()
             return self._state
@@ -332,9 +328,6 @@ class StressTestRunner:
                 )
                 result.total_received = sum(
                     [r.total_received for r in result.state_by_receiver.values()]
-                )
-                result.actual_size = sum(
-                    [r.actual_size for r in result.state_by_receiver.values()]
                 )
                 result.time_elapsed = end_time - start_time
                 _logger.critical("Stress test completed.  Results:\n{}".format(result))
@@ -500,9 +493,6 @@ class StressTestRunnerAsync(StressTestRunner):
             )
             result.total_received = sum(
                 [r.total_received for r in result.state_by_receiver.values()]
-            )
-            result.actual_size = sum(
-                [r.actual_size for r in result.state_by_receiver.values()]
             )
             result.time_elapsed = end_time - start_time
             _logger.critical("Stress test completed.  Results:\n{}".format(result))

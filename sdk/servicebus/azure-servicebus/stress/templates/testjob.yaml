@@ -17,6 +17,12 @@ spec:
 
       {{ if eq .Stress.testTarget "aqueuew" }}
       command: ['bash', '-c', 'python test_stress_queues_async.py --method send_receive --duration 300000 --logging-enable --transport']
+      # args:
+      #   - |
+      #       set -ex;
+      #       mkdir -p $DEBUG_SHARE;
+      #       cd $DEBUG_SHARE;
+      #       pwd;
       {{- end -}}
 
       {{ if eq .Stress.testTarget "queuew" }}
@@ -62,6 +68,16 @@ spec:
       {{ if eq .Stress.testTarget "batch" }}
       command: ['bash', '-c', 'python test_stress_queues.py --method send_receive_batch --duration 300000 --logging-enable']
       {{- end -}}
+
+      {{ if eq .Stress.testTarget "queueuamqp" }}
+      command: ['bash', '-c', 'python test_stress_queues.py --method uamqp --duration 300000 --logging-enable --uamqp_mode']
+      {{- end -}}
+
+
+
+
+
+
 
       # {{ if eq .Stress.testTarget "asend_receive_slow" }}
       # command: ['bash', '-c', 'python test_stress_queues_async.py --method send_receive_slow --duration 300000 --logging-enable']
