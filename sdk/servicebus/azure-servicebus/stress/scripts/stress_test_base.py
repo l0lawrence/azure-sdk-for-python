@@ -243,9 +243,8 @@ class StressTestRunner:
                                 max_wait_time=self.max_wait_time,
                             )
                         elif self.receive_type == ReceiveType.push:
-                            batch = receiver._get_streaming_message_iter(
-                                max_wait_time=self.max_wait_time
-                            )
+                            receiver.max_wait_time = self.max_wait_time
+                            batch = receiver
                         else:
                             batch = []
 
@@ -441,10 +440,8 @@ class StressTestRunnerAsync(StressTestRunner):
                                     message, receiver, end_time
                                 )
                         elif self.receive_type == ReceiveType.push:
-                            batch = receiver._get_streaming_message_iter(
-                                max_wait_time=self.max_wait_time
-                            )
-                            async for message in batch:
+                            receiver.max_wait_time = self.max_wait_time
+                            async for message in receiver:
                                 if end_time <= datetime.utcnow():
                                     break
                                 await self._receive_handle_message(

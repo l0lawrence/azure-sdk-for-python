@@ -333,7 +333,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--conn_str", help="ServiceBus connection string",
         default=os.environ.get('SERVICE_BUS_CONNECTION_STR'))
-    parser.add_argument("--queue_name", help="The queue name.", default=os.environ.get('QUEUE_NAME'))
+    parser.add_argument("--queue_name", help="The queue name.", default="testQueue")
     parser.add_argument("--method", type=str)
     parser.add_argument("--duration", type=int, default=259200)
     parser.add_argument("--logging_enable", action="store_true")
