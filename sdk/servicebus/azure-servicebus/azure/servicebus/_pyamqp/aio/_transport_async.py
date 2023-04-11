@@ -84,7 +84,6 @@ class AsyncTransportMixin:
                 decoded = decode_frame(payload)
             return channel, decoded
         except (
-            TimeoutError,
             socket.timeout,
             asyncio.IncompleteReadError,
             asyncio.TimeoutError,
@@ -137,7 +136,6 @@ class AsyncTransportMixin:
             except (
                 asyncio.CancelledError,
                 asyncio.TimeoutError,
-                TimeoutError,
                 socket.timeout,
                 asyncio.IncompleteReadError
             ):
