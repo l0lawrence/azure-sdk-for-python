@@ -53,7 +53,6 @@ from ..constants import (
     TLS_HEADER_FRAME,
     WEBSOCKET_PORT,
     AMQP_WS_SUBPROTOCOL,
-    TIMEOUT_INTERVAL,
     READ_TIMEOUT_INTERVAL,
 )
 from .._transport import (
@@ -68,7 +67,7 @@ from .._transport import (
 )
 from ..error import AuthenticationException, ErrorCondition
 
-
+TIMEOUT_INTERVAL = 0.2
 _LOGGER = logging.getLogger(__name__)
 
 
