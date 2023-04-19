@@ -53,7 +53,6 @@ from ..constants import (
     TLS_HEADER_FRAME,
     WEBSOCKET_PORT,
     AMQP_WS_SUBPROTOCOL,
-    READ_TIMEOUT_INTERVAL,
 )
 from .._transport import (
     AMQP_FRAME,
