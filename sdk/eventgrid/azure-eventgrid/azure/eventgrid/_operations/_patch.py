@@ -10,8 +10,8 @@ import base64
 from typing import List, overload, Union, Any, Optional
 from ._operations import EventGridClientOperationsMixin as OperationsMixin
 from azure.core.messaging import CloudEvent
-from ..models._models import CloudEventEvent as InternalCloudEvent, LockToken, LockTokensResponse
-from ..models._models import ReceiveResponse
+from ..models._models import CloudEventEvent as InternalCloudEvent, LockToken, LockTokensResult
+from ..models._models import ReceiveResult
 from azure.core.tracing.decorator import distributed_trace
 
 
@@ -129,7 +129,7 @@ class EventGridClientOperationsMixin(OperationsMixin):
         max_events: Optional[int] = None,
         max_wait_time: Optional[int] = None,
         **kwargs: Any
-    ) -> List[ReceiveResponse]:
+    ) -> List[ReceiveResult]:
         """Receive Batch of Cloud Events from the Event Subscription.
 
         :param topic_name: Topic Name. Required.
@@ -161,13 +161,13 @@ class EventGridClientOperationsMixin(OperationsMixin):
     @distributed_trace
     def release(
         self, topic_name: str, event_subscription_name: str, lock_tokens: List[LockToken], **kwargs: Any
-    ) -> LockTokensResponse:
+    ) -> LockTokensResult:
         self.release_batch_of_cloud_events(topic_name, event_subscription_name, lock_tokens, **kwargs)
 
     @distributed_trace
     def acknowledge(
         self, topic_name: str, event_subscription_name: str, lock_tokens: List[LockToken], **kwargs: Any
-    ) -> LockTokensResponse:
+    ) -> LockTokensResult:
         self.acknowledge_batch_of_cloud_events(topic_name, event_subscription_name, lock_tokens, **kwargs)
 
 

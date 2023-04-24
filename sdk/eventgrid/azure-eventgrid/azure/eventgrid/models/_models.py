@@ -159,7 +159,7 @@ class LockToken(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class LockTokenInput(_model_base.Model):
+class LockTokens(_model_base.Model):
     """Lock token input formatting.
 
     All required parameters must be populated in order to send to Azure.
@@ -190,7 +190,7 @@ class LockTokenInput(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class LockTokensResponse(_model_base.Model):
+class LockTokensResult(_model_base.Model):
     """Details of the LockTokens information. This is used for both Acknowledge and Release operation
     response.
 
@@ -244,7 +244,7 @@ class ReceiveDetails(_model_base.Model):
     """Cloud Event details. Required."""
 
 
-class ReceiveResponse(_model_base.Model):
+class ReceiveResult(_model_base.Model):
     """Details of the Receive operation response.
 
     All required parameters must be populated in order to send to Azure.
