@@ -228,6 +228,7 @@ class AMQPClient(
                 if elapsed_time >= self._keep_alive_interval:
                     _logger.debug("Keeping %r connection alive.", self.__class__.__name__)
                     self._connection.listen(wait=self._socket_timeout, batch=self._link.current_link_credit)
+                    self._connection._outgoing_empty()
                     start_time = current_time
                 time.sleep(1)
         except Exception as e:  # pylint: disable=broad-except
