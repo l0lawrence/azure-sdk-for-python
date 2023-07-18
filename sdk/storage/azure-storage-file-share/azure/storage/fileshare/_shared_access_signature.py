@@ -241,16 +241,15 @@ class _FileSharedAccessHelper(_SharedAccessHelper):
 
 
 def generate_account_sas(
-        account_name,  # type: str
-        account_key,  # type: str
-        resource_types,  # type: Union[ResourceTypes, str]
-        permission,  # type: Union[AccountSasPermissions, str]
-        expiry,  # type: Optional[Union[datetime, str]]
-        start=None,  # type: Optional[Union[datetime, str]]
-        ip=None,  # type: Optional[str]
-        **kwargs  # type: Any
-    ):
-    # type: (...) -> str
+        account_name: str,
+        account_key: str,
+        resource_types: Union[ResourceTypes, str],
+        permission: Union[AccountSasPermissions, str],
+        expiry: Optional[Union[datetime, str]],
+        start: Optional[Union[datetime, str]] = None,
+        ip: Optional[str] = None,
+        **kwargs: Any,
+    ) -> str:
     """Generates a shared access signature for the file service.
 
     Use the returned signature with the credential parameter of any ShareServiceClient,
@@ -316,16 +315,16 @@ def generate_account_sas(
 
 
 def generate_share_sas(
-        account_name,  # type: str
-        share_name,  # type: str
-        account_key,  # type: str
-        permission=None,  # type: Optional[Union[ShareSasPermissions, str]]
-        expiry=None,  # type: Optional[Union[datetime, str]]
-        start=None,  # type: Optional[Union[datetime, str]]
-        policy_id=None,  # type: Optional[str]
-        ip=None,  # type: Optional[str]
-        **kwargs # type: Any
-    ):  # type: (...) -> str
+        account_name: str,
+        share_name: str,
+        account_key: str,
+        permission: Optional[Union[ShareSasPermissions, str]] = None,
+        expiry: Optional[Union[datetime, str]] = None,
+        start: Optional[Union[datetime, str]] = None,
+        policy_id: Optional[str] = None,
+        ip: Optional[str] = None,
+        **kwargs: Any
+    ) -> str:
     """Generates a shared access signature for a share.
 
     Use the returned signature with the credential parameter of any ShareServiceClient,
@@ -403,18 +402,17 @@ def generate_share_sas(
 
 
 def generate_file_sas(
-        account_name,  # type: str
-        share_name,  # type: str
-        file_path,  # type: List[str]
-        account_key,  # type: str
-        permission=None,  # type: Optional[Union[FileSasPermissions, str]]
-        expiry=None,  # type: Optional[Union[datetime, str]]
-        start=None,  # type: Optional[Union[datetime, str]]
-        policy_id=None,  # type: Optional[str]
-        ip=None,  # type: Optional[str]
-        **kwargs # type: Any
-    ):
-    # type: (...) -> str
+        account_name: str,
+        share_name: str,
+        file_path: List[str],
+        account_key: str,
+        permission: Optional[Union[FileSasPermissions, str]] = None,
+        expiry: Optional[Union[datetime, str]] = None,
+        start: Optional[Union[datetime, str]] = None,
+        policy_id: Optional[str] = None,
+        ip: Optional[str] = None,
+        **kwargs: Any
+    ) -> str:
     """Generates a shared access signature for a file.
 
     Use the returned signature with the credential parameter of any ShareServiceClient,
