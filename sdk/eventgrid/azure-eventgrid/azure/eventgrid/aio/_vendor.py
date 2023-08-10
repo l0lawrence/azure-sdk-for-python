@@ -23,3 +23,4 @@ class EventGridClientMixinABC(ABC):
     _config: EventGridClientConfiguration
     _serialize: "Serializer"
     _deserialize: "Deserializer"
+

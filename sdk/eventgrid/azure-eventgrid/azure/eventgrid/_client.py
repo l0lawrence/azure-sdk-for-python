@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 
 from copy import deepcopy
-from typing import Any
+from typing import Any, TYPE_CHECKING, Union
 
 from azure.core import PipelineClient
 from azure.core.credentials import AzureKeyCredential
@@ -17,24 +17,30 @@ from ._configuration import EventGridClientConfiguration
 from ._operations import EventGridClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
-class EventGridClient(EventGridClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
-    """Azure Messaging EventGrid Client.
+if TYPE_CHECKING:
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials import TokenCredential
 
-    :param endpoint: The host name of the namespace, e.g.
-     namespaceName1.westus-1.eventgrid.azure.net. Required.
+class EventGridClient(EventGridClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+    """Describes the schema of the Azure App Service events published to Azure Event Grid. This
+    corresponds to the Data property of an EventGridEvent.
+
+    :param endpoint: The host name of the topic, e.g. topic1.westus2-1.eventgrid.azure.net.
+     Required.
     :type endpoint: str
-    :param credential: Credential needed for the client to connect to Azure. Required.
-    :type credential: ~azure.core.credentials.AzureKeyCredential
-    :keyword api_version: The API version to use for this operation. Default value is
-     "2023-06-01-preview". Note that overriding this default value may result in unsupported
-     behavior.
+    :param credential: Credential needed for the client to connect to Azure. Is either a
+     AzureKeyCredential type or a TokenCredential type. Required.
+    :type credential: ~azure.core.credentials.AzureKeyCredential or
+     ~azure.core.credentials.TokenCredential
+    :keyword api_version: The API version to use for this operation. Default value is "2018-01-01".
+     Note that overriding this default value may result in unsupported behavior.
     :paramtype api_version: str
     """
 
     def __init__(
         self,
         endpoint: str,
-        credential: AzureKeyCredential,
+        credential: Union[AzureKeyCredential, "TokenCredential"],
         **kwargs: Any
     ) -> None:
         _endpoint = '{endpoint}'
