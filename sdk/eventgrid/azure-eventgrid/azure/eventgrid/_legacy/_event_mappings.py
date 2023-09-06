@@ -7,7 +7,6 @@
 from enum import Enum
 from azure.core import CaseInsensitiveEnumMeta
 
-
 # pylint: disable=line-too-long
 # pylint: disable=enum-must-be-uppercase
 class SystemEventNames(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -16,523 +15,399 @@ class SystemEventNames(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     Azure Event Grid. To check the list of recognizable system topics,
     visit https://docs.microsoft.com/azure/event-grid/system-topics.
     """
-
     # These names at the top are 'corrected' aliases of duplicate values that appear below, which are
     # deprecated but maintained for backwards compatibility.
-    AcsChatMemberAddedToThreadWithUserEventName = (
-        "Microsoft.Communication.ChatMemberAddedToThreadWithUser"
-    )
+    AcsChatMemberAddedToThreadWithUserEventName = 'Microsoft.Communication.ChatMemberAddedToThreadWithUser'
 
-    ResourceWriteFailureEventName = "Microsoft.Resources.ResourceWriteFailure"
+    ResourceWriteFailureEventName = 'Microsoft.Resources.ResourceWriteFailure'
 
-    IoTHubDeviceDeletedEventName = "Microsoft.Devices.DeviceDeleted"
+    IoTHubDeviceDeletedEventName = 'Microsoft.Devices.DeviceDeleted'
 
-    IoTHubDeviceDisconnectedEventName = "Microsoft.Devices.DeviceDisconnected"
+    IoTHubDeviceDisconnectedEventName = 'Microsoft.Devices.DeviceDisconnected'
 
-    ResourceDeleteFailureEventName = "Microsoft.Resources.ResourceDeleteFailure"
+    ResourceDeleteFailureEventName = 'Microsoft.Resources.ResourceDeleteFailure'
 
-    ResourceDeleteCancelEventName = "Microsoft.Resources.ResourceDeleteCancel"
+    ResourceDeleteCancelEventName = 'Microsoft.Resources.ResourceDeleteCancel'
 
-    AcsChatThreadParticipantAddedEventName = (
-        "Microsoft.Communication.ChatThreadParticipantAdded"
-    )
+    AcsChatThreadParticipantAddedEventName = 'Microsoft.Communication.ChatThreadParticipantAdded'
 
-    ResourceDeleteSuccessEventName = "Microsoft.Resources.ResourceDeleteSuccess"
+    ResourceDeleteSuccessEventName = 'Microsoft.Resources.ResourceDeleteSuccess'
 
-    EventGridSubscriptionValidationEventName = (
-        "Microsoft.EventGrid.SubscriptionValidationEvent"
-    )
+    EventGridSubscriptionValidationEventName = 'Microsoft.EventGrid.SubscriptionValidationEvent'
 
-    ResourceWriteSuccessEventName = "Microsoft.Resources.ResourceWriteSuccess"
+    ResourceWriteSuccessEventName = 'Microsoft.Resources.ResourceWriteSuccess'
 
-    ResourceActionSuccessEventName = "Microsoft.Resources.ResourceActionSuccess"
+    ResourceActionSuccessEventName = 'Microsoft.Resources.ResourceActionSuccess'
 
-    ResourceWriteCancelEventName = "Microsoft.Resources.ResourceWriteCancel"
+    ResourceWriteCancelEventName = 'Microsoft.Resources.ResourceWriteCancel'
 
-    ResourceActionFailureEventName = "Microsoft.Resources.ResourceActionFailure"
+    ResourceActionFailureEventName = 'Microsoft.Resources.ResourceActionFailure'
 
-    AcsChatMemberRemovedFromThreadWithUserEventName = (
-        "Microsoft.Communication.ChatMemberRemovedFromThreadWithUser"
-    )
+    AcsChatMemberRemovedFromThreadWithUserEventName = 'Microsoft.Communication.ChatMemberRemovedFromThreadWithUser'
 
-    IoTHubDeviceConnectedEventName = "Microsoft.Devices.DeviceConnected"
+    IoTHubDeviceConnectedEventName = 'Microsoft.Devices.DeviceConnected'
 
-    EventGridSubscriptionDeletedEventName = (
-        "Microsoft.EventGrid.SubscriptionDeletedEvent"
-    )
+    EventGridSubscriptionDeletedEventName = 'Microsoft.EventGrid.SubscriptionDeletedEvent'
 
-    AcsChatThreadParticipantRemovedEventName = (
-        "Microsoft.Communication.ChatThreadParticipantRemoved"
-    )
+    AcsChatThreadParticipantRemovedEventName = 'Microsoft.Communication.ChatThreadParticipantRemoved'
 
-    ResourceActionCancelEventName = "Microsoft.Resources.ResourceActionCancel"
+    ResourceActionCancelEventName = 'Microsoft.Resources.ResourceActionCancel'
 
-    IoTHubDeviceCreatedEventName = "Microsoft.Devices.DeviceCreated"
+    IoTHubDeviceCreatedEventName = 'Microsoft.Devices.DeviceCreated'
 
     # Aliases end here
-    AcsChatMessageDeletedEventName = "Microsoft.Communication.ChatMessageDeleted"
+    AcsChatMessageDeletedEventName = 'Microsoft.Communication.ChatMessageDeleted'
 
-    AcsChatMessageDeletedInThreadEventName = (
-        "Microsoft.Communication.ChatMessageDeletedInThread"
-    )
+    AcsChatMessageDeletedInThreadEventName = 'Microsoft.Communication.ChatMessageDeletedInThread'
 
-    AcsChatMessageEditedEventName = "Microsoft.Communication.ChatMessageEdited"
+    AcsChatMessageEditedEventName = 'Microsoft.Communication.ChatMessageEdited'
 
-    AcsChatMessageEditedInThreadEventName = (
-        "Microsoft.Communication.ChatMessageEditedInThread"
-    )
+    AcsChatMessageEditedInThreadEventName = 'Microsoft.Communication.ChatMessageEditedInThread'
 
-    AcsChatMessageReceivedEventName = "Microsoft.Communication.ChatMessageReceived"
+    AcsChatMessageReceivedEventName = 'Microsoft.Communication.ChatMessageReceived'
 
-    AcsChatMessageReceivedInThreadEventName = (
-        "Microsoft.Communication.ChatMessageReceivedInThread"
-    )
+    AcsChatMessageReceivedInThreadEventName = 'Microsoft.Communication.ChatMessageReceivedInThread'
 
-    AcsChatParticipantAddedToThreadEventName = (
-        "Microsoft.Communication.ChatThreadParticipantAdded"
-    )
+    AcsChatParticipantAddedToThreadEventName = 'Microsoft.Communication.ChatThreadParticipantAdded'
 
-    AcsChatParticipantAddedToThreadWithUserEventName = (
-        "Microsoft.Communication.ChatParticipantAddedToThreadWithUser"
-    )
+    AcsChatParticipantAddedToThreadWithUserEventName = 'Microsoft.Communication.ChatParticipantAddedToThreadWithUser'
 
-    AcsChatParticipantRemovedFromThreadEventName = (
-        "Microsoft.Communication.ChatThreadParticipantRemoved"
-    )
+    AcsChatParticipantRemovedFromThreadEventName = 'Microsoft.Communication.ChatThreadParticipantRemoved'
 
-    AcsChatParticipantRemovedFromThreadWithUserEventName = (
-        "Microsoft.Communication.ChatParticipantRemovedFromThreadWithUser"
-    )
+    AcsChatParticipantRemovedFromThreadWithUserEventName = 'Microsoft.Communication.ChatParticipantRemovedFromThreadWithUser'
 
-    AcsChatThreadCreatedEventName = "Microsoft.Communication.ChatThreadCreated"
+    AcsChatThreadCreatedEventName = 'Microsoft.Communication.ChatThreadCreated'
 
-    AcsChatThreadCreatedWithUserEventName = (
-        "Microsoft.Communication.ChatThreadCreatedWithUser"
-    )
+    AcsChatThreadCreatedWithUserEventName = 'Microsoft.Communication.ChatThreadCreatedWithUser'
 
-    AcsChatThreadDeletedEventName = "Microsoft.Communication.ChatThreadDeleted"
+    AcsChatThreadDeletedEventName = 'Microsoft.Communication.ChatThreadDeleted'
 
-    AcsChatThreadPropertiesUpdatedEventName = (
-        "Microsoft.Communication.ChatThreadPropertiesUpdated"
-    )
+    AcsChatThreadPropertiesUpdatedEventName = 'Microsoft.Communication.ChatThreadPropertiesUpdated'
 
-    AcsChatThreadPropertiesUpdatedPerUserEventName = (
-        "Microsoft.Communication.ChatThreadPropertiesUpdatedPerUser"
-    )
+    AcsChatThreadPropertiesUpdatedPerUserEventName = 'Microsoft.Communication.ChatThreadPropertiesUpdatedPerUser'
 
-    AcsChatThreadWithUserDeletedEventName = (
-        "Microsoft.Communication.ChatThreadWithUserDeleted"
-    )
+    AcsChatThreadWithUserDeletedEventName = 'Microsoft.Communication.ChatThreadWithUserDeleted'
 
-    AcsEmailDeliveryReportReceivedEventName = (
-        "Microsoft.Communication.EmailDeliveryReportReceived"
-    )
+    AcsEmailDeliveryReportReceivedEventName = 'Microsoft.Communication.EmailDeliveryReportReceived'
 
-    AcsEmailEngagementTrackingReportReceivedEventName = (
-        "Microsoft.Communication.EmailEngagementTrackingReportReceived"
-    )
+    AcsEmailEngagementTrackingReportReceivedEventName = 'Microsoft.Communication.EmailEngagementTrackingReportReceived'
 
-    AcsIncomingCallEventName = "Microsoft.Communication.IncomingCall"
+    AcsIncomingCallEventName = 'Microsoft.Communication.IncomingCall'
 
-    AcsRecordingFileStatusUpdatedEventName = (
-        "Microsoft.Communication.RecordingFileStatusUpdated"
-    )
+    AcsRecordingFileStatusUpdatedEventName = 'Microsoft.Communication.RecordingFileStatusUpdated'
 
-    AcsSmsDeliveryReportReceivedEventName = (
-        "Microsoft.Communication.SMSDeliveryReportReceived"
-    )
+    AcsSmsDeliveryReportReceivedEventName = 'Microsoft.Communication.SMSDeliveryReportReceived'
 
-    AcsSmsReceivedEventName = "Microsoft.Communication.SMSReceived"
+    AcsSmsReceivedEventName = 'Microsoft.Communication.SMSReceived'
 
-    AcsUserDisconnectedEventName = "Microsoft.Communication.UserDisconnected"
+    AcsUserDisconnectedEventName = 'Microsoft.Communication.UserDisconnected'
 
-    ApiManagementApiCreatedEventName = "Microsoft.ApiManagement.APICreated"
+    ApiManagementApiCreatedEventName = 'Microsoft.ApiManagement.APICreated'
 
-    ApiManagementApiDeletedEventName = "Microsoft.ApiManagement.APIDeleted"
+    ApiManagementApiDeletedEventName = 'Microsoft.ApiManagement.APIDeleted'
 
-    ApiManagementApiReleaseCreatedEventName = (
-        "Microsoft.ApiManagement.APIReleaseCreated"
-    )
+    ApiManagementApiReleaseCreatedEventName = 'Microsoft.ApiManagement.APIReleaseCreated'
 
-    ApiManagementApiReleaseDeletedEventName = (
-        "Microsoft.ApiManagement.APIReleaseDeleted"
-    )
+    ApiManagementApiReleaseDeletedEventName = 'Microsoft.ApiManagement.APIReleaseDeleted'
 
-    ApiManagementApiReleaseUpdatedEventName = (
-        "Microsoft.ApiManagement.APIReleaseUpdated"
-    )
+    ApiManagementApiReleaseUpdatedEventName = 'Microsoft.ApiManagement.APIReleaseUpdated'
 
-    ApiManagementApiUpdatedEventName = "Microsoft.ApiManagement.APIUpdated"
+    ApiManagementApiUpdatedEventName = 'Microsoft.ApiManagement.APIUpdated'
 
-    ApiManagementGatewayApiAddedEventName = "Microsoft.ApiManagement.GatewayAPIAdded"
+    ApiManagementGatewayApiAddedEventName = 'Microsoft.ApiManagement.GatewayAPIAdded'
 
-    ApiManagementGatewayApiRemovedEventName = (
-        "Microsoft.ApiManagement.GatewayAPIRemoved"
-    )
+    ApiManagementGatewayApiRemovedEventName = 'Microsoft.ApiManagement.GatewayAPIRemoved'
 
-    ApiManagementGatewayCertificateAuthorityCreatedEventName = (
-        "Microsoft.ApiManagement.GatewayCertificateAuthorityCreated"
-    )
+    ApiManagementGatewayCertificateAuthorityCreatedEventName = 'Microsoft.ApiManagement.GatewayCertificateAuthorityCreated'
 
-    ApiManagementGatewayCertificateAuthorityDeletedEventName = (
-        "Microsoft.ApiManagement.GatewayCertificateAuthorityDeleted"
-    )
+    ApiManagementGatewayCertificateAuthorityDeletedEventName = 'Microsoft.ApiManagement.GatewayCertificateAuthorityDeleted'
 
-    ApiManagementGatewayCertificateAuthorityUpdatedEventName = (
-        "Microsoft.ApiManagement.GatewayCertificateAuthorityUpdated"
-    )
+    ApiManagementGatewayCertificateAuthorityUpdatedEventName = 'Microsoft.ApiManagement.GatewayCertificateAuthorityUpdated'
 
-    ApiManagementGatewayCreatedEventName = "Microsoft.ApiManagement.GatewayCreated"
+    ApiManagementGatewayCreatedEventName = 'Microsoft.ApiManagement.GatewayCreated'
 
-    ApiManagementGatewayDeletedEventName = "Microsoft.ApiManagement.GatewayDeleted"
+    ApiManagementGatewayDeletedEventName = 'Microsoft.ApiManagement.GatewayDeleted'
 
-    ApiManagementGatewayHostnameConfigurationCreatedEventName = (
-        "Microsoft.ApiManagement.GatewayHostnameConfigurationCreated"
-    )
+    ApiManagementGatewayHostnameConfigurationCreatedEventName = 'Microsoft.ApiManagement.GatewayHostnameConfigurationCreated'
 
-    ApiManagementGatewayHostnameConfigurationDeletedEventName = (
-        "Microsoft.ApiManagement.GatewayHostnameConfigurationDeleted"
-    )
+    ApiManagementGatewayHostnameConfigurationDeletedEventName = 'Microsoft.ApiManagement.GatewayHostnameConfigurationDeleted'
 
-    ApiManagementGatewayHostnameConfigurationUpdatedEventName = (
-        "Microsoft.ApiManagement.GatewayHostnameConfigurationUpdated"
-    )
+    ApiManagementGatewayHostnameConfigurationUpdatedEventName = 'Microsoft.ApiManagement.GatewayHostnameConfigurationUpdated'
 
-    ApiManagementGatewayUpdatedEventName = "Microsoft.ApiManagement.GatewayUpdated"
+    ApiManagementGatewayUpdatedEventName = 'Microsoft.ApiManagement.GatewayUpdated'
 
-    ApiManagementProductCreatedEventName = "Microsoft.ApiManagement.ProductCreated"
+    ApiManagementProductCreatedEventName = 'Microsoft.ApiManagement.ProductCreated'
 
-    ApiManagementProductDeletedEventName = "Microsoft.ApiManagement.ProductDeleted"
+    ApiManagementProductDeletedEventName = 'Microsoft.ApiManagement.ProductDeleted'
 
-    ApiManagementProductUpdatedEventName = "Microsoft.ApiManagement.ProductUpdated"
+    ApiManagementProductUpdatedEventName = 'Microsoft.ApiManagement.ProductUpdated'
 
-    ApiManagementSubscriptionCreatedEventName = (
-        "Microsoft.ApiManagement.SubscriptionCreated"
-    )
+    ApiManagementSubscriptionCreatedEventName = 'Microsoft.ApiManagement.SubscriptionCreated'
 
-    ApiManagementSubscriptionDeletedEventName = (
-        "Microsoft.ApiManagement.SubscriptionDeleted"
-    )
+    ApiManagementSubscriptionDeletedEventName = 'Microsoft.ApiManagement.SubscriptionDeleted'
 
-    ApiManagementSubscriptionUpdatedEventName = (
-        "Microsoft.ApiManagement.SubscriptionUpdated"
-    )
+    ApiManagementSubscriptionUpdatedEventName = 'Microsoft.ApiManagement.SubscriptionUpdated'
 
-    ApiManagementUserCreatedEventName = "Microsoft.ApiManagement.UserCreated"
+    ApiManagementUserCreatedEventName = 'Microsoft.ApiManagement.UserCreated'
 
-    ApiManagementUserDeletedEventName = "Microsoft.ApiManagement.UserDeleted"
+    ApiManagementUserDeletedEventName = 'Microsoft.ApiManagement.UserDeleted'
 
-    ApiManagementUserUpdatedEventName = "Microsoft.ApiManagement.UserUpdated"
+    ApiManagementUserUpdatedEventName = 'Microsoft.ApiManagement.UserUpdated'
 
-    AppConfigurationKeyValueDeletedEventName = (
-        "Microsoft.AppConfiguration.KeyValueDeleted"
-    )
+    AppConfigurationKeyValueDeletedEventName = 'Microsoft.AppConfiguration.KeyValueDeleted'
 
-    AppConfigurationKeyValueModifiedEventName = (
-        "Microsoft.AppConfiguration.KeyValueModified"
-    )
+    AppConfigurationKeyValueModifiedEventName = 'Microsoft.AppConfiguration.KeyValueModified'
 
-    ContainerRegistryChartDeletedEventName = "Microsoft.ContainerRegistry.ChartDeleted"
+    AppConfigurationSnapshotCreatedEventName = 'Microsoft.AppConfiguration.SnapshotCreated'
 
-    ContainerRegistryChartPushedEventName = "Microsoft.ContainerRegistry.ChartPushed"
+    AppConfigurationSnapshotModifiedEventName = 'Microsoft.AppConfiguration.SnapshotModified'
 
-    ContainerRegistryImageDeletedEventName = "Microsoft.ContainerRegistry.ImageDeleted"
+    ContainerRegistryChartDeletedEventName = 'Microsoft.ContainerRegistry.ChartDeleted'
 
-    ContainerRegistryImagePushedEventName = "Microsoft.ContainerRegistry.ImagePushed"
+    ContainerRegistryChartPushedEventName = 'Microsoft.ContainerRegistry.ChartPushed'
 
-    ContainerServiceNewKubernetesVersionAvailableEventName = (
-        "Microsoft.ContainerService.NewKubernetesVersionAvailable"
-    )
+    ContainerRegistryImageDeletedEventName = 'Microsoft.ContainerRegistry.ImageDeleted'
 
-    DataBoxCopyCompletedEventName = "Microsoft.DataBox.CopyCompleted"
+    ContainerRegistryImagePushedEventName = 'Microsoft.ContainerRegistry.ImagePushed'
 
-    DataBoxCopyStartedEventName = "Microsoft.DataBox.CopyStarted"
+    ContainerServiceClusterSupportEndedEventName = 'Microsoft.ContainerService.ClusterSupportEnded'
 
-    DataBoxOrderCompletedEventName = "Microsoft.DataBox.OrderCompleted"
+    ContainerServiceClusterSupportEndingEventName = 'Microsoft.ContainerService.ClusterSupportEnding'
 
-    EventHubCaptureFileCreatedEventName = "Microsoft.EventHub.CaptureFileCreated"
+    ContainerServiceNewKubernetesVersionAvailableEventName = 'Microsoft.ContainerService.NewKubernetesVersionAvailable'
 
-    # spell-checker:ignore Dicom
-    HealthcareDicomImageCreatedEventName = "Microsoft.HealthcareApis.DicomImageCreated"
+    ContainerServiceNodePoolRollingFailedEventName = 'Microsoft.ContainerService.NodePoolRollingFailed'
 
-    HealthcareDicomImageDeletedEventName = "Microsoft.HealthcareApis.DicomImageDeleted"
+    ContainerServiceNodePoolRollingStartedEventName = 'Microsoft.ContainerService.NodePoolRollingStarted'
 
-    HealthcareDicomImageUpdatedEventName = "Microsoft.HealthcareApis.DicomImageUpdated"
+    ContainerServiceNodePoolRollingSucceededEventName = 'Microsoft.ContainerService.NodePoolRollingSucceeded'
 
-    # spell-checker:ignore Fhir
-    HealthcareFhirResourceCreatedEventName = (
-        "Microsoft.HealthcareApis.FhirResourceCreated"
-    )
+    DataBoxCopyCompletedEventName = 'Microsoft.DataBox.CopyCompleted'
 
-    HealthcareFhirResourceDeletedEventName = (
-        "Microsoft.HealthcareApis.FhirResourceDeleted"
-    )
+    DataBoxCopyStartedEventName = 'Microsoft.DataBox.CopyStarted'
 
-    HealthcareFhirResourceUpdatedEventName = (
-        "Microsoft.HealthcareApis.FhirResourceUpdated"
-    )
+    DataBoxOrderCompletedEventName = 'Microsoft.DataBox.OrderCompleted'
 
-    IotHubDeviceConnectedEventName = "Microsoft.Devices.DeviceConnected"
+    EventGridMQTTClientCreatedOrUpdatedEventName = 'Microsoft.EventGrid.MQTTClientCreatedOrUpdated'
 
-    IotHubDeviceCreatedEventName = "Microsoft.Devices.DeviceCreated"
+    EventGridMQTTClientDeletedEventName = 'Microsoft.EventGrid.MQTTClientDeleted'
 
-    IotHubDeviceDeletedEventName = "Microsoft.Devices.DeviceDeleted"
+    EventGridMQTTClientSessionConnectedEventName = 'Microsoft.EventGrid.MQTTClientSessionConnected'
 
-    IotHubDeviceDisconnectedEventName = "Microsoft.Devices.DeviceDisconnected"
+    EventGridMQTTClientSessionDisconnectedEventName = 'Microsoft.EventGrid.MQTTClientSessionDisconnected'
 
-    IotHubDeviceTelemetryEventName = "Microsoft.Devices.DeviceTelemetry"
+    EventHubCaptureFileCreatedEventName = 'Microsoft.EventHub.CaptureFileCreated'
 
-    KeyVaultCertificateExpiredEventName = "Microsoft.KeyVault.CertificateExpired"
+    HealthcareDicomImageCreatedEventName = 'Microsoft.HealthcareApis.DicomImageCreated'
 
-    KeyVaultCertificateNearExpiryEventName = "Microsoft.KeyVault.CertificateNearExpiry"
+    HealthcareDicomImageDeletedEventName = 'Microsoft.HealthcareApis.DicomImageDeleted'
 
-    KeyVaultCertificateNewVersionCreatedEventName = (
-        "Microsoft.KeyVault.CertificateNewVersionCreated"
-    )
+    HealthcareDicomImageUpdatedEventName = 'Microsoft.HealthcareApis.DicomImageUpdated'
 
-    KeyVaultKeyExpiredEventName = "Microsoft.KeyVault.KeyExpired"
+    HealthcareFhirResourceCreatedEventName = 'Microsoft.HealthcareApis.FhirResourceCreated'
 
-    KeyVaultKeyNearExpiryEventName = "Microsoft.KeyVault.KeyNearExpiry"
+    HealthcareFhirResourceDeletedEventName = 'Microsoft.HealthcareApis.FhirResourceDeleted'
 
-    KeyVaultKeyNewVersionCreatedEventName = "Microsoft.KeyVault.KeyNewVersionCreated"
+    HealthcareFhirResourceUpdatedEventName = 'Microsoft.HealthcareApis.FhirResourceUpdated'
 
-    KeyVaultSecretExpiredEventName = "Microsoft.KeyVault.SecretExpired"
+    IotHubDeviceConnectedEventName = 'Microsoft.Devices.DeviceConnected'
 
-    KeyVaultSecretNearExpiryEventName = "Microsoft.KeyVault.SecretNearExpiry"
+    IotHubDeviceCreatedEventName = 'Microsoft.Devices.DeviceCreated'
 
-    KeyVaultSecretNewVersionCreatedEventName = (
-        "Microsoft.KeyVault.SecretNewVersionCreated"
-    )
+    IotHubDeviceDeletedEventName = 'Microsoft.Devices.DeviceDeleted'
 
-    KeyVaultVaultAccessPolicyChangedEventName = (
-        "Microsoft.KeyVault.VaultAccessPolicyChanged"
-    )
+    IotHubDeviceDisconnectedEventName = 'Microsoft.Devices.DeviceDisconnected'
 
-    MachineLearningServicesDatasetDriftDetectedEventName = (
-        "Microsoft.MachineLearningServices.DatasetDriftDetected"
-    )
+    IotHubDeviceTelemetryEventName = 'Microsoft.Devices.DeviceTelemetry'
 
-    MachineLearningServicesModelDeployedEventName = (
-        "Microsoft.MachineLearningServices.ModelDeployed"
-    )
+    KeyVaultCertificateExpiredEventName = 'Microsoft.KeyVault.CertificateExpired'
 
-    MachineLearningServicesModelRegisteredEventName = (
-        "Microsoft.MachineLearningServices.ModelRegistered"
-    )
+    KeyVaultCertificateNearExpiryEventName = 'Microsoft.KeyVault.CertificateNearExpiry'
 
-    MachineLearningServicesRunCompletedEventName = (
-        "Microsoft.MachineLearningServices.RunCompleted"
-    )
+    KeyVaultCertificateNewVersionCreatedEventName = 'Microsoft.KeyVault.CertificateNewVersionCreated'
 
-    MachineLearningServicesRunStatusChangedEventName = (
-        "Microsoft.MachineLearningServices.RunStatusChanged"
-    )
+    KeyVaultKeyExpiredEventName = 'Microsoft.KeyVault.KeyExpired'
 
-    MapsGeofenceEnteredEventName = "Microsoft.Maps.GeofenceEntered"
+    KeyVaultKeyNearExpiryEventName = 'Microsoft.KeyVault.KeyNearExpiry'
 
-    MapsGeofenceExitedEventName = "Microsoft.Maps.GeofenceExited"
+    KeyVaultKeyNewVersionCreatedEventName = 'Microsoft.KeyVault.KeyNewVersionCreated'
 
-    MapsGeofenceResultEventName = "Microsoft.Maps.GeofenceResult"
+    KeyVaultSecretExpiredEventName = 'Microsoft.KeyVault.SecretExpired'
 
-    MediaJobCanceledEventName = "Microsoft.Media.JobCanceled"
+    KeyVaultSecretNearExpiryEventName = 'Microsoft.KeyVault.SecretNearExpiry'
 
-    MediaJobCancelingEventName = "Microsoft.Media.JobCanceling"
+    KeyVaultSecretNewVersionCreatedEventName = 'Microsoft.KeyVault.SecretNewVersionCreated'
 
-    # spell-checker:ignore Errored
-    MediaJobErroredEventName = "Microsoft.Media.JobErrored"
+    KeyVaultVaultAccessPolicyChangedEventName = 'Microsoft.KeyVault.VaultAccessPolicyChanged'
 
-    MediaJobFinishedEventName = "Microsoft.Media.JobFinished"
+    MachineLearningServicesDatasetDriftDetectedEventName = 'Microsoft.MachineLearningServices.DatasetDriftDetected'
 
-    MediaJobOutputCanceledEventName = "Microsoft.Media.JobOutputCanceled"
+    MachineLearningServicesModelDeployedEventName = 'Microsoft.MachineLearningServices.ModelDeployed'
 
-    MediaJobOutputCancelingEventName = "Microsoft.Media.JobOutputCanceling"
+    MachineLearningServicesModelRegisteredEventName = 'Microsoft.MachineLearningServices.ModelRegistered'
 
-    MediaJobOutputErroredEventName = "Microsoft.Media.JobOutputErrored"
+    MachineLearningServicesRunCompletedEventName = 'Microsoft.MachineLearningServices.RunCompleted'
 
-    MediaJobOutputFinishedEventName = "Microsoft.Media.JobOutputFinished"
+    MachineLearningServicesRunStatusChangedEventName = 'Microsoft.MachineLearningServices.RunStatusChanged'
 
-    MediaJobOutputProcessingEventName = "Microsoft.Media.JobOutputProcessing"
+    MapsGeofenceEnteredEventName = 'Microsoft.Maps.GeofenceEntered'
 
-    MediaJobOutputProgressEventName = "Microsoft.Media.JobOutputProgress"
+    MapsGeofenceExitedEventName = 'Microsoft.Maps.GeofenceExited'
 
-    MediaJobOutputScheduledEventName = "Microsoft.Media.JobOutputScheduled"
+    MapsGeofenceResultEventName = 'Microsoft.Maps.GeofenceResult'
 
-    MediaJobOutputStateChangeEventName = "Microsoft.Media.JobOutputStateChange"
+    MediaJobCanceledEventName = 'Microsoft.Media.JobCanceled'
 
-    MediaJobProcessingEventName = "Microsoft.Media.JobProcessing"
+    MediaJobCancelingEventName = 'Microsoft.Media.JobCanceling'
 
-    MediaJobScheduledEventName = "Microsoft.Media.JobScheduled"
+    MediaJobErroredEventName = 'Microsoft.Media.JobErrored'
 
-    MediaJobStateChangeEventName = "Microsoft.Media.JobStateChange"
+    MediaJobFinishedEventName = 'Microsoft.Media.JobFinished'
 
-    MediaLiveEventChannelArchiveHeartbeatEventName = (
-        "Microsoft.Media.LiveEventChannelArchiveHeartbeat"
-    )
+    MediaJobOutputCanceledEventName = 'Microsoft.Media.JobOutputCanceled'
 
-    MediaLiveEventConnectionRejectedEventName = (
-        "Microsoft.Media.LiveEventConnectionRejected"
-    )
+    MediaJobOutputCancelingEventName = 'Microsoft.Media.JobOutputCanceling'
 
-    MediaLiveEventEncoderConnectedEventName = (
-        "Microsoft.Media.LiveEventEncoderConnected"
-    )
+    MediaJobOutputErroredEventName = 'Microsoft.Media.JobOutputErrored'
 
-    MediaLiveEventEncoderDisconnectedEventName = (
-        "Microsoft.Media.LiveEventEncoderDisconnected"
-    )
+    MediaJobOutputFinishedEventName = 'Microsoft.Media.JobOutputFinished'
 
-    MediaLiveEventIncomingDataChunkDroppedEventName = (
-        "Microsoft.Media.LiveEventIncomingDataChunkDropped"
-    )
+    MediaJobOutputProcessingEventName = 'Microsoft.Media.JobOutputProcessing'
 
-    MediaLiveEventIncomingStreamReceivedEventName = (
-        "Microsoft.Media.LiveEventIncomingStreamReceived"
-    )
+    MediaJobOutputProgressEventName = 'Microsoft.Media.JobOutputProgress'
 
-    MediaLiveEventIncomingStreamsOutOfSyncEventName = (
-        "Microsoft.Media.LiveEventIncomingStreamsOutOfSync"
-    )
+    MediaJobOutputScheduledEventName = 'Microsoft.Media.JobOutputScheduled'
 
-    MediaLiveEventIncomingVideoStreamsOutOfSyncEventName = (
-        "Microsoft.Media.LiveEventIncomingVideoStreamsOutOfSync"
-    )
+    MediaJobOutputStateChangeEventName = 'Microsoft.Media.JobOutputStateChange'
 
-    MediaLiveEventIngestHeartbeatEventName = "Microsoft.Media.LiveEventIngestHeartbeat"
+    MediaJobProcessingEventName = 'Microsoft.Media.JobProcessing'
 
-    MediaLiveEventTrackDiscontinuityDetectedEventName = (
-        "Microsoft.Media.LiveEventTrackDiscontinuityDetected"
-    )
+    MediaJobScheduledEventName = 'Microsoft.Media.JobScheduled'
 
-    PolicyInsightsPolicyStateChangedEventName = (
-        "Microsoft.PolicyInsights.PolicyStateChanged"
-    )
+    MediaJobStateChangeEventName = 'Microsoft.Media.JobStateChange'
 
-    PolicyInsightsPolicyStateCreatedEventName = (
-        "Microsoft.PolicyInsights.PolicyStateCreated"
-    )
+    MediaLiveEventChannelArchiveHeartbeatEventName = 'Microsoft.Media.LiveEventChannelArchiveHeartbeat'
 
-    PolicyInsightsPolicyStateDeletedEventName = (
-        "Microsoft.PolicyInsights.PolicyStateDeleted"
-    )
+    MediaLiveEventConnectionRejectedEventName = 'Microsoft.Media.LiveEventConnectionRejected'
 
-    RedisExportRDBCompletedEventName = "Microsoft.Cache.ExportRDBCompleted"
+    MediaLiveEventEncoderConnectedEventName = 'Microsoft.Media.LiveEventEncoderConnected'
 
-    RedisImportRDBCompletedEventName = "Microsoft.Cache.ImportRDBCompleted"
+    MediaLiveEventEncoderDisconnectedEventName = 'Microsoft.Media.LiveEventEncoderDisconnected'
 
-    RedisPatchingCompletedEventName = "Microsoft.Cache.PatchingCompleted"
+    MediaLiveEventIncomingDataChunkDroppedEventName = 'Microsoft.Media.LiveEventIncomingDataChunkDropped'
 
-    RedisScalingCompletedEventName = "Microsoft.Cache.ScalingCompleted"
+    MediaLiveEventIncomingStreamReceivedEventName = 'Microsoft.Media.LiveEventIncomingStreamReceived'
 
-    ResourceActionCancelName = "Microsoft.Resources.ResourceActionCancel"
+    MediaLiveEventIncomingStreamsOutOfSyncEventName = 'Microsoft.Media.LiveEventIncomingStreamsOutOfSync'
 
-    ResourceActionFailureName = "Microsoft.Resources.ResourceActionFailure"
+    MediaLiveEventIncomingVideoStreamsOutOfSyncEventName = 'Microsoft.Media.LiveEventIncomingVideoStreamsOutOfSync'
 
-    ResourceActionSuccessName = "Microsoft.Resources.ResourceActionSuccess"
+    MediaLiveEventIngestHeartbeatEventName = 'Microsoft.Media.LiveEventIngestHeartbeat'
 
-    ResourceDeleteCancelName = "Microsoft.Resources.ResourceDeleteCancel"
+    MediaLiveEventTrackDiscontinuityDetectedEventName = 'Microsoft.Media.LiveEventTrackDiscontinuityDetected'
 
-    ResourceDeleteFailureName = "Microsoft.Resources.ResourceDeleteFailure"
+    PolicyInsightsPolicyStateChangedEventName = 'Microsoft.PolicyInsights.PolicyStateChanged'
 
-    ResourceDeleteSuccessName = "Microsoft.Resources.ResourceDeleteSuccess"
+    PolicyInsightsPolicyStateCreatedEventName = 'Microsoft.PolicyInsights.PolicyStateCreated'
 
-    ResourceWriteCancelName = "Microsoft.Resources.ResourceWriteCancel"
+    PolicyInsightsPolicyStateDeletedEventName = 'Microsoft.PolicyInsights.PolicyStateDeleted'
 
-    ResourceWriteFailureName = "Microsoft.Resources.ResourceWriteFailure"
+    RedisExportRDBCompletedEventName = 'Microsoft.Cache.ExportRDBCompleted'
 
-    ResourceWriteSuccessName = "Microsoft.Resources.ResourceWriteSuccess"
+    RedisImportRDBCompletedEventName = 'Microsoft.Cache.ImportRDBCompleted'
 
-    ServiceBusActiveMessagesAvailablePeriodicNotificationsEventName = (
-        "Microsoft.ServiceBus.ActiveMessagesAvailablePeriodicNotifications"
-    )
+    RedisPatchingCompletedEventName = 'Microsoft.Cache.PatchingCompleted'
 
-    ServiceBusActiveMessagesAvailableWithNoListenersEventName = (
-        "Microsoft.ServiceBus.ActiveMessagesAvailableWithNoListeners"
-    )
+    RedisScalingCompletedEventName = 'Microsoft.Cache.ScalingCompleted'
 
-    ServiceBusDeadletterMessagesAvailablePeriodicNotificationsEventName = (
-        "Microsoft.ServiceBus.DeadletterMessagesAvailablePeriodicNotifications"
-    )
+    ResourceActionCancelName = 'Microsoft.Resources.ResourceActionCancel'
 
-    ServiceBusDeadletterMessagesAvailableWithNoListenersEventName = (
-        "Microsoft.ServiceBus.DeadletterMessagesAvailableWithNoListeners"
-    )
+    ResourceActionFailureName = 'Microsoft.Resources.ResourceActionFailure'
 
-    SignalRServiceClientConnectionConnectedEventName = (
-        "Microsoft.SignalRService.ClientConnectionConnected"
-    )
+    ResourceActionSuccessName = 'Microsoft.Resources.ResourceActionSuccess'
 
-    SignalRServiceClientConnectionDisconnectedEventName = (
-        "Microsoft.SignalRService.ClientConnectionDisconnected"
-    )
+    ResourceDeleteCancelName = 'Microsoft.Resources.ResourceDeleteCancel'
 
-    StorageAsyncOperationInitiatedEventName = (
-        "Microsoft.Storage.AsyncOperationInitiated"
-    )
+    ResourceDeleteFailureName = 'Microsoft.Resources.ResourceDeleteFailure'
 
-    StorageBlobCreatedEventName = "Microsoft.Storage.BlobCreated"
+    ResourceDeleteSuccessName = 'Microsoft.Resources.ResourceDeleteSuccess'
 
-    StorageBlobDeletedEventName = "Microsoft.Storage.BlobDeleted"
+    ResourceWriteCancelName = 'Microsoft.Resources.ResourceWriteCancel'
 
-    StorageBlobInventoryPolicyCompletedEventName = (
-        "Microsoft.Storage.BlobInventoryPolicyCompleted"
-    )
+    ResourceWriteFailureName = 'Microsoft.Resources.ResourceWriteFailure'
 
-    StorageBlobRenamedEventName = "Microsoft.Storage.BlobRenamed"
+    ResourceWriteSuccessName = 'Microsoft.Resources.ResourceWriteSuccess'
 
-    StorageBlobTierChangedEventName = "Microsoft.Storage.BlobTierChanged"
+    ServiceBusActiveMessagesAvailablePeriodicNotificationsEventName = 'Microsoft.ServiceBus.ActiveMessagesAvailablePeriodicNotifications'
 
-    StorageDirectoryCreatedEventName = "Microsoft.Storage.DirectoryCreated"
+    ServiceBusActiveMessagesAvailableWithNoListenersEventName = 'Microsoft.ServiceBus.ActiveMessagesAvailableWithNoListeners'
 
-    StorageDirectoryDeletedEventName = "Microsoft.Storage.DirectoryDeleted"
+    ServiceBusDeadletterMessagesAvailablePeriodicNotificationsEventName = 'Microsoft.ServiceBus.DeadletterMessagesAvailablePeriodicNotifications'
 
-    StorageDirectoryRenamedEventName = "Microsoft.Storage.DirectoryRenamed"
+    ServiceBusDeadletterMessagesAvailableWithNoListenersEventName = 'Microsoft.ServiceBus.DeadletterMessagesAvailableWithNoListeners'
 
-    StorageLifecyclePolicyCompletedEventName = (
-        "Microsoft.Storage.LifecyclePolicyCompleted"
-    )
+    SignalRServiceClientConnectionConnectedEventName = 'Microsoft.SignalRService.ClientConnectionConnected'
 
-    StorageTaskCompletedEventName = "Microsoft.Storage.StorageTaskCompleted"
+    SignalRServiceClientConnectionDisconnectedEventName = 'Microsoft.SignalRService.ClientConnectionDisconnected'
 
-    StorageTaskQueuedEventName = "Microsoft.Storage.StorageTaskQueued"
+    StorageAsyncOperationInitiatedEventName = 'Microsoft.Storage.AsyncOperationInitiated'
 
-    SubscriptionDeletedEventName = "Microsoft.EventGrid.SubscriptionDeletedEvent"
+    StorageBlobCreatedEventName = 'Microsoft.Storage.BlobCreated'
 
-    SubscriptionValidationEventName = "Microsoft.EventGrid.SubscriptionValidationEvent"
+    StorageBlobDeletedEventName = 'Microsoft.Storage.BlobDeleted'
 
-    WebAppServicePlanUpdatedEventName = "Microsoft.Web.AppServicePlanUpdated"
+    StorageBlobInventoryPolicyCompletedEventName = 'Microsoft.Storage.BlobInventoryPolicyCompleted'
 
-    WebAppUpdatedEventName = "Microsoft.Web.AppUpdated"
+    StorageBlobRenamedEventName = 'Microsoft.Storage.BlobRenamed'
 
-    WebBackupOperationCompletedEventName = "Microsoft.Web.BackupOperationCompleted"
+    StorageBlobTierChangedEventName = 'Microsoft.Storage.BlobTierChanged'
 
-    WebBackupOperationFailedEventName = "Microsoft.Web.BackupOperationFailed"
+    StorageDirectoryCreatedEventName = 'Microsoft.Storage.DirectoryCreated'
 
-    WebBackupOperationStartedEventName = "Microsoft.Web.BackupOperationStarted"
+    StorageDirectoryDeletedEventName = 'Microsoft.Storage.DirectoryDeleted'
 
-    WebRestoreOperationCompletedEventName = "Microsoft.Web.RestoreOperationCompleted"
+    StorageDirectoryRenamedEventName = 'Microsoft.Storage.DirectoryRenamed'
 
-    WebRestoreOperationFailedEventName = "Microsoft.Web.RestoreOperationFailed"
+    StorageLifecyclePolicyCompletedEventName = 'Microsoft.Storage.LifecyclePolicyCompleted'
 
-    WebRestoreOperationStartedEventName = "Microsoft.Web.RestoreOperationStarted"
+    StorageTaskCompletedEventName = 'Microsoft.Storage.StorageTaskCompleted'
 
-    WebSlotSwapCompletedEventName = "Microsoft.Web.SlotSwapCompleted"
+    StorageTaskQueuedEventName = 'Microsoft.Storage.StorageTaskQueued'
 
-    WebSlotSwapFailedEventName = "Microsoft.Web.SlotSwapFailed"
+    SubscriptionDeletedEventName = 'Microsoft.EventGrid.SubscriptionDeletedEvent'
 
-    WebSlotSwapStartedEventName = "Microsoft.Web.SlotSwapStarted"
+    SubscriptionValidationEventName = 'Microsoft.EventGrid.SubscriptionValidationEvent'
 
-    WebSlotSwapWithPreviewCancelledEventName = (
-        "Microsoft.Web.SlotSwapWithPreviewCancelled"
-    )
+    WebAppServicePlanUpdatedEventName = 'Microsoft.Web.AppServicePlanUpdated'
 
-    WebSlotSwapWithPreviewStartedEventName = "Microsoft.Web.SlotSwapWithPreviewStarted"
+    WebAppUpdatedEventName = 'Microsoft.Web.AppUpdated'
 
-    ContainerRegistryArtifactEventName = "Microsoft.AppConfiguration.KeyValueModified"
+    WebBackupOperationCompletedEventName = 'Microsoft.Web.BackupOperationCompleted'
 
-    KeyVaultAccessPolicyChangedEventName = "Microsoft.KeyVault.VaultAccessPolicyChanged"
+    WebBackupOperationFailedEventName = 'Microsoft.Web.BackupOperationFailed'
 
-    ContainerRegistryEventName = "Microsoft.ContainerRegistry.ChartPushed"
+    WebBackupOperationStartedEventName = 'Microsoft.Web.BackupOperationStarted'
 
-    ServiceBusDeadletterMessagesAvailableWithNoListenerEventName = (
-        "Microsoft.ServiceBus.DeadletterMessagesAvailableWithNoListeners"
-    )
+    WebRestoreOperationCompletedEventName = 'Microsoft.Web.RestoreOperationCompleted'
+
+    WebRestoreOperationFailedEventName = 'Microsoft.Web.RestoreOperationFailed'
+
+    WebRestoreOperationStartedEventName = 'Microsoft.Web.RestoreOperationStarted'
+
+    WebSlotSwapCompletedEventName = 'Microsoft.Web.SlotSwapCompleted'
+
+    WebSlotSwapFailedEventName = 'Microsoft.Web.SlotSwapFailed'
+
+    WebSlotSwapStartedEventName = 'Microsoft.Web.SlotSwapStarted'
+
+    WebSlotSwapWithPreviewCancelledEventName = 'Microsoft.Web.SlotSwapWithPreviewCancelled'
+
+    WebSlotSwapWithPreviewStartedEventName = 'Microsoft.Web.SlotSwapWithPreviewStarted'
+
+    ContainerRegistryArtifactEventName = 'Microsoft.AppConfiguration.KeyValueModified'
+
+    KeyVaultAccessPolicyChangedEventName = 'Microsoft.KeyVault.VaultAccessPolicyChanged'
+
+    ContainerRegistryEventName = 'Microsoft.ContainerRegistry.ChartPushed'
+
+    ServiceBusDeadletterMessagesAvailableWithNoListenerEventName = 'Microsoft.ServiceBus.DeadletterMessagesAvailableWithNoListeners'
