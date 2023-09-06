@@ -17,7 +17,7 @@ class EventGridClient(ServiceClientGenerated):
     """Azure Messaging EventGrid Client.
 
     :param endpoint: The host name of the namespace, e.g.
-     namespaceName1.westus-1.eventgrid.azure.net. Required.
+     https://namespaceName1.westus-1.eventgrid.azure.net. Required.
     :type endpoint: str
     :param credential: Credential needed for the client to connect to Azure. Required.
     :type credential: ~azure.core.credentials.AzureKeyCredential
