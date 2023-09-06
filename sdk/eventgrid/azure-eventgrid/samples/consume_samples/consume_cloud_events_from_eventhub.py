@@ -27,7 +27,7 @@ EVENTHUB_NAME = os.environ["EVENT_HUB_NAME"]
 
 
 def on_event(partition_context, event):
-    dict_event = CloudEvent.from_json(event)
+    dict_event: CloudEvent = CloudEvent.from_json(event)
     print("data: {}\n".format(dict_event.data))
 
 
