@@ -11,10 +11,10 @@ from azure.core.messaging import CloudEvent
 from azure.core.exceptions import HttpResponseError
 from azure.eventgrid import EventGridClient
 
-EVENTGRID_KEY = os.environ.get("EVENTGRID_KEY")
-EVENTGRID_ENDPOINT = os.environ.get("EVENTGRID_ENDPOINT")
-TOPIC_NAME = os.environ.get("TOPIC_NAME")
-EVENT_SUBSCRIPTION_NAME = os.environ.get("EVENT_SUBSCRIPTION_NAME")
+EVENTGRID_KEY = os.environ["EVENTGRID_KEY"]
+EVENTGRID_ENDPOINT = os.environ["EVENTGRID_ENDPOINT"]
+TOPIC_NAME = os.environ["TOPIC_NAME"]
+EVENT_SUBSCRIPTION_NAME = os.environ["EVENT_SUBSCRIPTION_NAME"]
 
 
 # Create a client
