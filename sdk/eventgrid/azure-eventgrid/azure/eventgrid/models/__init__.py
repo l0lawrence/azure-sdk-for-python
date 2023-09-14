@@ -8,22 +8,519 @@
 
 from ._models import AcknowledgeOptions
 from ._models import AcknowledgeResult
+from ._models import AcsChatEventBaseProperties
+from ._models import AcsChatEventInThreadBaseProperties
+from ._models import AcsChatMessageDeletedEventData
+from ._models import AcsChatMessageDeletedInThreadEventData
+from ._models import AcsChatMessageEditedEventData
+from ._models import AcsChatMessageEditedInThreadEventData
+from ._models import AcsChatMessageEventBaseProperties
+from ._models import AcsChatMessageEventInThreadBaseProperties
+from ._models import AcsChatMessageReceivedEventData
+from ._models import AcsChatMessageReceivedInThreadEventData
+from ._models import AcsChatParticipantAddedToThreadEventData
+from ._models import AcsChatParticipantAddedToThreadWithUserEventData
+from ._models import AcsChatParticipantRemovedFromThreadEventData
+from ._models import AcsChatParticipantRemovedFromThreadWithUserEventData
+from ._models import AcsChatThreadCreatedEventData
+from ._models import AcsChatThreadCreatedWithUserEventData
+from ._models import AcsChatThreadDeletedEventData
+from ._models import AcsChatThreadEventBaseProperties
+from ._models import AcsChatThreadEventInThreadBaseProperties
+from ._models import AcsChatThreadParticipantProperties
+from ._models import AcsChatThreadPropertiesUpdatedEventData
+from ._models import AcsChatThreadPropertiesUpdatedPerUserEventData
+from ._models import AcsChatThreadWithUserDeletedEventData
+from ._models import AcsEmailDeliveryReportReceivedEventData
+from ._models import AcsEmailDeliveryReportStatusDetails
+from ._models import AcsEmailEngagementTrackingReportReceivedEventData
+from ._models import AcsIncomingCallCustomContext
+from ._models import AcsIncomingCallEventData
+from ._models import AcsRecordingChunkInfoProperties
+from ._models import AcsRecordingFileStatusUpdatedEventData
+from ._models import AcsRecordingStorageInfoProperties
+from ._models import AcsSmsDeliveryAttemptProperties
+from ._models import AcsSmsDeliveryReportReceivedEventData
+from ._models import AcsSmsEventBaseProperties
+from ._models import AcsSmsReceivedEventData
+from ._models import AcsUserDisconnectedEventData
+from ._models import ApiManagementApiCreatedEventData
+from ._models import ApiManagementApiDeletedEventData
+from ._models import ApiManagementApiReleaseCreatedEventData
+from ._models import ApiManagementApiReleaseDeletedEventData
+from ._models import ApiManagementApiReleaseUpdatedEventData
+from ._models import ApiManagementApiUpdatedEventData
+from ._models import ApiManagementGatewayApiAddedEventData
+from ._models import ApiManagementGatewayApiRemovedEventData
+from ._models import ApiManagementGatewayCertificateAuthorityCreatedEventData
+from ._models import ApiManagementGatewayCertificateAuthorityDeletedEventData
+from ._models import ApiManagementGatewayCertificateAuthorityUpdatedEventData
+from ._models import ApiManagementGatewayCreatedEventData
+from ._models import ApiManagementGatewayDeletedEventData
+from ._models import ApiManagementGatewayHostnameConfigurationCreatedEventData
+from ._models import ApiManagementGatewayHostnameConfigurationDeletedEventData
+from ._models import ApiManagementGatewayHostnameConfigurationUpdatedEventData
+from ._models import ApiManagementGatewayUpdatedEventData
+from ._models import ApiManagementProductCreatedEventData
+from ._models import ApiManagementProductDeletedEventData
+from ._models import ApiManagementProductUpdatedEventData
+from ._models import ApiManagementSubscriptionCreatedEventData
+from ._models import ApiManagementSubscriptionDeletedEventData
+from ._models import ApiManagementSubscriptionUpdatedEventData
+from ._models import ApiManagementUserCreatedEventData
+from ._models import ApiManagementUserDeletedEventData
+from ._models import ApiManagementUserUpdatedEventData
+from ._models import AppConfigurationKeyValueDeletedEventData
+from ._models import AppConfigurationKeyValueModifiedEventData
+from ._models import AppConfigurationSnapshotCreatedEventData
+from ._models import AppConfigurationSnapshotEventData
+from ._models import AppConfigurationSnapshotModifiedEventData
+from ._models import AppEventTypeDetail
+from ._models import AppServicePlanEventTypeDetail
+from ._models import BrokerProperties
+from ._models import CloudEvent
+from ._models import CommunicationIdentifierModel
+from ._models import CommunicationUserIdentifierModel
+from ._models import ContainerRegistryArtifactEventData
+from ._models import ContainerRegistryArtifactEventTarget
+from ._models import ContainerRegistryChartDeletedEventData
+from ._models import ContainerRegistryChartPushedEventData
+from ._models import ContainerRegistryEventActor
+from ._models import ContainerRegistryEventConnectedRegistry
+from ._models import ContainerRegistryEventData
+from ._models import ContainerRegistryEventRequest
+from ._models import ContainerRegistryEventSource
+from ._models import ContainerRegistryEventTarget
+from ._models import ContainerRegistryImageDeletedEventData
+from ._models import ContainerRegistryImagePushedEventData
+from ._models import ContainerServiceClusterSupportEndedEventData
+from ._models import ContainerServiceClusterSupportEndingEventData
+from ._models import ContainerServiceClusterSupportEventData
+from ._models import ContainerServiceNewKubernetesVersionAvailableEventData
+from ._models import ContainerServiceNodePoolRollingEventData
+from ._models import ContainerServiceNodePoolRollingFailedEventData
+from ._models import ContainerServiceNodePoolRollingStartedEventData
+from ._models import ContainerServiceNodePoolRollingSucceededEventData
+from ._models import DataBoxCopyCompletedEventData
+from ._models import DataBoxCopyStartedEventData
+from ._models import DataBoxOrderCompletedEventData
+from ._models import DeviceConnectionStateEventInfo
+from ._models import DeviceConnectionStateEventProperties
+from ._models import DeviceLifeCycleEventProperties
+from ._models import DeviceTelemetryEventProperties
+from ._models import DeviceTwinInfo
+from ._models import DeviceTwinMetadata
+from ._models import DeviceTwinProperties
+from ._models import EventGridMQTTClientCreatedOrUpdatedEventData
+from ._models import EventGridMQTTClientDeletedEventData
+from ._models import EventGridMQTTClientEventData
+from ._models import EventGridMQTTClientSessionConnectedEventData
+from ._models import EventGridMQTTClientSessionDisconnectedEventData
+from ._models import EventHubCaptureFileCreatedEventData
 from ._models import FailedLockToken
+from ._models import HealthcareDicomImageCreatedEventData
+from ._models import HealthcareDicomImageDeletedEventData
+from ._models import HealthcareDicomImageUpdatedEventData
+from ._models import HealthcareFhirResourceCreatedEventData
+from ._models import HealthcareFhirResourceDeletedEventData
+from ._models import HealthcareFhirResourceUpdatedEventData
+from ._models import IotHubDeviceConnectedEventData
+from ._models import IotHubDeviceCreatedEventData
+from ._models import IotHubDeviceDeletedEventData
+from ._models import IotHubDeviceDisconnectedEventData
+from ._models import IotHubDeviceTelemetryEventData
+from ._models import JsonProperties
+from ._models import KeyVaultCertificateExpiredEventData
+from ._models import KeyVaultCertificateNearExpiryEventData
+from ._models import KeyVaultCertificateNewVersionCreatedEventData
+from ._models import KeyVaultKeyExpiredEventData
+from ._models import KeyVaultKeyNearExpiryEventData
+from ._models import KeyVaultKeyNewVersionCreatedEventData
+from ._models import KeyVaultSecretExpiredEventData
+from ._models import KeyVaultSecretNearExpiryEventData
+from ._models import KeyVaultSecretNewVersionCreatedEventData
+from ._models import KeyVaultVaultAccessPolicyChangedEventData
+from ._models import MachineLearningServicesDatasetDriftDetectedEventData
+from ._models import MachineLearningServicesModelDeployedEventData
+from ._models import MachineLearningServicesModelRegisteredEventData
+from ._models import MachineLearningServicesRunCompletedEventData
+from ._models import MachineLearningServicesRunStatusChangedEventData
+from ._models import MapsGeofenceEnteredEventData
+from ._models import MapsGeofenceEventProperties
+from ._models import MapsGeofenceExitedEventData
+from ._models import MapsGeofenceGeometry
+from ._models import MapsGeofenceResultEventData
+from ._models import MediaJobCanceledEventData
+from ._models import MediaJobCancelingEventData
+from ._models import MediaJobError
+from ._models import MediaJobErrorDetail
+from ._models import MediaJobErroredEventData
+from ._models import MediaJobFinishedEventData
+from ._models import MediaJobOutput
+from ._models import MediaJobOutputAsset
+from ._models import MediaJobOutputCanceledEventData
+from ._models import MediaJobOutputCancelingEventData
+from ._models import MediaJobOutputErroredEventData
+from ._models import MediaJobOutputFinishedEventData
+from ._models import MediaJobOutputProcessingEventData
+from ._models import MediaJobOutputProgressEventData
+from ._models import MediaJobOutputScheduledEventData
+from ._models import MediaJobOutputStateChangeEventData
+from ._models import MediaJobProcessingEventData
+from ._models import MediaJobScheduledEventData
+from ._models import MediaJobStateChangeEventData
+from ._models import MediaLiveEventChannelArchiveHeartbeatEventData
+from ._models import MediaLiveEventConnectionRejectedEventData
+from ._models import MediaLiveEventEncoderConnectedEventData
+from ._models import MediaLiveEventEncoderDisconnectedEventData
+from ._models import MediaLiveEventIncomingDataChunkDroppedEventData
+from ._models import MediaLiveEventIncomingStreamReceivedEventData
+from ._models import MediaLiveEventIncomingStreamsOutOfSyncEventData
+from ._models import MediaLiveEventIncomingVideoStreamsOutOfSyncEventData
+from ._models import MediaLiveEventIngestHeartbeatEventData
+from ._models import MediaLiveEventTrackDiscontinuityDetectedEventData
+from ._models import MicrosoftTeamsUserIdentifierModel
+from ._models import PhoneNumberIdentifierModel
+from ._models import PolicyInsightsPolicyStateChangedEventData
+from ._models import PolicyInsightsPolicyStateCreatedEventData
+from ._models import PolicyInsightsPolicyStateDeletedEventData
+from ._models import PublishResult
+from ._models import ReceiveDetails
+from ._models import ReceiveResult
+from ._models import RedisExportRDBCompletedEventData
+from ._models import RedisImportRDBCompletedEventData
+from ._models import RedisPatchingCompletedEventData
+from ._models import RedisScalingCompletedEventData
 from ._models import RejectOptions
 from ._models import RejectResult
 from ._models import ReleaseOptions
 from ._models import ReleaseResult
+from ._models import ResourceActionCancelData
+from ._models import ResourceActionFailureData
+from ._models import ResourceActionSuccessData
+from ._models import ResourceAuthorization
+from ._models import ResourceDeleteCancelData
+from ._models import ResourceDeleteFailureData
+from ._models import ResourceDeleteSuccessData
+from ._models import ResourceHttpRequest
+from ._models import ResourceWriteCancelData
+from ._models import ResourceWriteFailureData
+from ._models import ResourceWriteSuccessData
+from ._models import ServiceBusActiveMessagesAvailablePeriodicNotificationsEventData
+from ._models import ServiceBusActiveMessagesAvailableWithNoListenersEventData
+from ._models import ServiceBusDeadletterMessagesAvailablePeriodicNotificationsEventData
+from ._models import ServiceBusDeadletterMessagesAvailableWithNoListenersEventData
+from ._models import SignalRServiceClientConnectionConnectedEventData
+from ._models import SignalRServiceClientConnectionDisconnectedEventData
+from ._models import StorageAsyncOperationInitiatedEventData
+from ._models import StorageBlobCreatedEventData
+from ._models import StorageBlobDeletedEventData
+from ._models import StorageBlobInventoryPolicyCompletedEventData
+from ._models import StorageBlobRenamedEventData
+from ._models import StorageBlobTierChangedEventData
+from ._models import StorageDirectoryCreatedEventData
+from ._models import StorageDirectoryDeletedEventData
+from ._models import StorageDirectoryRenamedEventData
+from ._models import StorageLifecyclePolicyActionSummaryDetail
+from ._models import StorageLifecyclePolicyCompletedEventData
+from ._models import StorageTaskCompletedEventData
+from ._models import StorageTaskQueuedEventData
+from ._models import SubscriptionDeletedEventData
+from ._models import SubscriptionValidationEventData
+from ._models import SubscriptionValidationResponse
+from ._models import ThumbPrintValue
+from ._models import WebAppServicePlanUpdatedEventData
+from ._models import WebAppUpdatedEventData
+from ._models import WebBackupOperationCompletedEventData
+from ._models import WebBackupOperationFailedEventData
+from ._models import WebBackupOperationStartedEventData
+from ._models import WebRestoreOperationCompletedEventData
+from ._models import WebRestoreOperationFailedEventData
+from ._models import WebRestoreOperationStartedEventData
+from ._models import WebSlotSwapCompletedEventData
+from ._models import WebSlotSwapFailedEventData
+from ._models import WebSlotSwapStartedEventData
+from ._models import WebSlotSwapWithPreviewCancelledEventData
+from ._models import WebSlotSwapWithPreviewStartedEventData
+
+from ._enums import AcsEmailDeliveryReportStatus
+from ._enums import AcsUserEngagement
+from ._enums import AppAction
+from ._enums import AppServicePlanAction
+from ._enums import AsyncStatus
+from ._enums import CommunicationCloudEnvironmentModel
+from ._enums import DataBoxStageName
+from ._enums import EventGridMQTTClientDisconnectionReason
+from ._enums import EventGridMQTTClientState
+from ._enums import HealthcareFhirResourceType
+from ._enums import MediaJobErrorCategory
+from ._enums import MediaJobErrorCode
+from ._enums import MediaJobRetry
+from ._enums import MediaJobState
+from ._enums import StampKind
+from ._enums import StorageTaskCompletedStatus
+from ._enums import recordingChannelType
+from ._enums import recordingContentType
+from ._enums import recordingFormatType
 from ._patch import __all__ as _patch_all
 from ._patch import *  # pylint: disable=unused-wildcard-import
 from ._patch import patch_sdk as _patch_sdk
 __all__ = [
     'AcknowledgeOptions',
     'AcknowledgeResult',
+    'AcsChatEventBaseProperties',
+    'AcsChatEventInThreadBaseProperties',
+    'AcsChatMessageDeletedEventData',
+    'AcsChatMessageDeletedInThreadEventData',
+    'AcsChatMessageEditedEventData',
+    'AcsChatMessageEditedInThreadEventData',
+    'AcsChatMessageEventBaseProperties',
+    'AcsChatMessageEventInThreadBaseProperties',
+    'AcsChatMessageReceivedEventData',
+    'AcsChatMessageReceivedInThreadEventData',
+    'AcsChatParticipantAddedToThreadEventData',
+    'AcsChatParticipantAddedToThreadWithUserEventData',
+    'AcsChatParticipantRemovedFromThreadEventData',
+    'AcsChatParticipantRemovedFromThreadWithUserEventData',
+    'AcsChatThreadCreatedEventData',
+    'AcsChatThreadCreatedWithUserEventData',
+    'AcsChatThreadDeletedEventData',
+    'AcsChatThreadEventBaseProperties',
+    'AcsChatThreadEventInThreadBaseProperties',
+    'AcsChatThreadParticipantProperties',
+    'AcsChatThreadPropertiesUpdatedEventData',
+    'AcsChatThreadPropertiesUpdatedPerUserEventData',
+    'AcsChatThreadWithUserDeletedEventData',
+    'AcsEmailDeliveryReportReceivedEventData',
+    'AcsEmailDeliveryReportStatusDetails',
+    'AcsEmailEngagementTrackingReportReceivedEventData',
+    'AcsIncomingCallCustomContext',
+    'AcsIncomingCallEventData',
+    'AcsRecordingChunkInfoProperties',
+    'AcsRecordingFileStatusUpdatedEventData',
+    'AcsRecordingStorageInfoProperties',
+    'AcsSmsDeliveryAttemptProperties',
+    'AcsSmsDeliveryReportReceivedEventData',
+    'AcsSmsEventBaseProperties',
+    'AcsSmsReceivedEventData',
+    'AcsUserDisconnectedEventData',
+    'ApiManagementApiCreatedEventData',
+    'ApiManagementApiDeletedEventData',
+    'ApiManagementApiReleaseCreatedEventData',
+    'ApiManagementApiReleaseDeletedEventData',
+    'ApiManagementApiReleaseUpdatedEventData',
+    'ApiManagementApiUpdatedEventData',
+    'ApiManagementGatewayApiAddedEventData',
+    'ApiManagementGatewayApiRemovedEventData',
+    'ApiManagementGatewayCertificateAuthorityCreatedEventData',
+    'ApiManagementGatewayCertificateAuthorityDeletedEventData',
+    'ApiManagementGatewayCertificateAuthorityUpdatedEventData',
+    'ApiManagementGatewayCreatedEventData',
+    'ApiManagementGatewayDeletedEventData',
+    'ApiManagementGatewayHostnameConfigurationCreatedEventData',
+    'ApiManagementGatewayHostnameConfigurationDeletedEventData',
+    'ApiManagementGatewayHostnameConfigurationUpdatedEventData',
+    'ApiManagementGatewayUpdatedEventData',
+    'ApiManagementProductCreatedEventData',
+    'ApiManagementProductDeletedEventData',
+    'ApiManagementProductUpdatedEventData',
+    'ApiManagementSubscriptionCreatedEventData',
+    'ApiManagementSubscriptionDeletedEventData',
+    'ApiManagementSubscriptionUpdatedEventData',
+    'ApiManagementUserCreatedEventData',
+    'ApiManagementUserDeletedEventData',
+    'ApiManagementUserUpdatedEventData',
+    'AppConfigurationKeyValueDeletedEventData',
+    'AppConfigurationKeyValueModifiedEventData',
+    'AppConfigurationSnapshotCreatedEventData',
+    'AppConfigurationSnapshotEventData',
+    'AppConfigurationSnapshotModifiedEventData',
+    'AppEventTypeDetail',
+    'AppServicePlanEventTypeDetail',
+    'BrokerProperties',
+    'CloudEvent',
+    'CommunicationIdentifierModel',
+    'CommunicationUserIdentifierModel',
+    'ContainerRegistryArtifactEventData',
+    'ContainerRegistryArtifactEventTarget',
+    'ContainerRegistryChartDeletedEventData',
+    'ContainerRegistryChartPushedEventData',
+    'ContainerRegistryEventActor',
+    'ContainerRegistryEventConnectedRegistry',
+    'ContainerRegistryEventData',
+    'ContainerRegistryEventRequest',
+    'ContainerRegistryEventSource',
+    'ContainerRegistryEventTarget',
+    'ContainerRegistryImageDeletedEventData',
+    'ContainerRegistryImagePushedEventData',
+    'ContainerServiceClusterSupportEndedEventData',
+    'ContainerServiceClusterSupportEndingEventData',
+    'ContainerServiceClusterSupportEventData',
+    'ContainerServiceNewKubernetesVersionAvailableEventData',
+    'ContainerServiceNodePoolRollingEventData',
+    'ContainerServiceNodePoolRollingFailedEventData',
+    'ContainerServiceNodePoolRollingStartedEventData',
+    'ContainerServiceNodePoolRollingSucceededEventData',
+    'DataBoxCopyCompletedEventData',
+    'DataBoxCopyStartedEventData',
+    'DataBoxOrderCompletedEventData',
+    'DeviceConnectionStateEventInfo',
+    'DeviceConnectionStateEventProperties',
+    'DeviceLifeCycleEventProperties',
+    'DeviceTelemetryEventProperties',
+    'DeviceTwinInfo',
+    'DeviceTwinMetadata',
+    'DeviceTwinProperties',
+    'EventGridMQTTClientCreatedOrUpdatedEventData',
+    'EventGridMQTTClientDeletedEventData',
+    'EventGridMQTTClientEventData',
+    'EventGridMQTTClientSessionConnectedEventData',
+    'EventGridMQTTClientSessionDisconnectedEventData',
+    'EventHubCaptureFileCreatedEventData',
     'FailedLockToken',
+    'HealthcareDicomImageCreatedEventData',
+    'HealthcareDicomImageDeletedEventData',
+    'HealthcareDicomImageUpdatedEventData',
+    'HealthcareFhirResourceCreatedEventData',
+    'HealthcareFhirResourceDeletedEventData',
+    'HealthcareFhirResourceUpdatedEventData',
+    'IotHubDeviceConnectedEventData',
+    'IotHubDeviceCreatedEventData',
+    'IotHubDeviceDeletedEventData',
+    'IotHubDeviceDisconnectedEventData',
+    'IotHubDeviceTelemetryEventData',
+    'JsonProperties',
+    'KeyVaultCertificateExpiredEventData',
+    'KeyVaultCertificateNearExpiryEventData',
+    'KeyVaultCertificateNewVersionCreatedEventData',
+    'KeyVaultKeyExpiredEventData',
+    'KeyVaultKeyNearExpiryEventData',
+    'KeyVaultKeyNewVersionCreatedEventData',
+    'KeyVaultSecretExpiredEventData',
+    'KeyVaultSecretNearExpiryEventData',
+    'KeyVaultSecretNewVersionCreatedEventData',
+    'KeyVaultVaultAccessPolicyChangedEventData',
+    'MachineLearningServicesDatasetDriftDetectedEventData',
+    'MachineLearningServicesModelDeployedEventData',
+    'MachineLearningServicesModelRegisteredEventData',
+    'MachineLearningServicesRunCompletedEventData',
+    'MachineLearningServicesRunStatusChangedEventData',
+    'MapsGeofenceEnteredEventData',
+    'MapsGeofenceEventProperties',
+    'MapsGeofenceExitedEventData',
+    'MapsGeofenceGeometry',
+    'MapsGeofenceResultEventData',
+    'MediaJobCanceledEventData',
+    'MediaJobCancelingEventData',
+    'MediaJobError',
+    'MediaJobErrorDetail',
+    'MediaJobErroredEventData',
+    'MediaJobFinishedEventData',
+    'MediaJobOutput',
+    'MediaJobOutputAsset',
+    'MediaJobOutputCanceledEventData',
+    'MediaJobOutputCancelingEventData',
+    'MediaJobOutputErroredEventData',
+    'MediaJobOutputFinishedEventData',
+    'MediaJobOutputProcessingEventData',
+    'MediaJobOutputProgressEventData',
+    'MediaJobOutputScheduledEventData',
+    'MediaJobOutputStateChangeEventData',
+    'MediaJobProcessingEventData',
+    'MediaJobScheduledEventData',
+    'MediaJobStateChangeEventData',
+    'MediaLiveEventChannelArchiveHeartbeatEventData',
+    'MediaLiveEventConnectionRejectedEventData',
+    'MediaLiveEventEncoderConnectedEventData',
+    'MediaLiveEventEncoderDisconnectedEventData',
+    'MediaLiveEventIncomingDataChunkDroppedEventData',
+    'MediaLiveEventIncomingStreamReceivedEventData',
+    'MediaLiveEventIncomingStreamsOutOfSyncEventData',
+    'MediaLiveEventIncomingVideoStreamsOutOfSyncEventData',
+    'MediaLiveEventIngestHeartbeatEventData',
+    'MediaLiveEventTrackDiscontinuityDetectedEventData',
+    'MicrosoftTeamsUserIdentifierModel',
+    'PhoneNumberIdentifierModel',
+    'PolicyInsightsPolicyStateChangedEventData',
+    'PolicyInsightsPolicyStateCreatedEventData',
+    'PolicyInsightsPolicyStateDeletedEventData',
+    'PublishResult',
+    'ReceiveDetails',
+    'ReceiveResult',
+    'RedisExportRDBCompletedEventData',
+    'RedisImportRDBCompletedEventData',
+    'RedisPatchingCompletedEventData',
+    'RedisScalingCompletedEventData',
     'RejectOptions',
     'RejectResult',
     'ReleaseOptions',
     'ReleaseResult',
+    'ResourceActionCancelData',
+    'ResourceActionFailureData',
+    'ResourceActionSuccessData',
+    'ResourceAuthorization',
+    'ResourceDeleteCancelData',
+    'ResourceDeleteFailureData',
+    'ResourceDeleteSuccessData',
+    'ResourceHttpRequest',
+    'ResourceWriteCancelData',
+    'ResourceWriteFailureData',
+    'ResourceWriteSuccessData',
+    'ServiceBusActiveMessagesAvailablePeriodicNotificationsEventData',
+    'ServiceBusActiveMessagesAvailableWithNoListenersEventData',
+    'ServiceBusDeadletterMessagesAvailablePeriodicNotificationsEventData',
+    'ServiceBusDeadletterMessagesAvailableWithNoListenersEventData',
+    'SignalRServiceClientConnectionConnectedEventData',
+    'SignalRServiceClientConnectionDisconnectedEventData',
+    'StorageAsyncOperationInitiatedEventData',
+    'StorageBlobCreatedEventData',
+    'StorageBlobDeletedEventData',
+    'StorageBlobInventoryPolicyCompletedEventData',
+    'StorageBlobRenamedEventData',
+    'StorageBlobTierChangedEventData',
+    'StorageDirectoryCreatedEventData',
+    'StorageDirectoryDeletedEventData',
+    'StorageDirectoryRenamedEventData',
+    'StorageLifecyclePolicyActionSummaryDetail',
+    'StorageLifecyclePolicyCompletedEventData',
+    'StorageTaskCompletedEventData',
+    'StorageTaskQueuedEventData',
+    'SubscriptionDeletedEventData',
+    'SubscriptionValidationEventData',
+    'SubscriptionValidationResponse',
+    'ThumbPrintValue',
+    'WebAppServicePlanUpdatedEventData',
+    'WebAppUpdatedEventData',
+    'WebBackupOperationCompletedEventData',
+    'WebBackupOperationFailedEventData',
+    'WebBackupOperationStartedEventData',
+    'WebRestoreOperationCompletedEventData',
+    'WebRestoreOperationFailedEventData',
+    'WebRestoreOperationStartedEventData',
+    'WebSlotSwapCompletedEventData',
+    'WebSlotSwapFailedEventData',
+    'WebSlotSwapStartedEventData',
+    'WebSlotSwapWithPreviewCancelledEventData',
+    'WebSlotSwapWithPreviewStartedEventData',
+    'AcsEmailDeliveryReportStatus',
+    'AcsUserEngagement',
+    'AppAction',
+    'AppServicePlanAction',
+    'AsyncStatus',
+    'CommunicationCloudEnvironmentModel',
+    'DataBoxStageName',
+    'EventGridMQTTClientDisconnectionReason',
+    'EventGridMQTTClientState',
+    'HealthcareFhirResourceType',
+    'MediaJobErrorCategory',
+    'MediaJobErrorCode',
+    'MediaJobRetry',
+    'MediaJobState',
+    'StampKind',
+    'StorageTaskCompletedStatus',
+    'recordingChannelType',
+    'recordingContentType',
+    'recordingFormatType',
 ]
 __all__.extend([p for p in _patch_all if p not in __all__])
 _patch_sdk()
