@@ -67,5 +67,9 @@ spec:
       command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE  && cat > $DEBUG_SHARE/output && python3 test_stress_queues.py --method queue_peek --duration 300000 --logging-enable  ']
       {{- end -}}
 
+      {{ if eq .Stress.testTarget "aqueuepeek" }}
+      command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE  && cat > $DEBUG_SHARE/output && python3 test_stress_queues_async.py --method queue_peek --duration 300000 --logging-enable  ']
+      {{- end -}}
+
       {{- include "stress-test-addons.container-env" . | nindent 6 }}
 {{- end -}}

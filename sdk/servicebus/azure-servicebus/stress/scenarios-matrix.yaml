@@ -28,3 +28,5 @@ matrix:
       testTarget: abatchw
     queuepeek:
       testTarget: queuepeek
+    aqueuepeek:
+      testTarget: aqueuepeek
