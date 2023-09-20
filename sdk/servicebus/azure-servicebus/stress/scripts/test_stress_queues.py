@@ -30,14 +30,13 @@ def test_stress_queue_send_and_receive(args):
     )
     stress_test = StressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         azure_monitor_metric=AzureMonitorMetric("test_stress_queue_send_and_receive"),
         logging_level=LOGGING_LEVEL,
     )
@@ -56,14 +55,13 @@ def test_stress_queue_slow_send_and_receive(args):
     )
     stress_test = StressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         send_delay=(args.duration / 3),
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_slow_send_and_receive"
@@ -89,6 +87,7 @@ def test_stress_queue_receive_and_delete(args):
             sb_client.get_queue_receiver(
                 SERVICEBUS_QUEUE_NAME,
                 receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+                max_wait_time=args.max_wait_time,
             )
         ],
         admin_client=sb_admin_client,
@@ -98,7 +97,6 @@ def test_stress_queue_receive_and_delete(args):
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_slow_send_and_receive"
         ),
@@ -119,14 +117,13 @@ def test_stress_queue_unsettled_messages(args):
     )
     stress_test = StressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         should_complete_messages=False,
         azure_monitor_metric=AzureMonitorMetric("test_stress_queue_unsettled_messages"),
         logging_level=LOGGING_LEVEL,
@@ -149,7 +146,7 @@ def test_stress_queue_receive_large_batch_size(args):
     stress_test = StressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
         receivers=[
-            sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, prefetch_count=50)
+            sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time, prefetch_count=50)
         ],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
@@ -157,7 +154,6 @@ def test_stress_queue_receive_large_batch_size(args):
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_receive_large_batch_size"
         ),
@@ -187,14 +183,13 @@ def test_stress_queue_pull_receive_timeout(args):
     )
     stress_test = ReceiverTimeoutStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_pull_receive_timeout"
         ),
@@ -223,14 +218,13 @@ def test_stress_queue_long_renew_send_and_receive(args):
     )
     stress_test = LongRenewStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         send_delay=300,
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_long_renew_send_and_receive"
@@ -271,7 +265,7 @@ def test_stress_queue_long_renew_session_send_and_receive(args):
     stress_test = LongSessionRenewStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
         receivers=[
-            sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, session_id=session_id)
+            sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time, session_id=session_id)
         ],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
@@ -279,7 +273,6 @@ def test_stress_queue_long_renew_session_send_and_receive(args):
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         send_delay=300,
         send_session_id=session_id,
         azure_monitor_metric=AzureMonitorMetric(
@@ -308,14 +301,13 @@ def test_stress_queue_peek_messages(args):
     )
     stress_test = Peekon_receiveStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=ReceiveType.none,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         receive_delay=30,
         azure_monitor_metric=AzureMonitorMetric("test_stress_queue_peek_messages"),
         logging_level=LOGGING_LEVEL,
@@ -350,13 +342,12 @@ def test_stress_queue_close_and_reopen(args):
     )
     stress_test = RestartHandlerStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
         message_size=args.message_size,
-        max_wait_time=args.max_wait_time,
         receive_type=RECEIVE_TYPE,
         receive_delay=30,
         send_delay=10,
@@ -409,13 +400,12 @@ def test_stress_queue_check_for_dropped_messages(args):
     )
     stress_test = DroppedMessageCheckerStressTestRunner(
         senders=[sb_client.get_queue_sender(SERVICEBUS_QUEUE_NAME)],
-        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME)],
+        receivers=[sb_client.get_queue_receiver(SERVICEBUS_QUEUE_NAME, max_wait_time=args.max_wait_time)],
         admin_client=sb_admin_client,
         receive_type=RECEIVE_TYPE,
         duration=args.duration,
         send_batch_size=args.send_batch_size,
         max_message_count=args.max_message_count,
-        max_wait_time=args.max_wait_time,
         message_size=args.message_size,
         azure_monitor_metric=AzureMonitorMetric(
             "test_stress_queue_check_for_dropped_messages"
