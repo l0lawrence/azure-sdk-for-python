@@ -325,7 +325,6 @@ if __name__ == '__main__':
     parser.add_argument("--method", type=str)
     parser.add_argument("--duration", type=int, default=259200)
     parser.add_argument("--logging-enable", action="store_true")
-    parser.add_argument("--print-console", action="store_true")
 
     parser.add_argument("--send-batch-size", type=int, default=100)
     parser.add_argument("--message-size", type=int, default=100)
