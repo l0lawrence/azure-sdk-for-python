@@ -4,3 +4,4 @@ stress.exe
 Dockerfile
 *.py
 *.txt
+*.md
