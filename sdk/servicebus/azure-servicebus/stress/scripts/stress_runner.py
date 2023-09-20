@@ -1,8 +1,8 @@
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
-#--------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 import os
 import asyncio
@@ -20,9 +20,12 @@ from process_monitor import ProcessMonitor
 
 ENV_FILE = os.environ.get("ENV_FILE")
 
+
 def sync_send(client, args):
     azure_monitor_metric = AzureMonitorMetric("Sync ServiceBus Sender")
-    process_monitor = ProcessMonitor("monitor_sender_stress_sync.log", "sender_stress_sync")
+    process_monitor = ProcessMonitor(
+        "monitor_sender_stress_sync.log", "sender_stress_sync"
+    )
     stress_test = StressTestRunner(
         senders=[client.get_queue_sender(QUEUE_NAME)],
         receivers=[],
@@ -31,14 +34,16 @@ def sync_send(client, args):
         duration=timedelta(seconds=args.duration),
         azure_monitor_metric=azure_monitor_metric,
         process_monitor=process_monitor,
-        fail_on_exception=False
+        fail_on_exception=False,
     )
     stress_test.run()
 
 
 async def async_send(client, args):
     azure_monitor_metric = AzureMonitorMetric("Async ServiceBus Sender")
-    process_monitor = ProcessMonitor("monitor_sender_stress_async.log", "sender_stress_async")
+    process_monitor = ProcessMonitor(
+        "monitor_sender_stress_async.log", "sender_stress_async"
+    )
     stress_test = StressTestRunnerAsync(
         senders=[client.get_queue_sender(QUEUE_NAME)],
         receivers=[],
@@ -47,7 +52,7 @@ async def async_send(client, args):
         duration=timedelta(seconds=args.duration),
         azure_monitor_metric=azure_monitor_metric,
         process_monitor=process_monitor,
-        fail_on_exception=False
+        fail_on_exception=False,
     )
     await stress_test.run_async()
 
@@ -57,7 +62,9 @@ def sync_receive(client, args):
     config.read("./stress_runner.cfg")
 
     azure_monitor_metric = AzureMonitorMetric("Sync ServiceBus Receiver")
-    process_monitor = ProcessMonitor("monitor_receiver_stress_sync.log", "receiver_stress_sync")
+    process_monitor = ProcessMonitor(
+        "monitor_receiver_stress_sync.log", "receiver_stress_sync"
+    )
     stress_test = StressTestRunner(
         senders=[],
         receivers=[client.get_queue_receiver(QUEUE_NAME)],
@@ -67,14 +74,16 @@ def sync_receive(client, args):
         duration=timedelta(seconds=args.duration),
         azure_monitor_metric=azure_monitor_metric,
         process_monitor=process_monitor,
-        fail_on_exception=False
+        fail_on_exception=False,
     )
     stress_test.run()
 
 
 async def async_receive(client, args):
     azure_monitor_metric = AzureMonitorMetric("Async ServiceBus Receiver")
-    process_monitor = ProcessMonitor("monitor_receiver_stress_async.log", "receiver_stress_async")
+    process_monitor = ProcessMonitor(
+        "monitor_receiver_stress_async.log", "receiver_stress_async"
+    )
     stress_test = StressTestRunnerAsync(
         senders=[],
         receivers=[client.get_queue_receiver(QUEUE_NAME)],
@@ -84,17 +93,24 @@ async def async_receive(client, args):
         duration=timedelta(seconds=args.duration),
         azure_monitor_metric=azure_monitor_metric,
         process_monitor=process_monitor,
-        fail_on_exception=False
+        fail_on_exception=False,
     )
     await stress_test.run_async()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     load_dotenv(dotenv_path=ENV_FILE, override=True)
     parser = ArgumentParser()
-    parser.add_argument("--conn_str", help="ServiceBus connection string",
-        default=os.environ.get('SERVICE_BUS_CONNECTION_STR'))
-    parser.add_argument("--queue_name", help="The queue name.", default=os.environ.get("SERVICE_BUS_QUEUE_NAME"))
+    parser.add_argument(
+        "--conn_str",
+        help="ServiceBus connection string",
+        default=os.environ.get("SERVICE_BUS_CONNECTION_STR"),
+    )
+    parser.add_argument(
+        "--queue_name",
+        help="The queue name.",
+        default=os.environ.get("SERVICE_BUS_QUEUE_NAME"),
+    )
     parser.add_argument("--method", type=str)
     parser.add_argument("--duration", type=int, default=259200)
     parser.add_argument("--logging_enable", action="store_true")
@@ -110,20 +126,22 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     CONNECTION_STR = args.conn_str
-    QUEUE_NAME= args.queue_name
+    QUEUE_NAME = args.queue_name
 
     if args.method.startswith("sync"):
         sb_client = ServiceBusClient.from_connection_string(conn_str=CONNECTION_STR)
     else:
-        sb_client = AsyncServiceBusClient.from_connection_string(conn_str=CONNECTION_STR)
+        sb_client = AsyncServiceBusClient.from_connection_string(
+            conn_str=CONNECTION_STR
+        )
 
-    if args.method == 'sync_send':
+    if args.method == "sync_send":
         sync_send(sb_client, args)
-    elif args.method == 'async_send':
+    elif args.method == "async_send":
         loop.run_until_complete(async_send(sb_client, args))
-    elif args.method == 'sync_receive':
+    elif args.method == "sync_receive":
         sync_receive(sb_client, args)
-    elif args.method == 'async_receive':
+    elif args.method == "async_receive":
         loop.run_until_complete(async_receive(sb_client, args))
     else:
         raise RuntimeError("Must set a method to run stress test.")
