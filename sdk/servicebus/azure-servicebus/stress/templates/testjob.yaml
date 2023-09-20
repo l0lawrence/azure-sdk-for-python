@@ -63,12 +63,8 @@ spec:
       command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE  && cat > $DEBUG_SHARE/output && python3 test_stress_queues.py --method send_receive --send-batch-size=50 --max-message-count=50 --duration 300000 --logging-enable  ']
       {{- end -}}
 
-      {{ if eq .Stress.testTarget "amemray" }}
-      command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE && memray run --output $DEBUG_SHARE/sb_async_memray_output.bin test_stress_queues_async.py --method send_receive --duration 300000 --logging-enable']
-      {{- end -}}
-
-      {{ if eq .Stress.testTarget "memray" }}
-      command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE && memray run --output $DEBUG_SHARE/sb_memray_output.bin test_stress_queues.py --method send_receive --duration 300000 --logging-enable']
+      {{ if eq .Stress.testTarget "queuepeek" }}
+      command: ['bash', '-c', 'mkdir -p $DEBUG_SHARE  && cat > $DEBUG_SHARE/output && python3 test_stress_queues.py --method queue_peek --duration 300000 --logging-enable  ']
       {{- end -}}
 
       {{- include "stress-test-addons.container-env" . | nindent 6 }}

@@ -40,6 +40,9 @@ Summary of ServiceBus stress tests --
     - Send/Receive with MemRay
 - **amemray**:
     - Async Send/Receive with MemRay
+    ```azurepowershell
+    mkdir -p $DEBUG_SHARE && memray run --output $DEBUG_SHARE/sb_memray_output.bin test_stress_queues.py --method send_receive --duration 300000 --logging-enable
+    ``````
 
 ### Customizable Arguments
 

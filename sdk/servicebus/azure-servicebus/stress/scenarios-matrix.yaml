@@ -26,7 +26,5 @@ matrix:
       testTarget: batchw
     abatchw:
       testTarget: abatchw
-    memray:
-      testTarget: memray
-    amemray:
-      testTarget: amemray
+    queuepeek:
+      testTarget: queuepeek
