@@ -453,9 +453,7 @@ class StressTestRunnerAsync(StressTestRunner):
                                     message, receiver, end_time
                                 )
                         elif self.receive_type == ReceiveType.push:
-                            receiver.max_wait_time = self.max_wait_time
-                            batch = receiver
-                            async for message in batch:
+                            async for message in receiver:
                                 if end_time <= datetime.utcnow():
                                     break
                                 await self._receive_handle_message(
@@ -498,10 +496,7 @@ class StressTestRunnerAsync(StressTestRunner):
         with self.process_monitor:
             # await asyncio.gather(*send_tasks, *receive_tasks)
             for task in asyncio.as_completed(send_tasks + receive_tasks):
-                try:
-                    await task
-                except Exception as e:
-                    print(e)
+                await task
             result = StressTestResults()
             if self.senders:
                 result.state_by_sender = {

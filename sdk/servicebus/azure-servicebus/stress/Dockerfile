@@ -2,7 +2,7 @@
 # public OSS users should simply leave this argument blank or ignore its presence entirely
 FROM mcr.microsoft.com/mirror/docker/library/python:3.8-slim
 # Install if running off git branch
-# RUN apt-get -y update && apt-get -y install git
+RUN apt-get -y update && apt-get -y install git
 
 WORKDIR /app
 

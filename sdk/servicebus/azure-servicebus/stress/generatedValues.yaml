@@ -1,0 +1,26 @@
+scenarios:
+- testTarget: aqueue
+  image: Dockerfile
+  Scenario: Dockerfile-aqueue
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+- testTarget: aqueuepull
+  image: Dockerfile
+  Scenario: Dockerfile-aqueuepull
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+- testTarget: abatch
+  image: Dockerfile
+  Scenario: Dockerfile-abatch
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+- testTarget: aqueuew
+  image: Dockerfile
+  Scenario: Dockerfile-aqueuew
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+- testTarget: aqueuepullw
+  image: Dockerfile
+  Scenario: Dockerfile-aqueuepullw
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+- testTarget: abatchw
+  image: Dockerfile
+  Scenario: Dockerfile-abatchw
+  imageTag: stresspgs7b6dif73rup6.azurecr.io/llaw-type-error/py-sb-stress-test/dockerfile:llawrence
+

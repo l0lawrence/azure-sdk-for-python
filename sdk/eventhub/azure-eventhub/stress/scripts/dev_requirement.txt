@@ -1,5 +1,5 @@
 psutil
-azure-eventhub
+git+https://github.com/kashifkhan/azure-sdk-for-python.git@fix_ws_none_error#subdirectory=sdk/eventhub/azure-eventhub&egg=azure-eventhub
 azure-eventhub-checkpointstoreblob
 azure-eventhub-checkpointstoreblob-aio
 azure-servicebus
