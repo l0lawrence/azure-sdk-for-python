@@ -315,6 +315,7 @@ class AMQPClientAsync(AMQPClientSync):
         :return: Whether the authentication handshake is complete.
         :rtype: bool
         """
+        _logger.error("CBS AUTH is %r.", self._cbs_authenticator)
         if self._cbs_authenticator and not await self._cbs_authenticator.handle_token():
             await self._connection.listen(wait=self._socket_timeout)
             return False
