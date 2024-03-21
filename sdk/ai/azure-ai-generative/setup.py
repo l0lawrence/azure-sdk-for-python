@@ -50,6 +50,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
     ],
     zip_safe=False,
@@ -73,16 +74,16 @@ setup(
     python_requires="<4.0,>=3.8",
     install_requires=[
         # NOTE: To avoid breaking changes in a major version bump, all dependencies should pin an upper bound if possible.
-        "azure-ai-resources!=0.0.0b0",
-        "azureml-telemetry~=1.0,>=1.51.0",
-        "mlflow-skinny<3",
+        "azure-ai-resources>=1.0.0b7",
+        "mlflow-skinny<3,>=1.27.0",
         "opencensus-ext-azure~=1.0",
-        "opencensus-ext-logging",
+        "opencensus-ext-logging<=0.1.1",
     ],
     extras_require={
         "evaluate": [
-            "azureml-metrics[generative-ai]",
-            "promptflow",
+            "azureml-metrics[generative-ai]>=0.0.33", # generative-ai extra doesn't exist before this version
+            "azureml-mlflow",
+            "promptflow[azure]",
             "promptflow-tools",
         ],
         "faiss": [
@@ -97,7 +98,7 @@ setup(
             "azureml-fsspec>=1",
             "azureml-mlflow",
             "fsspec>=2023.3",
-            "openai>=0.27.8,<1",
+            "openai>=0.27.8",
             "tiktoken>=0.3,<1",
             "mmh3",
             "requests",
@@ -113,11 +114,10 @@ setup(
         ],
         "promptflow": [
             "promptflow[azure]",
-            "promptflow-tools",
-            "promptflow-vectordb"
+            "promptflow-tools"
         ],
         "qa_generation": [
-            "openai>=0.27.8,<1"
+            "openai>=0.27.8"
         ],
         "simulator": [
             "aiohttp>=3.8.5",
@@ -135,6 +135,6 @@ setup(
     },
     project_urls={
         "Bug Reports": "https://github.com/Azure/azure-sdk-for-python/issues",
-        "Source": "https://github.com/Azure/azure-sdk-python",
+        "Source": "https://github.com/Azure/azure-sdk-for-python",
     },
 )

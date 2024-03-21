@@ -38,6 +38,15 @@ class MetricsQueryClient(object):  # pylint: disable=client-accepts-api-version-
             :language: python
             :dedent: 4
             :caption: Creating the MetricsQueryClient with a TokenCredential.
+
+    .. admonition:: Example:
+
+        .. literalinclude:: ../samples/sample_authentication.py
+            :start-after: [START create_metrics_query_client_sovereign_cloud]
+            :end-before: [END create_metrics_query_client_sovereign_cloud]
+            :language: python
+            :dedent: 4
+            :caption: Creating the MetricsQueryClient for use with a sovereign cloud (i.e. non-public cloud).
     """
 
     def __init__(self, credential: TokenCredential, **kwargs: Any) -> None:
@@ -137,7 +146,6 @@ class MetricsQueryClient(object):  # pylint: disable=client-accepts-api-version-
             orderby=order_by,
             filter=filter,
             metricnamespace=metric_namespace,
-            connection_verify=False,
             **kwargs
         )
         return MetricsQueryResult._from_generated(generated)  # pylint: disable=protected-access

@@ -1,6 +1,18 @@
 # Release History
+## 1.1.0b1 (Unreleased)
 
-## 1.0.0 (Unreleased)
+This is the beta release of Azure Communication Job Router Python SDK. For more information, please see the [README][read_me].
+
+This is a Public Preview version, so breaking changes are possible in subsequent releases as we improve the product. To provide feedback, please submit an issue in our [Azure SDK for Python GitHub repo][issues].
+
+### Features Added
+- `JobRouterClient`
+  - `upsert_worker`
+    - keyword argument `max_concurrent_offers: Optional[int]` added.
+- `RouterWorker`
+  - Add `max_concurrent_offers`
+
+## 1.0.0 (2023-11-01)
 
 ### Features Added
 - `JobRouterAdministrationClient`
@@ -55,6 +67,27 @@
   - Removed property `assignment_id`
 - `CompleteJobOptions`
   - Removed property `assignment_id`
+- `JobMatchingMode`
+  - Property `kind` - Changed from `str` to `JobMatchingModeKind`
+  - Affected derived classes: `QueueAndMatchMode`, `ScheduleAndSuspendMode`, `SuspendMode`
+- `RouterRule`
+  - Property `kind` - Changed from `str` to `RouterRuleKind`
+  - Affected derived classes: `DirectMapRouterRule`, `ExpressionRouterRule`, `FunctionRouterRule`, `StaticRouterRule`, `WebhookRouterRule`
+- `DistributionMode`
+  - Property `kind` - Changed from `str` to `DistributionModeKind`
+  - Affected derived classes: `RoundRobinMode`, `LongestIdleMode`, `BestWorkerMode`
+- `ExceptionTrigger`
+  - Property `kind` - Changed from `str` to `ExceptionTriggerKind`
+  - Affected derived classes: `QueueLengthExceptionTrigger`, `WaitTimeExceptionTrigger`
+- `ExceptionAction`
+  - Property `kind` - Changed from `str` to `ExceptionActionKind`
+  - Affected derived classes: `CancelExceptionAction`, `ManualReclassifyExceptionAction`, `ReclassifyExceptionAction`
+- `QueueSelectorAttachment`
+  - Property `kind` - Changed from `str` to `QueueSelectorAttachmentKind`
+  - Affected derived classes: `ConditionalQueueSelectorAttachment`, `PassThroughQueueSelectorAttachment`, `RuleEngineQueueSelectorAttachment`, `StaticQueueSelectorAttachment`, `WeightedAllocationQueueSelectorAttachment`
+- `WorkerSelectorAttachment`
+  - Property `kind` - Changed from `str` to `WorkerSelectorAttachmentKind`
+  - Affected derived classes: `ConditionalWorkerSelectorAttachment`, `PassThroughWorkerSelectorAttachment`, `RuleEngineWorkerSelectorAttachment`, `StaticWorkerSelectorAttachment`, `WeightedAllocationWorkerSelectorAttachment`
 
 #### Renames
 - `ChannelConfiguration` -> `RouterChannel`
@@ -68,8 +101,6 @@
 - `RouterWorkerItem`
 - `RouterJobItem`
 - `RouterQueueAssignment`
-
-### Bugs Fixed
 
 ### Other Changes
 - `ClassificationPolicy`

@@ -4,6 +4,7 @@
 # license information.
 # -------------------------------------------------------------------------
 from typing import cast
+from unittest.mock import AsyncMock, PropertyMock, Mock
 
 from corehttp.rest import HttpRequest
 from corehttp.runtime import AsyncPipelineClient
@@ -46,6 +47,39 @@ async def test_sans_io_exception():
     req = HttpRequest("GET", "/")
     with pytest.raises(ValueError):
         await pipeline.run(req)
+
+
+def test_invalid_policy_error():
+    # non-HTTPPolicy/non-SansIOHTTPPolicy should raise an error
+    class FooPolicy:
+        pass
+
+    # sync send method should raise an error
+    class SyncSendPolicy:
+        def send(self, request):
+            pass
+
+    # only on_request should raise an error
+    class OnlyOnRequestPolicy:
+        def on_request(self, request):
+            pass
+
+    # only on_response should raise an error
+    class OnlyOnResponsePolicy:
+        def on_response(self, request, response):
+            pass
+
+    with pytest.raises(AttributeError):
+        pipeline = AsyncPipeline(transport=Mock(), policies=[FooPolicy()])
+
+    with pytest.raises(AttributeError):
+        pipeline = AsyncPipeline(transport=Mock(), policies=[SyncSendPolicy()])
+
+    with pytest.raises(AttributeError):
+        pipeline = AsyncPipeline(transport=Mock(), policies=[OnlyOnRequestPolicy()])
+
+    with pytest.raises(AttributeError):
+        pipeline = AsyncPipeline(transport=Mock(), policies=[OnlyOnResponsePolicy()])
 
 
 @pytest.mark.asyncio
@@ -94,7 +128,7 @@ async def test_basic_aiohttp_separate_session(port):
 @pytest.mark.asyncio
 async def test_retry_without_http_response():
     class NaughtyPolicy(AsyncHTTPPolicy):
-        def send(*args):
+        async def send(*args):
             raise BaseError("boo")
 
     policies = [AsyncRetryPolicy(), NaughtyPolicy()]
@@ -106,11 +140,11 @@ async def test_retry_without_http_response():
 @pytest.mark.asyncio
 async def test_add_custom_policy():
     class BooPolicy(AsyncHTTPPolicy):
-        def send(*args):
+        async def send(*args):
             raise BaseError("boo")
 
     class FooPolicy(AsyncHTTPPolicy):
-        def send(*args):
+        async def send(*args):
             raise BaseError("boo")
 
     retry_policy = AsyncRetryPolicy()
@@ -232,3 +266,31 @@ async def test_basic_httpx_separate_session(port):
     await transport.close()
     assert transport.client
     await transport.client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_aiohttp_default_ssl_context():
+    class MockAiohttpSession:
+        async def __aenter__(self):
+            pass
+
+        async def __aexit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+        async def close(self):
+            pass
+
+        async def open(self):
+            pass
+
+        async def request(self, method: str, url: str, **kwargs):
+            assert "ssl" not in kwargs
+            mock_response = AsyncMock(spec=aiohttp.ClientResponse)
+            type(mock_response).status = PropertyMock(return_value=200)
+            return mock_response
+
+    transport = AioHttpTransport(session=MockAiohttpSession(), session_owner=False)
+    pipeline = AsyncPipeline(transport=transport)
+
+    req = HttpRequest("GET", "https://bing.com")
+    await pipeline.run(req)

@@ -1,13 +1,7 @@
 import functools
 from devtools_testutils import PowerShellPreparer, EnvironmentVariableLoader
 
-from azure.mgmt.eventgrid.models import (
-    Topic,
-    InputSchema,
-    JsonInputSchemaMapping,
-    JsonField,
-    JsonFieldWithDefault,
-)
+from azure.mgmt.eventgrid.models import Topic, InputSchema, JsonInputSchemaMapping, JsonField, JsonFieldWithDefault
 
 EVENTGRID_TOPIC_PARAM = "eventgrid_topic"
 EVENTGRID_TOPIC_LOCATION = "eastus"
