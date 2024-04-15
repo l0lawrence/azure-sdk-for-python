@@ -4,6 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-many-lines
+# pylint: disable=docstring-keyword-should-match-keyword-only, docstring-missing-rtype, docstring-missing-return
 import functools
 from typing import Any, Dict, Optional, Union, TYPE_CHECKING
 from urllib.parse import urlparse, quote, unquote

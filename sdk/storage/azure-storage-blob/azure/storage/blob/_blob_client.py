@@ -4,7 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-many-lines
-
+# pylint: disable=docstring-keyword-should-match-keyword-only
 from functools import partial
 from io import BytesIO
 from typing import (

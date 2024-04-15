@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-
+# pylint: disable=docstring-keyword-should-match-keyword-only
 from datetime import date
 
 from .parser import _str, _to_utc_datetime

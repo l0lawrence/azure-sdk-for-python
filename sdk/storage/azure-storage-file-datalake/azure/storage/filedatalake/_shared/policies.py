@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-
+# pylint: disable=docstring-keyword-should-match-keyword-only
 import base64
 import hashlib
 import logging
@@ -12,7 +12,7 @@ import re
 import uuid
 from io import SEEK_SET, UnsupportedOperation
 from time import time
-from typing import Any, Dict, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, Optional, TYPE_CHECKING
 from urllib.parse import (
         parse_qsl,
         urlencode,

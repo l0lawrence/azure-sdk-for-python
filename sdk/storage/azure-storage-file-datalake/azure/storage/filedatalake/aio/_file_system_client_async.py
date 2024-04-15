@@ -5,6 +5,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=invalid-overridden-method
+# pylint: disable=docstring-keyword-should-match-keyword-only
 import functools
 from typing import (  # pylint: disable=unused-import
     Union, Optional, Any, Dict, List, Tuple,

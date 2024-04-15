@@ -4,7 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-many-lines, invalid-overridden-method
-
+# pylint: disable=docstring-keyword-should-match-keyword-only
 import warnings
 from functools import partial
 from typing import (  # pylint: disable=unused-import

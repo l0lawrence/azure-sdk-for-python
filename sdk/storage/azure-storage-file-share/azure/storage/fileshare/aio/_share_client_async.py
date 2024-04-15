@@ -4,6 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=invalid-overridden-method
+# pylint: disable=docstring-keyword-should-match-keyword-only
 import warnings
 import sys
 from typing import ( # pylint: disable=unused-import

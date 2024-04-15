@@ -4,6 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-many-lines
+# pylint: disable=docstring-keyword-should-match-keyword-only, docstring-missing-type
 from typing import (
     Any, Dict, Optional, Union,
     TYPE_CHECKING
