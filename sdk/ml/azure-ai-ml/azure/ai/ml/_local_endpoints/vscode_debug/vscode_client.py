@@ -1,8 +1,7 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-# pylint: disable=missing-client-constructor-parameter-credential,missing-client-constructor-parameter-kwargs
-# pylint: disable=client-accepts-api-version-keyword
+,missing-client-constructor-parameter-kwargs# pylint: disable=client-accepts-api-version-keyword
 import binascii
 import re
 

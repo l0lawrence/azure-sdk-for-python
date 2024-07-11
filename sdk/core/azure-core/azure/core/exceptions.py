@@ -97,8 +97,7 @@ def raise_with_traceback(exception: Callable, *args: Any, message: str = "", **k
     exc_msg = "{}, {}: {}".format(message, exc_type.__name__, exc_value)
     error = exception(exc_msg, *args, **kwargs)
     try:
-        raise error.with_traceback(exc_traceback)  # pylint: disable=raise-missing-from
-    except AttributeError:  # Python 2
+raise error.with_traceback(exc_traceback)    except AttributeError:  # Python 2
         error.__traceback__ = exc_traceback
         raise error  # pylint: disable=raise-missing-from
 

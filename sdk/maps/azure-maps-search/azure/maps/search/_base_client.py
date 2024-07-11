@@ -3,7 +3,6 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import
 from typing import Union, Any
 from azure.core.pipeline.policies import AzureKeyCredentialPolicy
 from azure.core.credentials import AzureKeyCredential, TokenCredential

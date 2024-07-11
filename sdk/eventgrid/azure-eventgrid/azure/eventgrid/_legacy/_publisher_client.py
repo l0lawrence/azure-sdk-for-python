@@ -48,8 +48,7 @@ from ._constants import DEFAULT_API_VERSION
 from ._version import VERSION
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials import (
+,ungrouped-imports    from azure.core.credentials import (
         AzureKeyCredential,
         AzureSasCredential,
         TokenCredential,

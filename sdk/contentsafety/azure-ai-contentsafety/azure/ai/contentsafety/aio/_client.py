@@ -19,8 +19,7 @@ from ._configuration import BlocklistClientConfiguration, ContentSafetyClientCon
 from ._operations import BlocklistClientOperationsMixin, ContentSafetyClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class ContentSafetyClient(ContentSafetyClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

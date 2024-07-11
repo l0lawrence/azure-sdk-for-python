@@ -24,8 +24,7 @@ from .._models import AttestationSigner, AttestationToken, AttestationResult, Tp
 from .._common import merge_validation_args
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-
+,ungrouped-imports
     from azure.core.credentials_async import AsyncTokenCredential
 
 

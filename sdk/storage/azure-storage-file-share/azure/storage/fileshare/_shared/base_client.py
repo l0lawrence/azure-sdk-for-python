@@ -64,8 +64,7 @@ _SERVICE_PARAMS = {
 }
 
 
-class StorageAccountHostsMixin(object):  # pylint: disable=too-many-instance-attributes
-    _client: Any
+class StorageAccountHostsMixin(object):    _client: Any
     def __init__(
         self,
         parsed_url: Any,
@@ -383,8 +382,7 @@ def parse_connection_str(
     conn_str: str,
     credential: Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, TokenCredential]], # pylint: disable=line-too-long
     service: str
-) -> Tuple[str, Optional[str], Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, TokenCredential]]]: # pylint: disable=line-too-long
-    conn_str = conn_str.rstrip(";")
+) -> Tuple[str, Optional[str], Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, TokenCredential]]]:    conn_str = conn_str.rstrip(";")
     conn_settings_list = [s.split("=", 1) for s in conn_str.split(";")]
     if any(len(tup) != 2 for tup in conn_settings_list):
         raise ValueError("Connection string is either blank or malformed.")

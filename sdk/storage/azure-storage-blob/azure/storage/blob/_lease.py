@@ -7,8 +7,7 @@
 
 import uuid
 
-from typing import (  # pylint: disable=unused-import
-    Union, Optional, Any, TypeVar, TYPE_CHECKING
+from typing import (    Union, Optional, Any, TypeVar, TYPE_CHECKING
 )
 
 from azure.core.exceptions import HttpResponseError
@@ -57,8 +56,7 @@ class BlobLeaseClient(object):  # pylint: disable=client-accepts-api-version-key
         if hasattr(client, 'blob_name'):
             self._client = client._client.blob  # type: ignore # pylint: disable=protected-access
         elif hasattr(client, 'container_name'):
-            self._client = client._client.container  # type: ignore # pylint: disable=protected-access
-        else:
+self._client = client._client.container  # type: ignore        else:
             raise TypeError("Lease must use either BlobClient or ContainerClient.")
 
     def __enter__(self):

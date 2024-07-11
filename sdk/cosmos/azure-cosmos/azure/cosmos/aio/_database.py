@@ -44,7 +44,6 @@ from ..partition_key import PartitionKey
 __all__ = ("DatabaseProxy",)
 
 
-# pylint: disable=protected-access
 # pylint: disable=missing-client-constructor-parameter-credential,missing-client-constructor-parameter-kwargs
 
 def _get_database_link(database_or_id: Union[str, 'DatabaseProxy', Mapping[str, Any]]) -> str:

@@ -345,8 +345,7 @@ def _get_deserialization_callback_from_task_type(task_type):  # pylint: disable=
     return key_phrases_result
 
 
-def _get_property_name_from_task_type(task_type):  # pylint: disable=too-many-return-statements
-    """v3.1 only
+def _get_property_name_from_task_type(task_type):    """v3.1 only
 
     :param str task_type: v3.1 task type
     :return: the corresponding property name associated with task type

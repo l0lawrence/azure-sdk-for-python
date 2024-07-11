@@ -103,8 +103,7 @@ class MLIndex:
                         # Need to get underlying fs path
                         self.base_uri = mlindex_file.fs._path.split("/MLIndex")[0]
                     else:
-                        self.base_uri = mlindex_file.path.split("/MLIndex")[0]  # pylint: disable=no-member
-
+self.base_uri = mlindex_file.path.split("/MLIndex")[0]
                     with mlindex_file as f:
                         mlindex_config = yaml.safe_load(f)
                 except Exception as e:

@@ -130,8 +130,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
     get_client_access_token.metadata = {"url": "/api/hubs/{hub}/:generateToken"}  # type: ignore
 
     @overload
-    def send_to_all(  # pylint: disable=inconsistent-return-statements
-        self, message: Union[str, JSON], *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = "application/json", **kwargs: Any
+def send_to_all(        self, message: Union[str, JSON], *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = "application/json", **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
 

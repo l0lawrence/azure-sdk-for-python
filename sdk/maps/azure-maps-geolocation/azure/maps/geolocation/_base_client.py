@@ -40,8 +40,7 @@ class MapsGeolocationClientBase:
         self._geolocation_client = self._maps_client.geolocation
 
     def __enter__(self):
-        self._maps_client.__enter__()  # pylint:disable=no-member
-        return self
+self._maps_client.__enter__()        return self
 
     def __exit__(self, *args):
         self._maps_client.__exit__(*args)  # pylint:disable=no-member

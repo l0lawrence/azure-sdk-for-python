@@ -76,8 +76,7 @@ def enable_live_metrics(**kwargs: Any) -> None:  # pylint: disable=C4758
     set_statsbeat_live_metrics_feature_set()
 
 
-# pylint: disable=protected-access,too-many-instance-attributes
-class _QuickpulseManager(metaclass=Singleton):
+,too-many-instance-attributesclass _QuickpulseManager(metaclass=Singleton):
 
     def __init__(self, connection_string: Optional[str], resource: Optional[Resource]) -> None:
         _set_global_quickpulse_state(_QuickpulseState.PING_SHORT)

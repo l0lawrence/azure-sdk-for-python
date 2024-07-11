@@ -42,7 +42,6 @@ from ..amqp import AmqpAnnotatedMessage
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
         from uamqp import (
             types as uamqp_types
         )

@@ -2,8 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=too-many-instance-attributes,protected-access
-from typing import Any, Dict, List, Optional
+,protected-accessfrom typing import Any, Dict, List, Optional
 
 from azure.ai.ml._restclient.v2023_08_01_preview.models import Workspace as RestWorkspace
 from azure.ai.ml._restclient.v2023_08_01_preview.models import WorkspaceHubConfig as RestWorkspaceHubConfig

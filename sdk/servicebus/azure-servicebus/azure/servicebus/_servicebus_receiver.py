@@ -55,7 +55,6 @@ from ._servicebus_session import ServiceBusSession
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
         from uamqp import ReceiveClient as uamqp_ReceiveClientSync, Message as uamqp_Message
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:

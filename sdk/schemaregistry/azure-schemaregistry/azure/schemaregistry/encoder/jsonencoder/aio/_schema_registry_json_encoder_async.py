@@ -40,8 +40,7 @@ from .._utils import (
     MessageType
 )
 from .._constants import JsonSchemaDraftIdentifier
-from ._async_lru import alru_cache  # pylint: disable=import-error
-
+from ._async_lru import alru_cache
 if TYPE_CHECKING:
     import azure.schemaregistry.aio
     from ...._encoder_protocols import MessageContent, SchemaContentValidate

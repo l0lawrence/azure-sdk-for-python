@@ -2,8 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=protected-access,no-member
-
+,no-member
 from typing import Any, Optional
 
 from azure.ai.ml._restclient.v2023_04_01_preview.models import StackEnsembleSettings as RestStackEnsembleSettings

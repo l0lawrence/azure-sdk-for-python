@@ -54,8 +54,7 @@ from .partition_key import (
 __all__ = ("ContainerProxy",)
 
 # pylint: disable=too-many-lines
-# pylint: disable=missing-client-constructor-parameter-credential,missing-client-constructor-parameter-kwargs
-
+,missing-client-constructor-parameter-kwargs
 PartitionKeyType = Union[str, int, float, bool, Sequence[Union[str, int, float, bool, None]], Type[NonePartitionKeyValue]]  # pylint: disable=line-too-long
 
 

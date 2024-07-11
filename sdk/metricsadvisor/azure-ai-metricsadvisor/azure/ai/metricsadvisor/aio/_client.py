@@ -19,8 +19,7 @@ from ._configuration import MetricsAdvisorClientConfiguration
 from ._operations import MetricsAdvisorClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class MetricsAdvisorClient(MetricsAdvisorClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

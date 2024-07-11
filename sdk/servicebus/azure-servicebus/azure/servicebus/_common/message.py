@@ -52,7 +52,6 @@ from .tracing import trace_message
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
         from uamqp import (
             Message,
             BatchMessage

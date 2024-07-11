@@ -122,8 +122,7 @@ class Receipt:
     nodeId: Optional[str] = None
     serviceEndorsements: Optional[List[str]] = None
 
-    def __init__(  # pylint: disable=dangerous-default-value
-        self,
+def __init__(        self,
         cert: str,
         leafComponents: Union[Dict[str, Any], LeafComponents],
         proof: List[Union[Dict[str, Any], ProofElement]],

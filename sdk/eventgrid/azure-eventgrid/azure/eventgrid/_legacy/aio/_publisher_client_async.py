@@ -65,8 +65,7 @@ SendType = Union[
 ListEventType = Union[List[CloudEvent], List[EventGridEvent], List[Dict]]
 
 
-class EventGridPublisherClient:  # pylint: disable=client-accepts-api-version-keyword
-    """Asynchronous EventGridPublisherClient publishes events to an EventGrid topic or domain.
+class EventGridPublisherClient:    """Asynchronous EventGridPublisherClient publishes events to an EventGrid topic or domain.
     It can be used to publish either an EventGridEvent, a CloudEvent or a Custom Schema.
 
     :param str endpoint: The topic endpoint to send the events to.

@@ -19,8 +19,7 @@ from ._configuration import DocumentTranslationClientConfiguration, SingleDocume
 from ._operations import DocumentTranslationClientOperationsMixin, SingleDocumentTranslationClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class DocumentTranslationClient(

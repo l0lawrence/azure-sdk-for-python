@@ -280,7 +280,6 @@ class ServiceBusClient(object): # pylint: disable=client-accepts-api-version-key
                 :caption: Create a new instance of the ServiceBusClient from connection string.
 
         """
-        # pylint: disable=protected-access
 
         if self._entity_name and queue_name != self._entity_name:
             raise ValueError(

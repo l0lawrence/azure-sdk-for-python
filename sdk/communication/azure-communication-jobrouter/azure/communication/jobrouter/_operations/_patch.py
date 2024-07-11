@@ -26,8 +26,7 @@ from ._operations import (
     JobRouterClientOperationsMixin as JobRouterClientOperationsMixinGenerated,
     JobRouterAdministrationClientOperationsMixin as JobRouterAdministrationClientOperationsMixinGenerated,
 )
-from .._model_base import _deserialize_datetime as _convert_str_to_datetime  # pylint:disable=protected-access
-
+from .._model_base import _deserialize_datetime as _convert_str_to_datetime
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:

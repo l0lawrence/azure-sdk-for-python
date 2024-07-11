@@ -41,8 +41,7 @@ class DocumentModelAdministrationLROPoller(Protocol[PollingReturnType_co]):
     """Implements a protocol followed by returned poller objects."""
 
     @property
-    def details(  # pylint: disable=unused-argument
-        self,
+def details(        self,
     ) -> Mapping[str, Any]:
         ...
 

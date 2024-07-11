@@ -11,7 +11,6 @@ from ._shared import parse_key_vault_id
 from ._generated.models import JsonWebKey as _JsonWebKey
 
 if TYPE_CHECKING:
-    # pylint:disable=unused-import
     from ._generated import models as _models
 
 KeyOperationResult = namedtuple("KeyOperationResult", ["id", "value"])

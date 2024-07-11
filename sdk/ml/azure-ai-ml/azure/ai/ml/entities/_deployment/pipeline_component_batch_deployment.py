@@ -12,8 +12,7 @@ from azure.ai.ml._restclient.v2024_01_01_preview.models import (
     BatchPipelineComponentDeploymentConfiguration,
     IdAssetReference,
 )
-from azure.ai.ml._schema._deployment.batch.pipeline_component_batch_deployment_schema import (  # pylint: disable=line-too-long
-    PipelineComponentBatchDeploymentSchema,
+from azure.ai.ml._schema._deployment.batch.pipeline_component_batch_deployment_schema import (    PipelineComponentBatchDeploymentSchema,
 )
 from azure.ai.ml._utils._arm_id_utils import _parse_endpoint_name_from_deployment_id
 from azure.ai.ml._utils._experimental import experimental

@@ -15,8 +15,7 @@ from .._model_base import rest_discriminator, rest_field
 from ._enums import OperationKind
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from .. import models as _models
+,ungrouped-imports    from .. import models as _models
 
 
 class AddressValue(_model_base.Model):  # pylint: disable=too-many-instance-attributes

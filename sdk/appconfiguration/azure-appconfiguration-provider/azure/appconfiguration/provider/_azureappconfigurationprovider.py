@@ -62,8 +62,7 @@ from ._user_agent import USER_AGENT
 if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
 
-JSON = Mapping[str, Any]  # pylint: disable=unsubscriptable-object
-_T = TypeVar("_T")
+JSON = Mapping[str, Any]_T = TypeVar("_T")
 logger = logging.getLogger(__name__)
 
 min_uptime = 5

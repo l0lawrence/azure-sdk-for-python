@@ -74,8 +74,7 @@ class AzureMonitorMetricExporter(BaseExporter, MetricExporter):
         self,
         metrics_data: OTMetricsData,
         timeout_millis: float = 10_000,  # pylint: disable=unused-argument
-        **kwargs: Any,  # pylint: disable=unused-argument
-    ) -> MetricExportResult:
+**kwargs: Any,    ) -> MetricExportResult:
         """Exports a batch of metric data
 
         :param metrics_data: OpenTelemetry Metric(s) to export.

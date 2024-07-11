@@ -31,8 +31,7 @@ from ..._operations._patch import get_token_by_key
 
 class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixinGenerated):
     @distributed_trace_async
-    async def get_client_access_token(  # pylint: disable=arguments-differ
-        self,
+async def get_client_access_token(        self,
         *,
         user_id: Optional[str] = None,
         roles: Optional[List[str]] = None,

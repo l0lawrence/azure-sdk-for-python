@@ -2,8 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=protected-access,no-member
-
+,no-member
 from typing import Any, Dict
 
 from azure.ai.ml._restclient.v2024_01_01_preview.models import (

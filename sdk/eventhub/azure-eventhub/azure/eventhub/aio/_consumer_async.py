@@ -18,8 +18,7 @@ from .._constants import EPOCH_SYMBOL, TIMEOUT_SYMBOL, RECEIVER_RUNTIME_METRIC_S
 
 if TYPE_CHECKING:
     try:
-        from uamqp import (  # pylint: disable=unused-import
-            ReceiveClientAsync as uamqp_ReceiveClientAsync,
+from uamqp import (            ReceiveClientAsync as uamqp_ReceiveClientAsync,
             Message as uamqp_Message,
         )
         from uamqp.types import AMQPType as uamqp_AMQPType

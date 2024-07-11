@@ -252,8 +252,7 @@ class BatchEndpointOperations(_ScopeDependentOperations):
 
     @distributed_trace
     @monitor_with_activity(ops_logger, "BatchEndpoint.Invoke", ActivityType.PUBLICAPI)
-    def invoke(  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-        self,
+def invoke(  , too-many-branches, too-many-statements        self,
         endpoint_name: str,
         *,
         deployment_name: Optional[str] = None,

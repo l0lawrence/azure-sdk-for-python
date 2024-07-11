@@ -156,7 +156,6 @@ class MLClient:
                 cloud name in kwargs and you must use an authority with DefaultAzureCredential.
     """
 
-    # pylint: disable=client-method-missing-type-annotations
     def __init__(
         self,
         credential: TokenCredential,

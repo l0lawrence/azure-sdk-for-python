@@ -56,8 +56,7 @@ def get_api_version(api_version: Optional[str], default: str) -> str:
     return api_version or default
 
 
-class TablesBaseClient:  # pylint: disable=too-many-instance-attributes
-    """Base class for TableClient
+class TablesBaseClient:    """Base class for TableClient
 
     :ivar str account_name: The name of the Tables account.
     :ivar str scheme: The scheme component in the full URL to the Tables account.

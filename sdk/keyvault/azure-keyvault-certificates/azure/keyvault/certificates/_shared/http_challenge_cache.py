@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from urllib import parse
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import
     from typing import Dict, Optional
     from .http_challenge import HttpChallenge
 

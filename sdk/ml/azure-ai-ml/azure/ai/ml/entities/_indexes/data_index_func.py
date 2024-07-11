@@ -3,7 +3,6 @@
 # ---------------------------------------------------------
 # pylint: disable=protected-access
 # pylint: disable=no-member
-# pylint: disable=unused-argument
 
 import json
 import re

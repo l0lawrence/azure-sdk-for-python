@@ -29,8 +29,7 @@ class ConditionNode(ControlFlowNode):
 
     def __init__(
         self, condition: Any, *, true_block: Optional[List] = None, false_block: Optional[List] = None, **kwargs: Any
-    ) -> None:  # pylint: disable=unused-argument
-        kwargs.pop("type", None)
+) -> None:        kwargs.pop("type", None)
         super(ConditionNode, self).__init__(type=ControlFlowType.IF_ELSE, **kwargs)
         self.condition = condition
         if true_block and not isinstance(true_block, list):

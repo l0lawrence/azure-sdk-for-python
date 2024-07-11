@@ -10,7 +10,6 @@ except ImportError:
     TYPE_CHECKING = False
 
 if TYPE_CHECKING:
-    # pylint:disable=unused-import
     from typing import Optional, Union
     from cryptography.hazmat.primitives import hashes
 

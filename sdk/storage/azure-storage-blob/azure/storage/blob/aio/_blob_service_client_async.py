@@ -129,8 +129,7 @@ class BlobServiceClient(AsyncStorageAccountHostsMixin, BlobServiceClientBase, St
             credential=credential,
             **kwargs)
         self._client = AzureBlobStorage(self.url, base_url=self.url, pipeline=self._pipeline)
-        self._client._config.version = get_api_version(kwargs)  # pylint: disable=protected-access
-        self._configure_encryption(kwargs)
+self._client._config.version = get_api_version(kwargs)        self._configure_encryption(kwargs)
 
     @distributed_trace_async
     async def get_user_delegation_key(self, key_start_time,  # type: datetime

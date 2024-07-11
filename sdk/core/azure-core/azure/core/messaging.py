@@ -22,8 +22,7 @@ _Unset: Any = object()
 DataType = TypeVar("DataType")
 
 
-class CloudEvent(Generic[DataType]):  # pylint:disable=too-many-instance-attributes
-    """Properties of the CloudEvent 1.0 Schema.
+class CloudEvent(Generic[DataType]):    """Properties of the CloudEvent 1.0 Schema.
     All required parameters must be populated in order to send to Azure.
 
     :param source: Required. Identifies the context in which an event happened. The combination of id and source must

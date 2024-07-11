@@ -233,10 +233,8 @@ try:
         TIMEOUT_FACTOR = 1000
         # CONNECTION_CLOSING_STATES: Tuple = (  # pylint:disable=protected-access
         #        c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.CLOSE_SENT,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.DISCARDING,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.END,  # pylint:disable=c-extension-no-member
-        #    )
+#        c_uamqp.ConnectionState.CLOSE_SENT,        #        c_uamqp.ConnectionState.DISCARDING,  # pylint:disable=c-extension-no-member
+#        c_uamqp.ConnectionState.END,        #    )
         TRANSPORT_IDENTIFIER = f"{UAMQP_LIBRARY}/{__version__}"
 
         # To enable extensible string enums for the public facing parameter
@@ -477,8 +475,7 @@ try:
             """
             return (
                 handler.message_handler._link.peer_max_message_size
-            )  # pylint:disable=protected-access
-
+)
         @staticmethod
         def get_handler_link_name(handler: "AMQPClient") -> str:
             """

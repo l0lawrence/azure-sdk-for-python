@@ -15,8 +15,7 @@ from ._operations import InsightAttachmentsOperations as InsightAttachmentsOpera
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-import datetime
+from typing import MutableMapping  # type: ignoreimport datetime
 import sys
 from typing import Any, Callable, Dict, IO, Iterable, Iterator, List, Optional, TypeVar, Union, cast, overload
 import urllib.parse

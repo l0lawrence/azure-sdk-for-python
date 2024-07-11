@@ -22,8 +22,7 @@ from ._operations import QuestionAnsweringClientOperationsMixin
 
 class QuestionAnsweringClient(
     QuestionAnsweringClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
-    """The language service API is a suite of natural language processing (NLP) skills built with
+):    """The language service API is a suite of natural language processing (NLP) skills built with
     best-in-class Microsoft machine learning algorithms. The API can be used to analyze
     unstructured text for tasks such as sentiment analysis, key phrase extraction, language
     detection and question answering. Further documentation can be found in

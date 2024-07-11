@@ -152,8 +152,7 @@ class MetricsAdvisorClientOperationsMixin(
         return await self.get_data_feed(data_feed_id)
 
     @distributed_trace_async
-    async def create_hook(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
-        self, hook: Union[models.EmailNotificationHook, models.WebNotificationHook], **kwargs: Any
+async def create_hook(  # type: ignore ,arguments-renamed        self, hook: Union[models.EmailNotificationHook, models.WebNotificationHook], **kwargs: Any
     ) -> Union[models.NotificationHook, models.EmailNotificationHook, models.WebNotificationHook]:
         response_headers = await super().create_hook(  # type: ignore
             hook, cls=lambda pipeline_response, _, response_headers: response_headers, **kwargs  # type: ignore

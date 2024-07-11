@@ -234,7 +234,6 @@ class _StatsbeatMetrics:
         return True
 
     # pylint: disable=unused-argument
-    # pylint: disable=protected-access
     def _get_feature_metric(self, options: CallbackOptions) -> Iterable[Observation]:
         observations: List[Observation] = []
         # Check if it is time to observe long interval metrics

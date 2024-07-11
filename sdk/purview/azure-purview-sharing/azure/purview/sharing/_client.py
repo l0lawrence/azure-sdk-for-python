@@ -17,8 +17,7 @@ from ._serialization import Deserializer, Serializer
 from .operations import ReceivedSharesOperations, SentSharesOperations, ShareResourcesOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials import TokenCredential
+,ungrouped-imports    from azure.core.credentials import TokenCredential
 
 
 class PurviewSharingClient:  # pylint: disable=client-accepts-api-version-keyword

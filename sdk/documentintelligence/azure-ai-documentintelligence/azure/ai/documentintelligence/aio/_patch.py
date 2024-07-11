@@ -17,8 +17,7 @@ from ._client import (
 )
 
 
-class DocumentIntelligenceClient(DIClientGenerated):  # pylint: disable=client-accepts-api-version-keyword
-    """DocumentIntelligenceClient.
+class DocumentIntelligenceClient(DIClientGenerated):    """DocumentIntelligenceClient.
 
     :param endpoint: The Document Intelligence service endpoint. Required.
     :type endpoint: str

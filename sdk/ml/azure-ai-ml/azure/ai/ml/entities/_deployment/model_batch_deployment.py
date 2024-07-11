@@ -66,8 +66,7 @@ class ModelBatchDeployment(Deployment):
         scoring_script: Optional[
             Union[str, PathLike]
         ] = None,  # promoted property from code_configuration.scoring_script
-        **kwargs: Any,  # pylint: disable=unused-argument
-    ):
+**kwargs: Any,    ):
         self._provisioning_state: Optional[str] = kwargs.pop("provisioning_state", None)
         super().__init__(
             name=name,

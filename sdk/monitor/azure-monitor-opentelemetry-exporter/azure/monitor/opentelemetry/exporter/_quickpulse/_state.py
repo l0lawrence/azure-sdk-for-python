@@ -84,8 +84,7 @@ def _is_post_state():
 
 
 def _append_quickpulse_document(document: DocumentIngress):
-    # pylint: disable=global-statement,global-variable-not-assigned
-    global _QUICKPULSE_DOCUMENTS
+,global-variable-not-assigned    global _QUICKPULSE_DOCUMENTS
     # Limit risk of memory leak by limiting doc length to something manageable
     if len(_QUICKPULSE_DOCUMENTS) > 20:
         try:

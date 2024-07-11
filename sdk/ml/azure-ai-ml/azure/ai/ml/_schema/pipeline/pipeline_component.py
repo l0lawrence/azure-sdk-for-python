@@ -246,7 +246,6 @@ class PipelineComponentFileRefField(FileRefField):
         """
         # Update base_path to parent path of component file.
         component_schema_context = deepcopy(self.context)
-        # pylint: disable=no-member
         value = _resolve_group_inputs_for_component(value)
         return _AnonymousPipelineComponentSchema(context=component_schema_context)._serialize(value, **kwargs)
 

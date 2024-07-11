@@ -4,8 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 
-from typing import TYPE_CHECKING  # pylint: disable=unused-import
-from urllib.parse import urlparse
+from typing import TYPE_CHECKINGfrom urllib.parse import urlparse
 
 from azure.core.async_paging import AsyncItemPaged, AsyncList
 

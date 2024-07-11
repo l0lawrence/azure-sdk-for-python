@@ -142,7 +142,6 @@ class DoWhile(LoopNode):
         :rtype: DoWhile
         """
 
-        # pylint: disable=protected-access
         # Get body object from pipeline job list.
         body_name = cls._get_data_binding_expression_value(loaded_data.pop("body"), regex=r"\{\{.*\.jobs\.(.*)\}\}")
         body = cls._get_body_from_pipeline_jobs(pipeline_jobs, body_name)

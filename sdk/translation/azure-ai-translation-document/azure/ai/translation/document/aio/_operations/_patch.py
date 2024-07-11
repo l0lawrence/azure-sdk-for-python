@@ -41,8 +41,7 @@ from ...aio._patch import AsyncDocumentTranslationLROPoller
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # type: ignore[misc] # pylint: disable=unsubscriptable-object
+from typing import MutableMapping  # type: ignoreJSON = MutableMapping[str, Any]  # type: ignore[misc] # pylint: disable=unsubscriptable-object
 T = TypeVar("T")
 ClsType = Optional[  # type: ignore[misc]
     Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]

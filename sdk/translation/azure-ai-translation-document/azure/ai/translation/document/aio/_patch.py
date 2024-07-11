@@ -139,7 +139,6 @@ class AsyncDocumentTranslationLROPollingMethod(AsyncLROBasePolling):
             return self._current_body.id
         return self._get_id_from_headers()
 
-    # pylint: disable=arguments-differ
     def from_continuation_token(self, continuation_token: str, **kwargs: Any) -> Tuple:  # type: ignore[override]
         try:
             client = kwargs["client"]

@@ -5,8 +5,7 @@
 # --------------------------------------------------------------------------
 # pylint: disable=invalid-overridden-method, docstring-keyword-should-match-keyword-only
 
-from typing import ( # pylint: disable=unused-import
-    Any, Dict, Optional, Union,
+from typing import (    Any, Dict, Optional, Union,
     TYPE_CHECKING)
 
 try:

@@ -708,8 +708,7 @@ class SearchClient(HeadersMixin):
             return result_first_half
 
     def __enter__(self) -> "SearchClient":
-        self._client.__enter__()  # pylint:disable=no-member
-        return self
+self._client.__enter__()        return self
 
     def __exit__(self, *args) -> None:
         self._client.__exit__(*args)

@@ -84,8 +84,7 @@ class EventProcessor(
         self._consumer_group = consumer_group
         self._eventhub_client = eventhub_client
         self._namespace = (
-            eventhub_client._address.hostname  # pylint: disable=protected-access
-        )
+eventhub_client._address.hostname        )
         self._eventhub_name = eventhub_client.eventhub_name
         self._event_handler = on_event
         self._batch = batch

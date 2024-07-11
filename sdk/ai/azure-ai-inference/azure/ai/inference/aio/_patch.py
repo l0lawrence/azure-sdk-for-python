@@ -38,8 +38,7 @@ from .._operations._operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping

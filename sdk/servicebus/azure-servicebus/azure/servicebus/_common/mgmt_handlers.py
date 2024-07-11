@@ -21,8 +21,7 @@ def default(  # pylint: disable=inconsistent-return-statements
     if status_code == 200:
         return message.value
 
-    amqp_transport.handle_amqp_mgmt_error( # pylint: disable=protected-access
-        _LOGGER, "Service request failed.", condition, description, status_code
+amqp_transport.handle_amqp_mgmt_error(        _LOGGER, "Service request failed.", condition, description, status_code
     )
 
 

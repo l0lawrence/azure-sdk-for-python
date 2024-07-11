@@ -794,7 +794,6 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.

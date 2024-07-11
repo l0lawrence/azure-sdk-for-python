@@ -281,7 +281,6 @@ class ModelPackage(Resource, PackageRequest):
     def dump(
         self,
         dest: Union[str, PathLike, IO[AnyStr]],
-        # pylint: disable=unused-argument
         **kwargs: Any,
     ) -> None:
         """Dumps the job content into a file in YAML format.

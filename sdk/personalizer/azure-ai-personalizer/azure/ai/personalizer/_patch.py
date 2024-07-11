@@ -23,8 +23,7 @@ from ._client import PersonalizerClient as PersonalizerClientGenerated
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+from typing import MutableMapping  # type: ignoreJSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
 
 __all__: List[str] = [
     "PersonalizerClient",

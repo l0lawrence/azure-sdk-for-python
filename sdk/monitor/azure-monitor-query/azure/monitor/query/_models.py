@@ -18,8 +18,7 @@ from ._helpers import construct_iso8601, process_row
 if sys.version_info >= (3, 9):
     from collections.abc import Mapping
 else:
-    from typing import Mapping  # pylint: disable=ungrouped-imports
-
+from typing import Mapping
 
 JSON = Mapping[str, Any]  # pylint: disable=unsubscriptable-object
 

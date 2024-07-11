@@ -18,8 +18,7 @@ from ._configuration import TextTranslationClientConfiguration
 from ._operations import TextTranslationClientOperationsMixin
 
 
-class TextTranslationClient(TextTranslationClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
-    """Text translation is a cloud-based REST API feature of the Translator service that uses neural
+class TextTranslationClient(TextTranslationClientOperationsMixin):    """Text translation is a cloud-based REST API feature of the Translator service that uses neural
     machine translation technology to enable quick and accurate source-to-target text translation
     in real time across all supported languages.
 

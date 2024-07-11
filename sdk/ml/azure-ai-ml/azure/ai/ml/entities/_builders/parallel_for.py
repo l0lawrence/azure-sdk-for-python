@@ -167,8 +167,7 @@ class ParallelFor(LoopNode, NodeIOMixin):
             raise UserErrorException("Unsupported items type: {}".format(type(items)))
         return result
 
-    def _to_rest_object(self, **kwargs: Any) -> dict:  # pylint: disable=unused-argument
-        """Convert self to a rest object for remote call.
+def _to_rest_object(self, **kwargs: Any) -> dict:        """Convert self to a rest object for remote call.
 
         :return: The rest object
         :rtype: dict

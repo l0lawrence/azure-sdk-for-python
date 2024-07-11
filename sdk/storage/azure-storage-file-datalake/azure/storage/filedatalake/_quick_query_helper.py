@@ -4,8 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 
-from typing import Union, Iterable, IO  # pylint: disable=unused-import
-
+from typing import Union, Iterable, IO
 
 class DataLakeFileQueryReader(object):  # pylint: disable=too-many-instance-attributes
     """A streaming object to read query results.

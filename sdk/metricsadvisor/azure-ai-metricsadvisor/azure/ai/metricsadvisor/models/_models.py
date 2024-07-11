@@ -14,8 +14,7 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 import msrest.serialization
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from .. import models as _models
+,ungrouped-imports    from .. import models as _models
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:

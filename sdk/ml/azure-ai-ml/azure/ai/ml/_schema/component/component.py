@@ -106,8 +106,7 @@ class ComponentSchema(AssetSchema):
 
     def __init__(self, *args, **kwargs):
         # Remove schema_ignored to enable serialize and deserialize schema.
-        self._declared_fields.pop("schema_ignored", None)  # pylint: disable=no-member
-        super().__init__(*args, **kwargs)
+self._declared_fields.pop("schema_ignored", None)        super().__init__(*args, **kwargs)
 
     @pre_load
     def convert_version_to_str(self, data, **kwargs):  # pylint: disable=unused-argument

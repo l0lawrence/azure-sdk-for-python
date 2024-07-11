@@ -39,8 +39,7 @@ if TYPE_CHECKING:
     from ._models import ShareProperties, AccessPolicy
 
 
-class ShareClient(StorageAccountHostsMixin): # pylint: disable=too-many-public-methods
-    """A client to interact with a specific share, although that share may not yet exist.
+class ShareClient(StorageAccountHostsMixin):    """A client to interact with a specific share, although that share may not yet exist.
 
     For operations relating to a specific directory or file in this share, the clients for
     those entities can also be retrieved using the :func:`get_directory_client` and :func:`get_file_client` functions.

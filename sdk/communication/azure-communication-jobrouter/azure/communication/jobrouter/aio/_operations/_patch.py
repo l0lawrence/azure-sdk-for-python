@@ -28,8 +28,7 @@ else:
     from typing import MutableMapping  # type: ignore
 
 
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
-
+JSON = MutableMapping[str, Any]
 
 class JobRouterAdministrationClientOperationsMixin(
     JobRouterAdministrationClientOperationsMixinGenerated

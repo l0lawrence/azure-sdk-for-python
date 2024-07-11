@@ -37,7 +37,6 @@ from ._common.constants import (
 if TYPE_CHECKING:
     from .exceptions import ServiceBusError
     try:
-        # pylint:disable=unused-import
         from uamqp import AMQPClient as uamqp_AMQPClientSync
     except ImportError:
         pass

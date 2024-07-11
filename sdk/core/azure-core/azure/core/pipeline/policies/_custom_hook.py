@@ -41,8 +41,7 @@ class CustomHookPolicy(SansIOHTTPPolicy[HTTPRequestType, HTTPResponseType]):
     :keyword callback raw_response_hook: Callback function. Will be invoked on response.
     """
 
-    def __init__(self, **kwargs: Any):  # pylint: disable=unused-argument,super-init-not-called
-        self._request_callback = kwargs.get("raw_request_hook")
+def __init__(self, **kwargs: Any):  ,super-init-not-called        self._request_callback = kwargs.get("raw_request_hook")
         self._response_callback = kwargs.get("raw_response_hook")
 
     def on_request(self, request: PipelineRequest[HTTPRequestType]) -> None:

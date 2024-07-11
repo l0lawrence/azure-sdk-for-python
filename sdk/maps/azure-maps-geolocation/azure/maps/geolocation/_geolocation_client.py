@@ -3,8 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import,ungrouped-imports, R0904, C0302
-from typing import Union, Any
+,ungrouped-imports, R0904, C0302from typing import Union, Any
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.credentials import AzureKeyCredential, TokenCredential
 

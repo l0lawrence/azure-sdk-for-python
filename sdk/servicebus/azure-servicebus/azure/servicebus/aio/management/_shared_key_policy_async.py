@@ -27,8 +27,7 @@ class AsyncServiceBusSharedKeyCredentialPolicy(SansIOHTTPPolicy):
         self._token_expiry_on = 0
         self._token = None
 
-    async def _update_token(self):  # pylint: disable=invalid-overridden-method
-        if (
+async def _update_token(self):        if (
             self._token_expiry_on + 60 <= time.time()
         ):  # Update token if it's expiring in 60 seconds
             access_token, self._token_expiry_on = await self._credential.get_token(

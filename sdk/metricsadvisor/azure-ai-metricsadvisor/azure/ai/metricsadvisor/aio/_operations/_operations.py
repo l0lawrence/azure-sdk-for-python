@@ -205,8 +205,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         return deserialized
 
     @distributed_trace_async
-    async def delete_alert_configuration(  # pylint: disable=inconsistent-return-statements
-        self, configuration_id: str, **kwargs: Any
+async def delete_alert_configuration(        self, configuration_id: str, **kwargs: Any
     ) -> None:
         """Delete anomaly alerting configuration.
 

@@ -20,8 +20,7 @@ from azure.core.pipeline.policies import (
 )
 from azure.core.pipeline.transport import (
     RequestsTransport,
-)  # pylint: disable=no-name-in-module
-from azure.core.utils import parse_connection_string
+)from azure.core.utils import parse_connection_string
 
 from ._api_version import DEFAULT_VERSION, ApiVersion
 from ._auth import SasCredentialPolicy, SharedKeyCredentialPolicy

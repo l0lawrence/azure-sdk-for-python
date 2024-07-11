@@ -708,8 +708,7 @@ class LROBasePolling(
         HttpResponseTypeVar,
     ],
     PollingMethod[PollingReturnType_co],
-):  # pylint: disable=too-many-instance-attributes
-    """A base LRO poller.
+):    """A base LRO poller.
 
     This assumes a basic flow:
     - I analyze the response to decide the polling approach

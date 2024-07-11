@@ -400,8 +400,7 @@ class ClientBase:  # pylint:disable=too-many-instance-attributes
         )
         if backoff <= self._config.backoff_max and (
             timeout_time is None or time.time() + backoff <= timeout_time
-        ):  # pylint:disable=no-else-return
-            time.sleep(backoff)
+):            time.sleep(backoff)
             _LOGGER.info(
                 "%r has an exception (%r). Retrying...",
                 format(entity_name),

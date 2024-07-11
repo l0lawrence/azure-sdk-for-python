@@ -14,8 +14,7 @@ from ._generated._serialization import Deserializer, Serializer
 from ._generated.operations import AdministrationOperations, TestRunOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials import TokenCredential
+,ungrouped-imports    from azure.core.credentials import TokenCredential
 
 class _BaseClient:
     def __init__(self, endpoint: str, credential: "TokenCredential", **kwargs: Any) -> None:

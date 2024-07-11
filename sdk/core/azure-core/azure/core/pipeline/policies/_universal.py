@@ -77,8 +77,7 @@ class HeadersPolicy(SansIOHTTPPolicy[HTTPRequestType, HTTPResponseType]):
 
     def __init__(
         self, base_headers: Optional[Dict[str, str]] = None, **kwargs: Any
-    ) -> None:  # pylint: disable=super-init-not-called
-        self._headers: Dict[str, str] = base_headers or {}
+) -> None:        self._headers: Dict[str, str] = base_headers or {}
         self._headers.update(kwargs.pop("headers", {}))
 
     @property

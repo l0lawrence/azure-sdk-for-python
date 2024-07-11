@@ -20,8 +20,7 @@ from ._operations import ClinicalMatchingClientOperationsMixin
 
 class ClinicalMatchingClient(
     ClinicalMatchingClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
-    """ClinicalMatchingClient.
+):    """ClinicalMatchingClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
      https://westus2.api.cognitive.microsoft.com). Required.

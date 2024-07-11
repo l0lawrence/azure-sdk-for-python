@@ -329,8 +329,7 @@ class WorkspaceOperationsBase(ABC):
         if serverless_compute_settings:
             serverless_compute_settings = (
                 serverless_compute_settings._to_rest_object()
-            )  # pylint: disable=protected-access
-
+)
         update_param = WorkspaceUpdateParameters(
             tags=kwargs.get("tags", workspace.tags),
             description=kwargs.get("description", workspace.description),

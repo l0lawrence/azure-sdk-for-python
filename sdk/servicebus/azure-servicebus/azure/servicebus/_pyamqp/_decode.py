@@ -3,8 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 #--------------------------------------------------------------------------
-# pylint: disable=redefined-builtin, import-error
-
+, import-error
 import struct
 import uuid
 import logging

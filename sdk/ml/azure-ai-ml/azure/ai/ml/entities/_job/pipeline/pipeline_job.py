@@ -493,7 +493,6 @@ class PipelineJob(Job, YamlTranslatableMixin, PipelineJobIOMixin, PathAwareSchem
         """
         component = self._to_component(context, **kwargs)
 
-        # pylint: disable=abstract-class-instantiated
         return Pipeline(
             component=component,
             compute=self.compute,

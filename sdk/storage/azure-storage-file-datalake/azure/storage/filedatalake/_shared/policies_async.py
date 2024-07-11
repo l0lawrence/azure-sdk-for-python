@@ -19,8 +19,7 @@ from .policies import is_retry, StorageRetryPolicy
 
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
-    from azure.core.pipeline import (  # pylint: disable=non-abstract-transport-import
-        PipelineRequest,
+from azure.core.pipeline import (        PipelineRequest,
         PipelineResponse
     )
 

@@ -32,8 +32,7 @@ class StoredProcedureParameter(DictMixin, RestTranslatableMixin):
         self.value = value
 
 
-class Database(DictMixin, RestTranslatableMixin):  # pylint: disable=too-many-instance-attributes
-    """Define a database class for a DataTransfer Component or Job.
+class Database(DictMixin, RestTranslatableMixin):    """Define a database class for a DataTransfer Component or Job.
 
     :keyword query: The SQL query to retrieve data from the database.
     :paramtype query: str

@@ -45,8 +45,7 @@ from ._client import MetricsAdvisorClient as _ClientAsync
 from .. import models
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class MetricsAdvisorAdministrationClient:  # pylint:disable=too-many-public-methods,client-accepts-api-version-keyword

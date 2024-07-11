@@ -33,8 +33,7 @@ from .._vendor import EventGridConsumerClientMixinABC, EventGridPublisherClientM
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-T = TypeVar("T")
+from typing import MutableMapping  # type: ignoreT = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
 _Unset: Any = object()

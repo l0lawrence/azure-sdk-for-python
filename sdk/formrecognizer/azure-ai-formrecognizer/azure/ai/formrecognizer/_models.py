@@ -3772,8 +3772,7 @@ class BlobFileListSource:
     file_list: str
     """Path to a JSONL file within the container specifying a subset of documents for training."""
 
-    def __init__(  # pylint: disable=unused-argument
-        self,
+def __init__(        self,
         container_url: str,
         file_list: str
     ) -> None:
@@ -4482,8 +4481,7 @@ class OperationDetails(OperationSummary):
         )
 
 
-class AnalyzeResult:  # pylint: disable=too-many-instance-attributes
-    """Document analysis result."""
+class AnalyzeResult:    """Document analysis result."""
 
     api_version: str
     """API version used to produce this result."""

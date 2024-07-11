@@ -99,8 +99,7 @@ class OperationMixinHelpers:
     def _convert_to_sub_feedback(self, feedback) -> FeedbackUnion:
         feedback_type = feedback["feedbackType"]
         if feedback_type == "Anomaly":
-            generated = self._deserialize(  # type: ignore # pylint: disable=no-member
-                generated_models.AnomalyFeedback, feedback
+generated = self._deserialize(  # type: ignore                generated_models.AnomalyFeedback, feedback
             )
             return models.AnomalyFeedback._from_generated(generated)  # type: ignore # pylint: disable=protected-access
         if feedback_type == "ChangePoint":
@@ -620,11 +619,9 @@ class OperationMixinHelpers:
         )
         path_format_arguments = {
             "endpoint": self._serialize.url(  # type: ignore  # pylint: disable=no-member
-                "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  # pylint: disable=no-member
-            ),
+"self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore            ),
         }
-        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
-        return request, kwargs
+request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore        return request, kwargs
 
     def _update_alert_configuration_deserialize(self, pipeline_response, **kwargs: Any):
         cls = kwargs.pop("cls", None)
@@ -637,8 +634,7 @@ class OperationMixinHelpers:
             error = self._deserialize.failsafe_deserialize(ErrorCode, pipeline_response)  # type: ignore  # pylint: disable=no-member
             raise HttpResponseError(response=response, model=error)
 
-        deserialized = self._deserialize(  # type: ignore  # pylint: disable=no-member
-            generated_models.AnomalyAlertConfiguration, pipeline_response
+deserialized = self._deserialize(  # type: ignore            generated_models.AnomalyAlertConfiguration, pipeline_response
         )
 
         if cls:
@@ -655,8 +651,7 @@ class OperationMixinHelpers:
                 "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  # pylint: disable=no-member
             ),
         }
-        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
-        return request
+request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore        return request
 
     def _get_feedback_deserialize(self, pipeline_response, **kwargs) -> models.MetricFeedback:
         cls = kwargs.pop("cls", None)
@@ -749,8 +744,7 @@ class OperationMixinHelpers:
             }
             if not next_link:
                 request = initial_request
-                request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
-            else:
+request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore            else:
                 request = next_request
                 request.url = self._client.format_url(next_link, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
             return request

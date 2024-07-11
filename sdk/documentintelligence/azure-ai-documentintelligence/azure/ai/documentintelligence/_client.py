@@ -25,8 +25,7 @@ from ._operations import (
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials import TokenCredential
+,ungrouped-imports    from azure.core.credentials import TokenCredential
 
 
 class DocumentIntelligenceClient(

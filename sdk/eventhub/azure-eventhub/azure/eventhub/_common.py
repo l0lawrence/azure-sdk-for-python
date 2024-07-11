@@ -59,8 +59,7 @@ from ._transport._pyamqp_transport import PyamqpTransport
 
 if TYPE_CHECKING:
     try:
-        from uamqp import (  # pylint: disable=unused-import
-            Message,    # not importing as uamqp_Message, b/c type is exposed to user
+from uamqp import (            Message,    # not importing as uamqp_Message, b/c type is exposed to user
             BatchMessage,
         )
     except ImportError:

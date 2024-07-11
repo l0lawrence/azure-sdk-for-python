@@ -251,7 +251,6 @@ class ChatThreadProperties:
     :vartype created_by: ~azure.communication.chat.CommunicationIdentifier
     """
 
-    # pylint:disable=protected-access
 
     def __init__(
         self,

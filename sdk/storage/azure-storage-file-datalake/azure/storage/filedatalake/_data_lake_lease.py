@@ -7,8 +7,7 @@
 
 import uuid
 
-from typing import (  # pylint: disable=unused-import
-    Union, Optional, Any,
+from typing import (    Union, Optional, Any,
     TypeVar, TYPE_CHECKING
 )
 from azure.core.tracing.decorator import distributed_trace
@@ -57,8 +56,7 @@ class DataLakeLeaseClient(object):  # pylint: disable=client-accepts-api-version
         if hasattr(client, '_blob_client'):
             _client = client._blob_client  # type: ignore # pylint: disable=protected-access
         elif hasattr(client, '_container_client'):
-            _client = client._container_client  # type: ignore # pylint: disable=protected-access
-        else:
+_client = client._container_client  # type: ignore        else:
             raise TypeError("Lease must use any of FileSystemClient DataLakeDirectoryClient, or DataLakeFileClient.")
 
         self._blob_lease_client = BlobLeaseClient(_client, lease_id=lease_id)

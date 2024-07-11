@@ -3,8 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import,ungrouped-imports, C0302, C0203
-from typing import List, Optional, Union, NamedTuple
+,ungrouped-imports, C0302, C0203from typing import List, Optional, Union, NamedTuple
 import msrest.serialization
 
 from .._generated.models import (

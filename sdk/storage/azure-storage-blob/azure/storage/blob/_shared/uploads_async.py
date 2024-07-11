@@ -306,8 +306,7 @@ class BlockBlobChunkUploader(_ChunkUploader):
         return block_id
 
 
-class PageBlobChunkUploader(_ChunkUploader):  # pylint: disable=abstract-method
-
+class PageBlobChunkUploader(_ChunkUploader):
     def _is_chunk_empty(self, chunk_data):
         # read until non-zero byte is encountered
         # if reached the end without returning, then chunk_data is all 0's

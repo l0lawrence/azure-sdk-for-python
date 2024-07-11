@@ -2,8 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=unused-argument,protected-access
-
+,protected-access
 import yaml
 
 from azure.ai.ml._schema.core.fields import NestedField, FileRefField

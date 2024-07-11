@@ -121,8 +121,7 @@ def _get_opencensus_span() -> Optional[Type[AbstractSpan]]:
     :returns: OpenCensusSpan type or None
     """
     try:
-        from azure.core.tracing.ext.opencensus_span import (  # pylint:disable=redefined-outer-name
-            OpenCensusSpan,
+from azure.core.tracing.ext.opencensus_span import (            OpenCensusSpan,
         )
 
         return OpenCensusSpan

@@ -2,8 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=too-many-instance-attributes,protected-access
-
+,protected-access
 
 from os import PathLike
 from pathlib import Path

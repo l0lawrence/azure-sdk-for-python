@@ -498,7 +498,6 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         kwargs["headers"] = self._merge_client_headers(kwargs.get("headers"))
         if select:
             kwargs["select"] = ",".join(select)
-        # pylint:disable=protected-access
         return cast(ItemPaged[SearchAlias], self._client.aliases.list(**kwargs))
 
     @distributed_trace

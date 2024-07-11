@@ -14,8 +14,7 @@ from .. import _model_base
 from .._model_base import rest_field
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from .. import models as _models
+,ungrouped-imports    from .. import models as _models
 
 
 class Catalog(_model_base.Model):

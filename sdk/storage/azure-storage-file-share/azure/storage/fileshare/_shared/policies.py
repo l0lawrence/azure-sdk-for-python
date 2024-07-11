@@ -268,8 +268,7 @@ class StorageLoggingPolicy(NetworkTraceLoggingPolicy):
 
 class StorageRequestHook(SansIOHTTPPolicy):
 
-    def __init__(self, **kwargs):  # pylint: disable=unused-argument
-        self._request_callback = kwargs.get('raw_request_hook')
+def __init__(self, **kwargs):        self._request_callback = kwargs.get('raw_request_hook')
         super(StorageRequestHook, self).__init__()
 
     def on_request(self, request: "PipelineRequest") -> None:

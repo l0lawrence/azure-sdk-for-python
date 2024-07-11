@@ -578,7 +578,6 @@ def _convert_span_events_to_envelopes(span: ReadableSpan) -> Sequence[TelemetryI
                 properties=properties,
                 exceptions=[exc_details],
             )
-            # pylint: disable=line-too-long
             envelope.data = MonitorBase(base_data=data, base_type='ExceptionData')
         else:
             envelope.name = _MESSAGE_ENVELOPE_NAME

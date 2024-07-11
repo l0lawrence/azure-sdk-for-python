@@ -56,7 +56,6 @@ class TextAnalysisLROPoller(Protocol[PollingReturnType_co]):
         :rtype: str
         """
 
-    # pylint: disable=unused-argument
     def result(self, timeout: Optional[float] = None) -> PollingReturnType_co:
         """Return the result of the long running operation, or
         the result available after the specified timeout.

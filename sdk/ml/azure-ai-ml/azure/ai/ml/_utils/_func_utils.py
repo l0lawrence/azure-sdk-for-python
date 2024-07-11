@@ -192,8 +192,7 @@ try:
             return result
 
         @classmethod
-        def _class_init_impl(cls):  # pylint: disable=unused-argument
-            """Override this method to implement different template matching algorithm."""
+def _class_init_impl(cls):            """Override this method to implement different template matching algorithm."""
             cls._template_separators_before_body, cls._template_separators_after_body = cls._split(
                 cls.get_instructions(_source_template_func),
                 separator=cls._get_mock_body_instructions(),

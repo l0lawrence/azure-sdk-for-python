@@ -20,7 +20,6 @@ from .._internal.pipeline import build_pipeline
 ABC = abc.ABC
 
 if TYPE_CHECKING:
-    # pylint:disable=ungrouped-imports
 
     from azure.core.pipeline.policies import HTTPPolicy, SansIOHTTPPolicy
     from azure.core.pipeline.transport import HttpRequest

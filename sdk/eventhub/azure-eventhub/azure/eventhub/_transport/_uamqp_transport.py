@@ -105,12 +105,9 @@ if uamqp_installed:
         Union["uamqp_ConnectionState", "pyamqp_ConnectionState"],
         Union["uamqp_ConnectionState", "pyamqp_ConnectionState"],
         Union["uamqp_ConnectionState", "pyamqp_ConnectionState"],
-        Optional[Union["uamqp_ConnectionState", "pyamqp_ConnectionState"]]] = (  # pylint:disable=protected-access
-                c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
+Optional[Union["uamqp_ConnectionState", "pyamqp_ConnectionState"]]] = (                c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
                 c_uamqp.ConnectionState.CLOSE_SENT,  # pylint:disable=c-extension-no-member
-                c_uamqp.ConnectionState.DISCARDING,  # pylint:disable=c-extension-no-member
-                c_uamqp.ConnectionState.END,  # pylint:disable=c-extension-no-member
-                None
+c_uamqp.ConnectionState.DISCARDING,                c_uamqp.ConnectionState.END,                None
             )
         TRANSPORT_IDENTIFIER = f"{UAMQP_LIBRARY}/{__version__}"
 

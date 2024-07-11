@@ -1250,8 +1250,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
             return cls(pipeline_response, None, {})
 
     @overload
-    def create_alert_configuration(  # pylint: disable=inconsistent-return-statements
-        self, body: _models.AnomalyAlertConfiguration, *, content_type: str = "application/json", **kwargs: Any
+def create_alert_configuration(        self, body: _models.AnomalyAlertConfiguration, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create anomaly alerting configuration.
 

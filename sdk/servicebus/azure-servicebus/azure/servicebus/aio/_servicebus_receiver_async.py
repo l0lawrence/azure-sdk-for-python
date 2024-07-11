@@ -64,7 +64,6 @@ from ._async_utils import create_authentication
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
         from uamqp.async_ops.client_async import ReceiveClientAsync as uamqp_ReceiveClientAsync
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAuthAsync
         from uamqp.message import Message as uamqp_Message

@@ -225,8 +225,7 @@ class ImageClassificationMultilabelJob(AutoMLImageClassificationBase):
         job.set_data(**data_settings)
         return job
 
-    def _to_dict(self, inside_pipeline: bool = False) -> Dict:  # pylint: disable=arguments-differ
-        from azure.ai.ml._schema.automl.image_vertical.image_classification import ImageClassificationMultilabelSchema
+def _to_dict(self, inside_pipeline: bool = False) -> Dict:        from azure.ai.ml._schema.automl.image_vertical.image_classification import ImageClassificationMultilabelSchema
         from azure.ai.ml._schema.pipeline.automl_node import ImageClassificationMultilabelNodeSchema
 
         schema_dict: dict = {}

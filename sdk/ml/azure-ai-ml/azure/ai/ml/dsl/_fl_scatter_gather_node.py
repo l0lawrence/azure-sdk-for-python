@@ -4,7 +4,6 @@
 
 import importlib
 
-# pylint: disable=protected-access
 from typing import Any, Dict, List, Optional, Union
 
 from azure.ai.ml._utils._experimental import experimental

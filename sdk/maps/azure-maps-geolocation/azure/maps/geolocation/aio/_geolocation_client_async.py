@@ -4,8 +4,7 @@
 # license information.
 # ---------------------------------------------------------------------
 
-# pylint: disable=unused-import,ungrouped-imports, R0904, C0302, too-many-function-args, W0212
-from typing import Any, Union
+,ungrouped-imports, R0904, C0302, too-many-function-args, W0212from typing import Any, Union
 from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.core.credentials import AzureKeyCredential
 from azure.core.credentials_async import AsyncTokenCredential

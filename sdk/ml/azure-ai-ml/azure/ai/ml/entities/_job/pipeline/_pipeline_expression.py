@@ -207,8 +207,7 @@ class PipelineExpressionMixin:
         self._validate_binary_operation(other, PipelineExpressionOperator.XOR)
         return PipelineExpression._from_operation(self, None, PipelineExpressionOperator.XOR)
 
-    def __bool__(self) -> bool:  # pylint: disable=invalid-bool-returned
-        """Python method that is used to implement truth value testing and the built-in operation bool().
+def __bool__(self) -> bool:        """Python method that is used to implement truth value testing and the built-in operation bool().
 
         This method is not supported as PipelineExpressionMixin is designed to record operation history,
         while this method can only return False or True, leading to history breaks here.

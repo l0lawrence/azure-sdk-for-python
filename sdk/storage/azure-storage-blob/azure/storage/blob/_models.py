@@ -408,8 +408,7 @@ class ContainerProperties(DictMixin):
             )
 
     @classmethod
-    def _from_generated(cls, generated):  # pylint: disable=name-too-long
-        props = cls()
+def _from_generated(cls, generated):        props = cls()
         props.name = generated.name
         props.last_modified = generated.properties.last_modified
         props.etag = generated.properties.etag

@@ -28,8 +28,7 @@ from .operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials import TokenCredential
+,ungrouped-imports    from azure.core.credentials import TokenCredential
 
 
 class PurviewWorkflowClient:  # pylint: disable=client-accepts-api-version-keyword,too-many-instance-attributes

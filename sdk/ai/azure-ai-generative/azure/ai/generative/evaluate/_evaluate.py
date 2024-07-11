@@ -463,7 +463,6 @@ def log_input(data, data_is_file):
                 artifact_aml_uri = _get_artifact_dir_path(os.path.join(os.path.basename(tempdir), file_name))
 
                 mlflow.log_input(
-                    # pylint: disable=no-member
                     mlflow.data.from_pandas(pd.read_json(destination_file, lines=True), source=artifact_aml_uri)
                 )
             else:

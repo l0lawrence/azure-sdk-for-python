@@ -45,7 +45,6 @@ if TYPE_CHECKING:
         AzureNamedKeyCredential,
     )
     try:
-        # pylint:disable=unused-import
         from uamqp import SendClient as uamqp_SendClientSync
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:

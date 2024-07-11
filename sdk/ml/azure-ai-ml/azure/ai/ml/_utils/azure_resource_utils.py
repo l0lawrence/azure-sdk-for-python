@@ -19,8 +19,7 @@ def get_resources_from_subscriptions(
         subsList = subscription_list
     else:
         try:
-            from azure.mgmt.resource import SubscriptionClient  # pylint: disable=import-error
-        except ImportError as e:
+from azure.mgmt.resource import SubscriptionClient        except ImportError as e:
             raise ImportError("azure-mgmt-resource is required to get all accessible subscriptions") from e
 
         subsClient = SubscriptionClient(credential)

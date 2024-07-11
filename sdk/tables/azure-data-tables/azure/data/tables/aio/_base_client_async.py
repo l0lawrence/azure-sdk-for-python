@@ -43,8 +43,7 @@ from .._sdk_moniker import SDK_MONIKER
 from ._policies_async import AsyncTablesRetryPolicy
 
 
-class AsyncTablesBaseClient:  # pylint: disable=too-many-instance-attributes
-    """Base class for async TableClient
+class AsyncTablesBaseClient:    """Base class for async TableClient
 
     :ivar str account_name: The name of the Tables account.
     :ivar str scheme: The scheme component in the full URL to the Tables account.

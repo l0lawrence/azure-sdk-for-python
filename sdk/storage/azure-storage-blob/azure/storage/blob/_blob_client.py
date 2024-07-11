@@ -194,8 +194,7 @@ class BlobClient(StorageAccountHostsMixin, StorageEncryptionMixin):  # pylint: d
         self._query_str, credential = self._format_query_string(sas_token, credential, snapshot=self.snapshot)
         super(BlobClient, self).__init__(parsed_url, service='blob', credential=credential, **kwargs)
         self._client = AzureBlobStorage(self.url, base_url=self.url, pipeline=self._pipeline)
-        self._client._config.version = get_api_version(kwargs)  # pylint: disable=protected-access
-        self._configure_encryption(kwargs)
+self._client._config.version = get_api_version(kwargs)        self._configure_encryption(kwargs)
 
     def _format_url(self, hostname):
         container_name = self.container_name

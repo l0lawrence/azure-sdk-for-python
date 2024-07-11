@@ -17,8 +17,7 @@ from ._configuration import DeviceUpdateClientConfiguration
 from .operations import DeviceManagementOperations, DeviceUpdateOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from typing import Dict
+,ungrouped-imports    from typing import Dict
 
     from azure.core.credentials_async import AsyncTokenCredential
 

@@ -17,8 +17,7 @@ from ._configuration import ConfidentialLedgerCertificateClientConfiguration
 from ._operations import ConfidentialLedgerCertificateClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from typing import Dict
+,ungrouped-imports    from typing import Dict
 
 
 class ConfidentialLedgerCertificateClient(

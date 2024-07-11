@@ -1,8 +1,7 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-# pylint: disable=no-member, protected-access
-from copy import deepcopy
+, protected-accessfrom copy import deepcopy
 
 import yaml
 from marshmallow import INCLUDE, fields, post_load, validate

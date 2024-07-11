@@ -28,8 +28,7 @@ from ._operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from azure.core.credentials_async import AsyncTokenCredential
+,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class ChatCompletionsClient(ChatCompletionsClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

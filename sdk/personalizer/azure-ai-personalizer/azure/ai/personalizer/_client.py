@@ -18,8 +18,7 @@ from ._operations import PersonalizerClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 
-class PersonalizerClient(PersonalizerClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
-    """Personalizer Service is an Azure Cognitive Service that makes it easy to target content and
+class PersonalizerClient(PersonalizerClientOperationsMixin):    """Personalizer Service is an Azure Cognitive Service that makes it easy to target content and
     experiences without complex pre-analysis or cleanup of past data. Given a context and
     featurized content, the Personalizer Service returns which content item to show to users in
     rewardActionId. As rewards are sent in response to the use of rewardActionId, the reinforcement
