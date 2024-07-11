@@ -126,4 +126,4 @@ for result in results:
             print("Error in reading line")
             print(path, num)
 
-        break
+        # break
