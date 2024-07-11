@@ -823,7 +823,8 @@ class DocumentModelAdministrationClient(FormRecognizerClientBase):
         return self._client.close()
 
     def __enter__(self) -> "DocumentModelAdministrationClient":
-self._client.__enter__()        return self
+        self._client.__enter__()  # pylint:disable=no-member
+        return self
 
     def __exit__(self, *args: Any) -> None:
         self._client.__exit__(*args)  # pylint:disable=no-member

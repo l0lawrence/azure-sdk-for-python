@@ -37,7 +37,8 @@ class ImdsCredential(AsyncContextManager, GetTokenMixin):
     async def _acquire_token_silently(self, *scopes: str, **kwargs: Any) -> Optional[AccessToken]:
         return self._client.get_cached_token(*scopes)
 
-async def _request_token(self, *scopes: str, **kwargs: Any) -> AccessToken:
+    async def _request_token(self, *scopes: str, **kwargs: Any) -> AccessToken:  # pylint:disable=unused-argument
+
         if within_credential_chain.get() and not self._endpoint_available:
             # If within a chain (e.g. DefaultAzureCredential), we do a quick check to see if the IMDS endpoint
             # is available to avoid hanging for a long time if the endpoint isn't available.

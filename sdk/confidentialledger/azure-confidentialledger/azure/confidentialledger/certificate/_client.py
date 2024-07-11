@@ -17,7 +17,8 @@ from ._operations import ConfidentialLedgerCertificateClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Dict
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Dict
 
 
 class ConfidentialLedgerCertificateClient(

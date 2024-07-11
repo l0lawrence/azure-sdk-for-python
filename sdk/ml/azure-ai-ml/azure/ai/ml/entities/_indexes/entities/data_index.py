@@ -3,6 +3,7 @@
 # ---------------------------------------------------------
 """DataIndex entities."""
 
+# pylint: disable=no-member
 
 from typing import Dict, Optional
 

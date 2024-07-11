@@ -7,7 +7,8 @@
 
 import functools
 import warnings
-from typing import (    Any, AnyStr, AsyncIterable, AsyncIterator, Dict, List, IO, Iterable, Optional, overload, Union,
+from typing import (  # pylint: disable=unused-import
+    Any, AnyStr, AsyncIterable, AsyncIterator, Dict, List, IO, Iterable, Optional, overload, Union,
     TYPE_CHECKING
 )
 

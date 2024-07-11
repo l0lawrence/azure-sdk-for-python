@@ -73,7 +73,8 @@ class BatchJobSchema(PathAwareSchema):
                     if input_data.type == AssetTypes.TRITON_MODEL:
                         data[EndpointYamlFields.BATCH_JOB_INPUT_DATA][key] = TritonModelJobInput(
                             mode=input_data.mode, uri=input_data.path
-)                    if input_data.type == AssetTypes.MLFLOW_MODEL:
+                        )  # pylint: disable=line-too-long
+                    if input_data.type == AssetTypes.MLFLOW_MODEL:
                         data[EndpointYamlFields.BATCH_JOB_INPUT_DATA][key] = MLFlowModelJobInput(
                             mode=input_data.mode, uri=input_data.path
                         )  # pylint: disable=line-too-long

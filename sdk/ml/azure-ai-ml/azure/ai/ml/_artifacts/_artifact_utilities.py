@@ -191,7 +191,8 @@ def list_logs_in_datastore(
                 expiry=datetime.utcnow() + timedelta(minutes=30),
             )
         elif isinstance(storage_client, Gen2StorageClient):
-token = generate_file_sas(                account_name=ds_info["storage_account"],
+            token = generate_file_sas(  # pylint: disable=no-value-for-parameter
+                account_name=ds_info["storage_account"],
                 file_system_name=ds_info["container_name"],
                 file_name=item_name,
                 credential=ds_info["credential"],

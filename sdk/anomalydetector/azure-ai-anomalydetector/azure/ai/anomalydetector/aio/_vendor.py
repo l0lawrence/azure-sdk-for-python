@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING
 from ._configuration import AnomalyDetectorClientConfiguration
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core import AsyncPipelineClient
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core import AsyncPipelineClient
 
     from .._serialization import Deserializer, Serializer
 

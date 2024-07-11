@@ -104,7 +104,8 @@ class Schedule(YamlTranslatableMixin, PathAwareSchemaValidatableMixin, Resource)
     @classmethod
     def _resolve_cls_and_type(
         cls, data: Dict, params_override: Optional[List[Dict]] = None
-) -> Tuple:        from azure.ai.ml.entities._data_import.schedule import ImportDataSchedule
+    ) -> Tuple:  # pylint: disable=unused-argument
+        from azure.ai.ml.entities._data_import.schedule import ImportDataSchedule
         from azure.ai.ml.entities._monitoring.schedule import MonitorSchedule
 
         if "create_monitor" in data:

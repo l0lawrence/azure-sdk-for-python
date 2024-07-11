@@ -53,7 +53,8 @@ from ._client import ImageEmbeddingsClient as ImageEmbeddingsClientGenerated
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-from typing import MutableMapping  # type: ignore
+    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+
 if sys.version_info >= (3, 11):
     from typing import Self
 else:

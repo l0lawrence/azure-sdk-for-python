@@ -37,7 +37,8 @@ from ._operations._patch import _UTC_TZ
 
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials import TokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials import TokenCredential
 
 
 def _parse_connection_string(connection_string: str, **kwargs: Any) -> Any:

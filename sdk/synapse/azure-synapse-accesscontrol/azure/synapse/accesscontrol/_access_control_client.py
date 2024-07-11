@@ -12,7 +12,8 @@ from azure.core import PipelineClient
 from msrest import Deserializer, Serializer
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any
 
     from azure.core.credentials import TokenCredential
     from azure.core.pipeline.transport import HttpRequest, HttpResponse

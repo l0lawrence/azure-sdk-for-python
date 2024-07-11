@@ -222,7 +222,8 @@ class ImageInstanceSegmentationJob(AutoMLImageObjectDetectionBase):
         job.set_data(**data_settings)
         return job
 
-def _to_dict(self, inside_pipeline: bool = False) -> Dict:        from azure.ai.ml._schema.automl.image_vertical.image_object_detection import ImageInstanceSegmentationSchema
+    def _to_dict(self, inside_pipeline: bool = False) -> Dict:  # pylint: disable=arguments-differ
+        from azure.ai.ml._schema.automl.image_vertical.image_object_detection import ImageInstanceSegmentationSchema
         from azure.ai.ml._schema.pipeline.automl_node import ImageInstanceSegmentationNodeSchema
 
         schema_dict: dict = {}

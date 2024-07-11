@@ -226,7 +226,8 @@ class TextClassificationMultilabelJob(AutoMLNLPJob):
         loaded_data.pop(AutoMLConstants.TASK_TYPE_YAML, None)
         return TextClassificationMultilabelJob(**loaded_data)
 
-def _to_dict(self, inside_pipeline: bool = False) -> Dict:        from azure.ai.ml._schema.automl.nlp_vertical.text_classification_multilabel import (
+    def _to_dict(self, inside_pipeline: bool = False) -> Dict:  # pylint: disable=arguments-differ
+        from azure.ai.ml._schema.automl.nlp_vertical.text_classification_multilabel import (
             TextClassificationMultilabelSchema,
         )
         from azure.ai.ml._schema.pipeline.automl_node import AutoMLTextClassificationMultilabelNode

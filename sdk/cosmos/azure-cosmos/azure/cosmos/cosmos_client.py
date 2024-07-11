@@ -307,7 +307,8 @@ class CosmosClient:  # pylint: disable=client-accepts-api-version-keyword
         return DatabaseProxy(self.client_connection, id=result["id"], properties=result)
 
     @distributed_trace
-def create_database_if_not_exists(        self,
+    def create_database_if_not_exists(  # pylint:disable=docstring-missing-param
+        self,
         id: str,
         populate_query_metrics: Optional[bool] = None,
         offer_throughput: Optional[Union[int, ThroughputProperties]] = None,

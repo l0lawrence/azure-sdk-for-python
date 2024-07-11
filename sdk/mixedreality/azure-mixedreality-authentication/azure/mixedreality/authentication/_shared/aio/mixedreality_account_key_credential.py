@@ -10,7 +10,8 @@ from datetime import date, datetime
 from azure.core.credentials import AccessToken
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any
     from azure.core.credentials import AzureKeyCredential
 
 ACCOUNT_KEY_VALID_YEARS = 10

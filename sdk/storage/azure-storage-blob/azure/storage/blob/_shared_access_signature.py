@@ -5,7 +5,8 @@
 # --------------------------------------------------------------------------
 # pylint: disable=docstring-keyword-should-match-keyword-only
 
-from typing import (    Union, Optional, Any, TYPE_CHECKING
+from typing import (  # pylint: disable=unused-import
+    Union, Optional, Any, TYPE_CHECKING
 )
 from urllib.parse import parse_qs
 

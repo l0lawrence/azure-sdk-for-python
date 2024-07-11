@@ -8,7 +8,8 @@ from typing import Any, List
 if sys.version_info >= (3, 9):
     from collections.abc import Mapping
 else:
-from typing import Mapping  # type: ignore
+    from typing import Mapping  # type: ignore  # pylint: disable=ungrouped-imports
+
 JSON = Mapping[str, Any]  # pylint: disable=unsubscriptable-object
 
 

@@ -9,7 +9,8 @@ jenkins-hash lookup3 algorithm implementation
 from asyncio import Lock
 from ..._buffered_producer._partition_resolver import (
     generate_hash_code,
-)
+)  # pylint: disable=protected-access
+
 
 class PartitionResolver:
     def __init__(self, partitions):

@@ -26,7 +26,8 @@ from ._common import merge_validation_args
 
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials import TokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials import TokenCredential
 
 
 class AttestationClient(object):

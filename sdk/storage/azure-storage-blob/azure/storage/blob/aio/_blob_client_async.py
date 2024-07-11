@@ -7,7 +7,8 @@
 
 import warnings
 from functools import partial
-from typing import (    Any, AnyStr, AsyncIterable, Dict, IO, Iterable, List, Optional, overload, Tuple, Union,
+from typing import (  # pylint: disable=unused-import
+    Any, AnyStr, AsyncIterable, Dict, IO, Iterable, List, Optional, overload, Tuple, Union,
     TYPE_CHECKING
 )
 

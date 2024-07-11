@@ -5,7 +5,8 @@
 # --------------------------------------------------------------------------
 # pylint: disable=invalid-overridden-method, docstring-keyword-should-match-keyword-only
 
-from typing import (    Union, Optional, Any,
+from typing import (  # pylint: disable=unused-import
+    Union, Optional, Any,
     TypeVar, TYPE_CHECKING
 )
 from azure.core.tracing.decorator_async import distributed_trace_async
@@ -51,7 +52,8 @@ class DataLakeLeaseClient(DataLakeLeaseClientBase):  # pylint: disable=client-ac
         if hasattr(client, '_blob_client'):
             _client = client._blob_client  # type: ignore # pylint: disable=protected-access
         elif hasattr(client, '_container_client'):
-_client = client._container_client  # type: ignore        else:
+            _client = client._container_client  # type: ignore # pylint: disable=protected-access
+        else:
             raise TypeError("Lease must use any of FileSystemClient DataLakeDirectoryClient, or DataLakeFileClient.")
 
         self._blob_lease_client = BlobLeaseClient(_client, lease_id=lease_id)

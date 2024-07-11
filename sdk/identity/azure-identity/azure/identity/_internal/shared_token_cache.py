@@ -80,7 +80,8 @@ def _filtered_accounts(
     return filtered_accounts
 
 
-class SharedTokenCacheBase(ABC):    def __init__(
+class SharedTokenCacheBase(ABC):  # pylint: disable=too-many-instance-attributes
+    def __init__(
         self,
         username: Optional[str] = None,
         *,

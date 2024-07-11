@@ -25,7 +25,8 @@ except ImportError:
 from functools import partial
 
 
-from ... import (    MessageContent,
+from ... import (  # pylint: disable=import-error
+    MessageContent,
     MessageType as MessageTypeProtocol,
 )
 from ._exceptions import (  # pylint: disable=import-error

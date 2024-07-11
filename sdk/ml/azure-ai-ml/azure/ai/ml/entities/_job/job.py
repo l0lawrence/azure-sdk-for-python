@@ -283,7 +283,8 @@ class Job(Resource, ComponentTranslatableMixin, TelemetryMixin):
     @classmethod
     def _from_rest_object(  # pylint: disable=too-many-return-statements
         cls, obj: Union[JobBase, JobBase_2401, Run]
-) -> "Job":        from azure.ai.ml.entities import PipelineJob
+    ) -> "Job":  # pylint: disable=too-many-return-statements
+        from azure.ai.ml.entities import PipelineJob
         from azure.ai.ml.entities._builders.command import Command
         from azure.ai.ml.entities._builders.spark import Spark
         from azure.ai.ml.entities._job.automl.automl_job import AutoMLJob

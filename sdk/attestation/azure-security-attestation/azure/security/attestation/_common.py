@@ -17,7 +17,8 @@ from cryptography.x509 import Certificate
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any
 
 
 def base64url_encode(unencoded):

@@ -17,7 +17,8 @@ from ._serialization import Deserializer, Serializer
 from .operations import DeviceManagementOperations, DeviceUpdateOperations
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Dict
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Dict
 
     from azure.core.credentials import TokenCredential
 

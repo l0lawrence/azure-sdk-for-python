@@ -20,7 +20,8 @@ from ._serialization import Deserializer, Serializer
 
 class CancerProfilingClient(
     CancerProfilingClientOperationsMixin
-):    """CancerProfilingClient.
+):  # pylint: disable=client-accepts-api-version-keyword
+    """CancerProfilingClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
      https://westus2.api.cognitive.microsoft.com). Required.

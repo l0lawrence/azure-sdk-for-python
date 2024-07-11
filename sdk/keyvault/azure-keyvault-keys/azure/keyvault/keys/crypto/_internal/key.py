@@ -12,6 +12,7 @@ except ImportError:
     TYPE_CHECKING = False
 
 if TYPE_CHECKING:
+    # pylint:disable=unused-import
     from typing import Any, FrozenSet
 
 class Key(object, metaclass=ABCMeta):

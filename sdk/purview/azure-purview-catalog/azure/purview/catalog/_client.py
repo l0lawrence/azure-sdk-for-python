@@ -18,7 +18,8 @@ from ._configuration import PurviewCatalogClientConfiguration
 from .operations import CollectionOperations, DiscoveryOperations, EntityOperations, GlossaryOperations, LineageOperations, RelationshipOperations, TypesOperations
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Dict
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Dict
 
     from azure.core.credentials import TokenCredential
 

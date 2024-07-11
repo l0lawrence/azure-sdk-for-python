@@ -122,7 +122,8 @@ class Model(Artifact):  # pylint: disable=too-many-instance-attributes
         return res
 
     def _to_dict(self) -> Dict:
-return dict(ModelSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self))
+        return dict(ModelSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self))  # pylint: disable=no-member
+
     @classmethod
     def _from_rest_object(cls, model_rest_object: ModelVersion) -> "Model":
         rest_model_version: ModelVersionProperties = model_rest_object.properties

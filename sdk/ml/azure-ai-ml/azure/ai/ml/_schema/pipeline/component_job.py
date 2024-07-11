@@ -242,7 +242,8 @@ class SweepSchema(BaseNodeSchema, ParameterizedSweepSchema):
 
         # parse inputs/outputs
         data = parse_inputs_outputs(data)
-return Sweep(**data)
+        return Sweep(**data)  # pylint: disable=abstract-class-instantiated
+
     @pre_dump
     def resolve_inputs_outputs(self, job, **kwargs):
         return _resolve_inputs_outputs(job)

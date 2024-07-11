@@ -151,7 +151,8 @@ class MetricsAdvisorClient:  # pylint: disable=client-accepts-api-version-keywor
         return "<MetricsAdvisorClient [endpoint={}]>".format(repr(self._endpoint))[:1024]
 
     def __enter__(self) -> "MetricsAdvisorClient":
-self._client.__enter__()        return self
+        self._client.__enter__()  # pylint:disable=no-member
+        return self
 
     def __exit__(self, *args) -> None:
         self._client.__exit__(*args)  # pylint:disable=no-member

@@ -4,7 +4,8 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
-, too-many-linesimport collections
+# pylint: disable=super-init-not-called, too-many-lines
+import collections
 import copy
 import json
 from datetime import datetime

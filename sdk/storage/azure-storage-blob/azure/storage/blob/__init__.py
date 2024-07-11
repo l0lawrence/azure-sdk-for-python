@@ -7,7 +7,8 @@
 
 import os
 
-from typing import Union, Iterable, AnyStr, IO, Any, Dictfrom ._version import VERSION
+from typing import Union, Iterable, AnyStr, IO, Any, Dict  # pylint: disable=unused-import
+from ._version import VERSION
 from ._blob_client import BlobClient
 from ._container_client import ContainerClient
 from ._blob_service_client import BlobServiceClient

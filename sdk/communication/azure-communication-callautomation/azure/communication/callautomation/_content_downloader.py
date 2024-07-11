@@ -35,7 +35,8 @@ class ContentDownloader(object):
 
         self._call_recording_client = call_recording_client
 
-def download_streaming(        self, source_location: str, offset: int, length: int, **kwargs: Any
+    def download_streaming(  # pylint: disable=inconsistent-return-statements
+        self, source_location: str, offset: int, length: int, **kwargs: Any
     ) -> HttpResponse:
         """Download a stream of the call recording.
 

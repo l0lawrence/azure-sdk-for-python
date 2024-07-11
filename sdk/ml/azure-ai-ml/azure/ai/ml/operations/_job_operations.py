@@ -176,7 +176,8 @@ class JobOperations(_ScopeDependentOperations):
         self._credential = credential
         self._orchestrators = OperationOrchestrator(
             self._all_operations, self._operation_scope, self._operation_config
-)
+        )  # pylint: disable=line-too-long
+
         self.service_client_01_2024_preview = kwargs.pop("service_client_01_2024_preview", None)
         self._kwargs = kwargs
 

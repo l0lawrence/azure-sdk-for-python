@@ -16,7 +16,8 @@ from ._models import MetricsQueryResult
 from ._enums import MetricAggregationType
 from ._helpers import get_authentication_policy, get_timespan_iso8601_endpoints, get_subscription_id_from_resource
 
-JSON = MutableMapping[str, Any]
+JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+
 
 class MetricsClient:  # pylint: disable=client-accepts-api-version-keyword
     """MetricsClient should be used for performing metrics queries on multiple monitored resources in the

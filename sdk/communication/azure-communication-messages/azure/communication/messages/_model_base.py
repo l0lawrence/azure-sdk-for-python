@@ -345,7 +345,8 @@ def _get_model(module_name: str, model_name: str):
 _UNSET = object()
 
 
-class _MyMutableMapping(MutableMapping[str, typing.Any]):    def __init__(self, data: typing.Dict[str, typing.Any]) -> None:
+class _MyMutableMapping(MutableMapping[str, typing.Any]):  # pylint: disable=unsubscriptable-object
+    def __init__(self, data: typing.Dict[str, typing.Any]) -> None:
         self._data = copy.deepcopy(data)
 
     def __contains__(self, key: typing.Any) -> bool:
@@ -529,7 +530,8 @@ class Model(_MyMutableMapping):
             k: v
             for mro_class in mros
             if hasattr(mro_class, "__annotations__")  # pylint: disable=no-member
-for k, v in mro_class.__annotations__.items()        }
+            for k, v in mro_class.__annotations__.items()  # pylint: disable=no-member
+        }
         for attr, rf in attr_to_rest_field.items():
             rf._module = cls.__module__
             if not rf._type:

@@ -19,7 +19,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-,missing-client-constructor-parameter-kwargs
+# pylint: disable=missing-client-constructor-parameter-credential,missing-client-constructor-parameter-kwargs
+
 """Create, read, update and delete users in the Azure Cosmos DB SQL API service.
 """
 from typing import Any, Dict, List, Mapping, Union, Optional

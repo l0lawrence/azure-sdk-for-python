@@ -100,7 +100,8 @@ class TextAnalyticsClientBase:
         )
 
     def __enter__(self):
-self._client.__enter__()        return self
+        self._client.__enter__()  # pylint:disable=no-member
+        return self
 
     def __exit__(self, *args):
         self._client.__exit__(*args)  # pylint:disable=no-member

@@ -174,6 +174,7 @@ class ImportJob(Job, JobIOMixin):
         self.output = output
 
     def _to_dict(self) -> Dict:
+        # pylint: disable=no-member
         res: dict = ImportJobSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self)
         return res
 

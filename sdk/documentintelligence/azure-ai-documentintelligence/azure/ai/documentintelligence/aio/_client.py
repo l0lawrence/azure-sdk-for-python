@@ -25,7 +25,8 @@ from ._operations import (
 )
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class DocumentIntelligenceClient(

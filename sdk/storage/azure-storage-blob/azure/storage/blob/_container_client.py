@@ -54,7 +54,8 @@ if TYPE_CHECKING:
     from azure.core.credentials import AzureNamedKeyCredential, AzureSasCredential, TokenCredential
     from azure.core.pipeline.transport import HttpResponse  # pylint: disable=C4756
     from datetime import datetime
-from ._models import (        PublicAccess,
+    from ._models import (  # pylint: disable=unused-import
+        PublicAccess,
         AccessPolicy,
         StandardBlobTier,
         PremiumPageBlobTier)

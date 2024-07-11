@@ -19,7 +19,8 @@ from ._operations import MetricsAdvisorClientOperationsMixin
 from .models import _models as models
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials import TokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials import TokenCredential
 
 
 class MetricsAdvisorClient(MetricsAdvisorClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

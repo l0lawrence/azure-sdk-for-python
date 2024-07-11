@@ -20,7 +20,8 @@ from ._operations import JobRouterAdministrationClientOperationsMixin, JobRouter
 
 class JobRouterAdministrationClient(
     JobRouterAdministrationClientOperationsMixin
-):    """JobRouterAdministrationClient.
+):  # pylint: disable=client-accepts-api-version-keyword
+    """JobRouterAdministrationClient.
 
     :param endpoint: Uri of your Communication resource. Required.
     :type endpoint: str

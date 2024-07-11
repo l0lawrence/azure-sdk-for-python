@@ -95,6 +95,7 @@ class FaceClient(FaceClientGenerated):
         face_id_time_to_live: Optional[int] = None,
         **kwargs: Any,
     ) -> List[_models.FaceDetectionResult]:
+        # pylint: disable=line-too-long
         """Detect human faces in an image, return face rectangles, and optionally with faceIds, landmarks,
         and attributes.
 

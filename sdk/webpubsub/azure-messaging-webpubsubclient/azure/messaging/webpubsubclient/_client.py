@@ -10,7 +10,8 @@ import time
 import logging
 import threading
 import urllib.parse
-import websocketfrom azure.core.pipeline.policies import RetryMode
+import websocket  # pylint: disable=import-error
+from azure.core.pipeline.policies import RetryMode
 
 from .models._models import (
     OnConnectedArgs,

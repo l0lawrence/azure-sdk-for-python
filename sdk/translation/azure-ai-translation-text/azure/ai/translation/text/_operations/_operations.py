@@ -35,7 +35,8 @@ from .._vendor import TextTranslationClientMixinABC, prep_if_match, prep_if_none
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-from typing import MutableMapping  # type: ignoreT = TypeVar("T")
+    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
 _SERIALIZER = Serializer()

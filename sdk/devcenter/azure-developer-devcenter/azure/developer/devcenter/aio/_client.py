@@ -18,7 +18,8 @@ from ._configuration import DevCenterClientConfiguration
 from ._operations import DevCenterClientOperationsMixin
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class DevCenterClient(DevCenterClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

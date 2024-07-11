@@ -12,7 +12,8 @@ from ._enums import LogsQueryStatus
 if sys.version_info >= (3, 9):
     from collections.abc import Mapping
 else:
-from typing import Mapping
+    from typing import Mapping  # pylint: disable=ungrouped-imports
+
 
 JSON = Mapping[str, Any]  # pylint: disable=unsubscriptable-object
 

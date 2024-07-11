@@ -252,6 +252,7 @@ def parallel_run_function(
                 **kwargs,
             )
 
+    # pylint: disable=abstract-class-instantiated
     parallel_obj = Parallel(
         component=component,
         name=name,

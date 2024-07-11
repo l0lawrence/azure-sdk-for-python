@@ -36,6 +36,7 @@ from ._constants import (
 
 
 if TYPE_CHECKING:
+    # pylint: disable=ungrouped-imports
     from ._transport._base import AmqpTransport
     from ._pyamqp.message import Message as pyamqp_Message
     try:

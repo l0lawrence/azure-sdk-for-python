@@ -224,7 +224,8 @@ class TextClassificationJob(AutoMLNLPJob):
         loaded_data.pop(AutoMLConstants.TASK_TYPE_YAML, None)
         return TextClassificationJob(**loaded_data)
 
-def _to_dict(self, inside_pipeline: bool = False) -> Dict:        from azure.ai.ml._schema.automl.nlp_vertical.text_classification import TextClassificationSchema
+    def _to_dict(self, inside_pipeline: bool = False) -> Dict:  # pylint: disable=arguments-differ
+        from azure.ai.ml._schema.automl.nlp_vertical.text_classification import TextClassificationSchema
         from azure.ai.ml._schema.pipeline.automl_node import AutoMLTextClassificationNode
 
         if inside_pipeline:

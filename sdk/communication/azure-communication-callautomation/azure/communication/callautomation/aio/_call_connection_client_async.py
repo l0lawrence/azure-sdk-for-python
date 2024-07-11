@@ -95,7 +95,8 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
     :keyword api_version: Azure Communication Call Automation API version.
     :paramtype api_version: str
     """
-def __init__(, missing-client-constructor-parameter-kwargs        self,
+    def __init__(# pylint: disable=missing-client-constructor-parameter-credential, missing-client-constructor-parameter-kwargs
+        self,
         endpoint: str,
         credential: Union['AsyncTokenCredential', 'AzureKeyCredential'],
         call_connection_id: str,

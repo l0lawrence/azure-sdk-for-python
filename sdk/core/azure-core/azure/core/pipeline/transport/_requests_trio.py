@@ -110,7 +110,8 @@ class TrioStreamDownloadGenerator(AsyncIterator):
                     self.iter_content_func,
                 )
             except AttributeError:  # trio < 0.12.1
-chunk = await trio.run_sync_in_worker_thread(  # type: ignore                    _iterate_response_content,
+                chunk = await trio.run_sync_in_worker_thread(  # type: ignore # pylint: disable=no-member
+                    _iterate_response_content,
                     self.iter_content_func,
                 )
             if not chunk:

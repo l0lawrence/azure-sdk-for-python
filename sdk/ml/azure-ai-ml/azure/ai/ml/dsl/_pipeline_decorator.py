@@ -133,6 +133,7 @@ def pipeline(
     """
 
     def pipeline_decorator(func: Callable[P, T]) -> Callable:
+        # pylint: disable=isinstance-second-argument-not-valid-type
         if not isinstance(func, Callable):  # type: ignore
             raise UserErrorException(f"Dsl pipeline decorator accept only function type, got {type(func)}.")
 

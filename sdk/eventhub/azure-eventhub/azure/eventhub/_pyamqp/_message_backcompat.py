@@ -4,6 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 
+# pylint: disable=too-many-lines
 from enum import Enum
 from typing import (
     Callable,

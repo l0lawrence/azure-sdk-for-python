@@ -94,7 +94,8 @@ class RecognizeEntitiesResult(DictMixin):
     the recognized entities from a particular document.
     """
 
-id: str    """Unique, non-empty document identifier that matches the
+    id: str  # pylint: disable=redefined-builtin
+    """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
     entities: List["CategorizedEntity"]
@@ -938,7 +939,8 @@ class DetectLanguageInput(LanguageInput):
         id: str,  # pylint: disable=redefined-builtin
         text: str,
         country_hint: Optional[str] = None,
-**kwargs: Any    ) -> None:
+        **kwargs: Any  # pylint: disable=unused-argument
+    ) -> None:
         super().__init__(id=id, text=text, country_hint=country_hint)
         self.id = id
         self.text = text
@@ -2372,7 +2374,8 @@ class ExtractiveSummaryAction(DictMixin):
     def _to_generated(self, api_version, task_id):  # pylint: disable=unused-argument
         return _v2023_04_01_models.ExtractiveSummarizationLROTask(  # pylint: disable=no-member
             task_name=task_id,
-parameters=_v2023_04_01_models.ExtractiveSummarizationTaskParameters(                model_version=self.model_version,
+            parameters=_v2023_04_01_models.ExtractiveSummarizationTaskParameters(  # pylint: disable=no-member
+                model_version=self.model_version,
                 string_index_type=string_index_type_compatibility(self.string_index_type),
                 logging_opt_out=self.disable_service_logs,
                 sentence_count=self.max_sentence_count,

@@ -4,7 +4,8 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
-, too-many-linesfrom azure.storage.blob.aio._models import ContainerPropertiesPaged
+# pylint: disable=super-init-not-called, too-many-lines
+from azure.storage.blob.aio._models import ContainerPropertiesPaged
 from .._models import FileSystemProperties
 
 

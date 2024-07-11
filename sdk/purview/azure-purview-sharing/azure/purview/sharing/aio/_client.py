@@ -17,7 +17,8 @@ from ._configuration import PurviewSharingClientConfiguration
 from .operations import ReceivedSharesOperations, SentSharesOperations, ShareResourcesOperations
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class PurviewSharingClient:  # pylint: disable=client-accepts-api-version-keyword

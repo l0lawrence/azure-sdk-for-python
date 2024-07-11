@@ -2,7 +2,8 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-,try-except-raise,line-too-long
+# pylint: disable=protected-access,try-except-raise,line-too-long
+
 import logging
 
 

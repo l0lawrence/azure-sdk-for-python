@@ -505,7 +505,8 @@ def create_index_from_raw_embeddings(
     return mlindex
 
 
-def main(_args, _logger, activity_logger):    try:
+def main(_args, _logger, activity_logger):  # pylint: disable=too-many-locals
+    try:
         try:
             acs_config = json.loads(_args.acs_config)
         except Exception as e:

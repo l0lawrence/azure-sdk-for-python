@@ -22,7 +22,8 @@ from ._shared.mixedreality_account_key_credential import MixedRealityAccountKeyC
 from ._utils import convert_to_access_token, generate_cv_base
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any, Union
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Union
     from azure.core.credentials import TokenCredential
     from azure.core.credentials import AccessToken
 

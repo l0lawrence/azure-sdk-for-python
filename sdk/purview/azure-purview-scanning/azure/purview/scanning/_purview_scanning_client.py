@@ -16,7 +16,8 @@ from ._configuration import PurviewScanningClientConfiguration
 from .operations import ClassificationRulesOperations, DataSourcesOperations, FiltersOperations, KeyVaultConnectionsOperations, ScanResultOperations, ScanRulesetsOperations, ScansOperations, SystemScanRulesetsOperations, TriggersOperations
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any, Dict, Optional
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Dict, Optional
 
     from azure.core.credentials import TokenCredential
     from azure.core.rest import HttpRequest, HttpResponse

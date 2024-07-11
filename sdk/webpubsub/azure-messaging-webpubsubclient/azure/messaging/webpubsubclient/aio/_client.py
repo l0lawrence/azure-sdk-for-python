@@ -1059,7 +1059,8 @@ class WebPubSubClient(
         self,
         event: CallbackType,
         listener: Callable,
-**kwargs: Any,    ) -> None:
+        **kwargs: Any,  # pylint: disable=unused-argument
+    ) -> None:
         """Add handler.
         :param event: The event name. Required.
         :type event: ~azure.messaging.webpubsubclient.models.CallbackType

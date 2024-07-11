@@ -337,7 +337,8 @@ class DocumentTranslationInput:
 class TranslationStatus:  # pylint: disable=too-many-instance-attributes
     """Status information about the translation operation."""
 
-id: str    """Id of the translation operation."""
+    id: str  # pylint: disable=redefined-builtin
+    """Id of the translation operation."""
     created_on: datetime.datetime
     """The date time when the translation operation was created."""
     last_updated_on: datetime.datetime
@@ -1218,7 +1219,8 @@ class DocumentTranslationClient:
         ):  # pylint: disable=protected-access
             return TranslationStatus._from_generated(
                 _TranslationStatus(generated_model)
-)
+            )  # pylint: disable=protected-access
+
         model_conversion_function = kwargs.pop(
             "cls",
             lambda translation_statuses: [_convert_from_generated_model(status) for status in translation_statuses],

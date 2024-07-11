@@ -34,8 +34,11 @@ try:
     else:
         _RETRY_ERRORS: Tuple = (  # type: ignore[no-redef]
             openai.error.ServiceUnavailableError,  # pylint: disable=no-member
-openai.error.APIError,            openai.error.RateLimitError,  # pylint: disable=no-member
-openai.error.APIConnectionError,            openai.error.Timeout,        )
+            openai.error.APIError,  # pylint: disable=no-member
+            openai.error.RateLimitError,  # pylint: disable=no-member
+            openai.error.APIConnectionError,  # pylint: disable=no-member
+            openai.error.Timeout,  # pylint: disable=no-member
+        )
 
 except ImportError as e:
     print("In order to use qa, please install the 'qa_generation' extra of azure-ai-generative")

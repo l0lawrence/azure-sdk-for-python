@@ -119,7 +119,8 @@ class _QuickpulseExporter(MetricExporter):
         self,
         metrics_data: OTMetricsData,
         timeout_millis: float = 10_000,  # pylint: disable=unused-argument
-**kwargs: Any,    ) -> MetricExportResult:
+        **kwargs: Any,  # pylint: disable=unused-argument
+    ) -> MetricExportResult:
         """Exports a batch of metric data
 
         :param metrics_data: OpenTelemetry Metric(s) to export.
@@ -182,7 +183,8 @@ class _QuickpulseExporter(MetricExporter):
     def shutdown(
         self,
         timeout_millis: float = 30_000,  # pylint: disable=unused-argument
-**kwargs: Any,    ) -> None:
+        **kwargs: Any,  # pylint: disable=unused-argument
+    ) -> None:
         """Shuts down the exporter.
 
         Called when the SDK is shut down.

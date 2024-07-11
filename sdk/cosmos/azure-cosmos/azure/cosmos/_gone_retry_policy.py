@@ -24,6 +24,7 @@ Cosmos database service.
 """
 
 
+# pylint: disable=protected-access
 
 
 class PartitionKeyRangeGoneRetryPolicy(object):

@@ -7,7 +7,8 @@
 
 import re
 from datetime import datetime
-from typing import (    Any, Dict, Optional, Tuple, Union,
+from typing import ( # pylint: disable=unused-import
+    Any, Dict, Optional, Tuple, Union,
     TYPE_CHECKING
 )
 from urllib.parse import urlparse, quote

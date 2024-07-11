@@ -7,7 +7,8 @@
 
 import uuid
 
-from typing import (    Union, Optional, Any, TypeVar, TYPE_CHECKING
+from typing import (  # pylint: disable=unused-import
+    Union, Optional, Any, TypeVar, TYPE_CHECKING
 )
 
 from azure.core.tracing.decorator import distributed_trace

@@ -53,7 +53,8 @@ if uamqp_installed:
         """
 
         @staticmethod
-async def create_connection_async(            *,
+        async def create_connection_async( # pylint:disable=unused-argument
+            *,
             endpoint: str,
             auth: authentication.JWTTokenAuth,
             container_id: Optional[str] = None,

@@ -19,7 +19,8 @@ from ._configuration import ImageAnalysisClientConfiguration
 from ._operations import ImageAnalysisClientOperationsMixin
 
 
-class ImageAnalysisClient(ImageAnalysisClientOperationsMixin):    """ImageAnalysisClient.
+class ImageAnalysisClient(ImageAnalysisClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+    """ImageAnalysisClient.
 
     :param endpoint: Azure AI Computer Vision endpoint (protocol and hostname, for example:
      https://:code:`<resource-name>`.cognitiveservices.azure.com). Required.

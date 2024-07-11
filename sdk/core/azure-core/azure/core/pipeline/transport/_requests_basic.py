@@ -43,7 +43,8 @@ from azure.core.exceptions import (
     HttpResponseError,
     DecodeError,
 )
-from . import HttpRequest
+from . import HttpRequest  # pylint: disable=unused-import
+
 from ._base import HttpTransport, HttpResponse, _HttpResponseBase
 from ._bigger_block_size_http_adapters import BiggerBlockSizeHTTPAdapter
 from .._tools import (

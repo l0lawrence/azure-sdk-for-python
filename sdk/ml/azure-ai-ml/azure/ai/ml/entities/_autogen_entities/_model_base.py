@@ -337,7 +337,8 @@ def _get_model(module_name: str, model_name: str):
 _UNSET = object()
 
 
-class _MyMutableMapping(MutableMapping[str, typing.Any]):    def __init__(self, data: typing.Dict[str, typing.Any]) -> None:
+class _MyMutableMapping(MutableMapping[str, typing.Any]):  # pylint: disable=unsubscriptable-object
+    def __init__(self, data: typing.Dict[str, typing.Any]) -> None:
         self._data = copy.deepcopy(data)
 
     def __contains__(self, key: typing.Any) -> bool:
@@ -516,7 +517,8 @@ class Model(_MyMutableMapping):
             k: v
             for mro_class in mros
             if hasattr(mro_class, "__annotations__")  # pylint: disable=no-member
-for k, v in mro_class.__annotations__.items()        }
+            for k, v in mro_class.__annotations__.items()  # pylint: disable=no-member
+        }
         for attr, rf in attr_to_rest_field.items():
             rf._module = cls.__module__
             if not rf._type:
@@ -538,7 +540,8 @@ for k, v in mro_class.__annotations__.items()        }
             if (
                 isinstance(v, _RestField) and v._is_discriminator and v._rest_name not in exist_discriminators
             ):  # pylint: disable=protected-access
-return v._rest_name        return None
+                return v._rest_name  # pylint: disable=protected-access
+        return None
 
     @classmethod
     def _deserialize(cls, data, exist_discriminators):
@@ -546,7 +549,8 @@ return v._rest_name        return None
             return cls(data)
         discriminator = cls._get_discriminator(exist_discriminators)
         exist_discriminators.append(discriminator)
-mapped_cls = cls.__mapping__.get(data.get(discriminator), cls)  # pyright: ignore        if mapped_cls == cls:
+        mapped_cls = cls.__mapping__.get(data.get(discriminator), cls)  # pyright: ignore # pylint: disable=no-member
+        if mapped_cls == cls:
             return cls(data)
         return mapped_cls._deserialize(data, exist_discriminators)  # pylint: disable=protected-access
 

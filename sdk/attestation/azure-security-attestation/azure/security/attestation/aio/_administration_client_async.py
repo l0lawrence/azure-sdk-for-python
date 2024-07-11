@@ -33,7 +33,8 @@ from .._models import (
 from .._common import pem_from_base64, validate_signing_keys, merge_validation_args
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 AttestationPolicyManagementCertificateResult = Tuple[
     AttestationPolicyCertificateResult, AttestationToken

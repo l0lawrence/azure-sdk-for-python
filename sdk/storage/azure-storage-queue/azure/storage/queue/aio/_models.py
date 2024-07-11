@@ -4,6 +4,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
+# pylint: disable=super-init-not-called
 
 from typing import Any, Callable, List, Optional, Tuple
 

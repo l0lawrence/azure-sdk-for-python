@@ -71,7 +71,8 @@ def _iterate_response_content(iterator):
         raise _ResponseStopIteration()  # pylint: disable=raise-missing-from
 
 
-class AsyncHttpResponse(_HttpResponseBase, AsyncContextManager["AsyncHttpResponse"]):    """An AsyncHttpResponse ABC.
+class AsyncHttpResponse(_HttpResponseBase, AsyncContextManager["AsyncHttpResponse"]):  # pylint: disable=abstract-method
+    """An AsyncHttpResponse ABC.
 
     Allows for the asynchronous streaming of data from the response.
     """

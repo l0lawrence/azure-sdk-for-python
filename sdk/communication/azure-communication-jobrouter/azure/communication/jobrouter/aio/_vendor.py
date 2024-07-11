@@ -13,7 +13,8 @@ from azure.core import MatchConditions
 from ._configuration import JobRouterAdministrationClientConfiguration, JobRouterClientConfiguration
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core import AsyncPipelineClient
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core import AsyncPipelineClient
 
     from .._serialization import Deserializer, Serializer
 

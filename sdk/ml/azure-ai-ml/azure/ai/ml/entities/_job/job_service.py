@@ -210,7 +210,8 @@ class SshJobService(JobServiceBase):
         port: Optional[int] = None,
         ssh_public_keys: Optional[str] = None,
         properties: Optional[Dict[str, str]] = None,
-**kwargs: Any,    ) -> None:
+        **kwargs: Any,  # pylint: disable=unused-argument
+    ) -> None:
         super().__init__(
             endpoint=endpoint,
             nodes=nodes,

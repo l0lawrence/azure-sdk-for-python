@@ -15,7 +15,8 @@ from azure.core.pipeline.transport import HttpRequest, HttpResponse
 from .. import models as _models
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
 
     T = TypeVar('T')
     ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]

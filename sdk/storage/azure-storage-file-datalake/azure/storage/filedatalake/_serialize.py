@@ -6,7 +6,8 @@
 
 from typing import Any, Dict, Optional, Union
 
-from azure.storage.blob._serialize import _get_match_headersfrom ._shared import encode_base64
+from azure.storage.blob._serialize import _get_match_headers  # pylint: disable=protected-access
+from ._shared import encode_base64
 from ._generated.models import ModifiedAccessConditions, PathHTTPHeaders, \
     SourceModifiedAccessConditions, LeaseAccessConditions, CpkInfo
 

@@ -39,6 +39,7 @@ from ._async_utils import create_authentication
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
     try:
+        # pylint:disable=unused-import
         from uamqp.async_ops.client_async import SendClientAsync as uamqp_SendClientAsync
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAuthAsync
     except ImportError:

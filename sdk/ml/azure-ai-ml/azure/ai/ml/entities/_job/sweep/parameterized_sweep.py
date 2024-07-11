@@ -28,6 +28,7 @@ from .sampling_algorithm import (
     SamplingAlgorithmType,
 )
 
+# pylint: disable=unnecessary-lambda
 SAMPLING_ALGORITHM_TO_REST_CONSTRUCTOR: Dict[SamplingAlgorithmType, Type[RestSamplingAlgorithm]] = {
     SamplingAlgorithmType.RANDOM: RestRandomSamplingAlgorithm,
     SamplingAlgorithmType.GRID: RestGridSamplingAlgorithm,

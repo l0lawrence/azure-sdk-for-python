@@ -3,7 +3,8 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-, docstring-keyword-should-match-keyword-only
+# pylint: disable=invalid-overridden-method, docstring-keyword-should-match-keyword-only
+
 import functools
 import warnings
 from typing import (

@@ -212,8 +212,10 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         """
         return errors.RetryPolicy(
             retry_total=config.max_retries,  # pylint:disable=protected-access
-retry_backoff_factor=config.backoff_factor,            retry_backoff_max=config.backoff_max,  # pylint:disable=protected-access
-retry_mode=config.retry_mode,            no_retry_condition=NO_RETRY_ERRORS,
+            retry_backoff_factor=config.backoff_factor,  # pylint:disable=protected-access
+            retry_backoff_max=config.backoff_max,  # pylint:disable=protected-access
+            retry_mode=config.retry_mode,  # pylint:disable=protected-access
+            no_retry_condition=NO_RETRY_ERRORS,
             custom_condition_backoff=CUSTOM_CONDITION_BACKOFF,
         )
 
@@ -777,4 +779,5 @@ retry_mode=config.retry_mode,            no_retry_condition=NO_RETRY_ERRORS,
             #         closable._close_handler()  # pylint:disable=protected-access
             else:  # errors.AMQPConnectionError, compat.TimeoutException
                 if hasattr(closable, "_close_connection"):
-closable._close_connection()            return PyamqpTransport._create_eventhub_exception(exception, is_consumer=is_consumer)
+                    closable._close_connection()  # pylint:disable=protected-access
+            return PyamqpTransport._create_eventhub_exception(exception, is_consumer=is_consumer)

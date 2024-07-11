@@ -24,7 +24,8 @@ from .._util import convert_ordered_dict_to_dict, validate_attribute_type
 from .component import Component
 
 
-class DataTransferComponent(Component):    """DataTransfer component version, used to define a data transfer component.
+class DataTransferComponent(Component):  # pylint: disable=too-many-instance-attributes
+    """DataTransfer component version, used to define a data transfer component.
 
     :param task: Task type in the data transfer component. Possible values are "copy_data",
                  "import_data", and "export_data".

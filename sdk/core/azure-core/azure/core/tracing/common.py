@@ -54,7 +54,8 @@ def get_function_and_class_name(func: Callable, *args: object) -> str:
         return func.__qualname__
     except AttributeError:
         if args:
-return "{}.{}".format(args[0].__class__.__name__, func.__name__)        return func.__name__
+            return "{}.{}".format(args[0].__class__.__name__, func.__name__)  # pylint: disable=protected-access
+        return func.__name__
 
 
 @contextmanager

@@ -49,7 +49,8 @@ class CreateJobFileRefField(FileRefField):
 
         from azure.ai.ml.entities import Job
 
-return Job._load(            data=job_dict,
+        return Job._load(  # pylint: disable=no-member
+            data=job_dict,
             yaml_path=self.context[BASE_PATH_CONTEXT_KEY] / value,
             **kwargs,
         )

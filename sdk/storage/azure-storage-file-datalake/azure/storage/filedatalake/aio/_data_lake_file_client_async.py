@@ -305,7 +305,8 @@ class DataLakeFileClient(PathClient, DataLakeFileClientBase):
                 :dedent: 4
                 :caption: Getting the properties for a file.
         """
-return await self._get_path_properties(cls=deserialize_file_properties, **kwargs)
+        return await self._get_path_properties(cls=deserialize_file_properties, **kwargs)  # pylint: disable=protected-access
+
     @distributed_trace_async
     async def set_file_expiry(self, expiry_options,  # type: str
                               expires_on=None,  # type: Optional[Union[datetime, int]]

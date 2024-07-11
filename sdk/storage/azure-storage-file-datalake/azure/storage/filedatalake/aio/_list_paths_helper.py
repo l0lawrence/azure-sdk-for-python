@@ -4,7 +4,8 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
-, too-many-linesfrom azure.core.exceptions import HttpResponseError
+# pylint: disable=super-init-not-called, too-many-lines
+from azure.core.exceptions import HttpResponseError
 from azure.core.async_paging import AsyncPageIterator
 
 from .._deserialize import process_storage_error, get_deleted_path_properties_from_generated_code, \

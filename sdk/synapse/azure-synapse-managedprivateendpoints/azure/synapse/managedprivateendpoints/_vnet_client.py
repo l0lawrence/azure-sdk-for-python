@@ -19,7 +19,8 @@ from msrest import Deserializer, Serializer
 from ._configuration import VnetClientConfiguration
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any, Optional
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Optional
 
     from azure.core.credentials import TokenCredential
     from azure.core.pipeline.transport import HttpRequest, HttpResponse

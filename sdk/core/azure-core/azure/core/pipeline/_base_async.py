@@ -39,7 +39,8 @@ HTTPRequestType = TypeVar("HTTPRequestType")
 
 class _SansIOAsyncHTTPPolicyRunner(
     AsyncHTTPPolicy[HTTPRequestType, AsyncHTTPResponseType]
-):    """Async implementation of the SansIO policy.
+):  # pylint: disable=unsubscriptable-object
+    """Async implementation of the SansIO policy.
 
     Modifies the request and sends to the next policy in the chain.
 

@@ -17,7 +17,8 @@ from ._configuration import WebPubSubServiceClientConfiguration
 from ._operations import WebPubSubServiceClientOperationsMixin
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class WebPubSubServiceClient(

@@ -37,7 +37,8 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
     """
 
     @staticmethod
-async def create_connection_async(        *,
+    async def create_connection_async(# pylint:disable=unused-argument
+        *,
         endpoint: str,
         auth: JWTTokenAuthAsync,
         container_id: Optional[str] = None,
@@ -480,7 +481,8 @@ async def create_connection_async(        *,
                 #     if hasattr(closable, "_close_handler"):
                 #         closable._close_handler()  # pylint:disable=protected-access
                 else:  # errors.AMQPConnectionError, compat.TimeoutException
-await closable._close_connection_async()                return PyamqpTransportAsync._create_eventhub_exception(exception, is_consumer=is_consumer)
+                    await closable._close_connection_async()  # pylint:disable=protected-access
+                return PyamqpTransportAsync._create_eventhub_exception(exception, is_consumer=is_consumer)
             except AttributeError:
                 pass
             return PyamqpTransportAsync._create_eventhub_exception(exception, is_consumer=is_consumer)

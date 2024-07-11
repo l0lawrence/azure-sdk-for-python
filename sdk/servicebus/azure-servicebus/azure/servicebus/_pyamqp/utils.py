@@ -46,7 +46,8 @@ class UTC(datetime.tzinfo):
 
 
 try:
-from datetime import timezone
+    from datetime import timezone  # pylint: disable=ungrouped-imports
+
     TZ_UTC = timezone.utc  # type: ignore
 except ImportError:
     TZ_UTC = UTC()  # type: ignore

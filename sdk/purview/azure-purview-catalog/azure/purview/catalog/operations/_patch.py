@@ -29,7 +29,8 @@ if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
     from typing import MutableMapping  # type: ignore
-JSON = MutableMapping[str, Any]_SERIALIZER = Serializer()
+JSON = MutableMapping[str, Any] # pylint: disable=unsubscriptable-object
+_SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 def patch_sdk():
     pass

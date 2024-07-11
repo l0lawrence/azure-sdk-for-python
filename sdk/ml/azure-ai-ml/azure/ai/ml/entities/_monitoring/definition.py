@@ -152,7 +152,8 @@ class MonitorDefinition(RestTranslatableMixin):
             == MonitorTargetTasks.QUESTION_ANSWERING.lower()  # type: ignore[union-attr]
         ):
             self.monitoring_signals = {
-DEFAULT_TOKEN_USAGE_SIGNAL_NAME: GenerationTokenStatisticsSignal._get_default_token_statistics_signal(),            }
+                DEFAULT_TOKEN_USAGE_SIGNAL_NAME: GenerationTokenStatisticsSignal._get_default_token_statistics_signal(),  # pylint: disable=line-too-long
+            }
         else:
             self.monitoring_signals = {
                 DEFAULT_DATA_DRIFT_SIGNAL_NAME: DataDriftSignal._get_default_data_drift_signal(),

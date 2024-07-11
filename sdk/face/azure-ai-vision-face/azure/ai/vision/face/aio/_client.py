@@ -19,7 +19,8 @@ from ._configuration import FaceClientConfiguration, FaceSessionClientConfigurat
 from ._operations import FaceClientOperationsMixin, FaceSessionClientOperationsMixin
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class FaceClient(FaceClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword

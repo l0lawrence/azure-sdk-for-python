@@ -4,7 +4,8 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
-, too-many-linesfrom enum import Enum
+# pylint: disable=super-init-not-called, too-many-lines
+from enum import Enum
 
 from azure.core import CaseInsensitiveEnumMeta
 from azure.storage.blob import LeaseProperties as BlobLeaseProperties

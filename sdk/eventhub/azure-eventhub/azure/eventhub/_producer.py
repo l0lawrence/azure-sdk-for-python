@@ -292,7 +292,8 @@ class EventHubProducer(
                     links = [link] if link else []
 
             self._unsent_events = [wrapper_event_data._message]  # pylint: disable=protected-access
-with send_context_manager(self._client, links=links):                self._send_event_data_with_retry(timeout=timeout)
+            with send_context_manager(self._client, links=links):  # pylint: disable=protected-access
+                self._send_event_data_with_retry(timeout=timeout)
 
     def close(self) -> None:
         """

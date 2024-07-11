@@ -18,7 +18,8 @@ from ._configuration import ConversationAnalysisClientConfiguration
 from ._operations import ConversationAnalysisClientOperationsMixin
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 
 class ConversationAnalysisClient(

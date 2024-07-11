@@ -94,6 +94,7 @@ class FLScatterGather(ControlFlowNode, NodeIOMixin):
     ) -> None:
         # auto-create X_to_Y_argument_map values if allowed and needed.
         if create_default_mappings_if_needed:
+            # pylint: disable=line-too-long
             (
                 silo_to_aggregation_argument_map,
                 aggregation_to_silo_argument_map,

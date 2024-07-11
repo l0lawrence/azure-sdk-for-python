@@ -22,7 +22,8 @@ def _any_conditions(modified_access_conditions=None, **kwargs):  # pylint: disab
     ])
 
 
-def upload_datalake_file(        client=None,
+def upload_datalake_file(  # pylint: disable=unused-argument
+        client=None,
         stream=None,
         length=None,
         overwrite=None,

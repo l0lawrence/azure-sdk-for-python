@@ -153,7 +153,8 @@ class AzureJSONEncoder(JSONEncoder):
         if _is_model(o):
             readonly_props = [
                 p._rest_name for p in o._attr_to_rest_field.values() if _is_readonly(p)
-]            return {k: v for k, v in o.items() if k not in readonly_props}
+            ]  # pylint: disable=protected-access
+            return {k: v for k, v in o.items() if k not in readonly_props}
         if isinstance(o, (bytes, bytearray)):
             return base64.b64encode(o).decode()
         if o is AzureCoreNull:
@@ -428,7 +429,8 @@ class Model(_MyMutableMapping):
             k: v
             for mro_class in mros
             if hasattr(mro_class, "__annotations__")  # pylint: disable=no-member
-for k, v in mro_class.__annotations__.items()        }
+            for k, v in mro_class.__annotations__.items()  # pylint: disable=no-member
+        }
         for attr, rf in attr_to_rest_field.items():
             rf._module = cls.__module__
             if not rf._type:
@@ -456,7 +458,8 @@ for k, v in mro_class.__annotations__.items()        }
         if not hasattr(cls, "__mapping__"):  # pylint: disable=no-member
             return cls(data)
         discriminator = cls._get_discriminator()
-mapped_cls = cls.__mapping__.get(data.get(discriminator), cls)        if mapped_cls == cls:
+        mapped_cls = cls.__mapping__.get(data.get(discriminator), cls)  # pylint: disable=no-member
+        if mapped_cls == cls:
             return cls(data)
         return mapped_cls._deserialize(data)  # pylint: disable=protected-access
 

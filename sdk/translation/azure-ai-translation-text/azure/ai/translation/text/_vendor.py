@@ -13,7 +13,8 @@ from azure.core import MatchConditions
 from ._configuration import TextTranslationClientConfiguration
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core import PipelineClient
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core import PipelineClient
 
     from ._serialization import Deserializer, Serializer
 

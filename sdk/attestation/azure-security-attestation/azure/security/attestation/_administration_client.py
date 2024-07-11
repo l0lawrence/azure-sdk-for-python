@@ -33,7 +33,8 @@ from ._models import (
 from ._common import pem_from_base64, validate_signing_keys, merge_validation_args
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials import TokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials import TokenCredential
 
 
 class AttestationAdministrationClient(object):

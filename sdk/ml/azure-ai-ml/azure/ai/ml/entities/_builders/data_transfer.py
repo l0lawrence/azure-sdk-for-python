@@ -168,6 +168,7 @@ class DataTransferCopy(DataTransfer):
         Details will be provided in the error message.
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         *,

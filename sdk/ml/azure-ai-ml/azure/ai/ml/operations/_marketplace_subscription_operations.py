@@ -57,7 +57,8 @@ class MarketplaceSubscriptionOperations(_ScopeDependentOperations):
             self._workspace_name,
             marketplace_subscription.name,
             marketplace_subscription._to_rest_object(),  # type: ignore
-cls=lambda response, deserialized, headers: MarketplaceSubscription._from_rest_object(deserialized),  # type: ignore            **kwargs,
+            cls=lambda response, deserialized, headers: MarketplaceSubscription._from_rest_object(deserialized),  # type: ignore # pylint: disable=line-too-long
+            **kwargs,
         )
 
     @experimental

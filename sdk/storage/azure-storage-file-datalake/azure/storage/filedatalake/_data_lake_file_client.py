@@ -344,7 +344,8 @@ class DataLakeFileClient(PathClient):
             headers = kwargs.pop('headers', {})
             headers['x-ms-upn'] = str(upn)
             kwargs['headers'] = headers
-return self._get_path_properties(cls=deserialize_file_properties, **kwargs)
+        return self._get_path_properties(cls=deserialize_file_properties, **kwargs)  # pylint: disable=protected-access
+
     @distributed_trace
     def set_file_expiry(self, expiry_options,  # type: str
                         expires_on=None,   # type: Optional[Union[datetime, int]]
@@ -372,7 +373,8 @@ return self._get_path_properties(cls=deserialize_file_properties, **kwargs)
         except AttributeError:
             expires_on = str(expires_on)
         self._datalake_client_for_blob_operation.path \
-.set_expiry(expiry_options, expires_on=expires_on, **kwargs)
+            .set_expiry(expiry_options, expires_on=expires_on, **kwargs)  # pylint: disable=protected-access
+
     def _upload_options(  # pylint:disable=too-many-statements
             self, data: Union[bytes, str, Iterable[AnyStr], AsyncIterable[AnyStr], IO[AnyStr]],
             length: Optional[int] = None,

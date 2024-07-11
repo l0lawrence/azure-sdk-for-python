@@ -15,7 +15,8 @@ from .._generated.aio._configuration import LoadTestingClientConfiguration
 from .._generated._serialization import Deserializer, Serializer
 from .._generated.aio.operations import AdministrationOperations, TestRunOperations
 
-class _BaseClient:    """These APIs allow end users to create, view and run load tests using Azure Load Test Service.
+class _BaseClient:  # pylint: disable=client-accepts-api-version-keyword
+    """These APIs allow end users to create, view and run load tests using Azure Load Test Service.
 
     :ivar administration: AdministrationOperations operations
     :vartype administration: azure.developer.loadtesting.aio.operations.AdministrationOperations

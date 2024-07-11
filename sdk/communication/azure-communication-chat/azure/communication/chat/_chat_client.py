@@ -26,7 +26,8 @@ from ._utils import ( # pylint: disable=unused-import
 from ._version import SDK_MONIKER
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union
     from datetime import datetime
     from azure.core.paging import ItemPaged
 

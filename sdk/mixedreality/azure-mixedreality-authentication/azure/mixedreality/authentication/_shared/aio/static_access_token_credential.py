@@ -6,7 +6,8 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Any
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any
     from azure.core.credentials_async import AsyncTokenCredential
     from azure.core.credentials import AccessToken
 

@@ -31,7 +31,8 @@ from .deployment import Deployment
 module_logger = logging.getLogger(__name__)
 
 
-class BatchDeployment(Deployment):    """Batch endpoint deployment entity.
+class BatchDeployment(Deployment):  # pylint: disable=too-many-instance-attributes
+    """Batch endpoint deployment entity.
 
     :param name: the name of the batch deployment
     :type name: str

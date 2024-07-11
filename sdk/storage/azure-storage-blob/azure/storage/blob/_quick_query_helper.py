@@ -5,7 +5,8 @@
 # --------------------------------------------------------------------------
 
 from io import BytesIO
-from typing import Union, Iterable, IO
+from typing import Union, Iterable, IO  # pylint: disable=unused-import
+
 from ._shared.avro.datafile import DataFileReader
 from ._shared.avro.avro_io import DatumReader
 

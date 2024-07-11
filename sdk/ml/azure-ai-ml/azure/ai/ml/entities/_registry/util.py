@@ -1,7 +1,8 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-,no-else-return
+# pylint:disable=protected-access,no-else-return
+
 from azure.ai.ml._restclient.v2022_10_01_preview.models import ArmResourceId as RestArmResourceId
 from azure.ai.ml._restclient.v2022_10_01_preview.models import StorageAccountDetails as RestStorageAccountDetails
 from azure.ai.ml._restclient.v2022_10_01_preview.models import (

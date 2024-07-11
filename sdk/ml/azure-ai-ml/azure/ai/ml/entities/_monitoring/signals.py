@@ -861,7 +861,8 @@ class FeatureAttributionDriftSignal(RestTranslatableMixin):
         self.type = MonitorSignalType.FEATURE_ATTRIBUTION_DRIFT
 
     def _to_rest_object(
-self, **kwargs: Any    ) -> RestFeatureAttributionDriftMonitoringSignal:
+        self, **kwargs: Any  # pylint: disable=unused-argument
+    ) -> RestFeatureAttributionDriftMonitoringSignal:
         default_window_size = kwargs.get("default_data_window_size")
         ref_data_window_size = kwargs.get("ref_data_window_size")
         return RestFeatureAttributionDriftMonitoringSignal(

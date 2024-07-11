@@ -125,7 +125,8 @@ class EventHubConsumer(
             link_properties[EPOCH_SYMBOL] = int(owner_level)
         link_property_timeout_ms = (
             self._client._config.receive_timeout
-or self._timeout        ) * self._amqp_transport.TIMEOUT_FACTOR
+            or self._timeout  # pylint:disable=protected-access
+        ) * self._amqp_transport.TIMEOUT_FACTOR
         link_properties[TIMEOUT_SYMBOL] = int(link_property_timeout_ms)
         self._link_properties: Union[
             Dict[uamqp_AMQPType, uamqp_AMQPType], Dict[types.AMQPTypes, types.AMQPTypes]

@@ -21,7 +21,8 @@ from ._serialization import Deserializer, Serializer
 
 class RadiologyInsightsClient(
     RadiologyInsightsClientOperationsMixin
-):    """RadiologyInsightsClient.
+):  # pylint: disable=client-accepts-api-version-keyword
+    """RadiologyInsightsClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
      https://westus2.api.cognitive.microsoft.com). Required.

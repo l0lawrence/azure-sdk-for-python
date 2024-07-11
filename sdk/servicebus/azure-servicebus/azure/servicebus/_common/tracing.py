@@ -25,6 +25,7 @@ from azure.core.tracing import SpanKind, Link
 
 if TYPE_CHECKING:
     try:
+        # pylint:disable=unused-import
         from uamqp import Message as uamqp_Message
     except ImportError:
         uamqp_Message = None

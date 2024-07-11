@@ -26,6 +26,7 @@ from .amqp import AmqpAnnotatedMessage
 from ._constants import PROP_TIMESTAMP
 
 if TYPE_CHECKING:
+    # pylint: disable=ungrouped-imports
     from ._transport._base import AmqpTransport
     try:
         from uamqp import Message as uamqp_Message

@@ -15,7 +15,8 @@ from .._model_base import rest_discriminator, rest_field
 from ._enums import RadiologyInsightsInferenceType
 
 if TYPE_CHECKING:
-,ungrouped-imports    from .. import models as _models
+    # pylint: disable=unused-import,ungrouped-imports
+    from .. import models as _models
 
 
 class RadiologyInsightsInference(_model_base.Model):

@@ -72,7 +72,8 @@ class _AsyncChunkDownloader(_ChunkDownloader):
 
     async def _update_progress(self, length):
         if self.progress_lock:
-async with self.progress_lock:                self.progress_total += length
+            async with self.progress_lock:  # pylint: disable=not-async-context-manager
+                self.progress_total += length
         else:
             self.progress_total += length
 

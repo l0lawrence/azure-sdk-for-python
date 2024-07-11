@@ -72,7 +72,8 @@ class DefaultScaleSettings(OnlineScaleSettings):
 
     def __init__(self, **kwargs: Any):
         super(DefaultScaleSettings, self).__init__(
-type=ScaleType.DEFAULT.value,        )
+            type=ScaleType.DEFAULT.value,  # pylint: disable=no-member
+        )
 
     def _to_rest_object(self) -> RestDefaultScaleSettings:
         return RestDefaultScaleSettings()

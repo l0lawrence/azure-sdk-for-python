@@ -42,7 +42,8 @@ except NameError:
 
 if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
-from azure.core.pipeline import (        PipelineRequest,
+    from azure.core.pipeline import (  # pylint: disable=non-abstract-transport-import
+        PipelineRequest,
         PipelineResponse
     )
 

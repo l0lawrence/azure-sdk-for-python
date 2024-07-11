@@ -7,7 +7,8 @@
 
 import warnings
 import sys
-from typing import (    Optional, Union, Dict, Any, Iterable, Literal, TYPE_CHECKING
+from typing import ( # pylint: disable=unused-import
+    Optional, Union, Dict, Any, Iterable, Literal, TYPE_CHECKING
 )
 
 from azure.core.exceptions import HttpResponseError

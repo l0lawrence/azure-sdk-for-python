@@ -439,7 +439,8 @@ class ModelOperations(_ScopeDependentOperations):
         version: Optional[str] = None,
         label: Optional[str] = None,
         **kwargs: Any,
-) -> None:        """Archive a model asset.
+    ) -> None:  # pylint:disable=unused-argument
+        """Archive a model asset.
 
         :param name: Name of model asset.
         :type name: str

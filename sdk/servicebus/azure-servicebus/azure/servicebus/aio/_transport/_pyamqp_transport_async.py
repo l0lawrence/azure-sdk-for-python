@@ -128,7 +128,8 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         logger: "Logger",
         timeout: int,
         last_exception: Optional[Exception]
-) -> None:        """
+    ) -> None:  # pylint: disable=unused-argument
+        """
         Handles sending of service bus messages.
         :param ~azure.servicebus.ServiceBusSender sender: The sender with handler to send messages.
         :param ~pyamqp.message.Message message: The message to send.

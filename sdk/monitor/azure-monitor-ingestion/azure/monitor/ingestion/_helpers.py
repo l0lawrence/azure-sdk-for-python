@@ -11,7 +11,8 @@ import zlib
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-from typing import MutableMapping  # type: ignore
+    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+
 
 _LOGGER = logging.getLogger(__name__)
 JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object

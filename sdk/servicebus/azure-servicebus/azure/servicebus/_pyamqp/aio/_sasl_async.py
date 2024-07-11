@@ -64,7 +64,8 @@ class SASLExternalCredential(object):
         return b""
 
 
-class SASLTransportMixinAsync:    async def _negotiate(self):
+class SASLTransportMixinAsync:  # pylint: disable=no-member
+    async def _negotiate(self):
         await self.write(SASL_HEADER_FRAME)
         _, returned_header = await self.receive_frame()
         if returned_header[1] != SASL_HEADER_FRAME:

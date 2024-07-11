@@ -277,7 +277,8 @@ class ProxyConfiguration:
         self.Port: Optional[int] = None
 
 
-class ConnectionPolicy:    """Represents the Connection policy associated with a CosmosClientConnection.
+class ConnectionPolicy:  # pylint: disable=too-many-instance-attributes
+    """Represents the Connection policy associated with a CosmosClientConnection.
 
     :ivar int RequestTimeout:
         Gets or sets the request timeout (time to wait for a response from a

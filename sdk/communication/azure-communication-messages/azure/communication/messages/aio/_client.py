@@ -19,7 +19,8 @@ from ._configuration import MessageTemplateClientConfiguration, NotificationMess
 from ._operations import MessageTemplateClientOperationsMixin, NotificationMessagesClientOperationsMixin
 
 if TYPE_CHECKING:
-,ungrouped-imports    from azure.core.credentials_async import AsyncTokenCredential
+    # pylint: disable=unused-import,ungrouped-imports
+    from azure.core.credentials_async import AsyncTokenCredential
 
 class NotificationMessagesClient(NotificationMessagesClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
     """NotificationMessagesClient.

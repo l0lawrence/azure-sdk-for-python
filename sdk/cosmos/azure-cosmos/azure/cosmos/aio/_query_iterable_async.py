@@ -25,6 +25,7 @@ import asyncio
 from azure.core.async_paging import AsyncPageIterator
 from azure.cosmos._execution_context.aio import execution_dispatcher
 
+# pylint: disable=protected-access
 
 
 class QueryIterable(AsyncPageIterator):

@@ -304,7 +304,8 @@ class ClassificationJob(AutoMLTabular):
         job.set_data(**data_settings)
         return job
 
-def _to_dict(self, inside_pipeline: bool = False) -> Dict:        """Convert the object to a dictionary.
+    def _to_dict(self, inside_pipeline: bool = False) -> Dict:  # pylint: disable=arguments-differ
+        """Convert the object to a dictionary.
 
         :param inside_pipeline: whether the job is inside a pipeline or not, defaults to False
         :type inside_pipeline: bool

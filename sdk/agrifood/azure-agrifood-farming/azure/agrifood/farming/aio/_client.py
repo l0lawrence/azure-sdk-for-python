@@ -55,7 +55,8 @@ from .operations import (
 )
 
 if TYPE_CHECKING:
-,ungrouped-imports    from typing import Dict
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Dict
 
     from azure.core.credentials_async import AsyncTokenCredential
 

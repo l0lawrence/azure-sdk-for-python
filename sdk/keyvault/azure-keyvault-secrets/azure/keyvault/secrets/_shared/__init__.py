@@ -13,6 +13,7 @@ from . import http_challenge_cache
 HttpChallengeCache = http_challenge_cache  # to avoid aliasing pylint error (C4745)
 
 if TYPE_CHECKING:
+    # pylint: disable=unused-import
     from typing import Optional
 
 
