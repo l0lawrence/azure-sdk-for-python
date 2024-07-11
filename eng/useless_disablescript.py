@@ -92,34 +92,38 @@ for result in results:
             print(reason)
             if f"# pylint: disable={reason}" in lines[num]:
                 print("Found")
-                if lines[num].find(f"# pylint: disable={reason},"):
-                    lines[num] = lines[num].replace(f"{reason},", "").strip()
-                lines[num] = lines[num].replace(f"# pylint: disable={reason}", "").strip()
+                if "," in lines[num].split("pylint")[1]:
+                    lines[num] = lines[num].replace(f"{reason},", "")
+                else:
+                    lines[num] = lines[num].replace(f"# pylint: disable={reason}", "")
                 with open(path, "w") as fi:
                     fi.writelines(lines)
             elif f"# pylint: disable={reason}" in lines[num-1]:
                 print("Found")
-                if lines[num-1].find(f"# pylint: disable={reason},"):
-                    lines[num-1] = lines[num-1].replace(f"{reason},", "").strip()
-                lines[num-1] = lines[num-1].replace(f"# pylint: disable={reason}", "").strip()
+                if "," in lines[num-1].split("pylint")[1]:
+                    lines[num-1] = lines[num-1].replace(f"{reason},", "")
+                else:
+                    lines[num-1] = lines[num-1].replace(f"# pylint: disable={reason}", "")
                 with open(path, "w") as fi:
                     fi.writelines(lines)
             elif f"# pylint:disable={reason}" in lines[num]:
                 print("Found")
-                if lines[num].find(f"# pylint:disable={reason},"):
-                    lines[num] = lines[num].replace(f"{reason},", "").strip()
-                lines[num] = lines[num].replace(f"# pylint:disable={reason}", "").strip()
+                if "," in lines[num].split("pylint")[1]:
+                    lines[num] = lines[num].replace(f"{reason},", "")
+                else:
+                    lines[num] = lines[num].replace(f"# pylint:disable={reason}", "")
                 with open(path, "w") as fi:
                     fi.writelines(lines)
             elif f"# pylint:disable={reason}" in lines[num-1]:
                 print("Found")
-                if lines[num-1].find(f"# pylint:disable={reason},"):
-                    lines[num-1] = lines[num-1].replace(f"{reason},", "").strip()
-                lines[num-1] = lines[num-1].replace(f"# pylint:disable={reason}", "").strip()
+                if "," in lines[num-1].split("pylint")[1]:
+                    lines[num-1] = lines[num-1].replace(f"{reason},", "")
+                else:
+                    lines[num-1] = lines[num-1].replace(f"# pylint:disable={reason}", "")
                 with open(path, "w") as fi:
                     fi.writelines(lines)
         except:
             print("Error in reading line")
             print(path, num)
 
-        # break
+        break
