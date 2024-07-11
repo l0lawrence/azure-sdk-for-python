@@ -34,8 +34,8 @@ from .._vendor import BlocklistClientMixinABC, ContentSafetyClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1274,7 +1274,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    def remove_blocklist_items(  
         self,
         blocklist_name: str,
         options: _models.RemoveTextBlocklistItemsOptions,
@@ -1300,7 +1300,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         """
 
     @overload
-    def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    def remove_blocklist_items(  
         self, blocklist_name: str, options: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove BlocklistItems From Text Blocklist.
@@ -1321,7 +1321,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         """
 
     @overload
-    def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    def remove_blocklist_items(  
         self, blocklist_name: str, options: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove BlocklistItems From Text Blocklist.

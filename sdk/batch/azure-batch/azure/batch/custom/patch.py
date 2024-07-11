@@ -87,7 +87,7 @@ class _TaskWorkflowManager(object):
             # In case of a chunk exceeding the MaxMessageSize split chunk in half
             # and resubmit smaller chunk requests
             # TODO: Replace string with constant variable once available in SDK
-            if e.error.code == "RequestBodyTooLarge":  # pylint: disable=no-member
+            if e.error.code == "RequestBodyTooLarge":  
                 # In this case the task is misbehaved and will not be able to be added due to:
                 #   1) The task exceeding the max message size
                 #   2) A single cell of the task exceeds the per-cell limit, or
@@ -136,7 +136,7 @@ class _TaskWorkflowManager(object):
             except AttributeError:
                 pass
 
-            for task_result in add_collection_response.value:  # pylint: disable=no-member
+            for task_result in add_collection_response.value:  
                 if task_result.status == TaskAddStatus.server_error:
                     # Server error will be retried
                     with self._pending_queue_lock:

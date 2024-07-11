@@ -19,10 +19,10 @@ from .._api_versions import DEFAULT_VERSION
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 
-class EmailClient(object): # pylint: disable=client-accepts-api-version-keyword
+class EmailClient(object): 
     """A client to interact with the AzureCommunicationService Email gateway asynchronously.
 
     This client provides operations to send an email and monitor its status.

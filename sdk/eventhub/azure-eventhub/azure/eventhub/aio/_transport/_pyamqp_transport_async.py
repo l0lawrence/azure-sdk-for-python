@@ -37,7 +37,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
     """
 
     @staticmethod
-    async def create_connection_async(# pylint:disable=unused-argument
+    async def create_connection_async(
         *,
         endpoint: str,
         auth: JWTTokenAuthAsync,
@@ -91,7 +91,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         await connection.close()
 
     @staticmethod
-    def create_send_client(# pylint: disable=unused-argument
+    def create_send_client(
         *,
         config,
         target: str,
@@ -364,7 +364,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         #    token_auth.update_token()  # TODO: why don't we need to update in pyamqp?
 
     @staticmethod
-    def create_mgmt_client(address, mgmt_auth, config):  # pylint: disable=unused-argument
+    def create_mgmt_client(address, mgmt_auth, config):  
         """
         Creates and returns the mgmt AMQP client.
         :param _Address address: Required. The Address.
@@ -430,7 +430,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         )
 
     @staticmethod
-    async def _handle_exception_async(  # pylint:disable=too-many-branches, too-many-statements
+    async def _handle_exception_async(  # pylint:disable= too-many-statements
         exception: Exception, closable: Union["ClientBaseAsync", "ConsumerProducerMixin"], *, is_consumer=False
     ) -> Exception:
         # pylint: disable=protected-access
@@ -479,7 +479,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
                 # TODO: add MessageHandlerError in amqp?
                 # elif isinstance(exception, errors.MessageHandlerError):
                 #     if hasattr(closable, "_close_handler"):
-                #         closable._close_handler()  # pylint:disable=protected-access
+                #         closable._close_handler()  
                 else:  # errors.AMQPConnectionError, compat.TimeoutException
                     await closable._close_connection_async()  # pylint:disable=protected-access
                 return PyamqpTransportAsync._create_eventhub_exception(exception, is_consumer=is_consumer)

@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -237,7 +237,7 @@ class MetastoreOperations:
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete(self, id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, id: str, **kwargs: Any) -> None:  
         """Remove files in Syms.
 
         :param id: Required.

@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -55,7 +55,7 @@ class TriggerRunOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @distributed_trace_async
-    async def rerun_trigger_instance(  # pylint: disable=inconsistent-return-statements
+    async def rerun_trigger_instance(  
         self, trigger_name: str, run_id: str, **kwargs: Any
     ) -> None:
         """Rerun single trigger instance by runId.
@@ -110,7 +110,7 @@ class TriggerRunOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def cancel_trigger_instance(  # pylint: disable=inconsistent-return-statements
+    async def cancel_trigger_instance(  
         self, trigger_name: str, run_id: str, **kwargs: Any
     ) -> None:
         """Cancel single trigger instance by runId.

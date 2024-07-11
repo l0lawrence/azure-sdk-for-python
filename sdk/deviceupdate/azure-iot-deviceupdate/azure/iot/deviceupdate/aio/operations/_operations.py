@@ -83,8 +83,8 @@ from ...operations._operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -803,7 +803,7 @@ class DeviceUpdateOperations:
 
         return cast(JSON, deserialized)
 
-    async def _delete_update_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_update_initial(  
         self, provider: str, name: str, version: str, **kwargs: Any
     ) -> None:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
@@ -2054,7 +2054,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_device_class(  # pylint: disable=inconsistent-return-statements
+    async def delete_device_class(  
         self, device_class_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device class. Device classes are created automatically when Device Update-enabled
@@ -2332,7 +2332,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
 
         return AsyncItemPaged(get_next, extract_data)
 
-    async def _import_devices_initial(  # pylint: disable=inconsistent-return-statements
+    async def _import_devices_initial(  
         self, import_type: str, **kwargs: Any
     ) -> None:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
@@ -2914,7 +2914,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_group(  # pylint: disable=inconsistent-return-statements
+    async def delete_group(  
         self, group_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device group. This group is automatically created when a Device Update-enabled device
@@ -3701,7 +3701,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_deployment(  # pylint: disable=inconsistent-return-statements
+    async def delete_deployment(  
         self, group_id: str, deployment_id: str, **kwargs: Any
     ) -> None:
         """Deletes a deployment.
@@ -4048,7 +4048,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_device_class_subgroup(  # pylint: disable=inconsistent-return-statements
+    async def delete_device_class_subgroup(  
         self, group_id: str, device_class_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device class subgroup. This subgroup is automatically created when a Device
@@ -4497,7 +4497,7 @@ class DeviceManagementOperations:  # pylint: disable=too-many-public-methods
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_deployment_for_device_class_subgroup(  # pylint: disable=inconsistent-return-statements
+    async def delete_deployment_for_device_class_subgroup(  
         self, group_id: str, device_class_id: str, deployment_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device class subgroup deployment.

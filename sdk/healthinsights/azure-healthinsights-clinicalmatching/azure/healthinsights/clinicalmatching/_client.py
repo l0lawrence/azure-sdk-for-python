@@ -20,7 +20,7 @@ from ._serialization import Deserializer, Serializer
 
 class ClinicalMatchingClient(
     ClinicalMatchingClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """ClinicalMatchingClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

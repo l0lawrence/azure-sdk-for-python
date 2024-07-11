@@ -46,8 +46,8 @@ from .._vendor import BlocklistClientMixinABC, ContentSafetyClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -659,7 +659,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete_text_blocklist(  # pylint: disable=inconsistent-return-statements
+    async def delete_text_blocklist(  
         self, blocklist_name: str, **kwargs: Any
     ) -> None:
         """Delete Text Blocklist By blocklistName.
@@ -1027,7 +1027,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         return AsyncItemPaged(get_next, extract_data)
 
     @overload
-    async def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    async def remove_blocklist_items(  
         self,
         blocklist_name: str,
         options: _models.RemoveTextBlocklistItemsOptions,
@@ -1053,7 +1053,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         """
 
     @overload
-    async def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    async def remove_blocklist_items(  
         self, blocklist_name: str, options: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove BlocklistItems From Text Blocklist.
@@ -1074,7 +1074,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         """
 
     @overload
-    async def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    async def remove_blocklist_items(  
         self, blocklist_name: str, options: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove BlocklistItems From Text Blocklist.
@@ -1095,7 +1095,7 @@ class BlocklistClientOperationsMixin(BlocklistClientMixinABC):
         """
 
     @distributed_trace_async
-    async def remove_blocklist_items(  # pylint: disable=inconsistent-return-statements
+    async def remove_blocklist_items(  
         self,
         blocklist_name: str,
         options: Union[_models.RemoveTextBlocklistItemsOptions, JSON, IO[bytes]],

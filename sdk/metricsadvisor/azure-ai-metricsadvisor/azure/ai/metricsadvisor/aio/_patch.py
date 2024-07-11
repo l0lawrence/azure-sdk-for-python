@@ -45,7 +45,7 @@ from ._client import MetricsAdvisorClient as _ClientAsync
 from .. import models
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 
@@ -981,11 +981,11 @@ class MetricsAdvisorClient:  # pylint: disable=client-accepts-api-version-keywor
         return "<MetricsAdvisorClient [endpoint={}]>".format(repr(self._endpoint))[:1024]
 
     async def __aenter__(self) -> "MetricsAdvisorClient":
-        await self._client.__aenter__()  # pylint:disable=no-member
+        await self._client.__aenter__()  
         return self
 
     async def __aexit__(self, *args: Any) -> None:
-        await self._client.__aexit__(*args)  # pylint:disable=no-member
+        await self._client.__aexit__(*args)  
 
     async def close(self) -> None:
         """Close the :class:`~azure.ai.metricsadvisor.aio.MetricsAdvisorClient` session."""

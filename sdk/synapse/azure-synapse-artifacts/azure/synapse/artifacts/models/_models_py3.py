@@ -16,12 +16,12 @@ from .. import _serialization
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    # pylint: disable=ungrouped-imports
     from .. import models as _models
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 
 
 class Activity(_serialization.Model):
@@ -1792,7 +1792,7 @@ class AmazonRdsForOracleSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class AmazonRdsForOracleTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AmazonRdsForOracleTableDataset(Dataset):  
     """The AmazonRdsForOracle database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -1905,7 +1905,7 @@ class AmazonRdsForOracleTableDataset(Dataset):  # pylint: disable=too-many-insta
         self.table = table
 
 
-class AmazonRdsForSqlServerLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AmazonRdsForSqlServerLinkedService(LinkedService):  
     """Amazon RDS for SQL Server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -2021,7 +2021,7 @@ class AmazonRdsForSqlServerLinkedService(LinkedService):  # pylint: disable=too-
         self.always_encrypted_settings = always_encrypted_settings
 
 
-class AmazonRdsForSqlServerSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class AmazonRdsForSqlServerSource(TabularSource):  
     """A copy activity Amazon RDS for SQL Server source.
 
     All required parameters must be populated in order to send to server.
@@ -2167,7 +2167,7 @@ class AmazonRdsForSqlServerSource(TabularSource):  # pylint: disable=too-many-in
         self.partition_settings = partition_settings
 
 
-class AmazonRdsForSqlServerTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AmazonRdsForSqlServerTableDataset(Dataset):  
     """The Amazon RDS for SQL Server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -2280,7 +2280,7 @@ class AmazonRdsForSqlServerTableDataset(Dataset):  # pylint: disable=too-many-in
         self.table = table
 
 
-class AmazonRedshiftLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AmazonRedshiftLinkedService(LinkedService):  
     """Linked service for Amazon Redshift.
 
     All required parameters must be populated in order to send to server.
@@ -2505,7 +2505,7 @@ class AmazonRedshiftSource(TabularSource):
         self.redshift_unload_settings = redshift_unload_settings
 
 
-class AmazonRedshiftTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AmazonRedshiftTableDataset(Dataset):  
     """The Amazon Redshift table dataset.
 
     All required parameters must be populated in order to send to server.
@@ -2627,7 +2627,7 @@ class AmazonRedshiftTableDataset(Dataset):  # pylint: disable=too-many-instance-
         self.schema_type_properties_schema = schema_type_properties_schema
 
 
-class AmazonS3Dataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AmazonS3Dataset(Dataset):  
     """A single Amazon Simple Storage Service (S3) object or a set of S3 objects.
 
     All required parameters must be populated in order to send to server.
@@ -2791,7 +2791,7 @@ class AmazonS3Dataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self.compression = compression
 
 
-class AmazonS3LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AmazonS3LinkedService(LinkedService):  
     """Linked service for Amazon S3.
 
     All required parameters must be populated in order to send to server.
@@ -3752,7 +3752,7 @@ class AutoScaleProperties(_serialization.Model):
         self.max_node_count = max_node_count
 
 
-class AvroDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AvroDataset(Dataset):  
     """Avro dataset.
 
     All required parameters must be populated in order to send to server.
@@ -4419,7 +4419,7 @@ class AvroWriteSettings(FormatWriteSettings):
         self.file_name_prefix = file_name_prefix
 
 
-class AzureBatchLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureBatchLinkedService(LinkedService):  
     """Azure Batch linked service.
 
     All required parameters must be populated in order to send to server.
@@ -4549,7 +4549,7 @@ class AzureBatchLinkedService(LinkedService):  # pylint: disable=too-many-instan
         self.credential = credential
 
 
-class AzureBlobDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureBlobDataset(Dataset):  
     """The Azure Blob storage.
 
     All required parameters must be populated in order to send to server.
@@ -4703,7 +4703,7 @@ class AzureBlobDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self.compression = compression
 
 
-class AzureBlobFSDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureBlobFSDataset(Dataset):  
     """The Azure Data Lake Storage Gen2 storage.
 
     All required parameters must be populated in order to send to server.
@@ -5076,7 +5076,7 @@ class AzureBlobFSLocation(DatasetLocation):
         self.file_system = file_system
 
 
-class AzureBlobFSReadSettings(StoreReadSettings):  # pylint: disable=too-many-instance-attributes
+class AzureBlobFSReadSettings(StoreReadSettings):  
     """Azure blobFS read settings.
 
     All required parameters must be populated in order to send to server.
@@ -6014,7 +6014,7 @@ class AzureBlobStorageWriteSettings(StoreWriteSettings):
         self.block_size_in_mb = block_size_in_mb
 
 
-class AzureDatabricksDeltaLakeDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureDatabricksDeltaLakeDataset(Dataset):  
     """Azure Databricks Delta Lake dataset.
 
     All required parameters must be populated in order to send to server.
@@ -6317,7 +6317,7 @@ class AzureDatabricksDeltaLakeImportCommand(ImportSettings):
         self.timestamp_format = timestamp_format
 
 
-class AzureDatabricksDeltaLakeLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureDatabricksDeltaLakeLinkedService(LinkedService):  
     """Azure Databricks Delta Lake linked service.
 
     All required parameters must be populated in order to send to server.
@@ -7019,7 +7019,7 @@ class ExecutionActivity(Activity):
         self.policy = policy
 
 
-class AzureDataExplorerCommandActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class AzureDataExplorerCommandActivity(ExecutionActivity):  
     """Azure Data Explorer command activity.
 
     All required parameters must be populated in order to send to server.
@@ -7140,7 +7140,7 @@ class AzureDataExplorerCommandActivity(ExecutionActivity):  # pylint: disable=to
         self.command_timeout = command_timeout
 
 
-class AzureDataExplorerLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureDataExplorerLinkedService(LinkedService):  
     """Azure Data Explorer (Kusto) linked service.
 
     All required parameters must be populated in order to send to server.
@@ -7581,7 +7581,7 @@ class AzureDataExplorerTableDataset(Dataset):
         self.table = table
 
 
-class AzureDataLakeAnalyticsLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureDataLakeAnalyticsLinkedService(LinkedService):  
     """Azure Data Lake Analytics linked service.
 
     All required parameters must be populated in order to send to server.
@@ -7724,7 +7724,7 @@ class AzureDataLakeAnalyticsLinkedService(LinkedService):  # pylint: disable=too
         self.encrypted_credential = encrypted_credential
 
 
-class AzureDataLakeStoreDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureDataLakeStoreDataset(Dataset):  
     """Azure Data Lake Store dataset.
 
     All required parameters must be populated in order to send to server.
@@ -8950,7 +8950,7 @@ class AzureFileStorageWriteSettings(StoreWriteSettings):
         self.type: str = "AzureFileStorageWriteSettings"
 
 
-class AzureFunctionActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class AzureFunctionActivity(ExecutionActivity):  
     """Azure Function activity.
 
     All required parameters must be populated in order to send to server.
@@ -9092,7 +9092,7 @@ class AzureFunctionActivity(ExecutionActivity):  # pylint: disable=too-many-inst
         self.body = body
 
 
-class AzureFunctionLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureFunctionLinkedService(LinkedService):  
     """Azure Function linked service.
 
     All required parameters must be populated in order to send to server.
@@ -9666,7 +9666,7 @@ class AzureMariaDBTableDataset(Dataset):
         self.table_name = table_name
 
 
-class AzureMLBatchExecutionActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class AzureMLBatchExecutionActivity(ExecutionActivity):  
     """Azure ML Batch Execution activity.
 
     All required parameters must be populated in order to send to server.
@@ -9807,7 +9807,7 @@ class AzureMLBatchExecutionActivity(ExecutionActivity):  # pylint: disable=too-m
         self.web_service_inputs = web_service_inputs
 
 
-class AzureMLExecutePipelineActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class AzureMLExecutePipelineActivity(ExecutionActivity):  
     """Azure ML Execute Pipeline activity.
 
     All required parameters must be populated in order to send to server.
@@ -9966,7 +9966,7 @@ class AzureMLExecutePipelineActivity(ExecutionActivity):  # pylint: disable=too-
         self.continue_on_step_failure = continue_on_step_failure
 
 
-class AzureMLLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureMLLinkedService(LinkedService):  
     """Azure ML Studio Web Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -10109,7 +10109,7 @@ class AzureMLLinkedService(LinkedService):  # pylint: disable=too-many-instance-
         self.authentication = authentication
 
 
-class AzureMLServiceLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureMLServiceLinkedService(LinkedService):  
     """Azure ML Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -10255,7 +10255,7 @@ class AzureMLServiceLinkedService(LinkedService):  # pylint: disable=too-many-in
         self.encrypted_credential = encrypted_credential
 
 
-class AzureMLUpdateResourceActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class AzureMLUpdateResourceActivity(ExecutionActivity):  
     """Azure ML Update Resource management activity.
 
     All required parameters must be populated in order to send to server.
@@ -10712,7 +10712,7 @@ class AzureMySqlSource(TabularSource):
         self.query = query
 
 
-class AzureMySqlTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureMySqlTableDataset(Dataset):  
     """The Azure MySQL database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -11105,7 +11105,7 @@ class AzurePostgreSqlSource(TabularSource):
         self.query = query
 
 
-class AzurePostgreSqlTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzurePostgreSqlTableDataset(Dataset):  
     """Azure PostgreSQL dataset.
 
     All required parameters must be populated in order to send to server.
@@ -11606,7 +11606,7 @@ class AzureSearchLinkedService(LinkedService):
         self.encrypted_credential = encrypted_credential
 
 
-class AzureSqlDatabaseLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureSqlDatabaseLinkedService(LinkedService):  
     """Microsoft Azure SQL Database linked service.
 
     All required parameters must be populated in order to send to server.
@@ -11758,7 +11758,7 @@ class AzureSqlDatabaseLinkedService(LinkedService):  # pylint: disable=too-many-
         self.credential = credential
 
 
-class AzureSqlDWLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureSqlDWLinkedService(LinkedService):  
     """Azure SQL Data Warehouse linked service.
 
     All required parameters must be populated in order to send to server.
@@ -11900,7 +11900,7 @@ class AzureSqlDWLinkedService(LinkedService):  # pylint: disable=too-many-instan
         self.credential = credential
 
 
-class AzureSqlDWTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureSqlDWTableDataset(Dataset):  
     """The Azure SQL Data Warehouse dataset.
 
     All required parameters must be populated in order to send to server.
@@ -12022,7 +12022,7 @@ class AzureSqlDWTableDataset(Dataset):  # pylint: disable=too-many-instance-attr
         self.table = table
 
 
-class AzureSqlMILinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureSqlMILinkedService(LinkedService):  
     """Azure SQL Managed Instance linked service.
 
     All required parameters must be populated in order to send to server.
@@ -12174,7 +12174,7 @@ class AzureSqlMILinkedService(LinkedService):  # pylint: disable=too-many-instan
         self.credential = credential
 
 
-class AzureSqlMITableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureSqlMITableDataset(Dataset):  
     """The Azure SQL Managed Instance dataset.
 
     All required parameters must be populated in order to send to server.
@@ -12296,7 +12296,7 @@ class AzureSqlMITableDataset(Dataset):  # pylint: disable=too-many-instance-attr
         self.table = table
 
 
-class AzureSqlSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class AzureSqlSink(CopySink):  
     """A copy activity Azure SQL sink.
 
     All required parameters must be populated in order to send to server.
@@ -12435,7 +12435,7 @@ class AzureSqlSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.table_option = table_option
 
 
-class AzureSqlSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class AzureSqlSource(TabularSource):  
     """A copy activity Azure SQL source.
 
     All required parameters must be populated in order to send to server.
@@ -12581,7 +12581,7 @@ class AzureSqlSource(TabularSource):  # pylint: disable=too-many-instance-attrib
         self.partition_settings = partition_settings
 
 
-class AzureSqlTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class AzureSqlTableDataset(Dataset):  
     """The Azure SQL Server database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -12703,7 +12703,7 @@ class AzureSqlTableDataset(Dataset):  # pylint: disable=too-many-instance-attrib
         self.table = table
 
 
-class AzureStorageLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureStorageLinkedService(LinkedService):  
     """The storage account linked service.
 
     All required parameters must be populated in order to send to server.
@@ -13015,7 +13015,7 @@ class AzureTableDataset(Dataset):
         self.table_name = table_name
 
 
-class AzureTableSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class AzureTableSink(CopySink):  
     """A copy activity Azure Table sink.
 
     All required parameters must be populated in order to send to server.
@@ -13237,7 +13237,7 @@ class AzureTableSource(TabularSource):
         self.azure_table_source_ignore_table_not_found = azure_table_source_ignore_table_not_found
 
 
-class AzureTableStorageLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class AzureTableStorageLinkedService(LinkedService):  
     """The azure table storage linked service.
 
     All required parameters must be populated in order to send to server.
@@ -13684,7 +13684,7 @@ class BigDataPoolResourceInfoListResult(_serialization.Model):
         self.value = value
 
 
-class BinaryDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class BinaryDataset(Dataset):  
     """Binary dataset.
 
     All required parameters must be populated in order to send to server.
@@ -14200,7 +14200,7 @@ class MultiplePipelineTrigger(Trigger):
         self.pipelines = pipelines
 
 
-class BlobEventsTrigger(MultiplePipelineTrigger):  # pylint: disable=too-many-instance-attributes
+class BlobEventsTrigger(MultiplePipelineTrigger):  
     """Trigger that runs every time a Blob event occurs.
 
     Variables are only populated by the server, and will be ignored when sending a request.
@@ -14314,7 +14314,7 @@ class BlobEventsTrigger(MultiplePipelineTrigger):  # pylint: disable=too-many-in
         self.scope = scope
 
 
-class BlobSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class BlobSink(CopySink):  
     """A copy activity Azure Blob sink.
 
     All required parameters must be populated in order to send to server.
@@ -14619,7 +14619,7 @@ class BlobTrigger(MultiplePipelineTrigger):
         self.linked_service = linked_service
 
 
-class CassandraLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class CassandraLinkedService(LinkedService):  
     """Linked service for Cassandra data source.
 
     All required parameters must be populated in order to send to server.
@@ -14852,7 +14852,7 @@ class CassandraSource(TabularSource):
         self.consistency_level = consistency_level
 
 
-class CassandraTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class CassandraTableDataset(Dataset):  
     """The Cassandra database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -15650,7 +15650,7 @@ class CompressionReadSettings(_serialization.Model):
         self.type: Optional[str] = None
 
 
-class ConcurLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class ConcurLinkedService(LinkedService):  
     """Concur Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -16299,7 +16299,7 @@ class CopyTranslator(_serialization.Model):
         self.type: Optional[str] = None
 
 
-class CosmosDbLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class CosmosDbLinkedService(LinkedService):  
     """Microsoft Azure Cosmos Database (CosmosDB) linked service.
 
     All required parameters must be populated in order to send to server.
@@ -17564,7 +17564,7 @@ class CredentialReference(_serialization.Model):
         self.reference_name = reference_name
 
 
-class CustomActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class CustomActivity(ExecutionActivity):  
     """Custom activity type.
 
     All required parameters must be populated in order to send to server.
@@ -18091,7 +18091,7 @@ class CustomSetupBase(_serialization.Model):
         self.type: Optional[str] = None
 
 
-class DatabricksNotebookActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class DatabricksNotebookActivity(ExecutionActivity):  
     """DatabricksNotebook activity.
 
     All required parameters must be populated in order to send to server.
@@ -18222,7 +18222,7 @@ class DatabricksNotebookActivity(ExecutionActivity):  # pylint: disable=too-many
         self.libraries = libraries
 
 
-class DatabricksSparkJarActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class DatabricksSparkJarActivity(ExecutionActivity):  
     """DatabricksSparkJar activity.
 
     All required parameters must be populated in order to send to server.
@@ -18351,7 +18351,7 @@ class DatabricksSparkJarActivity(ExecutionActivity):  # pylint: disable=too-many
         self.libraries = libraries
 
 
-class DatabricksSparkPythonActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class DatabricksSparkPythonActivity(ExecutionActivity):  
     """DatabricksSparkPython activity.
 
     All required parameters must be populated in order to send to server.
@@ -19504,7 +19504,7 @@ class DataFlowStagingInfo(_serialization.Model):
         self.folder_path = folder_path
 
 
-class DataLakeAnalyticsUSQLActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class DataLakeAnalyticsUSQLActivity(ExecutionActivity):  
     """Data Lake Analytics U-SQL activity.
 
     All required parameters must be populated in order to send to server.
@@ -20076,7 +20076,7 @@ class DataworldLinkedService(LinkedService):
         self.encrypted_credential = encrypted_credential
 
 
-class Db2LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class Db2LinkedService(LinkedService):  
     """Linked service for DB2 data source.
 
     All required parameters must be populated in order to send to server.
@@ -20321,7 +20321,7 @@ class Db2Source(TabularSource):
         self.query = query
 
 
-class Db2TableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class Db2TableDataset(Dataset):  
     """The Db2 table dataset.
 
     All required parameters must be populated in order to send to server.
@@ -20441,7 +20441,7 @@ class Db2TableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self.table = table
 
 
-class DeleteActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class DeleteActivity(ExecutionActivity):  
     """Delete activity.
 
     All required parameters must be populated in order to send to server.
@@ -21701,7 +21701,7 @@ class DrillSource(TabularSource):
         self.query = query
 
 
-class DrillTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class DrillTableDataset(Dataset):  
     """Drill server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -21914,7 +21914,7 @@ class DynamicExecutorAllocation(_serialization.Model):
         self.enabled = enabled
 
 
-class DynamicsAXLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class DynamicsAXLinkedService(LinkedService):  
     """Dynamics AX linked service.
 
     All required parameters must be populated in order to send to server.
@@ -23273,7 +23273,7 @@ class EditTablesRequest(_serialization.Model):
         self.link_tables = link_tables
 
 
-class EloquaLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class EloquaLinkedService(LinkedService):  
     """Eloqua server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -23809,7 +23809,7 @@ class EvaluateDataFlowExpressionRequest(_serialization.Model):
         self.expression = expression
 
 
-class ExcelDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class ExcelDataset(Dataset):  
     """Excel dataset.
 
     All required parameters must be populated in order to send to server.
@@ -24046,7 +24046,7 @@ class ExcelSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class ExecuteDataFlowActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class ExecuteDataFlowActivity(ExecutionActivity):  
     """Execute data flow activity.
 
     All required parameters must be populated in order to send to server.
@@ -24251,7 +24251,7 @@ class ExecuteDataFlowActivityTypePropertiesCompute(_serialization.Model):  # pyl
         self.core_count = core_count
 
 
-class ExecutePipelineActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class ExecutePipelineActivity(ControlActivity):  
     """Execute pipeline activity.
 
     All required parameters must be populated in order to send to server.
@@ -25185,7 +25185,7 @@ class FileServerWriteSettings(StoreWriteSettings):
         self.type: str = "FileServerWriteSettings"
 
 
-class FileShareDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class FileShareDataset(Dataset):  
     """An on-premises file system dataset.
 
     All required parameters must be populated in order to send to server.
@@ -25701,7 +25701,7 @@ class Flowlet(DataFlow):
         self.script_lines = script_lines
 
 
-class ForEachActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class ForEachActivity(ControlActivity):  
     """This activity is used for iterating over a collection and execute given activities.
 
     All required parameters must be populated in order to send to server.
@@ -25822,7 +25822,7 @@ class ForEachActivity(ControlActivity):  # pylint: disable=too-many-instance-att
         self.activities = activities
 
 
-class FtpReadSettings(StoreReadSettings):  # pylint: disable=too-many-instance-attributes
+class FtpReadSettings(StoreReadSettings):  
     """Ftp read settings.
 
     All required parameters must be populated in order to send to server.
@@ -25951,7 +25951,7 @@ class FtpReadSettings(StoreReadSettings):  # pylint: disable=too-many-instance-a
         self.disable_chunking = disable_chunking
 
 
-class FtpServerLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class FtpServerLinkedService(LinkedService):  
     """A FTP server Linked Service.
 
     All required parameters must be populated in order to send to server.
@@ -26150,7 +26150,7 @@ class FtpServerLocation(DatasetLocation):
         self.type: str = "FtpServerLocation"
 
 
-class GetMetadataActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class GetMetadataActivity(ExecutionActivity):  
     """Activity to get metadata of dataset.
 
     All required parameters must be populated in order to send to server.
@@ -26995,7 +26995,7 @@ class GoogleBigQueryLinkedService(LinkedService):  # pylint: disable=too-many-in
         self.encrypted_credential = encrypted_credential
 
 
-class GoogleBigQueryObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class GoogleBigQueryObjectDataset(Dataset):  
     """Google BigQuery service dataset.
 
     All required parameters must be populated in order to send to server.
@@ -27210,7 +27210,7 @@ class GoogleBigQuerySource(TabularSource):
         self.query = query
 
 
-class GoogleBigQueryV2LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class GoogleBigQueryV2LinkedService(LinkedService):  
     """Google BigQuery service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -27344,7 +27344,7 @@ class GoogleBigQueryV2LinkedService(LinkedService):  # pylint: disable=too-many-
         self.encrypted_credential = encrypted_credential
 
 
-class GoogleBigQueryV2ObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class GoogleBigQueryV2ObjectDataset(Dataset):  
     """Google BigQuery service dataset.
 
     All required parameters must be populated in order to send to server.
@@ -28142,7 +28142,7 @@ class GreenplumSource(TabularSource):
         self.query = query
 
 
-class GreenplumTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class GreenplumTableDataset(Dataset):  
     """Greenplum Database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -28625,7 +28625,7 @@ class HBaseSource(TabularSource):
         self.query = query
 
 
-class HdfsLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class HdfsLinkedService(LinkedService):  
     """Hadoop Distributed File System (HDFS) linked service.
 
     All required parameters must be populated in order to send to server.
@@ -29010,7 +29010,7 @@ class HdfsSource(CopySource):
         self.distcp_settings = distcp_settings
 
 
-class HDInsightHiveActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class HDInsightHiveActivity(ExecutionActivity):  
     """HDInsight Hive activity type.
 
     All required parameters must be populated in order to send to server.
@@ -29173,7 +29173,7 @@ class HDInsightHiveActivity(ExecutionActivity):  # pylint: disable=too-many-inst
         self.query_timeout = query_timeout
 
 
-class HDInsightLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class HDInsightLinkedService(LinkedService):  
     """HDInsight linked service.
 
     All required parameters must be populated in order to send to server.
@@ -29314,7 +29314,7 @@ class HDInsightLinkedService(LinkedService):  # pylint: disable=too-many-instanc
         self.file_system = file_system
 
 
-class HDInsightMapReduceActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class HDInsightMapReduceActivity(ExecutionActivity):  
     """HDInsight MapReduce activity type.
 
     All required parameters must be populated in order to send to server.
@@ -29861,7 +29861,7 @@ class HDInsightOnDemandLinkedService(LinkedService):  # pylint: disable=too-many
         self.credential = credential
 
 
-class HDInsightPigActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class HDInsightPigActivity(ExecutionActivity):  
     """HDInsight Pig activity type.
 
     All required parameters must be populated in order to send to server.
@@ -30010,7 +30010,7 @@ class HDInsightPigActivity(ExecutionActivity):  # pylint: disable=too-many-insta
         self.defines = defines
 
 
-class HDInsightSparkActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class HDInsightSparkActivity(ExecutionActivity):  
     """HDInsight Spark activity.
 
     All required parameters must be populated in order to send to server.
@@ -30602,7 +30602,7 @@ class HiveLinkedService(LinkedService):  # pylint: disable=too-many-instance-att
         self.encrypted_credential = encrypted_credential
 
 
-class HiveObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class HiveObjectDataset(Dataset):  
     """Hive Server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -30816,7 +30816,7 @@ class HiveSource(TabularSource):
         self.query = query
 
 
-class HttpDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class HttpDataset(Dataset):  
     """A file in an HTTP web server.
 
     All required parameters must be populated in order to send to server.
@@ -30967,7 +30967,7 @@ class HttpDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self.compression = compression
 
 
-class HttpLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class HttpLinkedService(LinkedService):  
     """Linked service for an HTTP source.
 
     All required parameters must be populated in order to send to server.
@@ -31371,7 +31371,7 @@ class HttpSource(CopySource):
         self.http_request_timeout = http_request_timeout
 
 
-class HubspotLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class HubspotLinkedService(LinkedService):  
     """Hubspot Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -31706,7 +31706,7 @@ class HubspotSource(TabularSource):
         self.query = query
 
 
-class IfConditionActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class IfConditionActivity(ControlActivity):  
     """This activity evaluates a boolean expression and executes either the activities under the
     ifTrueActivities property or the ifFalseActivities property depending on the result of the
     expression.
@@ -31995,7 +31995,7 @@ class ImpalaLinkedService(LinkedService):  # pylint: disable=too-many-instance-a
         self.encrypted_credential = encrypted_credential
 
 
-class ImpalaObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class ImpalaObjectDataset(Dataset):  
     """Impala server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -32209,7 +32209,7 @@ class ImpalaSource(TabularSource):
         self.query = query
 
 
-class InformixLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class InformixLinkedService(LinkedService):  
     """Informix linked service.
 
     All required parameters must be populated in order to send to server.
@@ -33254,7 +33254,7 @@ class IntegrationRuntimeVNetProperties(_serialization.Model):
         self.public_i_ps = public_i_ps
 
 
-class JiraLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class JiraLinkedService(LinkedService):  
     """Jira Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -33591,7 +33591,7 @@ class JiraSource(TabularSource):
         self.query = query
 
 
-class JsonDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class JsonDataset(Dataset):  
     """Json dataset.
 
     All required parameters must be populated in order to send to server.
@@ -34301,7 +34301,7 @@ class KqlScriptsResourceCollectionResponse(_serialization.Model):
         self.next_link = next_link
 
 
-class LakeHouseLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class LakeHouseLinkedService(LinkedService):  
     """Microsoft Fabric LakeHouse linked service.
 
     All required parameters must be populated in order to send to server.
@@ -34502,7 +34502,7 @@ class LakeHouseLocation(DatasetLocation):
         self.type: str = "LakeHouseLocation"
 
 
-class LakeHouseReadSettings(StoreReadSettings):  # pylint: disable=too-many-instance-attributes
+class LakeHouseReadSettings(StoreReadSettings):  
     """Microsoft Fabric LakeHouse Files read settings.
 
     All required parameters must be populated in order to send to server.
@@ -36560,7 +36560,7 @@ class LogStorageSettings(_serialization.Model):
         self.enable_reliable_logging = enable_reliable_logging
 
 
-class LookupActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class LookupActivity(ExecutionActivity):  
     """Lookup activity.
 
     All required parameters must be populated in order to send to server.
@@ -36687,7 +36687,7 @@ class LookupActivity(ExecutionActivity):  # pylint: disable=too-many-instance-at
         self.first_row_only = first_row_only
 
 
-class MagentoLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class MagentoLinkedService(LinkedService):  
     """Magento server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -37280,7 +37280,7 @@ class MappingDataFlow(DataFlow):
         self.script_lines = script_lines
 
 
-class MariaDBLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class MariaDBLinkedService(LinkedService):  
     """MariaDB server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -37608,7 +37608,7 @@ class MariaDBTableDataset(Dataset):
         self.table_name = table_name
 
 
-class MarketoLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class MarketoLinkedService(LinkedService):  
     """Marketo server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -38078,7 +38078,7 @@ class MetastoreUpdationResponse(_serialization.Model):
         self.status = status
 
 
-class MicrosoftAccessLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class MicrosoftAccessLinkedService(LinkedService):  
     """Microsoft Access linked service.
 
     All required parameters must be populated in order to send to server.
@@ -40125,7 +40125,7 @@ class NetezzaSource(TabularSource):
         self.partition_settings = partition_settings
 
 
-class NetezzaTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class NetezzaTableDataset(Dataset):  
     """Netezza dataset.
 
     All required parameters must be populated in order to send to server.
@@ -41231,7 +41231,7 @@ class ODataSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class OdbcLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class OdbcLinkedService(LinkedService):  
     """Open Database Connectivity (ODBC) linked service.
 
     All required parameters must be populated in order to send to server.
@@ -41641,7 +41641,7 @@ class OdbcTableDataset(Dataset):
         self.table_name = table_name
 
 
-class Office365Dataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class Office365Dataset(Dataset):  
     """The Office365 account.
 
     All required parameters must be populated in order to send to server.
@@ -41755,7 +41755,7 @@ class Office365Dataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self.predicate = predicate
 
 
-class Office365LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class Office365LinkedService(LinkedService):  
     """Office365 linked service.
 
     All required parameters must be populated in order to send to server.
@@ -41871,7 +41871,7 @@ class Office365LinkedService(LinkedService):  # pylint: disable=too-many-instanc
         self.encrypted_credential = encrypted_credential
 
 
-class Office365Source(CopySource):  # pylint: disable=too-many-instance-attributes
+class Office365Source(CopySource):  
     """A copy activity source for an Office 365 service.
 
     All required parameters must be populated in order to send to server.
@@ -42200,7 +42200,7 @@ class OraclePartitionSettings(_serialization.Model):
         self.partition_lower_bound = partition_lower_bound
 
 
-class OracleServiceCloudLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class OracleServiceCloudLinkedService(LinkedService):  
     """Oracle Service Cloud linked service.
 
     All required parameters must be populated in order to send to server.
@@ -42733,7 +42733,7 @@ class OracleSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class OracleTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class OracleTableDataset(Dataset):  
     """The on-premises Oracle database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -42855,7 +42855,7 @@ class OracleTableDataset(Dataset):  # pylint: disable=too-many-instance-attribut
         self.table = table
 
 
-class OrcDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class OrcDataset(Dataset):  
     """ORC dataset.
 
     All required parameters must be populated in order to send to server.
@@ -43308,7 +43308,7 @@ class ParameterSpecification(_serialization.Model):
         self.default_value = default_value
 
 
-class ParquetDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class ParquetDataset(Dataset):  
     """Parquet dataset.
 
     All required parameters must be populated in order to send to server.
@@ -43753,7 +43753,7 @@ class ParquetWriteSettings(FormatWriteSettings):
         self.file_name_prefix = file_name_prefix
 
 
-class PaypalLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class PaypalLinkedService(LinkedService):  
     """Paypal Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -44260,7 +44260,7 @@ class PhoenixLinkedService(LinkedService):  # pylint: disable=too-many-instance-
         self.encrypted_credential = encrypted_credential
 
 
-class PhoenixObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class PhoenixObjectDataset(Dataset):  
     """Phoenix server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -44575,7 +44575,7 @@ class PipelineReference(_serialization.Model):
         self.name = name
 
 
-class PipelineResource(SubResource):  # pylint: disable=too-many-instance-attributes
+class PipelineResource(SubResource):  
     """Pipeline resource type.
 
     Variables are only populated by the server, and will be ignored when sending a request.
@@ -45090,7 +45090,7 @@ class PostgreSqlSource(TabularSource):
         self.query = query
 
 
-class PostgreSqlTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class PostgreSqlTableDataset(Dataset):  
     """The PostgreSQL table dataset.
 
     All required parameters must be populated in order to send to server.
@@ -45531,7 +45531,7 @@ class PostgreSqlV2Source(TabularSource):
         self.query = query
 
 
-class PostgreSqlV2TableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class PostgreSqlV2TableDataset(Dataset):  
     """The PostgreSQLV2 table dataset.
 
     All required parameters must be populated in order to send to server.
@@ -45917,7 +45917,7 @@ class PrestoLinkedService(LinkedService):  # pylint: disable=too-many-instance-a
         self.encrypted_credential = encrypted_credential
 
 
-class PrestoObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class PrestoObjectDataset(Dataset):  
     """Presto server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -46450,7 +46450,7 @@ class QuickbaseLinkedService(LinkedService):
         self.encrypted_credential = encrypted_credential
 
 
-class QuickBooksLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class QuickBooksLinkedService(LinkedService):  
     """QuickBooks server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -47406,7 +47406,7 @@ class RerunTumblingWindowTriggerActionParameters(_serialization.Model):  # pylin
         self.max_concurrency = max_concurrency
 
 
-class ResponsysLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class ResponsysLinkedService(LinkedService):  
     """Responsys linked service.
 
     All required parameters must be populated in order to send to server.
@@ -47737,7 +47737,7 @@ class ResponsysSource(TabularSource):
         self.query = query
 
 
-class RestResourceDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class RestResourceDataset(Dataset):  
     """A Rest service dataset.
 
     All required parameters must be populated in order to send to server.
@@ -47986,7 +47986,7 @@ class RestServiceLinkedService(LinkedService):  # pylint: disable=too-many-insta
         "scope": {"key": "typeProperties.scope", "type": "object"},
     }
 
-    def __init__(  # pylint: disable=too-many-locals
+    def __init__(  
         self,
         *,
         url: JSON,
@@ -48109,7 +48109,7 @@ class RestServiceLinkedService(LinkedService):  # pylint: disable=too-many-insta
         self.scope = scope
 
 
-class RestSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class RestSink(CopySink):  
     """A copy activity Rest service Sink.
 
     All required parameters must be populated in order to send to server.
@@ -48240,7 +48240,7 @@ class RestSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.http_compression_type = http_compression_type
 
 
-class RestSource(CopySource):  # pylint: disable=too-many-instance-attributes
+class RestSource(CopySource):  
     """A copy activity Rest service source.
 
     All required parameters must be populated in order to send to server.
@@ -49133,7 +49133,7 @@ class RunQueryOrderBy(_serialization.Model):
         self.order = order
 
 
-class SalesforceLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SalesforceLinkedService(LinkedService):  
     """Linked service for Salesforce.
 
     All required parameters must be populated in order to send to server.
@@ -49256,7 +49256,7 @@ class SalesforceLinkedService(LinkedService):  # pylint: disable=too-many-instan
         self.encrypted_credential = encrypted_credential
 
 
-class SalesforceMarketingCloudLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SalesforceMarketingCloudLinkedService(LinkedService):  
     """Salesforce Marketing Cloud linked service.
 
     All required parameters must be populated in order to send to server.
@@ -49692,7 +49692,7 @@ class SalesforceObjectDataset(Dataset):
         self.object_api_name = object_api_name
 
 
-class SalesforceServiceCloudLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SalesforceServiceCloudLinkedService(LinkedService):  
     """Linked service for Salesforce Service Cloud.
 
     All required parameters must be populated in order to send to server.
@@ -50139,7 +50139,7 @@ class SalesforceServiceCloudSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class SalesforceServiceCloudV2LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SalesforceServiceCloudV2LinkedService(LinkedService):  
     """Linked service for Salesforce Service Cloud V2.
 
     All required parameters must be populated in order to send to server.
@@ -50262,7 +50262,7 @@ class SalesforceServiceCloudV2LinkedService(LinkedService):  # pylint: disable=t
         self.encrypted_credential = encrypted_credential
 
 
-class SalesforceServiceCloudV2ObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SalesforceServiceCloudV2ObjectDataset(Dataset):  
     """The Salesforce Service Cloud V2 object dataset.
 
     All required parameters must be populated in order to send to server.
@@ -50806,7 +50806,7 @@ class SalesforceSource(TabularSource):
         self.read_behavior = read_behavior
 
 
-class SalesforceV2LinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SalesforceV2LinkedService(LinkedService):  
     """Linked service for Salesforce V2.
 
     All required parameters must be populated in order to send to server.
@@ -50929,7 +50929,7 @@ class SalesforceV2LinkedService(LinkedService):  # pylint: disable=too-many-inst
         self.encrypted_credential = encrypted_credential
 
 
-class SalesforceV2ObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SalesforceV2ObjectDataset(Dataset):  
     """The Salesforce V2 object dataset.
 
     All required parameters must be populated in order to send to server.
@@ -51357,7 +51357,7 @@ class SapBwCubeDataset(Dataset):
         self.type: str = "SapBwCube"
 
 
-class SapBWLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SapBWLinkedService(LinkedService):  
     """SAP Business Warehouse Linked Service.
 
     All required parameters must be populated in order to send to server.
@@ -52314,7 +52314,7 @@ class SapEccSource(TabularSource):
         self.http_request_timeout = http_request_timeout
 
 
-class SapHanaLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SapHanaLinkedService(LinkedService):  
     """SAP HANA Linked Service.
 
     All required parameters must be populated in order to send to server.
@@ -52459,7 +52459,7 @@ class SapHanaPartitionSettings(_serialization.Model):
         self.partition_column_name = partition_column_name
 
 
-class SapHanaSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SapHanaSource(TabularSource):  
     """A copy activity source for SAP HANA source.
 
     All required parameters must be populated in order to send to server.
@@ -52576,7 +52576,7 @@ class SapHanaSource(TabularSource):  # pylint: disable=too-many-instance-attribu
         self.partition_settings = partition_settings
 
 
-class SapHanaTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SapHanaTableDataset(Dataset):  
     """SAP HANA Table properties.
 
     All required parameters must be populated in order to send to server.
@@ -52795,7 +52795,7 @@ class SapOdpLinkedService(LinkedService):  # pylint: disable=too-many-instance-a
         "encrypted_credential": {"key": "typeProperties.encryptedCredential", "type": "object"},
     }
 
-    def __init__(  # pylint: disable=too-many-locals
+    def __init__(  
         self,
         *,
         additional_properties: Optional[Dict[str, JSON]] = None,
@@ -52921,7 +52921,7 @@ class SapOdpLinkedService(LinkedService):  # pylint: disable=too-many-instance-a
         self.encrypted_credential = encrypted_credential
 
 
-class SapOdpResourceDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SapOdpResourceDataset(Dataset):  
     """SAP ODP Resource properties.
 
     All required parameters must be populated in order to send to server.
@@ -53036,7 +53036,7 @@ class SapOdpResourceDataset(Dataset):  # pylint: disable=too-many-instance-attri
         self.object_name = object_name
 
 
-class SapOdpSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SapOdpSource(TabularSource):  
     """A copy activity source for SAP ODP source.
 
     All required parameters must be populated in order to send to server.
@@ -53330,7 +53330,7 @@ class SapOpenHubLinkedService(LinkedService):  # pylint: disable=too-many-instan
         self.encrypted_credential = encrypted_credential
 
 
-class SapOpenHubSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SapOpenHubSource(TabularSource):  
     """A copy activity source for SAP Business Warehouse Open Hub Destination source.
 
     All required parameters must be populated in order to send to server.
@@ -53454,7 +53454,7 @@ class SapOpenHubSource(TabularSource):  # pylint: disable=too-many-instance-attr
         self.sap_data_column_delimiter = sap_data_column_delimiter
 
 
-class SapOpenHubTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SapOpenHubTableDataset(Dataset):  
     """Sap Business Warehouse Open Hub Destination Table properties.
 
     All required parameters must be populated in order to send to server.
@@ -53957,7 +53957,7 @@ class SapTableResourceDataset(Dataset):
         self.table_name = table_name
 
 
-class SapTableSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SapTableSource(TabularSource):  
     """A copy activity source for SAP Table source.
 
     All required parameters must be populated in order to send to server.
@@ -54318,7 +54318,7 @@ class ScriptAction(_serialization.Model):
         self.parameters = parameters
 
 
-class ScriptActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class ScriptActivity(ExecutionActivity):  
     """Script activity type.
 
     All required parameters must be populated in order to send to server.
@@ -55397,7 +55397,7 @@ class ServiceNowV2Source(TabularSource):
         self.expression = expression
 
 
-class SetVariableActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class SetVariableActivity(ControlActivity):  
     """Set value for a Variable.
 
     All required parameters must be populated in order to send to server.
@@ -55964,7 +55964,7 @@ class SftpWriteSettings(StoreWriteSettings):
         self.use_temp_file_rename = use_temp_file_rename
 
 
-class SharePointOnlineListLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SharePointOnlineListLinkedService(LinkedService):  
     """SharePoint Online List linked service.
 
     All required parameters must be populated in order to send to server.
@@ -56278,7 +56278,7 @@ class SharePointOnlineListSource(CopySource):
         self.http_request_timeout = http_request_timeout
 
 
-class ShopifyLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class ShopifyLinkedService(LinkedService):  
     """Shopify Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -56751,7 +56751,7 @@ class SmartsheetLinkedService(LinkedService):
         self.encrypted_credential = encrypted_credential
 
 
-class SnowflakeDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SnowflakeDataset(Dataset):  
     """The snowflake dataset.
 
     All required parameters must be populated in order to send to server.
@@ -57264,7 +57264,7 @@ class SnowflakeSource(CopySource):
         self.export_settings = export_settings
 
 
-class SnowflakeV2Dataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SnowflakeV2Dataset(Dataset):  
     """The snowflake dataset.
 
     All required parameters must be populated in order to send to server.
@@ -58711,7 +58711,7 @@ class SparkLinkedService(LinkedService):  # pylint: disable=too-many-instance-at
         self.encrypted_credential = encrypted_credential
 
 
-class SparkObjectDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SparkObjectDataset(Dataset):  
     """Spark Server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -59312,7 +59312,7 @@ class SqlConnection(_serialization.Model):
         self.database_name = database_name
 
 
-class SqlDWSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class SqlDWSink(CopySink):  
     """A copy activity SQL Data Warehouse sink.
 
     All required parameters must be populated in order to send to server.
@@ -59448,7 +59448,7 @@ class SqlDWSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.table_option = table_option
 
 
-class SqlDWSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SqlDWSource(TabularSource):  
     """A copy activity SQL Data Warehouse source.
 
     All required parameters must be populated in order to send to server.
@@ -59590,7 +59590,7 @@ class SqlDWSource(TabularSource):  # pylint: disable=too-many-instance-attribute
         self.partition_settings = partition_settings
 
 
-class SqlMISink(CopySink):  # pylint: disable=too-many-instance-attributes
+class SqlMISink(CopySink):  
     """A copy activity Azure SQL Managed Instance sink.
 
     All required parameters must be populated in order to send to server.
@@ -59729,7 +59729,7 @@ class SqlMISink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.table_option = table_option
 
 
-class SqlMISource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SqlMISource(TabularSource):  
     """A copy activity Azure SQL Managed Instance source.
 
     All required parameters must be populated in order to send to server.
@@ -59932,7 +59932,7 @@ class SqlPartitionSettings(_serialization.Model):
         self.partition_lower_bound = partition_lower_bound
 
 
-class SqlPool(TrackedResource):  # pylint: disable=too-many-instance-attributes
+class SqlPool(TrackedResource):  
     """A SQL Analytics pool.
 
     Variables are only populated by the server, and will be ignored when sending a request.
@@ -60143,7 +60143,7 @@ class SqlPoolReference(_serialization.Model):
         self.reference_name = reference_name
 
 
-class SqlPoolStoredProcedureActivity(Activity):  # pylint: disable=too-many-instance-attributes
+class SqlPoolStoredProcedureActivity(Activity):  
     """Execute SQL pool stored procedure activity.
 
     All required parameters must be populated in order to send to server.
@@ -60519,7 +60519,7 @@ class SqlScriptsListResponse(_serialization.Model):
         self.next_link = next_link
 
 
-class SqlServerLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SqlServerLinkedService(LinkedService):  
     """SQL Server linked service.
 
     All required parameters must be populated in order to send to server.
@@ -60635,7 +60635,7 @@ class SqlServerLinkedService(LinkedService):  # pylint: disable=too-many-instanc
         self.always_encrypted_settings = always_encrypted_settings
 
 
-class SqlServerSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class SqlServerSink(CopySink):  
     """A copy activity SQL server sink.
 
     All required parameters must be populated in order to send to server.
@@ -60774,7 +60774,7 @@ class SqlServerSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.table_option = table_option
 
 
-class SqlServerSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SqlServerSource(TabularSource):  
     """A copy activity SQL server source.
 
     All required parameters must be populated in order to send to server.
@@ -60920,7 +60920,7 @@ class SqlServerSource(TabularSource):  # pylint: disable=too-many-instance-attri
         self.partition_settings = partition_settings
 
 
-class SqlServerStoredProcedureActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class SqlServerStoredProcedureActivity(ExecutionActivity):  
     """SQL stored procedure activity type.
 
     All required parameters must be populated in order to send to server.
@@ -61041,7 +61041,7 @@ class SqlServerStoredProcedureActivity(ExecutionActivity):  # pylint: disable=to
         self.stored_procedure_parameters = stored_procedure_parameters
 
 
-class SqlServerTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class SqlServerTableDataset(Dataset):  
     """The on-premises SQL Server dataset.
 
     All required parameters must be populated in order to send to server.
@@ -61163,7 +61163,7 @@ class SqlServerTableDataset(Dataset):  # pylint: disable=too-many-instance-attri
         self.table = table
 
 
-class SqlSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class SqlSink(CopySink):  
     """A copy activity SQL sink.
 
     All required parameters must be populated in order to send to server.
@@ -61302,7 +61302,7 @@ class SqlSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.table_option = table_option
 
 
-class SqlSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class SqlSource(TabularSource):  
     """A copy activity SQL source.
 
     All required parameters must be populated in order to send to server.
@@ -61441,7 +61441,7 @@ class SqlSource(TabularSource):  # pylint: disable=too-many-instance-attributes
         self.partition_settings = partition_settings
 
 
-class SquareLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SquareLinkedService(LinkedService):  
     """Square Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -62378,7 +62378,7 @@ class StoredProcedureParameter(_serialization.Model):
         self.type = type
 
 
-class SwitchActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class SwitchActivity(ControlActivity):  
     """This activity evaluates an expression and executes activities under the cases property that
     correspond to the expression evaluation expected in the equals property.
 
@@ -62525,7 +62525,7 @@ class SwitchCase(_serialization.Model):
         self.activities = activities
 
 
-class SybaseLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class SybaseLinkedService(LinkedService):  
     """Linked service for Sybase data source.
 
     All required parameters must be populated in order to send to server.
@@ -63586,7 +63586,7 @@ class TarReadSettings(CompressionReadSettings):
         self.preserve_compression_file_name_as_folder = preserve_compression_file_name_as_folder
 
 
-class TeamDeskLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class TeamDeskLinkedService(LinkedService):  
     """Linked service for TeamDesk.
 
     All required parameters must be populated in order to send to server.
@@ -63708,7 +63708,7 @@ class TeamDeskLinkedService(LinkedService):  # pylint: disable=too-many-instance
         self.encrypted_credential = encrypted_credential
 
 
-class TeradataLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class TeradataLinkedService(LinkedService):  
     """Linked service for Teradata data source.
 
     All required parameters must be populated in order to send to server.
@@ -63986,7 +63986,7 @@ class TeradataSource(TabularSource):
         self.partition_settings = partition_settings
 
 
-class TeradataTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class TeradataTableDataset(Dataset):  
     """The Teradata database dataset.
 
     All required parameters must be populated in order to send to server.
@@ -64098,7 +64098,7 @@ class TeradataTableDataset(Dataset):  # pylint: disable=too-many-instance-attrib
         self.table = table
 
 
-class TextFormat(DatasetStorageFormat):  # pylint: disable=too-many-instance-attributes
+class TextFormat(DatasetStorageFormat):  
     """The data stored in text format.
 
     All required parameters must be populated in order to send to server.
@@ -64578,7 +64578,7 @@ class TriggerSubscriptionOperationStatus(_serialization.Model):
         self.status = None
 
 
-class TumblingWindowTrigger(Trigger):  # pylint: disable=too-many-instance-attributes
+class TumblingWindowTrigger(Trigger):  
     """Trigger that schedules pipeline runs for all fixed time interval windows from a start time
     without gaps and also supports backfill scenarios (when start time is in the past).
 
@@ -64936,7 +64936,7 @@ class TypeConversionSettings(_serialization.Model):
         self.culture = culture
 
 
-class UntilActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class UntilActivity(ControlActivity):  
     """This activity executes inner activities until the specified boolean expression results to true
     or timeout is reached, whichever is earlier.
 
@@ -65113,7 +65113,7 @@ class UserProperty(_serialization.Model):
         self.value = value
 
 
-class ValidationActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class ValidationActivity(ControlActivity):  
     """This activity verifies that an external resource exists.
 
     All required parameters must be populated in order to send to server.
@@ -65474,7 +65474,7 @@ class VerticaSource(TabularSource):
         self.query = query
 
 
-class VerticaTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class VerticaTableDataset(Dataset):  
     """Vertica dataset.
 
     All required parameters must be populated in order to send to server.
@@ -65712,7 +65712,7 @@ class WaitActivity(ControlActivity):
         self.wait_time_in_seconds = wait_time_in_seconds
 
 
-class WarehouseLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class WarehouseLinkedService(LinkedService):  
     """Microsoft Fabric Warehouse linked service.
 
     All required parameters must be populated in order to send to server.
@@ -65870,7 +65870,7 @@ class WarehouseLinkedService(LinkedService):  # pylint: disable=too-many-instanc
         self.service_principal_credential = service_principal_credential
 
 
-class WarehouseSink(CopySink):  # pylint: disable=too-many-instance-attributes
+class WarehouseSink(CopySink):  
     """A copy activity Microsoft Fabric Warehouse sink.
 
     All required parameters must be populated in order to send to server.
@@ -65999,7 +65999,7 @@ class WarehouseSink(CopySink):  # pylint: disable=too-many-instance-attributes
         self.write_behavior = write_behavior
 
 
-class WarehouseSource(TabularSource):  # pylint: disable=too-many-instance-attributes
+class WarehouseSource(TabularSource):  
     """A copy activity Microsoft Fabric Warehouse source.
 
     All required parameters must be populated in order to send to server.
@@ -66143,7 +66143,7 @@ class WarehouseSource(TabularSource):  # pylint: disable=too-many-instance-attri
         self.partition_settings = partition_settings
 
 
-class WarehouseTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class WarehouseTableDataset(Dataset):  
     """Microsoft Fabric Warehouse dataset.
 
     All required parameters must be populated in order to send to server.
@@ -66256,7 +66256,7 @@ class WarehouseTableDataset(Dataset):  # pylint: disable=too-many-instance-attri
         self.table = table
 
 
-class WebActivity(ExecutionActivity):  # pylint: disable=too-many-instance-attributes
+class WebActivity(ExecutionActivity):  
     """Web activity.
 
     All required parameters must be populated in order to send to server.
@@ -66682,7 +66682,7 @@ class WebClientCertificateAuthentication(WebLinkedServiceTypeProperties):
         self.password = password
 
 
-class WebHookActivity(ControlActivity):  # pylint: disable=too-many-instance-attributes
+class WebHookActivity(ControlActivity):  
     """WebHook activity.
 
     All required parameters must be populated in order to send to server.
@@ -66989,7 +66989,7 @@ class WebSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class WebTableDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class WebTableDataset(Dataset):  
     """The dataset points to a HTML table in the web page.
 
     All required parameters must be populated in order to send to server.
@@ -67486,7 +67486,7 @@ class WorkspaceUpdateParameters(_serialization.Model):
         self.identity = identity
 
 
-class XeroLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class XeroLinkedService(LinkedService):  
     """Xero Service linked service.
 
     All required parameters must be populated in order to send to server.
@@ -67824,7 +67824,7 @@ class XeroSource(TabularSource):
         self.query = query
 
 
-class XmlDataset(Dataset):  # pylint: disable=too-many-instance-attributes
+class XmlDataset(Dataset):  
     """Xml dataset.
 
     All required parameters must be populated in order to send to server.
@@ -68128,7 +68128,7 @@ class XmlSource(CopySource):
         self.additional_columns = additional_columns
 
 
-class ZendeskLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class ZendeskLinkedService(LinkedService):  
     """Linked service for Zendesk.
 
     All required parameters must be populated in order to send to server.
@@ -68295,7 +68295,7 @@ class ZipDeflateReadSettings(CompressionReadSettings):
         self.preserve_zip_file_name_as_folder = preserve_zip_file_name_as_folder
 
 
-class ZohoLinkedService(LinkedService):  # pylint: disable=too-many-instance-attributes
+class ZohoLinkedService(LinkedService):  
     """Zoho server linked service.
 
     All required parameters must be populated in order to send to server.

@@ -19,11 +19,11 @@ from ._operations import BlocklistClientOperationsMixin, ContentSafetyClientOper
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
-class ContentSafetyClient(ContentSafetyClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class ContentSafetyClient(ContentSafetyClientOperationsMixin):  
     """ContentSafetyClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
@@ -101,7 +101,7 @@ class ContentSafetyClient(ContentSafetyClientOperationsMixin):  # pylint: disabl
         self._client.__exit__(*exc_details)
 
 
-class BlocklistClient(BlocklistClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class BlocklistClient(BlocklistClientOperationsMixin):  
     """BlocklistClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

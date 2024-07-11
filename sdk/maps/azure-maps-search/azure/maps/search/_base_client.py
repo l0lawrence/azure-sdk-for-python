@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import
+
 from typing import Union, Any
 from azure.core.pipeline.policies import AzureKeyCredentialPolicy
 from azure.core.credentials import AzureKeyCredential, TokenCredential
@@ -44,7 +44,7 @@ class MapsSearchClientBase:
         self._search_client = self._maps_client.search
 
     def __enter__(self):
-        self._maps_client.__enter__()  # pylint:disable=no-member
+        self._maps_client.__enter__()  
         return self
 
     def __exit__(self, *args):

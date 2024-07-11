@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -139,7 +139,7 @@ class SparkJobDefinitionOperations:
 
         return AsyncItemPaged(get_next, extract_data)
 
-    async def _create_or_update_spark_job_definition_initial(  # pylint: disable=name-too-long
+    async def _create_or_update_spark_job_definition_initial(  
         self,
         spark_job_definition_name: str,
         properties: _models.SparkJobDefinition,
@@ -339,7 +339,7 @@ class SparkJobDefinitionOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_spark_job_definition_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_spark_job_definition_initial(  
         self, spark_job_definition_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -557,7 +557,7 @@ class SparkJobDefinitionOperations:
             self._client, raw_result, get_long_running_output, polling_method  # type: ignore
         )
 
-    async def _rename_spark_job_definition_initial(  # pylint: disable=inconsistent-return-statements
+    async def _rename_spark_job_definition_initial(  
         self, spark_job_definition_name: str, new_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         error_map = {

@@ -194,7 +194,7 @@ class BlobClient(StorageAccountHostsMixin, StorageEncryptionMixin):  # pylint: d
         self._query_str, credential = self._format_query_string(sas_token, credential, snapshot=self.snapshot)
         super(BlobClient, self).__init__(parsed_url, service='blob', credential=credential, **kwargs)
         self._client = AzureBlobStorage(self.url, base_url=self.url, pipeline=self._pipeline)
-        self._client._config.version = get_api_version(kwargs)  # pylint: disable=protected-access
+        self._client._config.version = get_api_version(kwargs)  
         self._configure_encryption(kwargs)
 
     def _format_url(self, hostname):
@@ -508,7 +508,7 @@ class BlobClient(StorageAccountHostsMixin, StorageEncryptionMixin):  # pylint: d
             'cpk_scope_info': get_cpk_scope_info(kwargs)
         }
         options.update(kwargs)
-        if not overwrite and not _any_conditions(**options): # pylint: disable=protected-access
+        if not overwrite and not _any_conditions(**options): 
             options['modified_access_conditions'].if_none_match = '*'
         return options
 
@@ -3072,7 +3072,7 @@ class BlobClient(StorageAccountHostsMixin, StorageEncryptionMixin):  # pylint: d
         options = self._get_blob_tags_options(**kwargs)
         try:
             _, tags = self._client.blob.get_tags(**options)
-            return parse_tags(tags) # pylint: disable=protected-access
+            return parse_tags(tags) 
         except HttpResponseError as error:
             process_storage_error(error)
 
@@ -4346,7 +4346,7 @@ class BlobClient(StorageAccountHostsMixin, StorageEncryptionMixin):  # pylint: d
             process_storage_error(error)
 
     @distributed_trace
-    def _get_container_client(self): # pylint: disable=client-method-missing-kwargs
+    def _get_container_client(self): 
         # type: (...) -> ContainerClient
         """Get a client to interact with the blob's parent container.
 

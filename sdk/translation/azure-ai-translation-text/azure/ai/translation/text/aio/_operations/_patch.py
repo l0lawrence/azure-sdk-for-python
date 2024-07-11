@@ -794,7 +794,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -859,7 +859,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -924,7 +924,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -1005,7 +1005,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.
@@ -1120,7 +1120,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.
@@ -1235,7 +1235,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientOperationsMixinG
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.

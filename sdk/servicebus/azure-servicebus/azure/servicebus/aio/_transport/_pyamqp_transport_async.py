@@ -128,7 +128,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         logger: "Logger",
         timeout: int,
         last_exception: Optional[Exception]
-    ) -> None:  # pylint: disable=unused-argument
+    ) -> None:  
         """
         Handles sending of service bus messages.
         :param ~azure.servicebus.ServiceBusSender sender: The sender with handler to send messages.
@@ -156,7 +156,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
     @staticmethod
     def create_receive_client_async(
         receiver: "ServiceBusReceiver", **kwargs: Any
-    ) -> "ReceiveClientAsync":  # pylint:disable=unused-argument
+    ) -> "ReceiveClientAsync":  
         """
         Creates and returns the receive client.
         :param ~azure.servicebus.aio.ServiceBusReceiver receiver: The receiver.
@@ -395,7 +395,7 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
         :rtype: ~pyamqp.aio._authentication_async.JWTTokenAuthAsync
         """
         # TODO: figure out why we're passing all these args to pyamqp JWTTokenAuth, which aren't being used
-        update_token = kwargs.pop("update_token")  # pylint: disable=unused-variable
+        update_token = kwargs.pop("update_token")  
         if update_token:
             # update_token not actually needed by pyamqp
             # just using to detect which args to pass

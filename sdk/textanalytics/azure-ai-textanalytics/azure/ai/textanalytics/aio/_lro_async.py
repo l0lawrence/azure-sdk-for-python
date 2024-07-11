@@ -121,7 +121,7 @@ class TextAnalyticsAsyncLROPollingMethod(AsyncLROBasePolling):
             )
         )
 
-    async def _poll(self):  # pylint:disable=invalid-overridden-method
+    async def _poll(self):  
         """Poll status of operation so long as operation is incomplete and
         we have an endpoint to query.
 

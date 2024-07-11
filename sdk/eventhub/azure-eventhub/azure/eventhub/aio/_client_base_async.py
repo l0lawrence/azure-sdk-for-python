@@ -319,7 +319,7 @@ class ClientBaseAsync(ClientBase):
         )
         if backoff <= self._config.backoff_max and (
             timeout_time is None or time.time() + backoff <= timeout_time
-        ):  # pylint:disable=no-else-return
+        ):  
             await asyncio.sleep(backoff, **self._internal_kwargs)
             _LOGGER.info(
                 "%r has an exception (%r). Retrying...",

@@ -32,8 +32,8 @@ from .._vendor import FaceClientMixinABC, FaceSessionClientMixinABC, prepare_mul
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 _Unset: Any = object()
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
@@ -489,7 +489,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
         face_id_time_to_live: Optional[int] = None,
         **kwargs: Any,
     ) -> List[_models.FaceDetectionResult]:
-        # pylint: disable=line-too-long
+        
         """Detect human faces in an image, return face rectangles, and optionally with faceIds, landmarks,
         and attributes.
 
@@ -946,7 +946,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
         face_id_time_to_live: Optional[int] = None,
         **kwargs: Any,
     ) -> List[_models.FaceDetectionResult]:
-        # pylint: disable=line-too-long
+        
         """Detect human faces in an image, return face rectangles, and optionally with faceIds, landmarks,
         and attributes.
 
@@ -1376,7 +1376,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def find_similar(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> List[_models.FaceFindSimilarResult]:
-        # pylint: disable=line-too-long
+        
         """Given query face's faceId, to search the similar-looking faces from a faceId array. A faceId
         array contains the faces created by Detect.
 
@@ -1448,7 +1448,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
         mode: Optional[Union[str, _models.FindSimilarMatchMode]] = None,
         **kwargs: Any,
     ) -> List[_models.FaceFindSimilarResult]:
-        # pylint: disable=line-too-long
+        
         """Given query face's faceId, to search the similar-looking faces from a faceId array. A faceId
         array contains the faces created by Detect.
 
@@ -1508,7 +1508,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def find_similar(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> List[_models.FaceFindSimilarResult]:
-        # pylint: disable=line-too-long
+        
         """Given query face's faceId, to search the similar-looking faces from a faceId array. A faceId
         array contains the faces created by Detect.
 
@@ -1563,7 +1563,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
         mode: Optional[Union[str, _models.FindSimilarMatchMode]] = None,
         **kwargs: Any,
     ) -> List[_models.FaceFindSimilarResult]:
-        # pylint: disable=line-too-long
+        
         """Given query face's faceId, to search the similar-looking faces from a faceId array. A faceId
         array contains the faces created by Detect.
 
@@ -1707,7 +1707,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def verify_face_to_face(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.FaceVerificationResult:
-        # pylint: disable=line-too-long
+        
         """Verify whether two faces belong to a same person.
 
         ..
@@ -1757,7 +1757,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def verify_face_to_face(
         self, *, face_id1: str, face_id2: str, content_type: str = "application/json", **kwargs: Any
     ) -> _models.FaceVerificationResult:
-        # pylint: disable=line-too-long
+        
         """Verify whether two faces belong to a same person.
 
         ..
@@ -1803,7 +1803,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def verify_face_to_face(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.FaceVerificationResult:
-        # pylint: disable=line-too-long
+        
         """Verify whether two faces belong to a same person.
 
         ..
@@ -1847,7 +1847,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def verify_face_to_face(
         self, body: Union[JSON, IO[bytes]] = _Unset, *, face_id1: str = _Unset, face_id2: str = _Unset, **kwargs: Any
     ) -> _models.FaceVerificationResult:
-        # pylint: disable=line-too-long
+        
         """Verify whether two faces belong to a same person.
 
         ..
@@ -1959,7 +1959,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
 
     @overload
     def group(self, body: JSON, *, content_type: str = "application/json", **kwargs: Any) -> _models.FaceGroupingResult:
-        # pylint: disable=line-too-long
+        
         """Divide candidate faces into groups based on face similarity.
 
         >
@@ -2016,7 +2016,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def group(
         self, *, face_ids: List[str], content_type: str = "application/json", **kwargs: Any
     ) -> _models.FaceGroupingResult:
-        # pylint: disable=line-too-long
+        
         """Divide candidate faces into groups based on face similarity.
 
         >
@@ -2066,7 +2066,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def group(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.FaceGroupingResult:
-        # pylint: disable=line-too-long
+        
         """Divide candidate faces into groups based on face similarity.
 
         >
@@ -2115,7 +2115,7 @@ class FaceClientOperationsMixin(FaceClientMixinABC):
     def group(
         self, body: Union[JSON, IO[bytes]] = _Unset, *, face_ids: List[str] = _Unset, **kwargs: Any
     ) -> _models.FaceGroupingResult:
-        # pylint: disable=line-too-long
+        
         """Divide candidate faces into groups based on face similarity.
 
         >
@@ -2236,7 +2236,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def create_liveness_session(
         self, body: _models.CreateLivenessSessionContent, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.CreateLivenessSessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new detect liveness session.
 
         A session is best for client device scenarios where developers want to authorize a client
@@ -2308,7 +2308,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def create_liveness_session(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.CreateLivenessSessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new detect liveness session.
 
         A session is best for client device scenarios where developers want to authorize a client
@@ -2360,7 +2360,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def create_liveness_session(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.CreateLivenessSessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new detect liveness session.
 
         A session is best for client device scenarios where developers want to authorize a client
@@ -2412,7 +2412,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def create_liveness_session(
         self, body: Union[_models.CreateLivenessSessionContent, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.CreateLivenessSessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new detect liveness session.
 
         A session is best for client device scenarios where developers want to authorize a client
@@ -2597,7 +2597,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
 
     @distributed_trace
     def get_liveness_session_result(self, session_id: str, **kwargs: Any) -> _models.LivenessSession:
-        # pylint: disable=line-too-long
+        
         """Get session result of detectLiveness/singleModal call.
 
         :param session_id: The unique ID to reference this session. Required.
@@ -2773,7 +2773,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def get_liveness_sessions(
         self, *, start: Optional[str] = None, top: Optional[int] = None, **kwargs: Any
     ) -> List[_models.LivenessSessionItem]:
-        # pylint: disable=line-too-long
+        
         """Lists sessions for /detectLiveness/SingleModal.
 
         List sessions from the last sessionId greater than the 'start'.
@@ -2865,7 +2865,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def get_liveness_session_audit_entries(
         self, session_id: str, *, start: Optional[str] = None, top: Optional[int] = None, **kwargs: Any
     ) -> List[_models.LivenessSessionAuditEntry]:
-        # pylint: disable=line-too-long
+        
         """Gets session requests and response body for the session.
 
         :param session_id: The unique ID to reference this session. Required.
@@ -3048,7 +3048,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def _create_liveness_with_verify_session(
         self, body: Union[_models.CreateLivenessSessionContent, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.CreateLivenessWithVerifySessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new liveness session with verify. Client device submits VerifyImage during the
         /detectLivenessWithVerify/singleModal call.
 
@@ -3202,19 +3202,19 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
         return deserialized  # type: ignore
 
     @overload
-    def _create_liveness_with_verify_session_with_verify_image(  # pylint: disable=protected-access,name-too-long
+    def _create_liveness_with_verify_session_with_verify_image(  # pylint: disable=name-too-long
         self, body: _models._models.CreateLivenessWithVerifySessionContent, **kwargs: Any
     ) -> _models.CreateLivenessWithVerifySessionResult: ...
     @overload
-    def _create_liveness_with_verify_session_with_verify_image(  # pylint: disable=name-too-long
+    def _create_liveness_with_verify_session_with_verify_image(  
         self, body: JSON, **kwargs: Any
     ) -> _models.CreateLivenessWithVerifySessionResult: ...
 
     @distributed_trace
-    def _create_liveness_with_verify_session_with_verify_image(  # pylint: disable=name-too-long
+    def _create_liveness_with_verify_session_with_verify_image(  
         self, body: Union[_models._models.CreateLivenessWithVerifySessionContent, JSON], **kwargs: Any
     ) -> _models.CreateLivenessWithVerifySessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new liveness session with verify. Provide the verify image during session creation.
 
         A session is best for client device scenarios where developers want to authorize a client
@@ -3424,7 +3424,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def get_liveness_with_verify_session_result(
         self, session_id: str, **kwargs: Any
     ) -> _models.LivenessWithVerifySession:
-        # pylint: disable=line-too-long
+        
         """Get session result of detectLivenessWithVerify/singleModal call.
 
         :param session_id: The unique ID to reference this session. Required.
@@ -3601,7 +3601,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def get_liveness_with_verify_sessions(
         self, *, start: Optional[str] = None, top: Optional[int] = None, **kwargs: Any
     ) -> List[_models.LivenessSessionItem]:
-        # pylint: disable=line-too-long
+        
         """Lists sessions for /detectLivenessWithVerify/SingleModal.
 
         List sessions from the last sessionId greater than the "start".
@@ -3693,7 +3693,7 @@ class FaceSessionClientOperationsMixin(FaceSessionClientMixinABC):
     def get_liveness_with_verify_session_audit_entries(  # pylint: disable=name-too-long
         self, session_id: str, *, start: Optional[str] = None, top: Optional[int] = None, **kwargs: Any
     ) -> List[_models.LivenessSessionAuditEntry]:
-        # pylint: disable=line-too-long
+        
         """Gets session requests and response body for the session.
 
         :param session_id: The unique ID to reference this session. Required.

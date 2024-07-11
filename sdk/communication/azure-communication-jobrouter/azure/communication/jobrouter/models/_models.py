@@ -23,7 +23,7 @@ from ._enums import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 
 
@@ -1560,7 +1560,7 @@ class RouterChannel(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class RouterJob(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class RouterJob(_model_base.Model):  
     """A unit of work to be routed.
 
     Readonly variables are only populated by the server, and will be ignored when sending a request.
@@ -2040,7 +2040,7 @@ class RouterQueueStatistics(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class RouterWorker(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class RouterWorker(_model_base.Model):  
     """An entity for jobs to be routed to.
 
     Readonly variables are only populated by the server, and will be ignored when sending a request.

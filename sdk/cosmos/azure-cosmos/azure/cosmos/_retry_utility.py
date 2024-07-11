@@ -201,7 +201,7 @@ class ConnectionRetryPolicy(RetryPolicy):
                         self.sleep(retry_settings, request.context.transport, response=response)
                         continue
                 break
-            except ClientAuthenticationError:  # pylint:disable=try-except-raise
+            except ClientAuthenticationError:  
                 # the authentication policy failed such that the client's request can't
                 # succeed--we'll never have a response to it, so propagate the exception
                 raise

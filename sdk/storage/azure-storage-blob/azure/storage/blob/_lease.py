@@ -7,7 +7,7 @@
 
 import uuid
 
-from typing import (  # pylint: disable=unused-import
+from typing import (  
     Union, Optional, Any, TypeVar, TYPE_CHECKING
 )
 
@@ -55,9 +55,9 @@ class BlobLeaseClient(object):  # pylint: disable=client-accepts-api-version-key
         self.last_modified = None
         self.etag = None
         if hasattr(client, 'blob_name'):
-            self._client = client._client.blob  # type: ignore # pylint: disable=protected-access
+            self._client = client._client.blob  # type: ignore 
         elif hasattr(client, 'container_name'):
-            self._client = client._client.container  # type: ignore # pylint: disable=protected-access
+            self._client = client._client.container  # type: ignore 
         else:
             raise TypeError("Lease must use either BlobClient or ContainerClient.")
 

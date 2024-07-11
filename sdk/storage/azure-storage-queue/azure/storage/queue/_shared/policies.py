@@ -274,7 +274,7 @@ class StorageLoggingPolicy(NetworkTraceLoggingPolicy):
 
 class StorageRequestHook(SansIOHTTPPolicy):
 
-    def __init__(self, **kwargs):  # pylint: disable=unused-argument
+    def __init__(self, **kwargs):  
         self._request_callback = kwargs.get('raw_request_hook')
         super(StorageRequestHook, self).__init__()
 
@@ -286,7 +286,7 @@ class StorageRequestHook(SansIOHTTPPolicy):
 
 class StorageResponseHook(HTTPPolicy):
 
-    def __init__(self, **kwargs):  # pylint: disable=unused-argument
+    def __init__(self, **kwargs):  
         self._response_callback = kwargs.get('raw_response_hook')
         super(StorageResponseHook, self).__init__()
 

@@ -41,20 +41,20 @@ from .._vendor import EventGridConsumerClientMixinABC, EventGridPublisherClientM
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 _Unset: Any = object()
 
 
 class EventGridPublisherClientOperationsMixin(EventGridPublisherClientMixinABC):
 
     @distributed_trace_async
-    async def _send(  # pylint: disable=protected-access
+    async def _send(  
         self, topic_name: str, event: _models._models.CloudEvent, **kwargs: Any
     ) -> _models._models.PublishResult:
-        # pylint: disable=line-too-long
+        
         """Publish a single Cloud Event to a namespace topic.
 
         :param topic_name: Topic Name. Required.
@@ -103,7 +103,7 @@ class EventGridPublisherClientOperationsMixin(EventGridPublisherClientMixinABC):
         content_type: str = kwargs.pop(
             "content_type", _headers.pop("content-type", "application/cloudevents+json; charset=utf-8")
         )
-        cls: ClsType[_models._models.PublishResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.PublishResult] = kwargs.pop("cls", None)  
 
         _content = json.dumps(event, cls=SdkJSONEncoder, exclude_readonly=True)  # type: ignore
 
@@ -146,10 +146,10 @@ class EventGridPublisherClientOperationsMixin(EventGridPublisherClientMixinABC):
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def _send_events(  # pylint: disable=protected-access
+    async def _send_events(  
         self, topic_name: str, events: List[_models._models.CloudEvent], **kwargs: Any
     ) -> _models._models.PublishResult:
-        # pylint: disable=line-too-long
+        
         """Publish a batch of Cloud Events to a namespace topic.
 
         :param topic_name: Topic Name. Required.
@@ -202,7 +202,7 @@ class EventGridPublisherClientOperationsMixin(EventGridPublisherClientMixinABC):
         content_type: str = kwargs.pop(
             "content_type", _headers.pop("content-type", "application/cloudevents-batch+json; charset=utf-8")
         )
-        cls: ClsType[_models._models.PublishResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.PublishResult] = kwargs.pop("cls", None)  
 
         _content = json.dumps(events, cls=SdkJSONEncoder, exclude_readonly=True)  # type: ignore
 
@@ -248,7 +248,7 @@ class EventGridPublisherClientOperationsMixin(EventGridPublisherClientMixinABC):
 class EventGridConsumerClientOperationsMixin(EventGridConsumerClientMixinABC):
 
     @distributed_trace_async
-    async def _receive(  # pylint: disable=protected-access
+    async def _receive(  
         self,
         topic_name: str,
         event_subscription_name: str,
@@ -257,7 +257,7 @@ class EventGridConsumerClientOperationsMixin(EventGridConsumerClientMixinABC):
         max_wait_time: Optional[int] = None,
         **kwargs: Any
     ) -> _models._models.ReceiveResult:
-        # pylint: disable=line-too-long
+        
         """Receive a batch of Cloud Events from a subscription.
 
         :param topic_name: Topic Name. Required.
@@ -331,7 +331,7 @@ class EventGridConsumerClientOperationsMixin(EventGridConsumerClientMixinABC):
         _headers = kwargs.pop("headers", {}) or {}
         _params = kwargs.pop("params", {}) or {}
 
-        cls: ClsType[_models._models.ReceiveResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.ReceiveResult] = kwargs.pop("cls", None)  
 
         _request = build_event_grid_consumer_receive_request(
             topic_name=topic_name,

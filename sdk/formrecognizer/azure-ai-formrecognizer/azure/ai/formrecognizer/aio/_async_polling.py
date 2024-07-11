@@ -20,7 +20,7 @@ class AsyncDocumentModelAdministrationLROPoller(Protocol[PollingReturnType_co]):
     """Implements a protocol followed by returned poller objects."""
 
     @property
-    def details(  # pylint: disable=unused-argument
+    def details(  
         self,
     ) -> Mapping[str, Any]:
         ...
@@ -36,12 +36,12 @@ class AsyncDocumentModelAdministrationLROPoller(Protocol[PollingReturnType_co]):
     def status(self) -> str:
         ...
 
-    async def result(  # pylint: disable=unused-argument
+    async def result(  
         self,
     ) -> PollingReturnType_co:
         ...
 
-    async def wait(self) -> None:  # pylint: disable=unused-argument
+    async def wait(self) -> None:  
         ...
 
     def done(self) -> bool:

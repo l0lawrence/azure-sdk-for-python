@@ -35,7 +35,7 @@ from .._vendor import TextTranslationClientMixinABC, prep_if_match, prep_if_none
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -277,7 +277,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.GetSupportedLanguagesResult:
-        # pylint: disable=line-too-long
+        
         """Gets the set of languages currently supported by other operations of the Translator.
 
         Gets the set of languages currently supported by other operations of the Translator.
@@ -1280,7 +1280,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -1345,7 +1345,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -1402,7 +1402,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         script: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.BreakSentenceItem]:
-        # pylint: disable=line-too-long
+        
         """Find Sentence Boundaries.
 
         Find Sentence Boundaries.
@@ -1520,7 +1520,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.
@@ -1635,7 +1635,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.
@@ -1742,7 +1742,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         client_trace_id: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.DictionaryLookupItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Entries.
 
         Lookup Dictionary Entries.
@@ -1910,7 +1910,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryExampleItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Examples.
 
         Lookup Dictionary Examples.
@@ -1997,7 +1997,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.DictionaryExampleItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Examples.
 
         Lookup Dictionary Examples.
@@ -2071,7 +2071,7 @@ class TextTranslationClientOperationsMixin(TextTranslationClientMixinABC):
         client_trace_id: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.DictionaryExampleItem]:
-        # pylint: disable=line-too-long
+        
         """Lookup Dictionary Examples.
 
         Lookup Dictionary Examples.

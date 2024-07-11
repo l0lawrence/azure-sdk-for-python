@@ -7,7 +7,7 @@
 
 import functools
 import warnings
-from typing import (  # pylint: disable=unused-import
+from typing import (  
     Any, AnyStr, AsyncIterable, AsyncIterator, Dict, List, IO, Iterable, Optional, overload, Union,
     TYPE_CHECKING
 )
@@ -45,7 +45,7 @@ if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
     from azure.core.pipeline.transport import AsyncHttpResponse  # pylint: disable=C4756
     from datetime import datetime
-    from .._models import ( # pylint: disable=unused-import
+    from .._models import ( 
         AccessPolicy,
         StandardBlobTier,
         PremiumPageBlobTier,
@@ -491,7 +491,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase, Storag
             process_storage_error(error)
 
     @distributed_trace
-    def _get_blob_service_client(self):  # pylint: disable=client-method-missing-kwargs
+    def _get_blob_service_client(self):  
         # type: (...) -> BlobServiceClient
         """Get a client to interact with the container's parent service account.
 

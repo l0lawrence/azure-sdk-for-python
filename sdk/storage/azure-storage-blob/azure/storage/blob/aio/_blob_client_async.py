@@ -7,7 +7,7 @@
 
 import warnings
 from functools import partial
-from typing import (  # pylint: disable=unused-import
+from typing import (  
     Any, AnyStr, AsyncIterable, Dict, IO, Iterable, List, Optional, overload, Tuple, Union,
     TYPE_CHECKING
 )
@@ -46,7 +46,7 @@ if TYPE_CHECKING:
     from azure.core.credentials import AzureNamedKeyCredential, AzureSasCredential
     from azure.core.credentials_async import AsyncTokenCredential
     from datetime import datetime
-    from .._models import (  # pylint: disable=unused-import
+    from .._models import (  
         ContentSettings,
         ImmutabilityPolicy,
         PremiumPageBlobTier,
@@ -138,7 +138,7 @@ class BlobClient(AsyncStorageAccountHostsMixin, BlobClientBase, StorageEncryptio
             credential=credential,
             **kwargs)
         self._client = AzureBlobStorage(self.url, base_url=self.url, pipeline=self._pipeline)
-        self._client._config.version = get_api_version(kwargs)  # pylint: disable=protected-access
+        self._client._config.version = get_api_version(kwargs)  
         self._configure_encryption(kwargs)
 
     @distributed_trace_async
@@ -1990,7 +1990,7 @@ class BlobClient(AsyncStorageAccountHostsMixin, BlobClientBase, StorageEncryptio
         options = self._get_blob_tags_options(**kwargs)
         try:
             _, tags = await self._client.blob.get_tags(**options)
-            return parse_tags(tags)  # pylint: disable=protected-access
+            return parse_tags(tags)  
         except HttpResponseError as error:
             process_storage_error(error)
 
@@ -2908,7 +2908,7 @@ class BlobClient(AsyncStorageAccountHostsMixin, BlobClientBase, StorageEncryptio
         except HttpResponseError as error:
             process_storage_error(error)
 
-    def _get_container_client(self): # pylint: disable=client-method-missing-kwargs
+    def _get_container_client(self): 
         # type: (...) -> ContainerClient
         """Get a client to interact with the blob's parent container.
 

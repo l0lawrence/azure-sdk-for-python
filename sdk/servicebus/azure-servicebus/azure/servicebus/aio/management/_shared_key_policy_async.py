@@ -27,7 +27,7 @@ class AsyncServiceBusSharedKeyCredentialPolicy(SansIOHTTPPolicy):
         self._token_expiry_on = 0
         self._token = None
 
-    async def _update_token(self):  # pylint: disable=invalid-overridden-method
+    async def _update_token(self):  
         if (
             self._token_expiry_on + 60 <= time.time()
         ):  # Update token if it's expiring in 60 seconds
@@ -38,6 +38,6 @@ class AsyncServiceBusSharedKeyCredentialPolicy(SansIOHTTPPolicy):
 
     async def on_request(
         self, request: PipelineRequest
-    ):  # pylint: disable=invalid-overridden-method
+    ):  
         await self._update_token()
         request.http_request.headers[self._name] = self._token

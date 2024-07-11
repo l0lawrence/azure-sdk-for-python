@@ -19,7 +19,7 @@ from ._operations import ImageAnalysisClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 
-class ImageAnalysisClient(ImageAnalysisClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class ImageAnalysisClient(ImageAnalysisClientOperationsMixin):  
     """ImageAnalysisClient.
 
     :param endpoint: Azure AI Computer Vision endpoint (protocol and hostname, for example:

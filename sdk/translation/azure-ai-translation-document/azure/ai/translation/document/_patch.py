@@ -337,7 +337,7 @@ class DocumentTranslationInput:
 class TranslationStatus:  # pylint: disable=too-many-instance-attributes
     """Status information about the translation operation."""
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Id of the translation operation."""
     created_on: datetime.datetime
     """The date time when the translation operation was created."""
@@ -433,7 +433,7 @@ class TranslationStatus:  # pylint: disable=too-many-instance-attributes
 class DocumentStatus:
     """Status information about a particular document within a translation operation."""
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Document Id."""
     source_document_url: str
     """Location of the source document in the source
@@ -692,7 +692,7 @@ class DocumentTranslationLROPollingMethod(LROBasePolling):
             return self._current_body.id
         return self._get_id_from_headers()
 
-    # pylint: disable=arguments-differ
+    
     def from_continuation_token(self, continuation_token: str, **kwargs: Any) -> Tuple:  # type: ignore[override]
         try:
             client = kwargs["client"]
@@ -968,11 +968,11 @@ class DocumentTranslationClient:
         )
 
     def __enter__(self) -> "DocumentTranslationClient":
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args) -> None:
-        self._client.__exit__(*args)  # pylint:disable=no-member
+        self._client.__exit__(*args)  
 
     def close(self) -> None:
         """Close the :class:`~azure.ai.translation.document.DocumentTranslationClient` session."""
@@ -1219,7 +1219,7 @@ class DocumentTranslationClient:
         ):  # pylint: disable=protected-access
             return TranslationStatus._from_generated(
                 _TranslationStatus(generated_model)
-            )  # pylint: disable=protected-access
+            )  
 
         model_conversion_function = kwargs.pop(
             "cls",

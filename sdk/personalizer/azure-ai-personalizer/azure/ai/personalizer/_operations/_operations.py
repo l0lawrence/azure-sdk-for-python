@@ -45,12 +45,12 @@ from .._vendor import PersonalizerClientMixinABC, _format_url_section
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 if sys.version_info >= (3, 8):
-    from typing import Literal  # pylint: disable=no-name-in-module, ungrouped-imports
+    from typing import Literal  # pylint: disable= ungrouped-imports
 else:
-    from typing_extensions import Literal  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing_extensions import Literal  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1626,7 +1626,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @overload
-    def create_evaluation(  # pylint: disable=inconsistent-return-statements
+    def create_evaluation(  
         self,
         evaluation_id: str,
         evaluation: JSON,
@@ -1672,7 +1672,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    def create_evaluation(  # pylint: disable=inconsistent-return-statements
+    def create_evaluation(  
         self,
         evaluation_id: str,
         evaluation: IO,
@@ -1901,7 +1901,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def reward_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    def reward_single_slot_event(  
         self,
         event_id: str,
         reward: JSON,
@@ -1938,7 +1938,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    def reward_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    def reward_single_slot_event(  
         self,
         event_id: str,
         reward: IO,
@@ -2087,7 +2087,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @overload
-    def apply_from_evaluation(  # pylint: disable=inconsistent-return-statements
+    def apply_from_evaluation(  
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Apply Learning Settings and Model.
@@ -2115,7 +2115,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    def apply_from_evaluation(  # pylint: disable=inconsistent-return-statements
+    def apply_from_evaluation(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Apply Learning Settings and Model.
@@ -2334,7 +2334,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(JSON, deserialized)
 
     @overload
-    def create_feature_importance(  # pylint: disable=inconsistent-return-statements
+    def create_feature_importance(  
         self,
         feature_importance_id: str,
         feature_importance: JSON,
@@ -2371,7 +2371,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    def create_feature_importance(  # pylint: disable=inconsistent-return-statements
+    def create_feature_importance(  
         self,
         feature_importance_id: str,
         feature_importance: IO,
@@ -2913,7 +2913,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(JSON, deserialized)
 
     @overload
-    def reward_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    def reward_multi_slot_event(  
         self,
         event_id: str,
         body: JSON,
@@ -2954,7 +2954,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    def reward_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    def reward_multi_slot_event(  
         self,
         event_id: str,
         body: IO,

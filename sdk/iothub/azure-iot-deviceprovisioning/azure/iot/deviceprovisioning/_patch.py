@@ -20,7 +20,7 @@ from azure.core.pipeline.policies import (
 )
 from azure.core.pipeline.transport import (
     RequestsTransport,
-)  # pylint: disable=no-name-in-module
+)  
 from azure.core.utils import parse_connection_string
 
 from ._api_version import DEFAULT_VERSION, ApiVersion
@@ -29,13 +29,13 @@ from ._client import DeviceProvisioningClient as GeneratedDeviceProvisioningClie
 from ._version import VERSION
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
 class DeviceProvisioningClient(
     GeneratedDeviceProvisioningClient
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """
     API for connecting to, and conducting operations on a Device Provisioning Service instance
 

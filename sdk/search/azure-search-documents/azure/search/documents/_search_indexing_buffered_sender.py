@@ -52,7 +52,7 @@ class SearchIndexingBufferedSender(SearchIndexingBufferedSenderBase, HeadersMixi
 
     _client: SearchIndexClient
 
-    # pylint: disable=too-many-instance-attributes
+    
 
     def __init__(
         self, endpoint: str, index_name: str, credential: Union[AzureKeyCredential, TokenCredential], **kwargs: Any
@@ -312,7 +312,7 @@ class SearchIndexingBufferedSender(SearchIndexingBufferedSenderBase, HeadersMixi
             return result_first_half
 
     def __enter__(self) -> "SearchIndexingBufferedSender":
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args) -> None:

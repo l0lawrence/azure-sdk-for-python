@@ -44,8 +44,8 @@ from .._vendor import MixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -887,7 +887,7 @@ class ConfidentialLedgerClientOperationsMixin(MixinABC):
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_user(self, user_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete_user(self, user_id: str, **kwargs: Any) -> None:  
         """Deletes a user from the Confidential Ledger.
 
         Deletes a user from the Confidential Ledger.

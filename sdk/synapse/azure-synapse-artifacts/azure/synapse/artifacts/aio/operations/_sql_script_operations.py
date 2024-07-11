@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -396,7 +396,7 @@ class SqlScriptOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_sql_script_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_sql_script_initial(  
         self, sql_script_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -494,7 +494,7 @@ class SqlScriptOperations:
             )
         return AsyncLROPoller[None](self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
-    async def _rename_sql_script_initial(  # pylint: disable=inconsistent-return-statements
+    async def _rename_sql_script_initial(  
         self, sql_script_name: str, new_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         error_map = {

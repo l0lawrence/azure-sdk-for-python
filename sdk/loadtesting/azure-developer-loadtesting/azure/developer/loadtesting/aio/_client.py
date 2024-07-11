@@ -15,7 +15,7 @@ from .._generated.aio._configuration import LoadTestingClientConfiguration
 from .._generated._serialization import Deserializer, Serializer
 from .._generated.aio.operations import AdministrationOperations, TestRunOperations
 
-class _BaseClient:  # pylint: disable=client-accepts-api-version-keyword
+class _BaseClient:  
     """These APIs allow end users to create, view and run load tests using Azure Load Test Service.
 
     :ivar administration: AdministrationOperations operations
@@ -74,7 +74,7 @@ class _BaseClient:  # pylint: disable=client-accepts-api-version-keyword
         await self._client.__aexit__(*exc_details)
 
 
-class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  # pylint: disable=client-accepts-api-version-keyword
+class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  
     """These APIs allow end users to create, view and run load tests using Azure Load Test Service.
 
     :param endpoint: URL to perform data plane API operations on the resource. Required.
@@ -90,7 +90,7 @@ class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  # py
         await self._client.__aenter__()
         return self
 
-class LoadTestRunClient(_BaseClient, TestRunOperations):  # pylint: disable=client-accepts-api-version-keyword
+class LoadTestRunClient(_BaseClient, TestRunOperations):  
     """These APIs allow end users to create, view and run load tests using Azure Load Test Service.
 
     :param endpoint: URL to perform data plane API operations on the resource. Required.

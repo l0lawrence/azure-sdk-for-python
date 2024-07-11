@@ -19,11 +19,11 @@ from .._models import LogsUploadError
 if sys.version_info >= (3, 9):
     from collections.abc import Mapping, MutableMapping
 else:
-    from typing import Mapping, MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import Mapping, MutableMapping  # type: ignore  
 
 
 _LOGGER = logging.getLogger(__name__)
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 
 
 class LogsIngestionClientOperationsMixin(GeneratedOps):

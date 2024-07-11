@@ -2048,7 +2048,7 @@ class MetricFeedback(dict):
         )
 
 
-class AnomalyFeedback(MetricFeedback):  # pylint:disable=too-many-instance-attributes
+class AnomalyFeedback(MetricFeedback):  
     """AnomalyFeedback.
 
     Variables are only populated by the server, and will be ignored when sending a request.

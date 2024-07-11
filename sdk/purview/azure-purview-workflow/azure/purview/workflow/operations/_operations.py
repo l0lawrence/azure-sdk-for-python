@@ -30,8 +30,8 @@ from .._serialization import Serializer
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1735,7 +1735,7 @@ class WorkflowRunOperations:
         return cast(JSON, deserialized)
 
     @overload
-    def cancel(  # pylint: disable=inconsistent-return-statements
+    def cancel(  
         self, workflow_run_id: str, run_cancel_reply: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Cancel a workflow run.
@@ -1761,7 +1761,7 @@ class WorkflowRunOperations:
         """
 
     @overload
-    def cancel(  # pylint: disable=inconsistent-return-statements
+    def cancel(  
         self, workflow_run_id: str, run_cancel_reply: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Cancel a workflow run.
@@ -2314,7 +2314,7 @@ class WorkflowTaskOperations:
         return cast(JSON, deserialized)
 
     @overload
-    def reassign(  # pylint: disable=inconsistent-return-statements
+    def reassign(  
         self, task_id: str, reassign_command: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reassign a workflow task.
@@ -2347,7 +2347,7 @@ class WorkflowTaskOperations:
         """
 
     @overload
-    def reassign(  # pylint: disable=inconsistent-return-statements
+    def reassign(  
         self, task_id: str, reassign_command: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reassign a workflow task.
@@ -2468,7 +2468,7 @@ class ApprovalOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @overload
-    def approve(  # pylint: disable=inconsistent-return-statements
+    def approve(  
         self, task_id: str, approval_response_comment: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Approve an approval.
@@ -2496,7 +2496,7 @@ class ApprovalOperations:
         """
 
     @overload
-    def approve(  # pylint: disable=inconsistent-return-statements
+    def approve(  
         self, task_id: str, approval_response_comment: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Approve an approval.
@@ -2594,7 +2594,7 @@ class ApprovalOperations:
             return cls(pipeline_response, None, {})
 
     @overload
-    def reject(  # pylint: disable=inconsistent-return-statements
+    def reject(  
         self, task_id: str, approval_response_comment: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reject an approval.
@@ -2622,7 +2622,7 @@ class ApprovalOperations:
         """
 
     @overload
-    def reject(  # pylint: disable=inconsistent-return-statements
+    def reject(  
         self, task_id: str, approval_response_comment: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reject an approval.
@@ -2738,7 +2738,7 @@ class TaskStatusOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @overload
-    def update(  # pylint: disable=inconsistent-return-statements
+    def update(  
         self, task_id: str, task_update_command: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update the status of a workflow task request.
@@ -2767,7 +2767,7 @@ class TaskStatusOperations:
         """
 
     @overload
-    def update(  # pylint: disable=inconsistent-return-statements
+    def update(  
         self, task_id: str, task_update_command: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update the status of a workflow task request.

@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -29,15 +29,15 @@ from .._vendor import LogsIngestionClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
 
 class LogsIngestionClientOperationsMixin(LogsIngestionClientMixinABC):
     @overload
-    async def _upload(  # pylint: disable=inconsistent-return-statements
+    async def _upload(  
         self,
         rule_id: str,
         stream: str,
@@ -50,7 +50,7 @@ class LogsIngestionClientOperationsMixin(LogsIngestionClientMixinABC):
         ...
 
     @overload
-    async def _upload(  # pylint: disable=inconsistent-return-statements
+    async def _upload(  
         self,
         rule_id: str,
         stream: str,
@@ -63,7 +63,7 @@ class LogsIngestionClientOperationsMixin(LogsIngestionClientMixinABC):
         ...
 
     @distributed_trace_async
-    async def _upload(  # pylint: disable=inconsistent-return-statements
+    async def _upload(  
         self,
         rule_id: str,
         stream: str,

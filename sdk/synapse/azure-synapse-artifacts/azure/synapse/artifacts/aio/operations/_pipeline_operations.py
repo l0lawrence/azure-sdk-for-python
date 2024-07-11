@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -42,8 +42,8 @@ from ...operations._pipeline_operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -403,7 +403,7 @@ class PipelineOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_pipeline_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_pipeline_initial(  
         self, pipeline_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -501,7 +501,7 @@ class PipelineOperations:
             )
         return AsyncLROPoller[None](self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
-    async def _rename_pipeline_initial(  # pylint: disable=inconsistent-return-statements
+    async def _rename_pipeline_initial(  
         self, pipeline_name: str, new_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         error_map = {

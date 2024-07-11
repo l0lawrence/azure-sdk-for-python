@@ -16,7 +16,7 @@ def ingest_data_to_index(
     index_config: IndexConfig,
     source_config: IndexDataSource,
     acs_config: Optional[ACSOutputConfig] = None,  # todo better name?
-) -> None:  # pylint: disable=too-many-function-args
+) -> None:  
     # create index creation pipeline from loaded yml component
     # presumably relying heavily upon code from here:
     # https://github.com/Azure/azureml_run_specification/blob/d74e8aac81203206976203fd4936f33d3b30e6e0/specs/simplified-sdk/mlindex_creation_job.md

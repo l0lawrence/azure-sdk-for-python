@@ -71,8 +71,8 @@ from .._vendor import PersonalizerClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -925,7 +925,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def delete_evaluation(  
         self, evaluation_id: str, **kwargs: Any
     ) -> None:
         """Offline Evaluation.
@@ -976,7 +976,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @overload
-    async def create_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def create_evaluation(  
         self, evaluation_id: str, evaluation: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create Offline Evaluation.
@@ -1017,7 +1017,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    async def create_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def create_evaluation(  
         self, evaluation_id: str, evaluation: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create Offline Evaluation.
@@ -1037,7 +1037,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @distributed_trace_async
-    async def create_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def create_evaluation(  
         self, evaluation_id: str, evaluation: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Create Offline Evaluation.
@@ -1236,7 +1236,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return AsyncItemPaged(get_next, extract_data)
 
     @overload
-    async def reward_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_single_slot_event(  
         self, event_id: str, reward: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reward.
@@ -1268,7 +1268,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    async def reward_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_single_slot_event(  
         self, event_id: str, reward: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reward.
@@ -1290,7 +1290,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @distributed_trace_async
-    async def reward_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_single_slot_event(  
         self, event_id: str, reward: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Reward.
@@ -1360,7 +1360,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def activate_single_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def activate_single_slot_event(  
         self, event_id: str, **kwargs: Any
     ) -> None:
         """Activate Event.
@@ -1412,7 +1412,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @overload
-    async def apply_from_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def apply_from_evaluation(  
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Apply Learning Settings and Model.
@@ -1440,7 +1440,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    async def apply_from_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def apply_from_evaluation(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Apply Learning Settings and Model.
@@ -1459,7 +1459,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @distributed_trace_async
-    async def apply_from_evaluation(  # pylint: disable=inconsistent-return-statements
+    async def apply_from_evaluation(  
         self, body: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Apply Learning Settings and Model.
@@ -1526,7 +1526,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def delete_feature_importance(  # pylint: disable=inconsistent-return-statements
+    async def delete_feature_importance(  
         self, feature_importance_id: str, **kwargs: Any
     ) -> None:
         """Feature Importance.
@@ -1659,7 +1659,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(JSON, deserialized)
 
     @overload
-    async def create_feature_importance(  # pylint: disable=inconsistent-return-statements
+    async def create_feature_importance(  
         self,
         feature_importance_id: str,
         feature_importance: JSON,
@@ -1696,7 +1696,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    async def create_feature_importance(  # pylint: disable=inconsistent-return-statements
+    async def create_feature_importance(  
         self,
         feature_importance_id: str,
         feature_importance: IO,
@@ -1721,7 +1721,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @distributed_trace_async
-    async def create_feature_importance(  # pylint: disable=inconsistent-return-statements
+    async def create_feature_importance(  
         self, feature_importance_id: str, feature_importance: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Create Feature Importance.
@@ -1910,7 +1910,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete_log(self, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete_log(self, **kwargs: Any) -> None:  
         """Logs.
 
         Delete all logs of Rank and Reward calls stored by Personalizer.
@@ -2074,7 +2074,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(AsyncIterator[bytes], deserialized)
 
     @distributed_trace_async
-    async def import_model(self, body: IO, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def import_model(self, body: IO, **kwargs: Any) -> None:  
         """Model File.
 
         Replace the existing model file for the Personalizer service.
@@ -2127,7 +2127,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def reset_model(self, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def reset_model(self, **kwargs: Any) -> None:  
         """Reset Model.
 
         Resets the model file generated by Personalizer service.
@@ -2237,7 +2237,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         return cast(JSON, deserialized)
 
     @overload
-    async def reward_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_multi_slot_event(  
         self, event_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reward (MultiSlot).
@@ -2273,7 +2273,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @overload
-    async def reward_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_multi_slot_event(  
         self, event_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reward (MultiSlot).
@@ -2294,7 +2294,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
         """
 
     @distributed_trace_async
-    async def reward_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def reward_multi_slot_event(  
         self, event_id: str, body: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Reward (MultiSlot).
@@ -2363,7 +2363,7 @@ class PersonalizerClientOperationsMixin(PersonalizerClientMixinABC):  # pylint: 
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def activate_multi_slot_event(  # pylint: disable=inconsistent-return-statements
+    async def activate_multi_slot_event(  
         self, event_id: str, **kwargs: Any
     ) -> None:
         """Activate Event (MultiSlot).

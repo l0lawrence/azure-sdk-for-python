@@ -19,11 +19,11 @@ from ._configuration import BlocklistClientConfiguration, ContentSafetyClientCon
 from ._operations import BlocklistClientOperationsMixin, ContentSafetyClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 
-class ContentSafetyClient(ContentSafetyClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class ContentSafetyClient(ContentSafetyClientOperationsMixin):  
     """ContentSafetyClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
@@ -105,7 +105,7 @@ class ContentSafetyClient(ContentSafetyClientOperationsMixin):  # pylint: disabl
         await self._client.__aexit__(*exc_details)
 
 
-class BlocklistClient(BlocklistClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class BlocklistClient(BlocklistClientOperationsMixin):  
     """BlocklistClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

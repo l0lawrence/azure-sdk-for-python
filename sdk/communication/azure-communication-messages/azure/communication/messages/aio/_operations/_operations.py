@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -35,8 +35,8 @@ from .._vendor import MessageTemplateClientMixinABC, NotificationMessagesClientM
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any] # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any] 
 T = TypeVar('T')
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -52,7 +52,7 @@ class NotificationMessagesClientOperationsMixin(   # pylint: disable=name-too-lo
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.SendMessageResult:
-        # pylint: disable=line-too-long
+        
         """Sends a notification message from Business to User.
 
         :param body: Required.

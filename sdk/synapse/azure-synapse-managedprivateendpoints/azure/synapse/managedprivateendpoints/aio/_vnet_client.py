@@ -20,7 +20,7 @@ from msrest import Deserializer, Serializer
 from ._configuration import VnetClientConfiguration
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 class _SDKClient(object):

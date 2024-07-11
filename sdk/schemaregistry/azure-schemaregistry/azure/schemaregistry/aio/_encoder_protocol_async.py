@@ -181,7 +181,7 @@ class SchemaEncoder(Protocol):
         ...
 
     async def decode(
-        self,  # pylint: disable=unused-argument
+        self,  
         message: Union["MessageType", "MessageContent"],
         *,
         request_options: Optional[Dict[str, Any]] = None,

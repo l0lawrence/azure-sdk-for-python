@@ -3,7 +3,7 @@
 # ---------------------------------------------------------
 """DataIndex entities."""
 
-# pylint: disable=no-member
+
 
 from os import PathLike
 from pathlib import Path
@@ -272,7 +272,7 @@ class DataIndex(Data):
         return load_from_dict(DataIndexSchema, data, context, **kwargs)
 
     def _to_dict(self) -> Dict:
-        # pylint: disable=no-member
+        
         from azure.ai.resources._index._dataindex._schema._data_index import DataIndexSchema
 
         return DataIndexSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self)

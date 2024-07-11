@@ -337,7 +337,7 @@ def _get_model(module_name: str, model_name: str):
 _UNSET = object()
 
 
-class _MyMutableMapping(MutableMapping[str, typing.Any]):  # pylint: disable=unsubscriptable-object
+class _MyMutableMapping(MutableMapping[str, typing.Any]):  
     def __init__(self, data: typing.Dict[str, typing.Any]) -> None:
         self._data = data
 
@@ -507,7 +507,7 @@ class Model(_MyMutableMapping):
     def copy(self) -> "Model":
         return Model(self.__dict__)
 
-    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> Self:  # pylint: disable=unused-argument
+    def __new__(cls, *args: typing.Any, **kwargs: typing.Any) -> Self:  
         # we know the last three classes in mro are going to be 'Model', 'dict', and 'object'
         mros = cls.__mro__[:-3][::-1]  # ignore model, dict, and object parents, and reverse the mro order
         attr_to_rest_field: typing.Dict[str, _RestField] = {  # map attribute name to rest_field property
@@ -517,7 +517,7 @@ class Model(_MyMutableMapping):
             k: v
             for mro_class in mros
             if hasattr(mro_class, "__annotations__")  # pylint: disable=no-member
-            for k, v in mro_class.__annotations__.items()  # pylint: disable=no-member
+            for k, v in mro_class.__annotations__.items()  
         }
         for attr, rf in attr_to_rest_field.items():
             rf._module = cls.__module__
@@ -527,12 +527,12 @@ class Model(_MyMutableMapping):
                 rf._rest_name_input = attr
         cls._attr_to_rest_field: typing.Dict[str, _RestField] = dict(attr_to_rest_field.items())
 
-        return super().__new__(cls)  # pylint: disable=no-value-for-parameter
+        return super().__new__(cls)  
 
     def __init_subclass__(cls, discriminator: typing.Optional[str] = None) -> None:
         for base in cls.__bases__:
             if hasattr(base, "__mapping__"):  # pylint: disable=no-member
-                base.__mapping__[discriminator or cls.__name__] = cls  # type: ignore  # pylint: disable=no-member
+                base.__mapping__[discriminator or cls.__name__] = cls  # type: ignore  
 
     @classmethod
     def _get_discriminator(cls, exist_discriminators) -> typing.Optional[str]:
@@ -540,12 +540,12 @@ class Model(_MyMutableMapping):
             if (
                 isinstance(v, _RestField) and v._is_discriminator and v._rest_name not in exist_discriminators
             ):  # pylint: disable=protected-access
-                return v._rest_name  # pylint: disable=protected-access
+                return v._rest_name  
         return None
 
     @classmethod
     def _deserialize(cls, data, exist_discriminators):
-        if not hasattr(cls, "__mapping__"):  # pylint: disable=no-member
+        if not hasattr(cls, "__mapping__"):  
             return cls(data)
         discriminator = cls._get_discriminator(exist_discriminators)
         exist_discriminators.append(discriminator)

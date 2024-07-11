@@ -35,7 +35,7 @@ class ContentDownloader(object):
 
         self._call_recording_client = call_recording_client
 
-    def download_streaming(  # pylint: disable=inconsistent-return-statements
+    def download_streaming(  
         self, source_location: str, offset: int, length: int, **kwargs: Any
     ) -> HttpResponse:
         """Download a stream of the call recording.
@@ -92,7 +92,7 @@ class ContentDownloader(object):
         )
         raise HttpResponseError(response = response, model = error)
 
-    def delete_recording(  # pylint: disable=inconsistent-return-statements
+    def delete_recording(  
         self, recording_location: str, **kwargs: Any
     ) -> None:
         """Delete a call recording.

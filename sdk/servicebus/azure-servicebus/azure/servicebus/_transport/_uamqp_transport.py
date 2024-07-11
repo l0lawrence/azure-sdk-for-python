@@ -233,9 +233,9 @@ try:
         TIMEOUT_FACTOR = 1000
         # CONNECTION_CLOSING_STATES: Tuple = (  # pylint:disable=protected-access
         #        c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.CLOSE_SENT,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.DISCARDING,  # pylint:disable=c-extension-no-member
-        #        c_uamqp.ConnectionState.END,  # pylint:disable=c-extension-no-member
+        #        c_uamqp.ConnectionState.CLOSE_SENT,  
+        #        c_uamqp.ConnectionState.DISCARDING,  
+        #        c_uamqp.ConnectionState.END,  
         #    )
         TRANSPORT_IDENTIFIER = f"{UAMQP_LIBRARY}/{__version__}"
 
@@ -283,7 +283,7 @@ try:
         @staticmethod
         def get_message_delivery_tag(
             message: "Message", _
-        ) -> str:  # pylint: disable=unused-argument
+        ) -> str:  
             """
             Gets delivery tag of a Message.
             :param ~uamqp.Message message: Message to get delivery_tag from for uamqp.Message.
@@ -296,7 +296,7 @@ try:
         @staticmethod
         def get_message_delivery_id(
             message: "Message", _
-        ) -> str:  # pylint: disable=unused-argument
+        ) -> str:  
             """
             Gets delivery id of a Message.
             :param ~uamqp.Message message: Message to get delivery_id from for uamqp.Message.
@@ -477,7 +477,7 @@ try:
             """
             return (
                 handler.message_handler._link.peer_max_message_size
-            )  # pylint:disable=protected-access
+            )  
 
         @staticmethod
         def get_handler_link_name(handler: "AMQPClient") -> str:
@@ -599,7 +599,7 @@ try:
             logger: "Logger",
             timeout: int,
             last_exception: Optional[Exception],
-        ) -> None:  # pylint: disable=unused-argument
+        ) -> None:  
             """
             Handles sending of service bus messages.
             :param ~azure.servicebus.ServiceBusSender sender: The sender with handler
@@ -624,7 +624,7 @@ try:
         def add_batch(
             sb_message_batch: "ServiceBusMessageBatch",
             outgoing_sb_message: "ServiceBusMessage",
-        ) -> None:  # pylint: disable=unused-argument
+        ) -> None:  
             """
             Add ServiceBusMessage to the data body of the BatchMessage.
             :param ~azure.servicebus.ServiceBusMessageBatch sb_message_batch: ServiceBusMessageBatch to add data to.
@@ -682,7 +682,7 @@ try:
 
             return ReceiveClient(
                 source,
-                debug=network_trace,  # pylint:disable=protected-access
+                debug=network_trace,  
                 error_policy=retry_policy,
                 prefetch=link_credit,
                 auto_complete=False,
@@ -769,7 +769,7 @@ try:
         @staticmethod
         def iter_next(
             receiver: "ServiceBusReceiver", wait_time: Optional[int] = None,
-        ) -> "ServiceBusReceivedMessage":  # pylint: disable=unused-argument
+        ) -> "ServiceBusReceivedMessage":  
             # pylint: disable=protected-access
             try:
                 receiver._receive_context.set()
@@ -858,7 +858,7 @@ try:
             settle_operation: str,
             dead_letter_reason: Optional[str] = None,
             dead_letter_error_description: Optional[str] = None,
-        ) -> None:  # pylint: disable=unused-argument
+        ) -> None:  
             UamqpTransport.settle_message_via_receiver_link_impl(
                 handler,
                 message,
@@ -874,7 +874,7 @@ try:
             settle_operation: str,
             dead_letter_reason: Optional[str] = None,
             dead_letter_error_description: Optional[str] = None,
-        ) -> Callable:  # pylint: disable=unused-argument
+        ) -> Callable:  
             # pylint: disable=protected-access
             message._message = cast(Message, message._message)
             if settle_operation == MESSAGE_COMPLETE:
@@ -967,7 +967,7 @@ try:
         def create_mgmt_msg(
             message: "Message",
             application_properties: Dict[str, Any],
-            config: "Configuration",  # pylint:disable=unused-argument
+            config: "Configuration",  
             reply_to: str,
             **kwargs: Any,
         ) -> "Message":

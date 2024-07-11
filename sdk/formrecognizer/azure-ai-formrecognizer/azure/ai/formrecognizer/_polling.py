@@ -41,7 +41,7 @@ class DocumentModelAdministrationLROPoller(Protocol[PollingReturnType_co]):
     """Implements a protocol followed by returned poller objects."""
 
     @property
-    def details(  # pylint: disable=unused-argument
+    def details(  
         self,
     ) -> Mapping[str, Any]:
         ...
@@ -57,21 +57,21 @@ class DocumentModelAdministrationLROPoller(Protocol[PollingReturnType_co]):
     def status(self) -> str:
         ...
 
-    def result(  # pylint: disable=unused-argument
+    def result(  
         self, timeout: Optional[int] = None
     ) -> PollingReturnType_co:
         ...
 
-    def wait(self, timeout: Optional[float] = None) -> None:  # pylint: disable=unused-argument
+    def wait(self, timeout: Optional[float] = None) -> None:  
         ...
 
     def done(self) -> bool:
         ...
 
-    def add_done_callback(self, func: Callable) -> None:  # pylint: disable=unused-argument
+    def add_done_callback(self, func: Callable) -> None:  
         ...
 
-    def remove_done_callback(self, func: Callable) -> None:  # pylint: disable=unused-argument
+    def remove_done_callback(self, func: Callable) -> None:  
         ...
 
 

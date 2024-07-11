@@ -231,8 +231,8 @@ from .._vendor import raise_if_not_implemented
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1480,7 +1480,7 @@ class ApplicationDataOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, application_data_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified application data resource under a particular party.
@@ -1786,7 +1786,7 @@ class AttachmentsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, attachment_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified attachment resource under a particular party.
@@ -3848,7 +3848,7 @@ class BoundariesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, boundary_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified boundary resource under a particular party.
@@ -4528,7 +4528,7 @@ class CropProductsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, crop_product_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified crop Product resource.
@@ -5085,7 +5085,7 @@ class CropsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(self, crop_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, crop_id: str, **kwargs: Any) -> None:  
         """Deletes Crop for given crop id.
 
         :param crop_id: Id of crop to be deleted. Required.
@@ -5664,7 +5664,7 @@ class DeviceDataModelsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_partner_id: str, device_data_model_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device data model entity.
@@ -6269,7 +6269,7 @@ class DevicesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_partner_id: str, device_id: str, **kwargs: Any
     ) -> None:
         """Deletes a device entity.
@@ -7617,7 +7617,7 @@ class FarmsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, farm_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified farm resource under a particular party.
@@ -8518,7 +8518,7 @@ class FieldsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, field_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified field resource under a particular party.
@@ -10069,7 +10069,7 @@ class HarvestDataOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, harvest_data_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified harvest data resource under a particular party.
@@ -10839,7 +10839,7 @@ class InsightAttachmentsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self,
         party_id: str,
         model_id: str,
@@ -11886,7 +11886,7 @@ class InsightsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, model_id: str, resource_type: str, resource_id: str, insight_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified insight resource.
@@ -12853,7 +12853,7 @@ class ManagementZonesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, management_zone_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified management zone resource under a particular party.
@@ -15217,7 +15217,7 @@ class NutrientAnalysesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, nutrient_analysis_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified nutrient analysis resource under a particular party.
@@ -15767,7 +15767,7 @@ class OAuthProvidersOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, oauth_provider_id: str, **kwargs: Any
     ) -> None:
         """Deletes an specified oauthProvider resource.
@@ -16961,7 +16961,7 @@ class PartiesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(self, party_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, party_id: str, **kwargs: Any) -> None:  
         """Deletes a specified party resource.
 
         :param party_id: Id of party to be deleted. Required.
@@ -18029,7 +18029,7 @@ class PlantingDataOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, planting_data_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified planting data resource under a particular party.
@@ -19222,7 +19222,7 @@ class PlantTissueAnalysesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, plant_tissue_analysis_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified plant tissue analysis resource under a particular party.
@@ -20199,7 +20199,7 @@ class PrescriptionMapsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, prescription_map_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified prescription map resource under a particular party.
@@ -21191,7 +21191,7 @@ class PrescriptionsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, prescription_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified prescription resource under a particular party.
@@ -23392,7 +23392,7 @@ class SeasonalFieldsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, seasonal_field_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified seasonal-field resource under a particular party.
@@ -24333,7 +24333,7 @@ class SeasonsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(self, season_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, season_id: str, **kwargs: Any) -> None:  
         """Deletes a specified season resource.
 
         :param season_id: Id of the season. Required.
@@ -24984,7 +24984,7 @@ class SensorDataModelsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_partner_id: str, sensor_data_model_id: str, **kwargs: Any
     ) -> None:
         """Deletes a sensor data model entity.
@@ -25652,7 +25652,7 @@ class SensorMappingsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_mapping_id: str, **kwargs: Any
     ) -> None:
         """Deletes a sensor mapping entity.
@@ -26199,7 +26199,7 @@ class SensorPartnerIntegrationsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_partner_id: str, integration_id: str, **kwargs: Any
     ) -> None:
         """Deletes a partner integration model entity.
@@ -26976,7 +26976,7 @@ class SensorsOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, sensor_partner_id: str, sensor_id: str, **kwargs: Any
     ) -> None:
         """Deletes a sensor entity.
@@ -28478,7 +28478,7 @@ class TillageDataOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, tillage_data_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified tillage data resource under a particular party.
@@ -31433,7 +31433,7 @@ class ZonesOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, party_id: str, zone_id: str, **kwargs: Any
     ) -> None:
         """Deletes a specified zone resource under a particular party.

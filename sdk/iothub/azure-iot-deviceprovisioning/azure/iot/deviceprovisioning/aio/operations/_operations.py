@@ -45,8 +45,8 @@ from ...operations._operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1613,7 +1613,7 @@ class EnrollmentOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, id: str, *, if_match: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Delete a device enrollment record.
@@ -4161,7 +4161,7 @@ class EnrollmentGroupOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, id: str, *, if_match: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Delete a device enrollment group.
@@ -5368,7 +5368,7 @@ class DeviceRegistrationStateOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, id: str, *, if_match: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Deletes the device registration.

@@ -15,7 +15,7 @@ from azure.core.pipeline.transport import HttpRequest, HttpResponse
 from .. import models as _models
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any, Callable, Dict, Generic, Optional, TypeVar
 
     T = TypeVar('T')

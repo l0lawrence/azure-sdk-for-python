@@ -18,11 +18,11 @@ from ._operations import LogsIngestionClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
-class LogsIngestionClient(LogsIngestionClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class LogsIngestionClient(LogsIngestionClientOperationsMixin):  
     """Azure Monitor Data Collection Python Client.
 
     :param endpoint: The Data Collection Endpoint for the Data Collection Rule, for example

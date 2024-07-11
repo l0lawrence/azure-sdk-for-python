@@ -12,7 +12,7 @@ from azure.monitor.opentelemetry.exporter._constants import _STATSBEAT_METRIC_NA
 
 class _StatsBeatExporter(AzureMonitorMetricExporter):
 
-    # pylint: disable=protected-access
+    
     def _point_to_envelope(
         self,
         point: DataPointT,

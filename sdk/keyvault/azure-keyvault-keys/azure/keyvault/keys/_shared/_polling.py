@@ -25,12 +25,12 @@ class KeyVaultOperationPoller(LROPoller):
     :type polling_method: ~azure.core.polling.PollingMethod
     """
 
-    # pylint: disable=arguments-differ
+    
     def __init__(self, polling_method: PollingMethod) -> None:
         super(KeyVaultOperationPoller, self).__init__(None, None, lambda *_: None, NoPolling())
         self._polling_method = polling_method
 
-    # pylint: disable=arguments-differ
+    
     def result(self) -> "Any":  # type: ignore
         """Returns a representation of the final resource without waiting for the operation to complete.
 

@@ -47,8 +47,8 @@ from ...operations._operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -550,7 +550,7 @@ class WorkflowOperations:
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def delete(self, workflow_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, workflow_id: str, **kwargs: Any) -> None:  
         """Delete a workflow.
 
         :param workflow_id: The workflow id. Required.
@@ -1335,7 +1335,7 @@ class WorkflowRunOperations:
         return cast(JSON, deserialized)
 
     @overload
-    async def cancel(  # pylint: disable=inconsistent-return-statements
+    async def cancel(  
         self, workflow_run_id: str, run_cancel_reply: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Cancel a workflow run.
@@ -1361,7 +1361,7 @@ class WorkflowRunOperations:
         """
 
     @overload
-    async def cancel(  # pylint: disable=inconsistent-return-statements
+    async def cancel(  
         self, workflow_run_id: str, run_cancel_reply: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Cancel a workflow run.
@@ -1379,7 +1379,7 @@ class WorkflowRunOperations:
         """
 
     @distributed_trace_async
-    async def cancel(  # pylint: disable=inconsistent-return-statements
+    async def cancel(  
         self, workflow_run_id: str, run_cancel_reply: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Cancel a workflow run.
@@ -1914,7 +1914,7 @@ class WorkflowTaskOperations:
         return cast(JSON, deserialized)
 
     @overload
-    async def reassign(  # pylint: disable=inconsistent-return-statements
+    async def reassign(  
         self, task_id: str, reassign_command: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reassign a workflow task.
@@ -1947,7 +1947,7 @@ class WorkflowTaskOperations:
         """
 
     @overload
-    async def reassign(  # pylint: disable=inconsistent-return-statements
+    async def reassign(  
         self, task_id: str, reassign_command: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reassign a workflow task.
@@ -1965,7 +1965,7 @@ class WorkflowTaskOperations:
         """
 
     @distributed_trace_async
-    async def reassign(  # pylint: disable=inconsistent-return-statements
+    async def reassign(  
         self, task_id: str, reassign_command: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Reassign a workflow task.
@@ -2068,7 +2068,7 @@ class ApprovalOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @overload
-    async def approve(  # pylint: disable=inconsistent-return-statements
+    async def approve(  
         self, task_id: str, approval_response_comment: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Approve an approval.
@@ -2096,7 +2096,7 @@ class ApprovalOperations:
         """
 
     @overload
-    async def approve(  # pylint: disable=inconsistent-return-statements
+    async def approve(  
         self, task_id: str, approval_response_comment: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Approve an approval.
@@ -2115,7 +2115,7 @@ class ApprovalOperations:
         """
 
     @distributed_trace_async
-    async def approve(  # pylint: disable=inconsistent-return-statements
+    async def approve(  
         self, task_id: str, approval_response_comment: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Approve an approval.
@@ -2194,7 +2194,7 @@ class ApprovalOperations:
             return cls(pipeline_response, None, {})
 
     @overload
-    async def reject(  # pylint: disable=inconsistent-return-statements
+    async def reject(  
         self, task_id: str, approval_response_comment: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reject an approval.
@@ -2222,7 +2222,7 @@ class ApprovalOperations:
         """
 
     @overload
-    async def reject(  # pylint: disable=inconsistent-return-statements
+    async def reject(  
         self, task_id: str, approval_response_comment: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Reject an approval.
@@ -2241,7 +2241,7 @@ class ApprovalOperations:
         """
 
     @distributed_trace_async
-    async def reject(  # pylint: disable=inconsistent-return-statements
+    async def reject(  
         self, task_id: str, approval_response_comment: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Reject an approval.
@@ -2338,7 +2338,7 @@ class TaskStatusOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @overload
-    async def update(  # pylint: disable=inconsistent-return-statements
+    async def update(  
         self, task_id: str, task_update_command: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update the status of a workflow task request.
@@ -2367,7 +2367,7 @@ class TaskStatusOperations:
         """
 
     @overload
-    async def update(  # pylint: disable=inconsistent-return-statements
+    async def update(  
         self, task_id: str, task_update_command: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update the status of a workflow task request.
@@ -2385,7 +2385,7 @@ class TaskStatusOperations:
         """
 
     @distributed_trace_async
-    async def update(  # pylint: disable=inconsistent-return-statements
+    async def update(  
         self, task_id: str, task_update_command: Union[JSON, IO], **kwargs: Any
     ) -> None:
         """Update the status of a workflow task request.

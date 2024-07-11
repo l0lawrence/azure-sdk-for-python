@@ -37,7 +37,7 @@ from ._operations._patch import _UTC_TZ
 
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 

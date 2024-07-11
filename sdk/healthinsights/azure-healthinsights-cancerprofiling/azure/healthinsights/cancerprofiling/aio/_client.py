@@ -18,7 +18,7 @@ from ._configuration import CancerProfilingClientConfiguration
 from ._operations import CancerProfilingClientOperationsMixin
 
 
-class CancerProfilingClient(CancerProfilingClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class CancerProfilingClient(CancerProfilingClientOperationsMixin):  
     """CancerProfilingClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

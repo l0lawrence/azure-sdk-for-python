@@ -151,11 +151,11 @@ class MetricsAdvisorClient:  # pylint: disable=client-accepts-api-version-keywor
         return "<MetricsAdvisorClient [endpoint={}]>".format(repr(self._endpoint))[:1024]
 
     def __enter__(self) -> "MetricsAdvisorClient":
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args) -> None:
-        self._client.__exit__(*args)  # pylint:disable=no-member
+        self._client.__exit__(*args)  
 
     def close(self) -> None:
         """Close the :class:`~azure.ai.metricsadvisor.MetricsAdvisorClient` session."""
@@ -735,11 +735,11 @@ class MetricsAdvisorAdministrationClient:  # pylint:disable=too-many-public-meth
         return self._client.close()
 
     def __enter__(self) -> "MetricsAdvisorAdministrationClient":
-        self._client.__enter__()  # pylint: disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args: Any) -> None:
-        self._client.__exit__(*args)  # pylint: disable=no-member
+        self._client.__exit__(*args)  
 
     @distributed_trace
     def get_alert_configuration(self, alert_configuration_id: str, **kwargs: Any) -> models.AnomalyAlertConfiguration:

@@ -128,7 +128,7 @@ def _convert_log_to_envelope(log_data: LogData) -> TelemetryItem:
     if log_record.attributes:
         exc_type = log_record.attributes.get(SpanAttributes.EXCEPTION_TYPE)
         exc_message = log_record.attributes.get(SpanAttributes.EXCEPTION_MESSAGE)
-        # pylint: disable=line-too-long
+        
         stack_trace = log_record.attributes.get(SpanAttributes.EXCEPTION_STACKTRACE)
     severity_level = _get_severity_level(log_record.severity_number)
 
@@ -167,7 +167,7 @@ def _convert_log_to_envelope(log_data: LogData) -> TelemetryItem:
             properties=properties,
             exceptions=[exc_details],
         )
-        # pylint: disable=line-too-long
+        
         envelope.data = MonitorBase(base_data=data, base_type="ExceptionData")
     else:  # Message telemetry
         if not log_record.body:

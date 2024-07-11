@@ -17,13 +17,13 @@ from ._configuration import ConfidentialLedgerCertificateClientConfiguration
 from ._operations import ConfidentialLedgerCertificateClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Dict
 
 
 class ConfidentialLedgerCertificateClient(
     ConfidentialLedgerCertificateClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """The ConfidentialLedgerCertificateClient is used to retrieve the TLS certificate required for
     connecting to a Confidential Ledger.
 

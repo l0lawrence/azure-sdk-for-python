@@ -1,4 +1,4 @@
-# -------------------------------------------------------------------------  # pylint: disable=file-needs-copyright-header
+# -------------------------------------------------------------------------  
 # This is a fork of the transport.py which was originally written by Barry Pederson and
 # maintained by the Celery project: https://github.com/celery/py-amqp.
 #
@@ -248,7 +248,7 @@ class AsyncTransport(
         socket_settings=None,
         raise_on_initial_eintr=True,
         use_tls: bool = True,
-        **kwargs,  # pylint: disable=unused-argument
+        **kwargs,  
     ):
         self.connected = False
         self.sock = None

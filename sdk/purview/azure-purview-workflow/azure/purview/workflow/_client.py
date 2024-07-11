@@ -28,11 +28,11 @@ from .operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
-class PurviewWorkflowClient:  # pylint: disable=client-accepts-api-version-keyword,too-many-instance-attributes
+class PurviewWorkflowClient:  # pylint: disable=too-many-instance-attributes
     """Workflows are automated, repeatable business processes which allow organizations to track
     changes, enforce policy compliance, and ensure quality data across their data
     landscape.Workflow service is a micro service within Microsoft Purview to validate and

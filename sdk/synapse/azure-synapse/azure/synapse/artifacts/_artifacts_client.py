@@ -12,7 +12,7 @@ from azure.core import PipelineClient
 from msrest import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any
 
     from azure.core.credentials import TokenCredential

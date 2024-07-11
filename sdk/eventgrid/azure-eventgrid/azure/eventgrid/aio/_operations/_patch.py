@@ -33,8 +33,8 @@ from ..._legacy._helpers import _is_eventgrid_event_format
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -61,7 +61,7 @@ class EventGridPublisherClientOperationsMixin(PublisherOperationsMixin):
         channel_name: Optional[str] = None,
         content_type: Optional[str] = None,
         **kwargs: Any,
-    ) -> None:  # pylint: disable=docstring-should-be-keyword, docstring-missing-param
+    ) -> None:  # pylint: disable= docstring-missing-param
         """Send events to the Event Grid Service.
 
         :param events: The event(s) to send. If sending to an Event Grid Namespace, the dict, list of dicts,

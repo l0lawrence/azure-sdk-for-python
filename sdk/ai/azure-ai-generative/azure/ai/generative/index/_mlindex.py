@@ -103,7 +103,7 @@ class MLIndex:
                         # Need to get underlying fs path
                         self.base_uri = mlindex_file.fs._path.split("/MLIndex")[0]
                     else:
-                        self.base_uri = mlindex_file.path.split("/MLIndex")[0]  # pylint: disable=no-member
+                        self.base_uri = mlindex_file.path.split("/MLIndex")[0]  
 
                     with mlindex_file as f:
                         mlindex_config = yaml.safe_load(f)
@@ -309,7 +309,7 @@ class MLIndex:
                 elif engine.endswith("indexes.faiss.FaissAndDocStore"):
                     from azure.ai.resources._index._indexes.faiss import FaissAndDocStore
 
-                    # pylint: disable=line-too-long
+                    
                     error_fmt_str = """Failed to import langchain faiss bridge module with: {e}\n"
                         This could be due to an incompatible change in langchain since this bridge was implemented.
                         If you understand what has changed you could implement your own wrapper of azure.ai.tools.mlindex._indexes.faiss.FaissAndDocStore.

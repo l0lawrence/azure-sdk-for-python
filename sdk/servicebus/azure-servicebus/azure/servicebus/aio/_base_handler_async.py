@@ -29,7 +29,7 @@ from ..exceptions import (
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
+        
         from uamqp.async_ops.client_async import AMQPClientAsync as uamqp_AMQPClientAsync
     except ImportError:
         pass

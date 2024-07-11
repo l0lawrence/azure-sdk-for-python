@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import,ungrouped-imports, C0302, C0203
+# pylint: disable= C0302, C0203
 from typing import List, Optional, Union, NamedTuple
 import msrest.serialization
 
@@ -47,7 +47,7 @@ class BoundingBox(NamedTuple):
     north: float = 0.0
 
 
-# pylint: disable=too-many-instance-attributes
+
 class StructuredAddress(object):
     """The Structured address as the search input.
 

@@ -100,11 +100,11 @@ class TextAnalyticsClientBase:
         )
 
     def __enter__(self):
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args):
-        self._client.__exit__(*args)  # pylint:disable=no-member
+        self._client.__exit__(*args)  
 
     def close(self) -> None:
         """Close sockets opened by the client.

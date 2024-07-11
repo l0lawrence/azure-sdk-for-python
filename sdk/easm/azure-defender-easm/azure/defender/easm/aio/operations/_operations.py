@@ -56,8 +56,8 @@ from ...operations._operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -8133,7 +8133,7 @@ class DiscoveryGroupsOperations:
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete(self, group_name: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, group_name: str, **kwargs: Any) -> None:  
         """Delete a discovery group with a given groupName.
 
         Delete a discovery group with a given groupName.
@@ -8815,7 +8815,7 @@ class DiscoveryGroupsOperations:
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def run(self, group_name: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def run(self, group_name: str, **kwargs: Any) -> None:  
         """Run a discovery group with a given groupName.
 
         Run a discovery group with a given groupName.
@@ -9972,7 +9972,7 @@ class SavedFiltersOperations:
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete(self, filter_name: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, filter_name: str, **kwargs: Any) -> None:  
         """Delete a saved filter with a given filterName.
 
         Delete a saved filter with a given filterName.

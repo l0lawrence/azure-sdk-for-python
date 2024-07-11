@@ -223,7 +223,7 @@ class CryptographyClient(KeyVaultClientBase):
             self._initialized = self._keys_get_forbidden
 
     @distributed_trace
-    def create_rsa_private_key(self) -> KeyVaultRSAPrivateKey:  # pylint:disable=client-method-missing-kwargs
+    def create_rsa_private_key(self) -> KeyVaultRSAPrivateKey:  
         """Create an `RSAPrivateKey` implementation backed by this `CryptographyClient`, as a `KeyVaultRSAPrivateKey`.
 
         The `CryptographyClient` will attempt to download the key, if it hasn't been already, as part of this operation.
@@ -235,7 +235,7 @@ class CryptographyClient(KeyVaultClientBase):
         return KeyVaultRSAPrivateKey(client=self, key_material=cast(JsonWebKey, self._key))
 
     @distributed_trace
-    def create_rsa_public_key(self) -> KeyVaultRSAPublicKey:  # pylint:disable=client-method-missing-kwargs
+    def create_rsa_public_key(self) -> KeyVaultRSAPublicKey:  
         """Create an `RSAPublicKey` implementation backed by this `CryptographyClient`, as a `KeyVaultRSAPublicKey`.
 
         The `CryptographyClient` will attempt to download the key, if it hasn't been already, as part of this operation.

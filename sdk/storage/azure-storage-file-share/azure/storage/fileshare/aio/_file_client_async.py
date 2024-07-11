@@ -44,9 +44,9 @@ from ._lease_async import ShareLeaseClient
 from ._download_async import StorageStreamDownloader
 
 if sys.version_info >= (3, 8):
-    from typing import Literal  # pylint: disable=no-name-in-module, ungrouped-imports
+    from typing import Literal  # pylint: disable= ungrouped-imports
 else:
-    from typing_extensions import Literal  # pylint: disable=ungrouped-imports
+    from typing_extensions import Literal  
 
 if TYPE_CHECKING:
     from azure.core.credentials import AzureNamedKeyCredential, AzureSasCredential
@@ -180,7 +180,7 @@ class ShareFileClient(AsyncStorageAccountHostsMixin, ShareFileClientBase):
                                         allow_trailing_dot=self.allow_trailing_dot,
                                         allow_source_trailing_dot=self.allow_source_trailing_dot,
                                         file_request_intent=self.file_request_intent)
-        self._client._config.version = get_api_version(kwargs) # pylint: disable=protected-access
+        self._client._config.version = get_api_version(kwargs) 
 
     @distributed_trace_async
     async def acquire_lease(self, lease_id=None, **kwargs):

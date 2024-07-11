@@ -99,7 +99,7 @@ class OperationMixinHelpers:
     def _convert_to_sub_feedback(self, feedback) -> FeedbackUnion:
         feedback_type = feedback["feedbackType"]
         if feedback_type == "Anomaly":
-            generated = self._deserialize(  # type: ignore # pylint: disable=no-member
+            generated = self._deserialize(  # type: ignore 
                 generated_models.AnomalyFeedback, feedback
             )
             return models.AnomalyFeedback._from_generated(generated)  # type: ignore # pylint: disable=protected-access
@@ -131,12 +131,12 @@ class OperationMixinHelpers:
         response_json = pipeline_response.http_response.json()
         try:
             response_json["metricAlertingConfigurations"] = [
-                self._deserialize(generated_models.MetricAlertConfiguration, m)  # type: ignore  # pylint: disable=no-member
+                self._deserialize(generated_models.MetricAlertConfiguration, m)  # type: ignore  
                 for m in response_json["metricAlertingConfigurations"]
             ]
         except KeyError as exc:
             raise ValueError(response_json) from exc
-        deserialized = self._deserialize(  # type: ignore  # pylint: disable=no-member
+        deserialized = self._deserialize(  # type: ignore  
             generated_models.AnomalyAlertConfiguration, response_json
         )
         if cls:
@@ -611,7 +611,7 @@ class OperationMixinHelpers:
             ).serialize()
         content_type = kwargs.pop("content_type", "application/merge-patch+json")  # type: Optional[str]
 
-        _json = self._serialize.body(alert_configuration_patch, "object")  # type: ignore  # pylint: disable=no-member
+        _json = self._serialize.body(alert_configuration_patch, "object")  # type: ignore  
 
         request = operations.build_update_alert_configuration_request(
             configuration_id=alert_configuration_id,
@@ -620,10 +620,10 @@ class OperationMixinHelpers:
         )
         path_format_arguments = {
             "endpoint": self._serialize.url(  # type: ignore  # pylint: disable=no-member
-                "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  # pylint: disable=no-member
+                "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  
             ),
         }
-        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
+        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  
         return request, kwargs
 
     def _update_alert_configuration_deserialize(self, pipeline_response, **kwargs: Any):
@@ -634,10 +634,10 @@ class OperationMixinHelpers:
 
         if response.status_code not in [200]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(ErrorCode, pipeline_response)  # type: ignore  # pylint: disable=no-member
+            error = self._deserialize.failsafe_deserialize(ErrorCode, pipeline_response)  # type: ignore  
             raise HttpResponseError(response=response, model=error)
 
-        deserialized = self._deserialize(  # type: ignore  # pylint: disable=no-member
+        deserialized = self._deserialize(  # type: ignore  
             generated_models.AnomalyAlertConfiguration, pipeline_response
         )
 
@@ -652,10 +652,10 @@ class OperationMixinHelpers:
         )
         path_format_arguments = {
             "endpoint": self._serialize.url(  # type: ignore  # pylint: disable=no-member
-                "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  # pylint: disable=no-member
+                "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  
             ),
         }
-        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
+        request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  
         return request
 
     def _get_feedback_deserialize(self, pipeline_response, **kwargs) -> models.MetricFeedback:
@@ -664,7 +664,7 @@ class OperationMixinHelpers:
         response = pipeline_response.http_response
         if response.status_code not in [200]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(ErrorCode, pipeline_response)  # type: ignore  # pylint: disable=no-member
+            error = self._deserialize.failsafe_deserialize(ErrorCode, pipeline_response)  # type: ignore  
             raise HttpResponseError(response=response, model=error)
         deserialized = self._convert_to_sub_feedback(pipeline_response.http_response.json())
 
@@ -744,15 +744,15 @@ class OperationMixinHelpers:
         def prepare_request(next_link=None):
             path_format_arguments = {
                 "endpoint": self._serialize.url(  # type: ignore  # pylint: disable=no-member
-                    "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  # pylint: disable=no-member
+                    "self._config.endpoint", self._config.endpoint, "str", skip_quote=True  # type: ignore  
                 ),
             }
             if not next_link:
                 request = initial_request
-                request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
+                request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore  
             else:
                 request = next_request
-                request.url = self._client.format_url(next_link, **path_format_arguments)  # type: ignore  # pylint: disable=no-member
+                request.url = self._client.format_url(next_link, **path_format_arguments)  # type: ignore  
             return request
 
         return prepare_request
@@ -761,7 +761,7 @@ class OperationMixinHelpers:
         data_source_parameter = json_response["dataSourceParameter"]
         data_source_type = json_response["dataSourceType"]
         return models.DataFeed._from_generated(  # pylint: disable=protected-access
-            self._deserialize(generated_models.DataFeed, json_response),  # type: ignore  # pylint: disable=no-member
+            self._deserialize(generated_models.DataFeed, json_response),  # type: ignore  
             data_source_parameter,
             data_source_type,
         )
@@ -859,7 +859,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         return self.get_data_feed(data_feed_id)
 
     @distributed_trace
-    def create_hook(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def create_hook(  # type: ignore # pylint: disable=arguments-renamed
         self, hook: Union[models.EmailNotificationHook, models.WebNotificationHook], **kwargs: Any
     ) -> Union[models.NotificationHook, models.EmailNotificationHook, models.WebNotificationHook]:
         response_headers = super().create_hook(  # type: ignore
@@ -921,7 +921,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         return self._deserialize_data_feed(response.json())
 
     @distributed_trace
-    def get_alert_configuration(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def get_alert_configuration(  # type: ignore # pylint: disable=arguments-renamed
         self, alert_configuration_id: str, **kwargs: Any
     ) -> models.AnomalyAlertConfiguration:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
@@ -1030,7 +1030,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         return super().update_hook(hook_id, hook_patch, **kwargs)
 
     @distributed_trace
-    def list_data_feeds(  # type: ignore # pylint: disable=arguments-differ
+    def list_data_feeds(  # type: ignore 
         self,
         *,
         data_feed_name: Optional[str] = None,
@@ -1056,7 +1056,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         )
 
     @distributed_trace
-    def list_alert_configurations(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def list_alert_configurations(  # type: ignore # pylint: disable=arguments-renamed
         self, detection_configuration_id: str, **kwargs: Any
     ) -> ItemPaged[models.AnomalyAlertConfiguration]:
         def _deserialize(deserializer, line):
@@ -1099,7 +1099,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         )
 
     @distributed_trace
-    def create_datasource_credential(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def create_datasource_credential(  # type: ignore # pylint: disable=arguments-renamed
         self, datasource_credential: DatasourceCredentialUnion, **kwargs: Any
     ) -> DatasourceCredentialUnion:
         response_headers = super().create_datasource_credential(  # type: ignore
@@ -1143,7 +1143,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         return self._get_feedback_deserialize(pipeline_response, cls=cls, error_map=error_map, **kwargs)
 
     @distributed_trace
-    def list_feedback(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def list_feedback(  # type: ignore # pylint: disable=arguments-renamed
         self, metric_id: str, **kwargs: Any
     ) -> ItemPaged[Union[models.MetricFeedback, FeedbackUnion]]:
         deserializer = functools.partial(self._deserialize, generated_models.MetricFeedback)
@@ -1321,7 +1321,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         return self._list_incidents_for_alert(**kwargs)  # type: ignore
 
     @distributed_trace
-    def list_metric_dimension_values(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def list_metric_dimension_values(  # type: ignore # pylint: disable=arguments-renamed
         self, metric_id: str, dimension_name: str, **kwargs: Any
     ) -> ItemPaged[str]:
         initial_request, next_request, kwargs = self._list_metric_dimension_values_requests(
@@ -1352,7 +1352,7 @@ class MetricsAdvisorClientOperationsMixin(  # pylint: disable=too-many-public-me
         )
 
     @distributed_trace
-    def list_metric_series_definitions(  # type: ignore # pylint: disable=arguments-differ,arguments-renamed
+    def list_metric_series_definitions(  # type: ignore # pylint: disable=arguments-renamed
         self, metric_id: str, active_since: datetime.datetime, **kwargs: Any
     ) -> ItemPaged[models.MetricSeriesDefinition]:
         initial_request, next_request, kwargs = self._list_metric_series_definitions_requests(

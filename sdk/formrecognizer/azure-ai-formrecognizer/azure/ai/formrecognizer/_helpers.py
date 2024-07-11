@@ -177,7 +177,7 @@ class TransportWrapper(HttpTransport):
     def __enter__(self):
         pass
 
-    def __exit__(self, *args):  # pylint: disable=arguments-differ
+    def __exit__(self, *args):  
         pass
 
 

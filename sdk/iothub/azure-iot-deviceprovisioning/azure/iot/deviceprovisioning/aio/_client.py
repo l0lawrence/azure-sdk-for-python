@@ -17,11 +17,11 @@ from ._configuration import DeviceProvisioningClientConfiguration
 from .operations import DeviceRegistrationStateOperations, EnrollmentGroupOperations, EnrollmentOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 
-class DeviceProvisioningClient:  # pylint: disable=client-accepts-api-version-keyword
+class DeviceProvisioningClient:  
     """API for service operations with the Azure IoT Hub Device Provisioning Service.
 
     :ivar enrollment: EnrollmentOperations operations

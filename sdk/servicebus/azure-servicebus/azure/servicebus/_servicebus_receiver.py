@@ -55,7 +55,7 @@ from ._servicebus_session import ServiceBusSession
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
+        
         from uamqp import ReceiveClient as uamqp_ReceiveClientSync, Message as uamqp_Message
         from uamqp.authentication import JWTTokenAuth as uamqp_JWTTokenAuth
     except ImportError:
@@ -76,7 +76,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class ServiceBusReceiver(
     BaseHandler, ReceiverMixin
-):  # pylint: disable=too-many-instance-attributes
+):  
     """The ServiceBusReceiver class defines a high level interface for
     receiving messages from the Azure Service Bus Queue or Topic Subscription.
 
@@ -624,7 +624,7 @@ class ServiceBusReceiver(
 
     def close(self) -> None:
         super(ServiceBusReceiver, self).close()
-        self._message_iter = None  # pylint: disable=attribute-defined-outside-init
+        self._message_iter = None  
 
     def _get_streaming_message_iter(
         self, max_wait_time: Optional[float] = None

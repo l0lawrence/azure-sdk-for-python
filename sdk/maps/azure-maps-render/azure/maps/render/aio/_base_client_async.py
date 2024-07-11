@@ -41,7 +41,7 @@ class AsyncMapsRenderClientBase:
         self._render_client = self._maps_client.render
 
     async def __aenter__(self):
-        await self._maps_client.__aenter__()  # pylint:disable=no-member
+        await self._maps_client.__aenter__()  
         return self
 
     async def __aexit__(self, *args):

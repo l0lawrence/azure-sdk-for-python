@@ -439,7 +439,7 @@ class ModelOperations(_ScopeDependentOperations):
         version: Optional[str] = None,
         label: Optional[str] = None,
         **kwargs: Any,
-    ) -> None:  # pylint:disable=unused-argument
+    ) -> None:  
         """Archive a model asset.
 
         :param name: Name of model asset.
@@ -475,7 +475,7 @@ class ModelOperations(_ScopeDependentOperations):
         version: Optional[str] = None,
         label: Optional[str] = None,
         **kwargs: Any,
-    ) -> None:  # pylint:disable=unused-argument
+    ) -> None:  
         """Restore an archived model asset.
 
         :param name: Name of model asset.

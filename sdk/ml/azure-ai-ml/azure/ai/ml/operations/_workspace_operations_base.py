@@ -329,7 +329,7 @@ class WorkspaceOperationsBase(ABC):
         if serverless_compute_settings:
             serverless_compute_settings = (
                 serverless_compute_settings._to_rest_object()
-            )  # pylint: disable=protected-access
+            )  
 
         update_param = WorkspaceUpdateParameters(
             tags=kwargs.get("tags", workspace.tags),
@@ -653,7 +653,7 @@ class WorkspaceOperationsBase(ABC):
         if workspace.identity:
             identity = workspace.identity._to_workspace_rest_object()
         else:
-            # pylint: disable=protected-access
+            
             identity = IdentityConfiguration(
                 type=camel_to_snake(ManagedServiceIdentityType.SYSTEM_ASSIGNED)
             )._to_workspace_rest_object()

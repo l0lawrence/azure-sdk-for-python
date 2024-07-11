@@ -31,7 +31,7 @@ from ..._operations._patch import get_token_by_key
 
 class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixinGenerated):
     @distributed_trace_async
-    async def get_client_access_token(  # pylint: disable=arguments-differ
+    async def get_client_access_token(  
         self,
         *,
         user_id: Optional[str] = None,
@@ -106,7 +106,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
     get_client_access_token.metadata = {"url": "/api/hubs/{hub}/:generateToken"}  # type: ignore
 
     @overload
-    async def send_to_all(  # pylint: disable=inconsistent-return-statements
+    async def send_to_all(  
         self, message: Union[str, JSON], *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = "application/json", **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
@@ -128,7 +128,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_all(  # pylint: disable=inconsistent-return-statements
+    async def send_to_all(  
         self, message: str, *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = "text/plain", **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
@@ -150,7 +150,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_all(  # pylint: disable=inconsistent-return-statements
+    async def send_to_all(  
         self, message: IO, *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = "application/octet-stream", **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
@@ -172,7 +172,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @distributed_trace_async
-    async def send_to_all(  # pylint: disable=inconsistent-return-statements
+    async def send_to_all(  
         self, message: Union[IO, str, JSON], *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, content_type: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
@@ -247,7 +247,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
             return cls(pipeline_response, None, {})
 
     @overload
-    async def send_to_group(  # pylint: disable=inconsistent-return-statements
+    async def send_to_group(  
         self,
         group: str,
         message: Union[str, JSON],
@@ -279,7 +279,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_group(  # pylint: disable=inconsistent-return-statements
+    async def send_to_group(  
         self,
         group: str,
         message: str,
@@ -311,7 +311,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_group(  # pylint: disable=inconsistent-return-statements
+    async def send_to_group(  
         self,
         group: str,
         message: IO,
@@ -343,7 +343,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @distributed_trace_async
-    async def send_to_group(  # pylint: disable=inconsistent-return-statements
+    async def send_to_group(  
         self,
         group: str,
         message: Union[IO, str, JSON],
@@ -429,7 +429,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
             return cls(pipeline_response, None, {})
         
     @overload
-    async def send_to_connection(  # pylint: disable=inconsistent-return-statements
+    async def send_to_connection(  
         self, connection_id: str, message: Union[str, JSON], *, content_type: Optional[str] = "application/json", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific connection.
@@ -448,7 +448,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_connection(  # pylint: disable=inconsistent-return-statements
+    async def send_to_connection(  
         self, connection_id: str, message: str, *, content_type: Optional[str] = "text/plain", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific connection.
@@ -467,7 +467,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_connection(  # pylint: disable=inconsistent-return-statements
+    async def send_to_connection(  
         self, connection_id: str, message: IO, *, content_type: Optional[str] = "application/octet-stream", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific connection.
@@ -486,7 +486,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @distributed_trace_async
-    async def send_to_connection(  # pylint: disable=inconsistent-return-statements
+    async def send_to_connection(  
         self, connection_id: str, message: Union[IO, str, JSON], *, content_type: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific connection.
@@ -557,7 +557,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
             return cls(pipeline_response, None, {})
 
     @overload
-    async def send_to_user(  # pylint: disable=inconsistent-return-statements
+    async def send_to_user(  
         self, user_id: str, message: Union[str, JSON], *, filter: Optional[str] = None, content_type: Optional[str] = "application/json", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific user.
@@ -579,7 +579,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_user(  # pylint: disable=inconsistent-return-statements
+    async def send_to_user(  
         self, user_id: str, message: str, *, filter: Optional[str] = None, content_type: Optional[str] = "text/plain", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific user.
@@ -601,7 +601,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @overload
-    async def send_to_user(  # pylint: disable=inconsistent-return-statements
+    async def send_to_user(  
         self, user_id: str, message: IO, *, filter: Optional[str] = None, content_type: Optional[str] = "application/octet-stream", **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific user.
@@ -623,7 +623,7 @@ class WebPubSubServiceClientOperationsMixin(WebPubSubServiceClientOperationsMixi
         """
 
     @distributed_trace_async
-    async def send_to_user(  # pylint: disable=inconsistent-return-statements
+    async def send_to_user(  
         self, user_id: str, message: Union[IO, str, JSON], *, filter: Optional[str] = None, content_type: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific user.

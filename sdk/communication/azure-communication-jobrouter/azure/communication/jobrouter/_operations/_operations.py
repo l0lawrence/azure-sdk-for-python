@@ -37,8 +37,8 @@ from .._vendor import JobRouterAdministrationClientMixinABC, JobRouterClientMixi
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1002,7 +1002,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.DistributionPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a distribution policy.
 
         Creates or updates a distribution policy.
@@ -1276,7 +1276,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.DistributionPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a distribution policy.
 
         Creates or updates a distribution policy.
@@ -1469,7 +1469,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.DistributionPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a distribution policy.
 
         Creates or updates a distribution policy.
@@ -1661,7 +1661,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.DistributionPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a distribution policy.
 
         Creates or updates a distribution policy.
@@ -2002,7 +2002,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
 
     @distributed_trace
     def get_distribution_policy(self, distribution_policy_id: str, **kwargs: Any) -> _models.DistributionPolicy:
-        # pylint: disable=line-too-long
+        
         """Retrieves an existing distribution policy by Id.
 
         Retrieves an existing distribution policy by Id.
@@ -2152,7 +2152,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
     # https://github.com/Azure/autorest.python/issues/2262
     @distributed_trace
     def list_distribution_policies(self, **kwargs: Any) -> ItemPaged["_models.DistributionPolicy"]:
-        # pylint: disable=line-too-long
+        
         """Retrieves existing distribution policies.
 
         Retrieves existing distribution policies.
@@ -2390,7 +2390,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.ClassificationPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a classification policy.
 
         Creates or updates a classification policy.
@@ -2613,7 +2613,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.ClassificationPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a classification policy.
 
         Creates or updates a classification policy.
@@ -2770,7 +2770,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.ClassificationPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a classification policy.
 
         Creates or updates a classification policy.
@@ -2926,7 +2926,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.ClassificationPolicy:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a classification policy.
 
         Creates or updates a classification policy.
@@ -3216,7 +3216,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
 
     @distributed_trace
     def get_classification_policy(self, classification_policy_id: str, **kwargs: Any) -> _models.ClassificationPolicy:
-        # pylint: disable=line-too-long
+        
         """Retrieves an existing classification policy by Id.
 
         Retrieves an existing classification policy by Id.
@@ -3351,7 +3351,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
     # https://github.com/Azure/autorest.python/issues/2262
     @distributed_trace
     def list_classification_policies(self, **kwargs: Any) -> ItemPaged["_models.ClassificationPolicy"]:
-        # pylint: disable=line-too-long
+        
         """Retrieves existing classification policies.
 
         Retrieves existing classification policies.
@@ -4147,7 +4147,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterQueue:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a queue.
 
         Creates or updates a queue.
@@ -4219,7 +4219,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterQueue:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a queue.
 
         Creates or updates a queue.
@@ -4275,7 +4275,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterQueue:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a queue.
 
         Creates or updates a queue.
@@ -4330,7 +4330,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterQueue:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a queue.
 
         Creates or updates a queue.
@@ -4469,7 +4469,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
 
     @distributed_trace
     def get_queue(self, queue_id: str, **kwargs: Any) -> _models.RouterQueue:
-        # pylint: disable=line-too-long
+        
         """Retrieves an existing queue by Id.
 
         Retrieves an existing queue by Id.
@@ -4553,7 +4553,7 @@ class JobRouterAdministrationClientOperationsMixin(  # pylint: disable=name-too-
     # https://github.com/Azure/autorest.python/issues/2262
     @distributed_trace
     def list_queues(self, **kwargs: Any) -> ItemPaged["_models.RouterQueue"]:
-        # pylint: disable=line-too-long
+        
         """Retrieves existing queues.
 
         Retrieves existing queues.
@@ -4725,7 +4725,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterJob:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a router job.
 
         Creates or updates a router job.
@@ -5012,7 +5012,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterJob:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a router job.
 
         Creates or updates a router job.
@@ -5185,7 +5185,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterJob:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a router job.
 
         Creates or updates a router job.
@@ -5357,7 +5357,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterJob:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a router job.
 
         Creates or updates a router job.
@@ -5711,7 +5711,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
 
     @distributed_trace
     def get_job(self, job_id: str, **kwargs: Any) -> _models.RouterJob:
-        # pylint: disable=line-too-long
+        
         """Retrieves an existing job by Id.
 
         Retrieves an existing job by Id.
@@ -5944,7 +5944,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    def _reclassify_job(  # pylint: disable=protected-access
+    def _reclassify_job(  
         self,
         job_id: str,
         options: Optional[_models._models.ReclassifyJobOptions] = None,
@@ -5955,19 +5955,19 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _reclassify_job(  # pylint: disable=protected-access
+    def _reclassify_job(  
         self, job_id: str, options: Optional[JSON] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models._models.ReclassifyJobResult:
         ...
 
     @overload
-    def _reclassify_job(  # pylint: disable=protected-access
+    def _reclassify_job(  
         self, job_id: str, options: Optional[IO[bytes]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models._models.ReclassifyJobResult:
         ...
 
     @distributed_trace
-    def _reclassify_job(  # pylint: disable=protected-access
+    def _reclassify_job(  
         self,
         job_id: str,
         options: Optional[Union[_models._models.ReclassifyJobOptions, JSON, IO[bytes]]] = None,
@@ -6004,7 +6004,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.ReclassifyJobResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.ReclassifyJobResult] = kwargs.pop("cls", None)  
 
         content_type = content_type or "application/json"
         _content = None
@@ -6055,7 +6055,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         return deserialized  # type: ignore
 
     @overload
-    def _cancel_job(  # pylint: disable=protected-access
+    def _cancel_job(  
         self,
         job_id: str,
         options: Optional[_models.CancelJobOptions] = None,
@@ -6066,22 +6066,22 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _cancel_job(  # pylint: disable=protected-access
+    def _cancel_job(  
         self, job_id: str, options: Optional[JSON] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models._models.CancelJobResult:
         ...
 
     @overload
-    def _cancel_job(  # pylint: disable=protected-access
+    def _cancel_job(  
         self, job_id: str, options: Optional[IO[bytes]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models._models.CancelJobResult:
         ...
 
     @distributed_trace
-    def _cancel_job(  # pylint: disable=protected-access
+    def _cancel_job(  
         self, job_id: str, options: Optional[Union[_models.CancelJobOptions, JSON, IO[bytes]]] = None, **kwargs: Any
     ) -> _models._models.CancelJobResult:
-        # pylint: disable=line-too-long
+        
         """Submits request to cancel an existing job by Id while supplying free-form cancellation reason.
 
         Submits request to cancel an existing job by Id while supplying free-form cancellation reason.
@@ -6119,7 +6119,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.CancelJobResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.CancelJobResult] = kwargs.pop("cls", None)  
 
         content_type = content_type or "application/json"
         _content = None
@@ -6170,7 +6170,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         return deserialized  # type: ignore
 
     @overload
-    def _complete_job(  # pylint: disable=protected-access
+    def _complete_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6182,7 +6182,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _complete_job(  # pylint: disable=protected-access
+    def _complete_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6194,7 +6194,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _complete_job(  # pylint: disable=protected-access
+    def _complete_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6206,7 +6206,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @distributed_trace
-    def _complete_job(  # pylint: disable=protected-access
+    def _complete_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6249,7 +6249,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.CompleteJobResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.CompleteJobResult] = kwargs.pop("cls", None)  
 
         content_type = content_type or "application/json"
         _content = None
@@ -6301,7 +6301,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         return deserialized  # type: ignore
 
     @overload
-    def _close_job(  # pylint: disable=protected-access
+    def _close_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6313,7 +6313,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _close_job(  # pylint: disable=protected-access
+    def _close_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6325,7 +6325,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _close_job(  # pylint: disable=protected-access
+    def _close_job(  
         self,
         job_id: str,
         assignment_id: str,
@@ -6337,14 +6337,14 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @distributed_trace
-    def _close_job(  # pylint: disable=protected-access
+    def _close_job(  
         self,
         job_id: str,
         assignment_id: str,
         options: Optional[Union[_models.CloseJobOptions, JSON, IO[bytes]]] = None,
         **kwargs: Any
     ) -> _models._models.CloseJobResult:
-        # pylint: disable=line-too-long
+        
         """Closes a completed job.
 
         Closes a completed job.
@@ -6387,7 +6387,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.CloseJobResult] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.CloseJobResult] = kwargs.pop("cls", None)  
 
         content_type = content_type or "application/json"
         _content = None
@@ -6451,7 +6451,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         scheduled_after: Optional[datetime.datetime] = None,
         **kwargs: Any
     ) -> ItemPaged["_models.RouterJob"]:
-        # pylint: disable=line-too-long
+        
         """Retrieves list of jobs based on filter parameters.
 
         Retrieves list of jobs based on filter parameters.
@@ -6765,7 +6765,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.UnassignJobResult:
-        # pylint: disable=line-too-long
+        
         """Unassign a job.
 
         Unassign a job.
@@ -6884,7 +6884,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         options: Optional[Union[_models.UnassignJobOptions, JSON, IO[bytes]]] = None,
         **kwargs: Any
     ) -> _models.UnassignJobResult:
-        # pylint: disable=line-too-long
+        
         """Unassign a job.
 
         Unassign a job.
@@ -7054,7 +7054,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         return deserialized  # type: ignore
 
     @overload
-    def _decline_job_offer(  # pylint: disable=protected-access
+    def _decline_job_offer(  
         self,
         worker_id: str,
         offer_id: str,
@@ -7066,7 +7066,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _decline_job_offer(  # pylint: disable=protected-access
+    def _decline_job_offer(  
         self,
         worker_id: str,
         offer_id: str,
@@ -7078,7 +7078,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @overload
-    def _decline_job_offer(  # pylint: disable=protected-access
+    def _decline_job_offer(  
         self,
         worker_id: str,
         offer_id: str,
@@ -7090,14 +7090,14 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         ...
 
     @distributed_trace
-    def _decline_job_offer(  # pylint: disable=protected-access
+    def _decline_job_offer(  
         self,
         worker_id: str,
         offer_id: str,
         options: Optional[Union[_models.DeclineJobOfferOptions, JSON, IO[bytes]]] = None,
         **kwargs: Any
     ) -> _models._models.DeclineJobOfferResult:
-        # pylint: disable=line-too-long
+        
         """Declines an offer to work on a job.
 
         Declines an offer to work on a job.
@@ -7139,7 +7139,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.DeclineJobOfferResult] = kwargs.pop(  # pylint: disable=protected-access
+        cls: ClsType[_models._models.DeclineJobOfferResult] = kwargs.pop(  
             "cls", None
         )
 
@@ -7194,7 +7194,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
 
     @distributed_trace
     def get_queue_statistics(self, queue_id: str, **kwargs: Any) -> _models.RouterQueueStatistics:
-        # pylint: disable=line-too-long
+        
         """Retrieves a queue's statistics.
 
         Retrieves a queue's statistics.
@@ -7279,7 +7279,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterWorker:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a worker.
 
         Creates or updates a worker.
@@ -7443,7 +7443,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterWorker:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a worker.
 
         Creates or updates a worker.
@@ -7545,7 +7545,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterWorker:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a worker.
 
         Creates or updates a worker.
@@ -7646,7 +7646,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         match_condition: Optional[MatchConditions] = None,
         **kwargs: Any
     ) -> _models.RouterWorker:
-        # pylint: disable=line-too-long
+        
         """Creates or updates a worker.
 
         Creates or updates a worker.
@@ -7877,7 +7877,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
 
     @distributed_trace
     def get_worker(self, worker_id: str, **kwargs: Any) -> _models.RouterWorker:
-        # pylint: disable=line-too-long
+        
         """Retrieves an existing worker by Id.
 
         Retrieves an existing worker by Id.
@@ -8067,7 +8067,7 @@ class JobRouterClientOperationsMixin(JobRouterClientMixinABC):
         has_capacity: Optional[bool] = None,
         **kwargs: Any
     ) -> ItemPaged["_models.RouterWorker"]:
-        # pylint: disable=line-too-long
+        
         """Retrieves existing workers.
 
         Retrieves existing workers.

@@ -11,7 +11,7 @@ from azure.core.credentials import AzureKeyCredential, AccessToken
 
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any
 
 ACCOUNT_KEY_VALID_YEARS = 10

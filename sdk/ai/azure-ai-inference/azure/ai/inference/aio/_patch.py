@@ -38,20 +38,20 @@ from .._operations._operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 
 if sys.version_info >= (3, 11):
     from typing import Self
 else:
     from typing_extensions import Self
 
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 _Unset: Any = object()
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ _LOGGER = logging.getLogger(__name__)
 async def load_client(
     endpoint: str, credential: Union[AzureKeyCredential, "AsyncTokenCredential"], **kwargs: Any
 ) -> Union["ChatCompletionsClient", "EmbeddingsClient", "ImageEmbeddingsClient"]:
-    # pylint: disable=line-too-long
+    
     """
     Load a client from a given endpoint URL. The method makes a REST API call to the `/info` route
     on the given endpoint, to determine the model type and therefore which client to instantiate.
@@ -206,7 +206,7 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         model: Optional[str] = None,
         **kwargs: Any,
     ) -> Union[AsyncIterable[_models.StreamingChatCompletionsUpdate], _models.ChatCompletions]:
-        # pylint: disable=line-too-long
+        
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
         "completes" provided prompt data. The method makes a REST API call to the `/chat/completions` route
@@ -306,7 +306,7 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         content_type: str = "application/json",
         **kwargs: Any,
     ) -> Union[AsyncIterable[_models.StreamingChatCompletionsUpdate], _models.ChatCompletions]:
-        # pylint: disable=line-too-long
+        
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
         "completes" provided prompt data.
@@ -330,7 +330,7 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         content_type: str = "application/json",
         **kwargs: Any,
     ) -> Union[AsyncIterable[_models.StreamingChatCompletionsUpdate], _models.ChatCompletions]:
-        # pylint: disable=line-too-long
+        
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
         "completes" provided prompt data.
@@ -368,7 +368,7 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         model: Optional[str] = None,
         **kwargs: Any,
     ) -> Union[AsyncIterable[_models.StreamingChatCompletionsUpdate], _models.ChatCompletions]:
-        # pylint: disable=line-too-long
+        
         # pylint: disable=too-many-locals
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
@@ -531,11 +531,11 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         if _stream:
             return _models.AsyncStreamingChatCompletions(response)
 
-        return _deserialize(_models.ChatCompletions, response.json())  # pylint: disable=protected-access
+        return _deserialize(_models.ChatCompletions, response.json())  
 
     @distributed_trace_async
     async def get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
 
         :return: ModelInfo. The ModelInfo is compatible with MutableMapping
@@ -543,7 +543,7 @@ class ChatCompletionsClient(ChatCompletionsClientGenerated):
         :raises ~azure.core.exceptions.HttpResponseError
         """
         if not self._model_info:
-            self._model_info = await self._get_model_info(**kwargs)  # pylint: disable=attribute-defined-outside-init
+            self._model_info = await self._get_model_info(**kwargs)  
         return self._model_info
 
     def __str__(self) -> str:
@@ -679,7 +679,7 @@ class EmbeddingsClient(EmbeddingsClientGenerated):
         input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
         **kwargs: Any,
     ) -> _models.EmbeddingsResult:
-        # pylint: disable=line-too-long
+        
         """Return the embedding vectors for given text prompts.
         The method makes a REST API call to the `/embeddings` route on the given endpoint.
 
@@ -782,7 +782,7 @@ class EmbeddingsClient(EmbeddingsClientGenerated):
 
     @distributed_trace_async
     async def get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
 
         :return: ModelInfo. The ModelInfo is compatible with MutableMapping
@@ -790,7 +790,7 @@ class EmbeddingsClient(EmbeddingsClientGenerated):
         :raises ~azure.core.exceptions.HttpResponseError
         """
         if not self._model_info:
-            self._model_info = await self._get_model_info(**kwargs)  # pylint: disable=attribute-defined-outside-init
+            self._model_info = await self._get_model_info(**kwargs)  
         return self._model_info
 
     def __str__(self) -> str:
@@ -926,7 +926,7 @@ class ImageEmbeddingsClient(ImageEmbeddingsClientGenerated):
         input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
         **kwargs: Any,
     ) -> _models.EmbeddingsResult:
-        # pylint: disable=line-too-long
+        
         """Return the embedding vectors for given images.
         The method makes a REST API call to the `/images/embeddings` route on the given endpoint.
 
@@ -1029,7 +1029,7 @@ class ImageEmbeddingsClient(ImageEmbeddingsClientGenerated):
 
     @distributed_trace_async
     async def get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
 
         :return: ModelInfo. The ModelInfo is compatible with MutableMapping
@@ -1037,7 +1037,7 @@ class ImageEmbeddingsClient(ImageEmbeddingsClientGenerated):
         :raises ~azure.core.exceptions.HttpResponseError
         """
         if not self._model_info:
-            self._model_info = await self._get_model_info(**kwargs)  # pylint: disable=attribute-defined-outside-init
+            self._model_info = await self._get_model_info(**kwargs)  
         return self._model_info
 
     def __str__(self) -> str:

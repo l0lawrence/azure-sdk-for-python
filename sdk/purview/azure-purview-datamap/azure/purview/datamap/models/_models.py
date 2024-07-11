@@ -14,11 +14,11 @@ from .._model_base import rest_field
 from .._vendor import FileType
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 
 
-class AtlasAttributeDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasAttributeDef(_model_base.Model):  
     """class that captures details of a struct-attribute.
 
     :ivar cardinality: single-valued attribute or multi-valued attribute. Known values are:
@@ -109,7 +109,7 @@ class AtlasAttributeDef(_model_base.Model):  # pylint: disable=too-many-instance
         super().__init__(*args, **kwargs)
 
 
-class AtlasBusinessMetadataDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasBusinessMetadataDef(_model_base.Model):  
     """class that captures details of a struct-type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -275,7 +275,7 @@ class AtlasClassification(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasClassificationDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasClassificationDef(_model_base.Model):  
     """class that captures details of a classification-type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -559,7 +559,7 @@ class AtlasEntitiesWithExtInfo(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasEntity(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasEntity(_model_base.Model):  
     """An instance of an entity - like hive_table, hive_database.
 
     Readonly variables are only populated by the server, and will be ignored when sending a request.
@@ -697,7 +697,7 @@ class AtlasEntity(_model_base.Model):  # pylint: disable=too-many-instance-attri
         super().__init__(*args, **kwargs)
 
 
-class AtlasEntityDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasEntityDef(_model_base.Model):  
     """class that captures details of a entity-type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -818,7 +818,7 @@ class AtlasEntityDef(_model_base.Model):  # pylint: disable=too-many-instance-at
         super().__init__(*args, **kwargs)
 
 
-class AtlasEntityHeader(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasEntityHeader(_model_base.Model):  
     """An instance of an entity - like hive_table, hive_database.
 
     :ivar attributes: The attributes of the struct.
@@ -968,7 +968,7 @@ class AtlasEntityWithExtInfo(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasEnumDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasEnumDef(_model_base.Model):  
     """class that captures details of an enum-type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -1154,7 +1154,7 @@ class AtlasErrorResponse(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasGlossary(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasGlossary(_model_base.Model):  
     """The glossary object.
 
     :ivar guid: The GUID of the object.
@@ -1253,7 +1253,7 @@ class AtlasGlossary(_model_base.Model):  # pylint: disable=too-many-instance-att
         super().__init__(*args, **kwargs)
 
 
-class AtlasGlossaryCategory(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasGlossaryCategory(_model_base.Model):  
     """The glossary category.
 
     :ivar guid: The GUID of the object.
@@ -1352,7 +1352,7 @@ class AtlasGlossaryCategory(_model_base.Model):  # pylint: disable=too-many-inst
         super().__init__(*args, **kwargs)
 
 
-class AtlasGlossaryExtInfo(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasGlossaryExtInfo(_model_base.Model):  
     """The extended information of glossary.
 
     :ivar guid: The GUID of the object.
@@ -1500,7 +1500,7 @@ class AtlasGlossaryHeader(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasGlossaryTerm(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasGlossaryTerm(_model_base.Model):  
     """The glossary term.
 
     :ivar guid: The GUID of the object.
@@ -2010,7 +2010,7 @@ class AtlasRelatedTermHeader(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasRelationship(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasRelationship(_model_base.Model):  
     """Atlas relationship instance.
 
     :ivar attributes: The attributes of the struct.
@@ -2110,7 +2110,7 @@ class AtlasRelationship(_model_base.Model):  # pylint: disable=too-many-instance
         super().__init__(*args, **kwargs)
 
 
-class AtlasRelationshipAttributeDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasRelationshipAttributeDef(_model_base.Model):  
     """The relationshipEndDef represents an end of the relationship. The end of the
     relationship is defined by a type, an
     attribute name, cardinality and whether
@@ -2214,7 +2214,7 @@ class AtlasRelationshipAttributeDef(_model_base.Model):  # pylint: disable=too-m
         super().__init__(*args, **kwargs)
 
 
-class AtlasRelationshipDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasRelationshipDef(_model_base.Model):  
     """AtlasRelationshipDef is a TypeDef that defines a relationship.
     As with other typeDefs the AtlasRelationshipDef has a name. Once created the
     RelationshipDef has a guid.
@@ -2538,7 +2538,7 @@ class AtlasStruct(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasStructDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasStructDef(_model_base.Model):  
     """class that captures details of a struct-type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -2763,7 +2763,7 @@ class AtlasTermCategorizationHeader(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AtlasTypeDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AtlasTypeDef(_model_base.Model):  
     """The definitions of type.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",
@@ -3599,7 +3599,7 @@ class MoveEntitiesOptions(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class NumberFormat(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class NumberFormat(_model_base.Model):  
     """The number format.
 
     :ivar available_locales: The number format.
@@ -4188,7 +4188,7 @@ class SearchHighlights(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class SearchResultValue(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class SearchResultValue(_model_base.Model):  
     """The value item of the search result.
 
     :ivar search_score: The search score calculated by the search engine. The results are ordered
@@ -4446,7 +4446,7 @@ class SuggestResult(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class SuggestResultValue(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class SuggestResultValue(_model_base.Model):  
     """The value item of the search suggest.
 
     :ivar search_score: The search score calculated by the search engine. The results are ordered
@@ -4628,7 +4628,7 @@ class TermSearchResultValue(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class TermTemplateDef(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class TermTemplateDef(_model_base.Model):  
     """Term template definition for glossary term.
 
     :ivar category: The enum of type category. Known values are: "PRIMITIVE", "OBJECT_ID_TYPE",

@@ -56,7 +56,7 @@ class TextAnalysisLROPoller(Protocol[PollingReturnType_co]):
         :rtype: str
         """
 
-    # pylint: disable=unused-argument
+    
     def result(self, timeout: Optional[float] = None) -> PollingReturnType_co:
         """Return the result of the long running operation, or
         the result available after the specified timeout.
@@ -68,7 +68,7 @@ class TextAnalysisLROPoller(Protocol[PollingReturnType_co]):
         :raises ~azure.core.exceptions.HttpResponseError: Server problem with the query.
         """
 
-    def wait(self, timeout: Optional[float] = None) -> None:  # pylint: disable=unused-argument
+    def wait(self, timeout: Optional[float] = None) -> None:  
         """Wait on the long running operation for a specified length
         of time. You can check if this call as ended with timeout with the
         "done()" method.
@@ -85,7 +85,7 @@ class TextAnalysisLROPoller(Protocol[PollingReturnType_co]):
         :rtype: bool
         """
 
-    def add_done_callback(self, func: Callable) -> None:  # pylint: disable=unused-argument
+    def add_done_callback(self, func: Callable) -> None:  
         """Add callback function to be run once the long running operation
         has completed - regardless of the status of the operation.
 
@@ -93,7 +93,7 @@ class TextAnalysisLROPoller(Protocol[PollingReturnType_co]):
          argument, a completed LongRunningOperation.
         """
 
-    def remove_done_callback(self, func: Callable) -> None:  # pylint: disable=unused-argument
+    def remove_done_callback(self, func: Callable) -> None:  
         """Remove a callback from the long running operation.
 
         :param callable func: The function to be removed from the callbacks.

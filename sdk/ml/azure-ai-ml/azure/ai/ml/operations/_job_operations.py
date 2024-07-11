@@ -176,7 +176,7 @@ class JobOperations(_ScopeDependentOperations):
         self._credential = credential
         self._orchestrators = OperationOrchestrator(
             self._all_operations, self._operation_scope, self._operation_config
-        )  # pylint: disable=line-too-long
+        )  
 
         self.service_client_01_2024_preview = kwargs.pop("service_client_01_2024_preview", None)
         self._kwargs = kwargs
@@ -717,7 +717,7 @@ class JobOperations(_ScopeDependentOperations):
 
         return self._resolve_azureml_id(Job._from_rest_object(result))
 
-    def _create_or_update_with_different_version_api(  # pylint: disable=name-too-long
+    def _create_or_update_with_different_version_api(  
         self, rest_job_resource: JobBase, **kwargs: Any
     ) -> JobBase:
         service_client_operation = self._operation_2023_02_preview

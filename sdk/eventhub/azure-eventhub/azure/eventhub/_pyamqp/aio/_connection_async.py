@@ -90,7 +90,7 @@ class Connection:  # pylint:disable=too-many-instance-attributes
             transport_type: TransportType = TransportType.Amqp,
             http_proxy: Optional[Dict[str, Any]] = None,
             socket_timeout: Optional[float] = None,
-            **kwargs: Any):  # pylint:disable=too-many-statements
+            **kwargs: Any):  
         parsed_url = urlparse(endpoint)
 
         if parsed_url.hostname is None:

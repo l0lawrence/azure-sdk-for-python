@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -50,7 +50,7 @@ class NotebookOperationResultOperations:
         self._deserialize = input_args.pop(0) if input_args else kwargs.pop("deserializer")
 
     @distributed_trace_async
-    async def get(self, operation_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def get(self, operation_id: str, **kwargs: Any) -> None:  
         """Get notebook operation result.
 
         :param operation_id: Operation ID. Required.

@@ -400,7 +400,7 @@ class ClientBase:  # pylint:disable=too-many-instance-attributes
         )
         if backoff <= self._config.backoff_max and (
             timeout_time is None or time.time() + backoff <= timeout_time
-        ):  # pylint:disable=no-else-return
+        ):  
             time.sleep(backoff)
             _LOGGER.info(
                 "%r has an exception (%r). Retrying...",
@@ -418,7 +418,7 @@ class ClientBase:  # pylint:disable=too-many-instance-attributes
     def _management_request(# pylint:disable=inconsistent-return-statements
         self, mgmt_msg: Union[uamqp_Message, Message], op_type: bytes
     ) -> Any:
-        # pylint:disable=assignment-from-none
+        
         retried_times = 0
         last_exception = None
         while retried_times <= self._config.max_retries:
@@ -427,7 +427,7 @@ class ClientBase:  # pylint:disable=too-many-instance-attributes
                 self._address, mgmt_auth=mgmt_auth, config=self._config
             )
             try:
-                conn = self._conn_manager.get_connection(  # pylint:disable=assignment-from-none
+                conn = self._conn_manager.get_connection(  
                     endpoint=self._address.hostname, auth=mgmt_auth
                 )
                 mgmt_client.open(connection=conn)
@@ -606,7 +606,7 @@ class ConsumerProducerMixin():
         operation_need_param = kwargs.pop("operation_need_param", True)
         max_retries = (
             self._client._config.max_retries
-        )  # pylint:disable=protected-access
+        )  
 
         while retried_times <= max_retries:
             try:

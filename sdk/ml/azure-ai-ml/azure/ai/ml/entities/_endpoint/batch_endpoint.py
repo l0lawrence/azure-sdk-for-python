@@ -107,10 +107,10 @@ class BatchEndpoint(Endpoint):
     def dump(
         self,
         dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,  # pylint: disable=unused-argument
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> Dict[str, Any]:
         context = {BASE_PATH_CONTEXT_KEY: Path(".").parent}
-        return BatchEndpointSchema(context=context).dump(self)  # type: ignore # pylint: disable=no-member
+        return BatchEndpointSchema(context=context).dump(self)  # type: ignore 
 
     @classmethod
     def _load(

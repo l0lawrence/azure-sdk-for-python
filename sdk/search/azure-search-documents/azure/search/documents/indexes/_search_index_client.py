@@ -498,7 +498,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         kwargs["headers"] = self._merge_client_headers(kwargs.get("headers"))
         if select:
             kwargs["select"] = ",".join(select)
-        # pylint:disable=protected-access
+        
         return cast(ItemPaged[SearchAlias], self._client.aliases.list(**kwargs))
 
     @distributed_trace
@@ -585,7 +585,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         """
         kwargs["headers"] = self._merge_client_headers(kwargs.get("headers"))
         result = self._client.aliases.create(alias, **kwargs)
-        return result  # pylint:disable=protected-access
+        return result  
 
     @distributed_trace
     def create_or_update_alias(
@@ -621,7 +621,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         result = self._client.aliases.create_or_update(
             alias_name=alias.name, alias=alias, prefer="return=representation", error_map=error_map, **kwargs
         )
-        return result  # pylint:disable=protected-access
+        return result  
 
     @distributed_trace
     def send_request(self, request: HttpRequest, *, stream: bool = False, **kwargs) -> HttpResponse:

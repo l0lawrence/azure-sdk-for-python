@@ -50,18 +50,18 @@ from .._vendor import AuthoringClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
 
-class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disable=too-many-public-methods
+class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  
     @distributed_trace
     def list_projects(
         self, *, top: Optional[int] = None, skip: Optional[int] = None, **kwargs: Any
     ) -> AsyncIterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Gets all projects for a user.
 
         See
@@ -184,7 +184,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
 
     @distributed_trace_async
     async def get_project_details(self, project_name: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Get the requested project metadata.
 
         See
@@ -272,7 +272,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def create_project(
         self, project_name: str, options: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Create or update a project.
 
         See
@@ -333,7 +333,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def create_project(
         self, project_name: str, options: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Create or update a project.
 
         See
@@ -378,7 +378,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
 
     @distributed_trace_async
     async def create_project(self, project_name: str, options: Union[JSON, IO[bytes]], **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Create or update a project.
 
         See
@@ -498,7 +498,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
 
         return cast(JSON, deserialized)  # type: ignore
 
-    async def _delete_project_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_project_initial(  
         self, project_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -661,7 +661,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_export(
         self, project_name: str, *, file_format: str = "json", asset_kind: Optional[str] = None, **kwargs: Any
     ) -> AsyncLROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Export project metadata and assets.
 
         See
@@ -870,7 +870,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Import project assets.
 
         See
@@ -1083,7 +1083,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Import project assets.
 
         See
@@ -1163,7 +1163,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         asset_kind: Optional[str] = None,
         **kwargs: Any
     ) -> AsyncLROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Import project assets.
 
         See
@@ -1778,7 +1778,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         return AsyncItemPaged(get_next, extract_data)
 
     @overload
-    async def update_synonyms(  # pylint: disable=inconsistent-return-statements
+    async def update_synonyms(  
         self, project_name: str, synonyms: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Updates all the synonyms of a project.
@@ -1815,7 +1815,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         """
 
     @overload
-    async def update_synonyms(  # pylint: disable=inconsistent-return-statements
+    async def update_synonyms(  
         self, project_name: str, synonyms: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Updates all the synonyms of a project.
@@ -1837,7 +1837,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         """
 
     @distributed_trace_async
-    async def update_synonyms(  # pylint: disable=inconsistent-return-statements
+    async def update_synonyms(  
         self, project_name: str, synonyms: Union[JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         """Updates all the synonyms of a project.
@@ -1926,7 +1926,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     def list_sources(
         self, project_name: str, *, top: Optional[int] = None, skip: Optional[int] = None, **kwargs: Any
     ) -> AsyncIterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Gets all the sources of a project.
 
         See
@@ -2117,7 +2117,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_sources(
         self, project_name: str, sources: List[JSON], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the sources of a project.
 
         See
@@ -2180,7 +2180,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_sources(
         self, project_name: str, sources: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the sources of a project.
 
         See
@@ -2220,7 +2220,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_sources(
         self, project_name: str, sources: Union[List[JSON], IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the sources of a project.
 
         See
@@ -2397,7 +2397,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         skip: Optional[int] = None,
         **kwargs: Any
     ) -> AsyncIterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Gets all the QnAs of a project.
 
         See
@@ -2668,7 +2668,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_qnas(
         self, project_name: str, qnas: List[JSON], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the QnAs of a project.
 
         See
@@ -2845,7 +2845,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_qnas(
         self, project_name: str, qnas: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the QnAs of a project.
 
         See
@@ -2962,7 +2962,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
     async def begin_update_qnas(
         self, project_name: str, qnas: Union[List[JSON], IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[AsyncIterable[JSON]]:
-        # pylint: disable=line-too-long
+        
         """Updates the QnAs of a project.
 
         See
@@ -3207,7 +3207,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         )
 
     @overload
-    async def add_feedback(  # pylint: disable=inconsistent-return-statements
+    async def add_feedback(  
         self, project_name: str, feedback: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update Active Learning feedback.
@@ -3244,7 +3244,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         """
 
     @overload
-    async def add_feedback(  # pylint: disable=inconsistent-return-statements
+    async def add_feedback(  
         self, project_name: str, feedback: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update Active Learning feedback.
@@ -3266,7 +3266,7 @@ class AuthoringClientOperationsMixin(AuthoringClientMixinABC):  # pylint: disabl
         """
 
     @distributed_trace_async
-    async def add_feedback(  # pylint: disable=inconsistent-return-statements
+    async def add_feedback(  
         self, project_name: str, feedback: Union[JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         """Update Active Learning feedback.

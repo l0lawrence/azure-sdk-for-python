@@ -3772,7 +3772,7 @@ class BlobFileListSource:
     file_list: str
     """Path to a JSONL file within the container specifying a subset of documents for training."""
 
-    def __init__(  # pylint: disable=unused-argument
+    def __init__(  
         self,
         container_url: str,
         file_list: str
@@ -3829,7 +3829,7 @@ class BlobSource:
     prefix: Optional[str]
     """Blob name prefix."""
 
-    def __init__(  # pylint: disable=unused-argument
+    def __init__(  
         self,
         container_url: str,
         *,
@@ -3888,7 +3888,7 @@ class ClassifierDocumentTypeDetails:
     source: Union[BlobSource, BlobFileListSource]
     """Content source containing the training data."""
 
-    def __init__(  # pylint: disable=unused-argument
+    def __init__(  
         self,
         source: Union[BlobSource, BlobFileListSource]
     ) -> None:
@@ -4482,7 +4482,7 @@ class OperationDetails(OperationSummary):
         )
 
 
-class AnalyzeResult:  # pylint: disable=too-many-instance-attributes
+class AnalyzeResult:  
     """Document analysis result."""
 
     api_version: str

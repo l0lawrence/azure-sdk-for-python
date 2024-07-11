@@ -25,7 +25,7 @@ from azure.core.tracing import SpanKind, Link
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
+        
         from uamqp import Message as uamqp_Message
     except ImportError:
         uamqp_Message = None
@@ -246,7 +246,7 @@ def get_receive_links(messages: Union[ServiceBusReceivedMessage, Iterable[Servic
         return []
 
     trace_messages = (
-        messages if isinstance(messages, Iterable)  # pylint:disable=isinstance-second-argument-not-valid-type
+        messages if isinstance(messages, Iterable)  
         else (messages,)
     )
 

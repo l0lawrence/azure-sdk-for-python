@@ -15,11 +15,11 @@ from .._model_base import rest_discriminator, rest_field
 from ._enums import OperationKind
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 
 
-class AddressValue(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AddressValue(_model_base.Model):  
     """Address field value.
 
     :ivar house_number: House or building number.
@@ -154,7 +154,7 @@ class AnalyzeDocumentRequest(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class AnalyzeResult(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class AnalyzeResult(_model_base.Model):  
     """Document analysis result.
 
     All required parameters must be populated in order to send to server.
@@ -1136,7 +1136,7 @@ class OperationDetails(_model_base.Model):
 
 class DocumentClassifierBuildOperationDetails(
     OperationDetails, discriminator="documentClassifierBuild"
-):  # pylint: disable=too-many-instance-attributes
+):  
     """Get Operation response object.
 
     All required parameters must be populated in order to send to server.
@@ -1267,7 +1267,7 @@ class DocumentClassifierDetails(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class DocumentField(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class DocumentField(_model_base.Model):  
     """An object representing the content and location of a field value.
 
     All required parameters must be populated in order to send to server.
@@ -1875,7 +1875,7 @@ class DocumentListItem(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class DocumentModelBuildOperationDetails(OperationDetails):  # pylint: disable=too-many-instance-attributes
+class DocumentModelBuildOperationDetails(OperationDetails):  
     """Get Operation response object.
 
     All required parameters must be populated in order to send to server.
@@ -1941,7 +1941,7 @@ class DocumentModelBuildOperationDetails(OperationDetails):  # pylint: disable=t
 
 class DocumentModelComposeOperationDetails(
     OperationDetails, discriminator="documentModelCompose"
-):  # pylint: disable=too-many-instance-attributes
+):  
     """Get Operation response object.
 
     All required parameters must be populated in order to send to server.
@@ -2007,7 +2007,7 @@ class DocumentModelComposeOperationDetails(
 
 class DocumentModelCopyToOperationDetails(
     OperationDetails, discriminator="documentModelCopyTo"
-):  # pylint: disable=too-many-instance-attributes
+):  
     """Get Operation response object.
 
     All required parameters must be populated in order to send to server.
@@ -2074,7 +2074,7 @@ class DocumentModelCopyToOperationDetails(
         super().__init__(*args, kind=OperationKind.DOCUMENT_MODEL_COPY_TO, **kwargs)
 
 
-class DocumentModelDetails(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class DocumentModelDetails(_model_base.Model):  
     """Document model info.
 
     All required parameters must be populated in order to send to server.
@@ -2163,7 +2163,7 @@ class DocumentModelDetails(_model_base.Model):  # pylint: disable=too-many-insta
         super().__init__(*args, **kwargs)
 
 
-class DocumentPage(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class DocumentPage(_model_base.Model):  
     """Content and layout elements extracted from a page from the input.
 
     All required parameters must be populated in order to send to server.

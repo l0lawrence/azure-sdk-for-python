@@ -706,7 +706,7 @@ class SearchClient(HeadersMixin):
             return result_first_half
 
     async def __aenter__(self) -> "SearchClient":
-        await self._client.__aenter__()  # pylint: disable=no-member
+        await self._client.__aenter__()  
         return self
 
     async def __aexit__(self, *args) -> None:

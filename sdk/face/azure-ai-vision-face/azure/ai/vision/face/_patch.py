@@ -95,7 +95,7 @@ class FaceClient(FaceClientGenerated):
         face_id_time_to_live: Optional[int] = None,
         **kwargs: Any,
     ) -> List[_models.FaceDetectionResult]:
-        # pylint: disable=line-too-long
+        
         """Detect human faces in an image, return face rectangles, and optionally with faceIds, landmarks,
         and attributes.
 
@@ -495,7 +495,7 @@ class FaceClient(FaceClientGenerated):
         face_id_time_to_live: Optional[int] = None,
         **kwargs: Any,
     ) -> List[_models.FaceDetectionResult]:
-        # pylint: disable=line-too-long
+        
         """Detect human faces in an image, return face rectangles, and optionally with faceIds, landmarks,
         and attributes.
 
@@ -931,7 +931,7 @@ class FaceSessionClient(FaceSessionClientGenerated):
         verify_image: Union[bytes, None],
         **kwargs: Any,
     ) -> _models.CreateLivenessWithVerifySessionResult:
-        # pylint: disable=line-too-long
+        
         """Create a new liveness session with verify. Client device submits VerifyImage during the
         /detectLivenessWithVerify/singleModal call.
 

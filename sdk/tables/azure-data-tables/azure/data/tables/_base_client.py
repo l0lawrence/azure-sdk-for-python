@@ -56,7 +56,7 @@ def get_api_version(api_version: Optional[str], default: str) -> str:
     return api_version or default
 
 
-class TablesBaseClient:  # pylint: disable=too-many-instance-attributes
+class TablesBaseClient:  
     """Base class for TableClient
 
     :ivar str account_name: The name of the Tables account.
@@ -241,7 +241,7 @@ class TablesBaseClient:  # pylint: disable=too-many-instance-attributes
         ]
 
     def _batch_send(self, table_name: str, *reqs: HttpRequest, **kwargs) -> List[Mapping[str, Any]]:
-        # pylint:disable=docstring-should-be-keyword
+        
         """Given a series of request, do a Storage batch call.
 
         :param table_name: The table name.
@@ -327,7 +327,7 @@ class TransportWrapper(HttpTransport):
     def __enter__(self):
         pass
 
-    def __exit__(self, *args):  # pylint: disable=arguments-differ
+    def __exit__(self, *args):  
         pass
 
 

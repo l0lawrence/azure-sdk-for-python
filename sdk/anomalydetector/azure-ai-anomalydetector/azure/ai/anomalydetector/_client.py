@@ -18,7 +18,7 @@ from ._operations import AnomalyDetectorClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 
-class AnomalyDetectorClient(AnomalyDetectorClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class AnomalyDetectorClient(AnomalyDetectorClientOperationsMixin):  
     """The Anomaly Detector API detects anomalies automatically in time series data.
     It supports two kinds of mode, one is for stateless using, another is for
     stateful using. In stateless mode, there are three functionalities. Entire

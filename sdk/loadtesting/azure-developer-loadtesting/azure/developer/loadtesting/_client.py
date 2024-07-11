@@ -14,7 +14,7 @@ from ._generated._serialization import Deserializer, Serializer
 from ._generated.operations import AdministrationOperations, TestRunOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 class _BaseClient:
@@ -63,7 +63,7 @@ class _BaseClient:
         self._client.__exit__(*exc_details)
 
 
-class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  # pylint: disable=client-accepts-api-version-keyword
+class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  
     """These APIs allow end users to do various administrative operations on Azure Load Test Service.
 
     :param endpoint: URL to perform data plane API operations on the resource. Required.
@@ -79,7 +79,7 @@ class LoadTestAdministrationClient(_BaseClient, AdministrationOperations):  # py
         self._client.__enter__()
         return self
 
-class LoadTestRunClient(_BaseClient, TestRunOperations):  # pylint: disable=client-accepts-api-version-keyword
+class LoadTestRunClient(_BaseClient, TestRunOperations):  
     """These APIs allow end users to run Azure Load Test and manage test run.
 
     :param endpoint: URL to perform data plane API operations on the resource. Required.

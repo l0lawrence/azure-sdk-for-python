@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -328,7 +328,7 @@ class TriggerOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_trigger_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_trigger_initial(  
         self, trigger_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -706,7 +706,7 @@ class TriggerOperations:
             self._client, raw_result, get_long_running_output, polling_method  # type: ignore
         )
 
-    async def _start_trigger_initial(  # pylint: disable=inconsistent-return-statements
+    async def _start_trigger_initial(  
         self, trigger_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -804,7 +804,7 @@ class TriggerOperations:
             )
         return AsyncLROPoller[None](self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
-    async def _stop_trigger_initial(  # pylint: disable=inconsistent-return-statements
+    async def _stop_trigger_initial(  
         self, trigger_name: str, **kwargs: Any
     ) -> None:
         error_map = {

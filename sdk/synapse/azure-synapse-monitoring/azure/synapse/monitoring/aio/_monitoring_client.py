@@ -13,7 +13,7 @@ from azure.core.pipeline.transport import AsyncHttpResponse, HttpRequest
 from msrest import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 from ._configuration import MonitoringClientConfiguration

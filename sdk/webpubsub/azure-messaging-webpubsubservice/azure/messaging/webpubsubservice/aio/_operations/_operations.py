@@ -51,15 +51,15 @@ from .._vendor import MixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
 
 class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-many-public-methods
     @distributed_trace_async
-    async def close_all_connections(  # pylint: disable=inconsistent-return-statements
+    async def close_all_connections(  
         self, *, excluded: Optional[List[str]] = None, reason: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Close the connections in the hub.
@@ -199,7 +199,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
         return cast(JSON, deserialized)
 
     @distributed_trace_async
-    async def send_to_all(  # pylint: disable=inconsistent-return-statements
+    async def send_to_all(  
         self, message: IO, *, excluded: Optional[List[str]] = None, filter: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Broadcast content inside request body to all the connected client connections.
@@ -262,7 +262,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def close_connection(  # pylint: disable=inconsistent-return-statements
+    async def close_connection(  
         self, connection_id: str, *, reason: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Close the client connection.
@@ -368,7 +368,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
         return 200 <= response.status_code <= 299
 
     @distributed_trace_async
-    async def send_to_connection(  # pylint: disable=inconsistent-return-statements
+    async def send_to_connection(  
         self, connection_id: str, message: IO, **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific connection.
@@ -427,7 +427,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def remove_connection_from_all_groups(  # pylint: disable=inconsistent-return-statements
+    async def remove_connection_from_all_groups(  
         self, connection_id: str, **kwargs: Any
     ) -> None:
         """Remove a connection from all groups.
@@ -531,7 +531,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
         return 200 <= response.status_code <= 299
 
     @distributed_trace_async
-    async def close_group_connections(  # pylint: disable=inconsistent-return-statements
+    async def close_group_connections(  
         self, group: str, *, excluded: Optional[List[str]] = None, reason: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Close connections in the specific group.
@@ -591,7 +591,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def send_to_group(  # pylint: disable=inconsistent-return-statements
+    async def send_to_group(  
         self,
         group: str,
         message: IO,
@@ -664,7 +664,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def remove_connection_from_group(  # pylint: disable=inconsistent-return-statements
+    async def remove_connection_from_group(  
         self, group: str, connection_id: str, **kwargs: Any
     ) -> None:
         """Remove a connection from the target group.
@@ -720,7 +720,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def add_connection_to_group(  # pylint: disable=inconsistent-return-statements
+    async def add_connection_to_group(  
         self, group: str, connection_id: str, **kwargs: Any
     ) -> None:
         """Add a connection to the target group.
@@ -776,7 +776,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def revoke_permission(  # pylint: disable=inconsistent-return-statements
+    async def revoke_permission(  
         self, permission: str, connection_id: str, *, target_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Revoke permission for the connection.
@@ -899,7 +899,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
         return 200 <= response.status_code <= 299
 
     @distributed_trace_async
-    async def grant_permission(  # pylint: disable=inconsistent-return-statements
+    async def grant_permission(  
         self, permission: str, connection_id: str, *, target_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Grant permission to the connection.
@@ -1011,7 +1011,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
         return 200 <= response.status_code <= 299
 
     @distributed_trace_async
-    async def close_user_connections(  # pylint: disable=inconsistent-return-statements
+    async def close_user_connections(  
         self, user_id: str, *, excluded: Optional[List[str]] = None, reason: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Close connections for the specific user.
@@ -1070,7 +1070,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def send_to_user(  # pylint: disable=inconsistent-return-statements
+    async def send_to_user(  
         self, user_id: str, message: IO, *, filter: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Send content inside request body to the specific user.
@@ -1133,7 +1133,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def remove_user_from_all_groups(  # pylint: disable=inconsistent-return-statements
+    async def remove_user_from_all_groups(  
         self, user_id: str, **kwargs: Any
     ) -> None:
         """Remove a user from all groups.
@@ -1185,7 +1185,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def remove_user_from_group(  # pylint: disable=inconsistent-return-statements
+    async def remove_user_from_group(  
         self, group: str, user_id: str, **kwargs: Any
     ) -> None:
         """Remove a user from the target group.
@@ -1241,7 +1241,7 @@ class WebPubSubServiceClientOperationsMixin(MixinABC):  # pylint: disable=too-ma
             return cls(pipeline_response, None, {})
 
     @distributed_trace_async
-    async def add_user_to_group(  # pylint: disable=inconsistent-return-statements
+    async def add_user_to_group(  
         self, group: str, user_id: str, **kwargs: Any
     ) -> None:
         """Add a user to the target group.

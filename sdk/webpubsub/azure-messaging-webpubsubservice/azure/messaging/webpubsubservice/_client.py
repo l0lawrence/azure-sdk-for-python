@@ -17,13 +17,13 @@ from ._operations import WebPubSubServiceClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
 class WebPubSubServiceClient(
     WebPubSubServiceClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """WebPubSubServiceClient.
 
     :param hub: Target hub name, which should start with alphabetic characters and only contain

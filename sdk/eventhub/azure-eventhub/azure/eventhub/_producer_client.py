@@ -334,7 +334,7 @@ class EventHubProducerClient(
         timeout: Optional[float] = None,
         partition_id: Optional[str] = None,
         partition_key: Optional[str] = None,
-        **kwargs: Any # pylint: disable=unused-argument
+        **kwargs: Any 
     ) -> None:
         set_event_partition_key(event, partition_key, self._amqp_transport)
         timeout_time = time.time() + timeout if timeout else None
@@ -601,7 +601,7 @@ class EventHubProducerClient(
         timeout: Optional[float] = None,
         partition_id: Optional[str] = None,
         partition_key: Optional[str] = None,
-        **kwargs: Any # pylint: disable=unused-argument
+        **kwargs: Any 
     ) -> None:
         """
         Sends an event data.

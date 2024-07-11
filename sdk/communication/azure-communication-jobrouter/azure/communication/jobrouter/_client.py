@@ -20,7 +20,7 @@ from ._serialization import Deserializer, Serializer
 
 class JobRouterAdministrationClient(
     JobRouterAdministrationClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """JobRouterAdministrationClient.
 
     :param endpoint: Uri of your Communication resource. Required.
@@ -96,7 +96,7 @@ class JobRouterAdministrationClient(
         self._client.__exit__(*exc_details)
 
 
-class JobRouterClient(JobRouterClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class JobRouterClient(JobRouterClientOperationsMixin):  
     """JobRouterClient.
 
     :param endpoint: Uri of your Communication resource. Required.

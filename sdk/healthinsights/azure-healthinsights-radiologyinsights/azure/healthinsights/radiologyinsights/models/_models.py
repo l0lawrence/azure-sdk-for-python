@@ -15,7 +15,7 @@ from .._model_base import rest_discriminator, rest_field
 from ._enums import RadiologyInsightsInferenceType
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 
 
@@ -460,7 +460,7 @@ class DomainResource(Resource):
         super().__init__(*args, **kwargs)
 
 
-class Condition(DomainResource, discriminator="Condition"):  # pylint: disable=too-many-instance-attributes
+class Condition(DomainResource, discriminator="Condition"):  
     """Detailed information about conditions, problems or diagnoses
     Based on `FHIR Condition <https://www.hl7.org/fhir/R4/condition.html>`_.
 
@@ -1041,7 +1041,7 @@ class Error(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class Extension(Element):  # pylint: disable=too-many-instance-attributes
+class Extension(Element):  
     """Base for all elements
     Based on `FHIR Element <https://www.hl7.org/fhir/datatypes.html#Element>`_.
 
@@ -1952,7 +1952,7 @@ class Narrative(Element):
         super().__init__(*args, **kwargs)
 
 
-class Observation(DomainResource):  # pylint: disable=too-many-instance-attributes
+class Observation(DomainResource):  
     """Detailed information about observations
     Based on `FHIR Observation <https://www.hl7.org/fhir/R4/observation.html>`_.
 
@@ -2166,7 +2166,7 @@ class Observation(DomainResource):  # pylint: disable=too-many-instance-attribut
         self.resource_type: Literal["Observation"] = "Observation"
 
 
-class ObservationComponent(Element):  # pylint: disable=too-many-instance-attributes
+class ObservationComponent(Element):  
     """Component results
     Based on `FHIR Observation.component <https://www.hl7.org/fhir/R4/observation.html>`_.
 
@@ -3173,7 +3173,7 @@ class Reference(Element):
         super().__init__(*args, **kwargs)
 
 
-class ResearchStudy(DomainResource, discriminator="ResearchStudy"):  # pylint: disable=too-many-instance-attributes
+class ResearchStudy(DomainResource, discriminator="ResearchStudy"):  
     """Detailed information about Research Study
     Based on `FHIR ResearchStudy <https://www.hl7.org/fhir/R4/researchstudy.html>`_.
 

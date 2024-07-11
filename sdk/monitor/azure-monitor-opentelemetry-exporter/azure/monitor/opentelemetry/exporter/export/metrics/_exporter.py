@@ -74,7 +74,7 @@ class AzureMonitorMetricExporter(BaseExporter, MetricExporter):
         self,
         metrics_data: OTMetricsData,
         timeout_millis: float = 10_000,  # pylint: disable=unused-argument
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> MetricExportResult:
         """Exports a batch of metric data
 
@@ -120,7 +120,7 @@ class AzureMonitorMetricExporter(BaseExporter, MetricExporter):
     def shutdown(
         self,
         timeout_millis: float = 30_000,  # pylint: disable=unused-argument
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> None:
         """Shuts down the exporter.
 
@@ -217,7 +217,7 @@ def _convert_point_to_envelope(
     return envelope
 
 
-# pylint: disable=protected-access
+
 def _handle_std_metric_envelope(
     envelope: TelemetryItem,
     name: str,

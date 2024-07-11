@@ -21,7 +21,7 @@ from ._operations import RadiologyInsightsClientOperationsMixin
 
 class RadiologyInsightsClient(
     RadiologyInsightsClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """RadiologyInsightsClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

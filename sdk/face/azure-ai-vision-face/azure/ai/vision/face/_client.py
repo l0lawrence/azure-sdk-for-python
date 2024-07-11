@@ -19,11 +19,11 @@ from ._operations import FaceClientOperationsMixin, FaceSessionClientOperationsM
 from ._serialization import Deserializer, Serializer
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
-class FaceClient(FaceClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class FaceClient(FaceClientOperationsMixin):  
     """FaceClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:
@@ -102,7 +102,7 @@ class FaceClient(FaceClientOperationsMixin):  # pylint: disable=client-accepts-a
         self._client.__exit__(*exc_details)
 
 
-class FaceSessionClient(FaceSessionClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class FaceSessionClient(FaceSessionClientOperationsMixin):  
     """FaceSessionClient.
 
     :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example:

@@ -345,7 +345,7 @@ def _get_deserialization_callback_from_task_type(task_type):  # pylint: disable=
     return key_phrases_result
 
 
-def _get_property_name_from_task_type(task_type):  # pylint: disable=too-many-return-statements
+def _get_property_name_from_task_type(task_type):  
     """v3.1 only
 
     :param str task_type: v3.1 task type
@@ -363,7 +363,7 @@ def _get_property_name_from_task_type(task_type):  # pylint: disable=too-many-re
     return "key_phrase_extraction_tasks"
 
 
-def get_task_from_pointer(task_type):  # pylint: disable=too-many-return-statements
+def get_task_from_pointer(task_type):  
     """v3.1 only
 
     :param str task_type: v3.1 task type

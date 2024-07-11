@@ -19,7 +19,7 @@ from .policies import is_retry, StorageRetryPolicy
 
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
-    from azure.core.pipeline import (  # pylint: disable=non-abstract-transport-import
+    from azure.core.pipeline import (  
         PipelineRequest,
         PipelineResponse
     )
@@ -44,7 +44,7 @@ async def retry_hook(settings, **kwargs):
 
 class AsyncStorageResponseHook(AsyncHTTPPolicy):
 
-    def __init__(self, **kwargs):  # pylint: disable=unused-argument
+    def __init__(self, **kwargs):  
         self._response_callback = kwargs.get('raw_response_hook')
         super(AsyncStorageResponseHook, self).__init__()
 

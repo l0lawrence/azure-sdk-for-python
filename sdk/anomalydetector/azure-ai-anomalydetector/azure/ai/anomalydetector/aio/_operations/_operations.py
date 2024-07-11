@@ -45,8 +45,8 @@ from .._vendor import AnomalyDetectorClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -690,7 +690,7 @@ class AnomalyDetectorClientOperationsMixin(AnomalyDetectorClientMixinABC):
         _headers = kwargs.pop("headers", {}) or {}
         _params = kwargs.pop("params", {}) or {}
 
-        cls: ClsType[_models._models.ModelList] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.ModelList] = kwargs.pop("cls", None)  
 
         error_map = {
             401: ClientAuthenticationError,
@@ -758,7 +758,7 @@ class AnomalyDetectorClientOperationsMixin(AnomalyDetectorClientMixinABC):
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete_multivariate_model(  # pylint: disable=inconsistent-return-statements
+    async def delete_multivariate_model(  
         self, model_id: str, **kwargs: Any
     ) -> None:
         """Delete Multivariate Model.

@@ -54,7 +54,7 @@ from .partition_key import (
 __all__ = ("ContainerProxy",)
 
 # pylint: disable=too-many-lines
-# pylint: disable=missing-client-constructor-parameter-credential,missing-client-constructor-parameter-kwargs
+
 
 PartitionKeyType = Union[str, int, float, bool, Sequence[Union[str, int, float, bool, None]], Type[NonePartitionKeyValue]]  # pylint: disable=line-too-long
 
@@ -88,7 +88,7 @@ class ContainerProxy:  # pylint: disable=too-many-public-methods
         self._scripts: Optional[ScriptsProxy] = None
         if properties:
             self.client_connection._set_container_properties_cache(self.container_link,
-                                                                   _set_properties_cache(properties))  # pylint: disable=protected-access, line-too-long
+                                                                   _set_properties_cache(properties))  # pylint: disable= line-too-long
 
     def __repr__(self) -> str:
         return "<ContainerProxy [{}]>".format(self.container_link)[:1024]
@@ -365,7 +365,7 @@ class ContainerProxy:  # pylint: disable=too-many-public-methods
         return result
 
     @distributed_trace
-    def query_items(  # pylint:disable=docstring-missing-param
+    def query_items(  
         self,
         query: str,
         parameters: Optional[List[Dict[str, object]]] = None,

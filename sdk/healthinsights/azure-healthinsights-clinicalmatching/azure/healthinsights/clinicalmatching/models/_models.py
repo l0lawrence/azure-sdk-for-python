@@ -14,7 +14,7 @@ from .. import _model_base
 from .._model_base import rest_field
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 
 
@@ -419,7 +419,7 @@ Each clinical trial can be in a certain phase or in multiple phases. """
         super().__init__(*args, **kwargs)
 
 
-class ClinicalTrialRegistryFilter(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class ClinicalTrialRegistryFilter(_model_base.Model):  
     """A filter defining a subset of clinical trials from a given clinical trial registry (e.g.
     clinicaltrials.gov).
 
@@ -836,7 +836,7 @@ class GeographicArea(_model_base.Model):
     :vartype properties: ~azure.healthinsights.clinicalmatching.models.AreaProperties
     """
 
-    type: Union[str, "_models.GeoJsonType"] = rest_field() # pylint: disable=redefined-builtin
+    type: Union[str, "_models.GeoJsonType"] = rest_field() 
     """``GeoJSON`` type. Required. \"Feature\""""
     geometry: "_models.AreaGeometry" = rest_field()
     """``GeoJSON`` geometry, representing the area circle's center. Required. """
@@ -973,7 +973,7 @@ class PatientDocument(_model_base.Model):
     :vartype content: ~azure.healthinsights.clinicalmatching.models.DocumentContent
     """
 
-    type: Union[str, "_models.DocumentType"] = rest_field() # pylint: disable=redefined-builtin
+    type: Union[str, "_models.DocumentType"] = rest_field() 
     """The type of the patient document, such as 'note' (text document) or 'fhirBundle' (FHIR JSON document).
     Required. Known values are: \"note\", \"fhirBundle\", \"dicom\", and \"genomicSequencing\". """
     clinical_type: Optional[Union[str, "_models.ClinicalDocumentType"]] = rest_field(name="clinicalType")
@@ -1158,7 +1158,7 @@ class TrialMatcherInference(_model_base.Model):
     :vartype metadata: ~azure.healthinsights.clinicalmatching.models.ClinicalTrialMetadata
     """
 
-    type: Union[str, "_models.TrialMatcherInferenceType"] = rest_field() # pylint: disable=redefined-builtin
+    type: Union[str, "_models.TrialMatcherInferenceType"] = rest_field() 
     """The type of the Trial Matcher inference. Required. \"trialEligibility\""""
     value: str = rest_field()
     """The value of the inference, as relevant for the given inference type. Required. """

@@ -17,13 +17,13 @@ from ._configuration import ConfidentialLedgerClientConfiguration
 from ._operations import ConfidentialLedgerClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Dict
 
 
 class ConfidentialLedgerClient(
     ConfidentialLedgerClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """The ConfidentialLedgerClient writes and retrieves ledger entries against the Confidential
     Ledger service.
 

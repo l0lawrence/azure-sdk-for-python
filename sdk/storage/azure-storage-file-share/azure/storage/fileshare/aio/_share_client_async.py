@@ -7,7 +7,7 @@
 
 import warnings
 import sys
-from typing import ( # pylint: disable=unused-import
+from typing import ( 
     Optional, Union, Dict, Any, Iterable, Literal, TYPE_CHECKING
 )
 
@@ -114,7 +114,7 @@ class ShareClient(AsyncStorageAccountHostsMixin, ShareClientBase):
                                         allow_trailing_dot=self.allow_trailing_dot,
                                         allow_source_trailing_dot=self.allow_source_trailing_dot,
                                         file_request_intent=self.file_request_intent)
-        self._client._config.version = get_api_version(kwargs)  # pylint: disable=protected-access
+        self._client._config.version = get_api_version(kwargs)  
 
     def get_directory_client(self, directory_path=None):
         # type: (Optional[str]) -> ShareDirectoryClient

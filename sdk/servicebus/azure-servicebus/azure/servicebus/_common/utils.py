@@ -42,7 +42,7 @@ from ..amqp import AmqpAnnotatedMessage
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
+        
         from uamqp import (
             types as uamqp_types
         )
@@ -138,7 +138,7 @@ def get_renewable_start_time(renewable):
 def get_renewable_lock_duration(
     renewable: Union["ServiceBusReceivedMessage", "BaseSession"]
 ) -> datetime.timedelta:
-    # pylint: disable=protected-access
+    
     try:
         return max(
             renewable.locked_until_utc - utc_now(), datetime.timedelta(seconds=0)

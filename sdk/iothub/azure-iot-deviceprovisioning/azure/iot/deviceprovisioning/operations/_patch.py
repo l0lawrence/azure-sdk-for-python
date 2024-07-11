@@ -42,7 +42,7 @@ if sys.version_info >= (3, 9):
 else:
     from typing import MutableMapping
 
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[
     Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]

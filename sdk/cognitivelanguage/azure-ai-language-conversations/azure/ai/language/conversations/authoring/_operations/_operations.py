@@ -33,8 +33,8 @@ from .._vendor import ConversationAuthoringClientMixinABC
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -951,7 +951,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 ):
     @distributed_trace
     def list_projects(self, *, top: Optional[int] = None, skip: Optional[int] = None, **kwargs: Any) -> Iterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Lists the existing projects.
 
         See
@@ -1082,7 +1082,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def create_project(
         self, project_name: str, project: JSON, *, content_type: str = "application/merge-patch+json", **kwargs: Any
     ) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Creates a new project or updates an existing one.
 
         See
@@ -1159,7 +1159,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         content_type: str = "application/merge-patch+json",
         **kwargs: Any
     ) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Creates a new project or updates an existing one.
 
         See
@@ -1210,7 +1210,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def create_project(self, project_name: str, project: Union[JSON, IO[bytes]], **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Creates a new project or updates an existing one.
 
         See
@@ -1342,7 +1342,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_project(self, project_name: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the details of a project.
 
         See
@@ -1490,7 +1490,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def begin_delete_project(self, project_name: str, **kwargs: Any) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Deletes a project.
 
         See
@@ -1685,7 +1685,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         trained_model_label: Optional[str] = None,
         **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a job to export a project's data.
 
         See
@@ -1907,7 +1907,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         content_type: str = "application/json",
         **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
@@ -2134,7 +2134,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         content_type: str = "application/json",
         **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
@@ -2224,7 +2224,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         exported_project_format: Optional[str] = None,
         **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
@@ -2562,7 +2562,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def begin_train(
         self, project_name: str, configuration: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a training job for a project.
 
         See
@@ -2697,7 +2697,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def begin_train(
         self, project_name: str, configuration: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a training job for a project.
 
         See
@@ -2809,7 +2809,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def begin_train(self, project_name: str, configuration: Union[JSON, IO[bytes]], **kwargs: Any) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a training job for a project.
 
         See
@@ -3182,7 +3182,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def begin_swap_deployments(
         self, project_name: str, deployments: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Swaps two existing deployments with each other.
 
         See
@@ -3271,7 +3271,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def begin_swap_deployments(
         self, project_name: str, deployments: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Swaps two existing deployments with each other.
 
         See
@@ -3352,7 +3352,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def begin_swap_deployments(
         self, project_name: str, deployments: Union[JSON, IO[bytes]], **kwargs: Any
     ) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Swaps two existing deployments with each other.
 
         See
@@ -3890,7 +3890,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def begin_delete_deployment(self, project_name: str, deployment_name: str, **kwargs: Any) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Deletes a project deployment.
 
         See
@@ -4014,7 +4014,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_deployment_job_status(self, project_name: str, deployment_name: str, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status of an existing deployment job.
 
         See
@@ -4140,7 +4140,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_swap_deployments_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status of an existing swap deployment job.
 
         See
@@ -4263,7 +4263,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_export_project_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status of an export job. Once job completes, returns the project metadata, and assets.
 
         See
@@ -4388,7 +4388,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_import_project_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status for an import.
 
         See
@@ -4830,7 +4830,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def begin_load_snapshot(self, project_name: str, trained_model_label: str, **kwargs: Any) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Restores the snapshot of this trained model to be the current working directory of the project.
 
         See
@@ -4963,7 +4963,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
         skip: Optional[int] = None,
         **kwargs: Any
     ) -> Iterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Gets the detailed results of the evaluation for a trained model. This includes the raw
         inference results for the data included in the evaluation process.
 
@@ -5112,7 +5112,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_model_evaluation_summary(self, project_name: str, trained_model_label: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the evaluation summary of a trained model. The summary includes high level performance
         measurements of the model e.g., F1, Precision, Recall, etc.
 
@@ -5270,7 +5270,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def get_load_snapshot_job_status(
         self, project_name: str, trained_model_label: str, job_id: str, **kwargs: Any
     ) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status for loading a snapshot.
 
         See
@@ -5398,7 +5398,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def list_training_jobs(
         self, project_name: str, *, top: Optional[int] = None, skip: Optional[int] = None, **kwargs: Any
     ) -> Iterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Lists the non-expired training jobs created for a project.
 
         See
@@ -5591,7 +5591,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_training_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status for a training job.
 
         See
@@ -5804,7 +5804,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def begin_cancel_training_job(self, project_name: str, job_id: str, **kwargs: Any) -> LROPoller[JSON]:
-        # pylint: disable=line-too-long
+        
         """Triggers a cancellation for a running training job.
 
         See
@@ -5961,7 +5961,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
 
     @distributed_trace
     def get_project_deletion_job_status(self, job_id: str, **kwargs: Any) -> JSON:
-        # pylint: disable=line-too-long
+        
         """Gets the status for a project deletion job.
 
         See
@@ -6083,7 +6083,7 @@ class ConversationAuthoringClientOperationsMixin(  # pylint: disable=too-many-pu
     def list_supported_languages(
         self, *, project_kind: str, top: Optional[int] = None, skip: Optional[int] = None, **kwargs: Any
     ) -> Iterable[JSON]:
-        # pylint: disable=line-too-long
+        
         """Lists the supported languages for the given project type.
 
         See

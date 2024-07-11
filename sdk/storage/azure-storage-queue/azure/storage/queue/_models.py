@@ -19,9 +19,9 @@ from ._generated.models import Metrics as GeneratedMetrics
 from ._generated.models import RetentionPolicy as GeneratedRetentionPolicy
 
 if sys.version_info >= (3, 11):
-    from typing import Self # pylint: disable=no-name-in-module, ungrouped-imports
+    from typing import Self # pylint: disable= ungrouped-imports
 else:
-    from typing_extensions import Self # pylint: disable=ungrouped-imports
+    from typing_extensions import Self 
 
 if TYPE_CHECKING:
     from datetime import datetime

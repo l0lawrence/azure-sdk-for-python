@@ -14,7 +14,7 @@ from ... import KeyOperation
 ABC = abc.ABC
 
 if TYPE_CHECKING:
-    # pylint:disable=unused-import
+    
     from typing import Optional, Union
     from .._internal.key import Key
     from .. import EncryptionAlgorithm, KeyWrapAlgorithm, SignatureAlgorithm

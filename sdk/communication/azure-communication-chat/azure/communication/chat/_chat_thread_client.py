@@ -35,7 +35,7 @@ from ._utils import CommunicationErrorResponseConverter
 from ._version import SDK_MONIKER
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union, Tuple
     from datetime import datetime
     from azure.core.paging import ItemPaged
@@ -308,7 +308,7 @@ class ChatThreadClient(object): # pylint: disable=client-accepts-api-version-key
             chat_message_type = ChatMessageType.TEXT
         elif not isinstance(chat_message_type, ChatMessageType):
             try:
-                chat_message_type = ChatMessageType.__getattr__(chat_message_type) # pylint:disable=protected-access
+                chat_message_type = ChatMessageType.__getattr__(chat_message_type) 
             except Exception:
                 raise ValueError( # pylint:disable=raise-missing-from
                     "chat_message_type: {message_type} is not acceptable".format(message_type=chat_message_type))
@@ -588,7 +588,7 @@ class ChatThreadClient(object): # pylint: disable=client-accepts-api-version-key
 
     def __enter__(self):
         # type: () -> ChatThreadClient
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args):

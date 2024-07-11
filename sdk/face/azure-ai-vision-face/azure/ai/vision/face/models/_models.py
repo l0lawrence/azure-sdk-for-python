@@ -18,12 +18,12 @@ from .._vendor import FileType
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    # pylint: disable=ungrouped-imports
     from .. import models as _models
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 
 
 class AccessoryItem(_model_base.Model):
@@ -405,7 +405,7 @@ class ExposureProperties(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class FaceAttributes(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class FaceAttributes(_model_base.Model):  
     """Face attributes for the detected face.
 
     :ivar age: Age in years.
@@ -710,7 +710,7 @@ class FaceGroupingResult(_model_base.Model):
         super().__init__(*args, **kwargs)
 
 
-class FaceLandmarks(_model_base.Model):  # pylint: disable=too-many-instance-attributes
+class FaceLandmarks(_model_base.Model):  
     """A collection of 27-point face landmarks pointing to the important positions of face components.
 
     All required parameters must be populated in order to send to server.

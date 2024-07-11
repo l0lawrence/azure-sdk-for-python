@@ -43,7 +43,7 @@ class OnlineDeploymentSchema(DeploymentSchema):
         required=False,
         allowed_values=[
             EndpointComputeType.MANAGED.value,  # pylint: disable=no-member
-            EndpointComputeType.KUBERNETES.value,  # pylint: disable=no-member
+            EndpointComputeType.KUBERNETES.value,  
         ],
         casing_transform=camel_to_snake,
     )

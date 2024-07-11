@@ -32,8 +32,8 @@ from .._vendor import ChatCompletionsClientMixinABC, EmbeddingsClientMixinABC, I
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 _Unset: Any = object()
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
@@ -244,7 +244,7 @@ class ChatCompletionsClientOperationsMixin(ChatCompletionsClientMixinABC):
         model: Optional[str] = None,
         **kwargs: Any
     ) -> _models.ChatCompletions:
-        # pylint: disable=line-too-long
+        
         # pylint: disable=too-many-locals
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
@@ -499,7 +499,7 @@ class ChatCompletionsClientOperationsMixin(ChatCompletionsClientMixinABC):
 
     @distributed_trace
     def _get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
         The method makes a REST API call to the ``/info`` route on the given endpoint.
 
@@ -613,7 +613,7 @@ class EmbeddingsClientOperationsMixin(EmbeddingsClientMixinABC):
         input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
         **kwargs: Any
     ) -> _models.EmbeddingsResult:
-        # pylint: disable=line-too-long
+        
         """Return the embedding vectors for given text prompts.
         The method makes a REST API call to the ``/embeddings`` route on the given endpoint.
 
@@ -763,7 +763,7 @@ class EmbeddingsClientOperationsMixin(EmbeddingsClientMixinABC):
 
     @distributed_trace
     def _get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
         The method makes a REST API call to the ``/info`` route on the given endpoint.
 
@@ -877,7 +877,7 @@ class ImageEmbeddingsClientOperationsMixin(ImageEmbeddingsClientMixinABC):
         input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
         **kwargs: Any
     ) -> _models.EmbeddingsResult:
-        # pylint: disable=line-too-long
+        
         """Return the embedding vectors for given images.
         The method makes a REST API call to the ``/images/embeddings`` route on the given endpoint.
 
@@ -1035,7 +1035,7 @@ class ImageEmbeddingsClientOperationsMixin(ImageEmbeddingsClientMixinABC):
 
     @distributed_trace
     def _get_model_info(self, **kwargs: Any) -> _models.ModelInfo:
-        # pylint: disable=line-too-long
+        
         """Returns information about the AI model.
         The method makes a REST API call to the ``/info`` route on the given endpoint.
 

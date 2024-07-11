@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -579,7 +579,7 @@ class LibraryOperations:
         )
 
     @distributed_trace_async
-    async def append(  # pylint: disable=inconsistent-return-statements
+    async def append(  
         self,
         comp: Union[str, _models.Enum13],
         library_name: str,

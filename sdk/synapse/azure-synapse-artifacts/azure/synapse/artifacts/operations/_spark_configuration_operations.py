@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -260,7 +260,7 @@ class SparkConfigurationOperations:
 
         return ItemPaged(get_next, extract_data)
 
-    def _create_or_update_spark_configuration_initial(  # pylint: disable=name-too-long
+    def _create_or_update_spark_configuration_initial(  
         self,
         spark_configuration_name: str,
         properties: _models.SparkConfiguration,

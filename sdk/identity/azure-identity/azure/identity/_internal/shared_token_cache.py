@@ -80,7 +80,7 @@ def _filtered_accounts(
     return filtered_accounts
 
 
-class SharedTokenCacheBase(ABC):  # pylint: disable=too-many-instance-attributes
+class SharedTokenCacheBase(ABC):  
     def __init__(
         self,
         username: Optional[str] = None,
@@ -88,7 +88,7 @@ class SharedTokenCacheBase(ABC):  # pylint: disable=too-many-instance-attributes
         authority: Optional[str] = None,
         tenant_id: Optional[str] = None,
         **kwargs: Any
-    ) -> None:  # pylint:disable=unused-argument
+    ) -> None:  
         self._authority = normalize_authority(authority) if authority else get_default_authority()
         environment = urlparse(self._authority).netloc
         self._environment_aliases = KNOWN_ALIASES.get(environment) or frozenset((environment,))

@@ -159,7 +159,7 @@ try:
 
             return ReceiveClientAsync(
                 source,
-                debug=network_trace,  # pylint:disable=protected-access
+                debug=network_trace,  
                 error_policy=retry_policy,
                 prefetch=link_credit,
                 auto_complete=False,
@@ -214,7 +214,7 @@ try:
         @staticmethod
         async def iter_next_async(
             receiver: "ServiceBusReceiver", wait_time: Optional[int] = None
-        ) -> "ServiceBusReceivedMessage": # pylint: disable=unused-argument
+        ) -> "ServiceBusReceivedMessage": 
             # pylint: disable=protected-access
             try:
                 receiver._receive_context.set()
@@ -264,7 +264,7 @@ try:
             settle_operation: str,
             dead_letter_reason: Optional[str] = None,
             dead_letter_error_description: Optional[str] = None,
-        ) -> None:  # pylint: disable=unused-argument
+        ) -> None:  
             await get_running_loop().run_in_executor(
                 None,
                 UamqpTransportAsync.settle_message_via_receiver_link_impl(

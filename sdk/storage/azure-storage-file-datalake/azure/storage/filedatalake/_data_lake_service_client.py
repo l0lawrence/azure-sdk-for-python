@@ -215,7 +215,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
         delegation_key = self._blob_service_client.get_user_delegation_key(key_start_time=key_start_time,
                                                                            key_expiry_time=key_expiry_time,
                                                                            **kwargs)  # pylint: disable=protected-access
-        return UserDelegationKey._from_generated(delegation_key)  # pylint: disable=protected-access
+        return UserDelegationKey._from_generated(delegation_key)  
 
     @distributed_trace
     def list_file_systems(self, name_starts_with=None,  # type: Optional[str]
@@ -264,7 +264,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
         item_paged = self._blob_service_client.list_containers(name_starts_with=name_starts_with,
                                                                include_metadata=include_metadata,
                                                                **kwargs)  # pylint: disable=protected-access
-        item_paged._page_iterator_class = FileSystemPropertiesPaged  # pylint: disable=protected-access
+        item_paged._page_iterator_class = FileSystemPropertiesPaged  
         return item_paged
 
     @distributed_trace
@@ -371,7 +371,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
         new_name = kwargs.pop('new_name', None)
         file_system = self.get_file_system_client(new_name or name)
         self._blob_service_client.undelete_container(
-            name, deleted_version, new_name=new_name, **kwargs)  # pylint: disable=protected-access
+            name, deleted_version, new_name=new_name, **kwargs)  
         return file_system
 
     @distributed_trace
@@ -608,7 +608,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
             #other-client--per-operation-configuration>`_.
         :rtype: None
         """
-        return self._blob_service_client.set_service_properties(**kwargs)  # pylint: disable=protected-access
+        return self._blob_service_client.set_service_properties(**kwargs)  
 
     @distributed_trace
     def get_service_properties(self, **kwargs):

@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -327,7 +327,7 @@ class LinkedServiceOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_linked_service_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_linked_service_initial(  
         self, linked_service_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -425,7 +425,7 @@ class LinkedServiceOperations:
             )
         return AsyncLROPoller[None](self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
-    async def _rename_linked_service_initial(  # pylint: disable=inconsistent-return-statements
+    async def _rename_linked_service_initial(  
         self, linked_service_name: str, new_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         error_map = {

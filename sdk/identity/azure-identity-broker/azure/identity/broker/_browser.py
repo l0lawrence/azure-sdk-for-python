@@ -10,8 +10,8 @@ from azure.core.exceptions import ClientAuthenticationError
 from azure.identity._credentials import (
     InteractiveBrowserCredential as _InteractiveBrowserCredential,
 )  # pylint:disable=protected-access
-from azure.identity._exceptions import CredentialUnavailableError  # pylint:disable=protected-access
-from azure.identity._internal.utils import within_dac  # pylint:disable=protected-access
+from azure.identity._exceptions import CredentialUnavailableError  
+from azure.identity._internal.utils import within_dac  
 from ._utils import wrap_exceptions, resolve_tenant
 
 

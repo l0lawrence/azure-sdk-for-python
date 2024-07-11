@@ -170,7 +170,7 @@ class BaseExporter:
 
     # pylint: disable=too-many-branches
     # pylint: disable=too-many-nested-blocks
-    # pylint: disable=too-many-return-statements
+    
     # pylint: disable=too-many-statements
     def _transmit(self, envelopes: List[TelemetryItem]) -> ExportResult:
         """

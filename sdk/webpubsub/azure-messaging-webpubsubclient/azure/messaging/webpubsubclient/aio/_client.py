@@ -1059,7 +1059,7 @@ class WebPubSubClient(
         self,
         event: CallbackType,
         listener: Callable,
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> None:
         """Add handler.
         :param event: The event name. Required.
@@ -1157,7 +1157,7 @@ class WebPubSubClient(
         self,
         event: CallbackType,
         listener: Callable,
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> None:
         """Remove handler for rejoining group failed.
         :param event: The event name. Required.

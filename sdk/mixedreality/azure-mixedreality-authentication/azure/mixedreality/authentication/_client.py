@@ -22,7 +22,7 @@ from ._shared.mixedreality_account_key_credential import MixedRealityAccountKeyC
 from ._utils import convert_to_access_token, generate_cv_base
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any, Union
     from azure.core.credentials import TokenCredential
     from azure.core.credentials import AccessToken
@@ -105,7 +105,7 @@ class MixedRealityStsClient(object): # pylint: disable=client-accepts-api-versio
 
     def __enter__(self):
         # type: () -> MixedRealityStsClient
-        self._client.__enter__()  # pylint:disable=no-member
+        self._client.__enter__()  
         return self
 
     def __exit__(self, *args):

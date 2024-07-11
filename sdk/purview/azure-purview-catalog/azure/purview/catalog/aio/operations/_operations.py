@@ -24,7 +24,7 @@ if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
     from typing import MutableMapping  # type: ignore
-JSON = MutableMapping[str, Any] # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any] 
 T = TypeVar('T')
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -1595,7 +1595,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_classification(  # pylint: disable=inconsistent-return-statements
+    async def add_classification(  
         self,
         request: JSON,
         **kwargs: Any
@@ -2402,7 +2402,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_classification(  # pylint: disable=inconsistent-return-statements
+    async def delete_classification(  
         self,
         guid: str,
         classification_name: str,
@@ -2531,7 +2531,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_classifications(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications(  
         self,
         guid: str,
         classifications: List[JSON],
@@ -2624,7 +2624,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def update_classifications(  # pylint: disable=inconsistent-return-statements
+    async def update_classifications(  
         self,
         guid: str,
         classifications: List[JSON],
@@ -3783,7 +3783,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_classification_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def delete_classification_by_unique_attribute(  
         self,
         type_name: str,
         classification_name: str,
@@ -3843,7 +3843,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_classifications_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications_by_unique_attribute(  
         self,
         type_name: str,
         atlas_classification_array: List[JSON],
@@ -3941,7 +3941,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def update_classifications_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def update_classifications_by_unique_attribute(  
         self,
         type_name: str,
         atlas_classification_array: List[JSON],
@@ -4668,7 +4668,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def delete_business_metadata(  
         self,
         guid: str,
         body: Optional[Dict[str, Any]] = None,
@@ -4737,7 +4737,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_or_update_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def add_or_update_business_metadata(  
         self,
         guid: str,
         body: Optional[Dict[str, Any]] = None,
@@ -4812,7 +4812,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements
+    async def delete_business_metadata_attributes(  
         self,
         bm_name: str,
         guid: str,
@@ -4885,7 +4885,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_or_update_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements
+    async def add_or_update_business_metadata_attributes(  
         self,
         bm_name: str,
         guid: str,
@@ -5022,7 +5022,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_labels(  # pylint: disable=inconsistent-return-statements
+    async def delete_labels(  
         self,
         guid: str,
         body: Optional[List[str]] = None,
@@ -5091,7 +5091,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def set_labels(  # pylint: disable=inconsistent-return-statements
+    async def set_labels(  
         self,
         guid: str,
         body: Optional[List[str]] = None,
@@ -5160,7 +5160,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_label(  # pylint: disable=inconsistent-return-statements
+    async def add_label(  
         self,
         guid: str,
         body: Optional[List[str]] = None,
@@ -5229,7 +5229,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def delete_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -5309,7 +5309,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def set_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def set_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -5388,7 +5388,7 @@ class EntityOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def add_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -6729,7 +6729,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_glossary_category(  # pylint: disable=inconsistent-return-statements
+    async def delete_glossary_category(  
         self,
         category_guid: str,
         **kwargs: Any
@@ -9005,7 +9005,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_glossary_term(  # pylint: disable=inconsistent-return-statements
+    async def delete_glossary_term(  
         self,
         term_guid: str,
         **kwargs: Any
@@ -10381,7 +10381,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def assign_term_to_entities(  # pylint: disable=inconsistent-return-statements
+    async def assign_term_to_entities(  
         self,
         term_guid: str,
         related_object_ids: List[JSON],
@@ -10470,7 +10470,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def remove_term_assignment_from_entities(  # pylint: disable=inconsistent-return-statements
+    async def remove_term_assignment_from_entities(  
         self,
         term_guid: str,
         related_object_ids: List[JSON],
@@ -10559,7 +10559,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_term_assignment_from_entities(  # pylint: disable=inconsistent-return-statements
+    async def delete_term_assignment_from_entities(  
         self,
         term_guid: str,
         related_object_ids: List[JSON],
@@ -11091,7 +11091,7 @@ class GlossaryOperations(abc.ABC):  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_glossary(  # pylint: disable=inconsistent-return-statements
+    async def delete_glossary(  
         self,
         glossary_guid: str,
         **kwargs: Any
@@ -15213,7 +15213,7 @@ class RelationshipOperations:
 
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self,
         guid: str,
         **kwargs: Any
@@ -18013,7 +18013,7 @@ class TypesOperations:  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_type_by_name(  # pylint: disable=inconsistent-return-statements
+    async def delete_type_by_name(  
         self,
         name: str,
         **kwargs: Any
@@ -23082,7 +23082,7 @@ class TypesOperations:  # pylint: disable=too-many-public-methods
 
 
     @distributed_trace_async
-    async def delete_type_definitions(  # pylint: disable=inconsistent-return-statements
+    async def delete_type_definitions(  
         self,
         types_def: JSON,
         **kwargs: Any

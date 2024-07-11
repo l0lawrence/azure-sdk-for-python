@@ -9,7 +9,7 @@ from azure.mixedreality.authentication import MixedRealityStsClient
 from .static_access_token_credential import StaticAccessTokenCredential
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Any, Union
     from azure.core.credentials import AccessToken, TokenCredential
 

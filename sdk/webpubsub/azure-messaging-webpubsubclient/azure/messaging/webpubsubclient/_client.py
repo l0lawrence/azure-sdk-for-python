@@ -10,7 +10,7 @@ import time
 import logging
 import threading
 import urllib.parse
-import websocket  # pylint: disable=import-error
+import websocket  
 from azure.core.pipeline.policies import RetryMode
 
 from .models._models import (
@@ -76,7 +76,7 @@ class WebSocketAppBase:
         self.recover_start_time = None
 
 
-class WebSocketAppSync(websocket.WebSocketApp, WebSocketAppBase):  # pylint: disable=too-many-instance-attributes
+class WebSocketAppSync(websocket.WebSocketApp, WebSocketAppBase):  
     def __init__(
         self,
         url,
@@ -137,7 +137,7 @@ _ACK_TIMEOUT = 30.0
 _START_TIMEOUT = 30.0
 
 
-class WebPubSubClientBase:  # pylint: disable=client-accepts-api-version-keyword,too-many-instance-attributes
+class WebPubSubClientBase:  # pylint: disable=too-many-instance-attributes
     """WebPubSubClientBase
 
     :keyword bool auto_rejoin_groups: Whether to enable restoring group after reconnecting
@@ -1160,7 +1160,7 @@ class WebPubSubClient(
         self,
         event: CallbackType,
         listener: Callable,
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> None:
         """Add handler.
         :param event: The event name. Required.
@@ -1256,7 +1256,7 @@ class WebPubSubClient(
         self,
         event: CallbackType,
         listener: Callable,
-        **kwargs: Any,  # pylint: disable=unused-argument
+        **kwargs: Any,  
     ) -> None:
         """Remove handler for rejoining group failed.
         :param event: The event name. Required.

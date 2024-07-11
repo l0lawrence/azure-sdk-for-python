@@ -43,7 +43,7 @@ from .._sdk_moniker import SDK_MONIKER
 from ._policies_async import AsyncTablesRetryPolicy
 
 
-class AsyncTablesBaseClient:  # pylint: disable=too-many-instance-attributes
+class AsyncTablesBaseClient:  
     """Base class for async TableClient
 
     :ivar str account_name: The name of the Tables account.
@@ -234,7 +234,7 @@ class AsyncTablesBaseClient:  # pylint: disable=too-many-instance-attributes
         ]
 
     async def _batch_send(self, table_name: str, *reqs: HttpRequest, **kwargs: Any) -> List[Mapping[str, Any]]:
-        # pylint:disable=docstring-should-be-keyword
+        
         """Given a series of request, do a Storage batch call.
 
         :param table_name: The table name.

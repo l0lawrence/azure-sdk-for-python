@@ -19,13 +19,13 @@ from ._configuration import EventGridConsumerClientConfiguration, EventGridPubli
 from ._operations import EventGridConsumerClientOperationsMixin, EventGridPublisherClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 
 class EventGridPublisherClient(
     EventGridPublisherClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """EventGridPublisherClient.
 
     :param endpoint: The host name of the namespace, e.g.
@@ -109,7 +109,7 @@ class EventGridPublisherClient(
 
 class EventGridConsumerClient(
     EventGridConsumerClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """EventGridConsumerClient.
 
     :param endpoint: The host name of the namespace, e.g.

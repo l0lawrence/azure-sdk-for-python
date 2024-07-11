@@ -494,7 +494,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         logger: "Logger",
         timeout: int,
         last_exception: Optional[Exception]
-    ) -> None:    # pylint: disable=unused-argument
+    ) -> None:    
         """
         Handles sending of service bus messages.
         :param ~azure.servicebus.ServiceBusSender sender: The sender with handler
@@ -519,7 +519,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
     @staticmethod
     def add_batch(
         sb_message_batch: "ServiceBusMessageBatch", outgoing_sb_message: "ServiceBusMessage"
-    ) -> None:  # pylint: disable=unused-argument
+    ) -> None:  
         """
         Add ServiceBusMessage to the data body of the BatchMessage.
         :param ~azure.servicebus.ServiceBusMessageBatch sb_message_batch: ServiceBusMessageBatch to add data to.
@@ -748,7 +748,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
     @staticmethod
     def get_current_time(
         handler: "ReceiveClient"
-    ) -> float:  # pylint: disable=unused-argument
+    ) -> float:  
         """
         Gets the current time.
         :param ~pyamqp.ReceiveClient handler: Client with link to get current time.
@@ -877,7 +877,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         :rtype: ~pyamqp.authentication.JWTTokenAuth
         """
         # TODO: figure out why we're passing all these args to pyamqp JWTTokenAuth, which aren't being used
-        update_token = kwargs.pop("update_token")  # pylint: disable=unused-variable
+        update_token = kwargs.pop("update_token")  
         if update_token:
             # update_token not actually needed by pyamqp
             # just using to detect which kwargs to pass
@@ -900,7 +900,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         config: "Configuration",
         reply_to: str,
         **kwargs: Any
-    ) -> "Message": # pylint:disable=unused-argument
+    ) -> "Message": 
         """
         :param message: The message to send in the management request.
         :type message: Any

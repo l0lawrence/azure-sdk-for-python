@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -512,7 +512,7 @@ class DataFlowDebugSessionOperations:
         return deserialized  # type: ignore
 
     @overload
-    def delete_data_flow_debug_session(  # pylint: disable=inconsistent-return-statements
+    def delete_data_flow_debug_session(  
         self,
         request: _models.DeleteDataFlowDebugSessionRequest,
         *,
@@ -532,7 +532,7 @@ class DataFlowDebugSessionOperations:
         """
 
     @overload
-    def delete_data_flow_debug_session(  # pylint: disable=inconsistent-return-statements
+    def delete_data_flow_debug_session(  
         self, request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Deletes a data flow debug session.

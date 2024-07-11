@@ -19,7 +19,7 @@ from ._operations import AuthoringClientOperationsMixin
 from ._serialization import Deserializer, Serializer
 
 
-class AuthoringClient(AuthoringClientOperationsMixin):  # pylint: disable=client-accepts-api-version-keyword
+class AuthoringClient(AuthoringClientOperationsMixin):  
     """The language service API is a suite of natural language processing (NLP) skills built with
     best-in-class Microsoft machine learning algorithms. The API can be used to analyze
     unstructured text for tasks such as sentiment analysis, key phrase extraction, language

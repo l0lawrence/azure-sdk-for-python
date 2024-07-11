@@ -112,7 +112,7 @@ class GridSamplingAlgorithm(SamplingAlgorithm):
         return RestGridSamplingAlgorithm()
 
     @classmethod
-    # pylint: disable=unused-argument
+    
     def _from_rest_object(cls, obj: RestGridSamplingAlgorithm) -> "GridSamplingAlgorithm":
         return cls()
 
@@ -138,6 +138,6 @@ class BayesianSamplingAlgorithm(SamplingAlgorithm):
         return RestBayesianSamplingAlgorithm()
 
     @classmethod
-    # pylint: disable=unused-argument
+    
     def _from_rest_object(cls, obj: RestBayesianSamplingAlgorithm) -> "BayesianSamplingAlgorithm":
         return cls()

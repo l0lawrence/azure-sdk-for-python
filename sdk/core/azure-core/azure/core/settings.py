@@ -121,7 +121,7 @@ def _get_opencensus_span() -> Optional[Type[AbstractSpan]]:
     :returns: OpenCensusSpan type or None
     """
     try:
-        from azure.core.tracing.ext.opencensus_span import (  # pylint:disable=redefined-outer-name
+        from azure.core.tracing.ext.opencensus_span import (  
             OpenCensusSpan,
         )
 
@@ -137,7 +137,7 @@ def _get_opentelemetry_span() -> Optional[Type[AbstractSpan]]:
     :returns: OpenTelemetrySpan type or None
     """
     try:
-        from azure.core.tracing.ext.opentelemetry_span import (  # pylint:disable=redefined-outer-name
+        from azure.core.tracing.ext.opentelemetry_span import (  
             OpenTelemetrySpan,
         )
 

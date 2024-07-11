@@ -14,13 +14,13 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING, Union
 import msrest.serialization
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from .. import models as _models
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
     from typing import MutableMapping  # type: ignore
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 
 
 class AlertResultList(msrest.serialization.Model):
@@ -426,7 +426,7 @@ class MetricFeedback(msrest.serialization.Model):
         self.dimension_key = dimension_key
 
 
-class AnomalyFeedback(MetricFeedback):  # pylint: disable=too-many-instance-attributes
+class AnomalyFeedback(MetricFeedback):  
     """AnomalyFeedback.
 
     Variables are only populated by the server, and will be ignored when sending a request.
@@ -3737,7 +3737,7 @@ class TopNGroupScope(msrest.serialization.Model):
         self.min_top_count = min_top_count
 
 
-class WebNotificationHook(NotificationHook):  # pylint: disable=too-many-instance-attributes
+class WebNotificationHook(NotificationHook):  
     """WebNotificationHook.
 
     Variables are only populated by the server, and will be ignored when sending a request.

@@ -41,7 +41,7 @@ class MapsRenderClientBase:
         self._render_client = self._maps_client.render
 
     def __enter__(self):
-        self._maps_client.__enter__()  # pylint:disable=no-member
+        self._maps_client.__enter__()  
         return self
 
     def __exit__(self, *args):

@@ -419,7 +419,7 @@ class FeatureSetOperations(_ScopeDependentOperations):
         )
 
     def _validate_and_get_feature_set_spec(self, featureset: FeatureSet) -> FeaturesetSpecMetadata:
-        # pylint: disable=no-member
+        
         if not (featureset.specification and featureset.specification.path):
             msg = "Missing FeatureSet specification path. Path is required for feature set."
             raise ValidationException(

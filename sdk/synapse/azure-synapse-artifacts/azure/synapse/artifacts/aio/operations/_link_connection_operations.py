@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -317,7 +317,7 @@ class LinkConnectionOperations:
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete(  # pylint: disable=inconsistent-return-statements
+    async def delete(  
         self, link_connection_name: str, **kwargs: Any
     ) -> None:
         """Delete a link connection.
@@ -369,7 +369,7 @@ class LinkConnectionOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def edit_tables(  # pylint: disable=inconsistent-return-statements
+    async def edit_tables(  
         self, link_connection_name: str, link_tables: Optional[List[_models.LinkTableRequest]] = None, **kwargs: Any
     ) -> None:
         """Edit tables for a link connection.
@@ -429,7 +429,7 @@ class LinkConnectionOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def start(  # pylint: disable=inconsistent-return-statements
+    async def start(  
         self, link_connection_name: str, **kwargs: Any
     ) -> None:
         """Start a link connection. It may take a few minutes from Starting to Running, monitor the status
@@ -482,7 +482,7 @@ class LinkConnectionOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def stop(  # pylint: disable=inconsistent-return-statements
+    async def stop(  
         self, link_connection_name: str, **kwargs: Any
     ) -> None:
         """Stop a link connection. It may take a few minutes from Stopping to stopped, monitor the status
@@ -766,7 +766,7 @@ class LinkConnectionOperations:
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def update_landing_zone_credential(  # pylint: disable=inconsistent-return-statements
+    async def update_landing_zone_credential(  
         self, link_connection_name: str, sas_token: Optional[_models.SecureString] = None, **kwargs: Any
     ) -> None:
         """Update landing zone credential of a link connection.
@@ -826,7 +826,7 @@ class LinkConnectionOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def pause(  # pylint: disable=inconsistent-return-statements
+    async def pause(  
         self, link_connection_name: str, **kwargs: Any
     ) -> None:
         """Pause a link connection. It may take a few minutes from Pausing to Paused, monitor the status
@@ -879,7 +879,7 @@ class LinkConnectionOperations:
             return cls(pipeline_response, None, {})  # type: ignore
 
     @distributed_trace_async
-    async def resume(  # pylint: disable=inconsistent-return-statements
+    async def resume(  
         self, link_connection_name: str, **kwargs: Any
     ) -> None:
         """Resume a link connection. It may take a few minutes from Resuming to Running, monitor the

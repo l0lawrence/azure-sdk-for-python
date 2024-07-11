@@ -11,11 +11,11 @@ import zlib
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
+    from typing import MutableMapping  # type: ignore  
 
 
 _LOGGER = logging.getLogger(__name__)
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+JSON = MutableMapping[str, Any]  
 
 MAX_CHUNK_SIZE_BYTES = 1024 * 1024  # 1 MiB
 GZIP_MAGIC_NUMBER = b"\x1f\x8b"

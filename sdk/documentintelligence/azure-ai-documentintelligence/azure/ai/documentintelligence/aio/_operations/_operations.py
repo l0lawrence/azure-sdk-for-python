@@ -54,14 +54,14 @@ from .._vendor import DocumentIntelligenceAdministrationClientMixinABC, Document
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
 
 class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinABC):  # pylint: disable=name-too-long
-    async def _analyze_document_initial(  # pylint: disable=inconsistent-return-statements
+    async def _analyze_document_initial(  
         self,
         model_id: str,
         analyze_request: Optional[Union[_models.AnalyzeDocumentRequest, JSON, IO[bytes]]] = None,
@@ -153,7 +153,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Analyzes document with document model.
 
         :param model_id: Unique document model name. Required.
@@ -931,7 +931,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Analyzes document with document model.
 
         :param model_id: Unique document model name. Required.
@@ -1700,7 +1700,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Analyzes document with document model.
 
         :param model_id: Unique document model name. Required.
@@ -2468,7 +2468,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         output_content_format: Optional[Union[str, _models.ContentFormat]] = None,
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Analyzes document with document model.
 
         :param model_id: Unique document model name. Required.
@@ -3292,7 +3292,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
             self._client, raw_result, get_long_running_output, polling_method  # type: ignore
         )
 
-    async def _classify_document_initial(  # pylint: disable=inconsistent-return-statements
+    async def _classify_document_initial(  
         self,
         classifier_id: str,
         classify_request: Union[_models.ClassifyDocumentRequest, JSON, IO[bytes]],
@@ -3369,7 +3369,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Classifies document with document classifier.
 
         :param classifier_id: Unique document classifier name. Required.
@@ -4130,7 +4130,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Classifies document with document classifier.
 
         :param classifier_id: Unique document classifier name. Required.
@@ -4882,7 +4882,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Classifies document with document classifier.
 
         :param classifier_id: Unique document classifier name. Required.
@@ -5633,7 +5633,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
         split: Optional[Union[str, _models.SplitMode]] = None,
         **kwargs: Any
     ) -> AsyncLROPoller[_models.AnalyzeResult]:
-        # pylint: disable=line-too-long
+        
         """Classifies document with document classifier.
 
         :param classifier_id: Unique document classifier name. Required.
@@ -6444,7 +6444,7 @@ class DocumentIntelligenceClientOperationsMixin(DocumentIntelligenceClientMixinA
 class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disable=name-too-long
     DocumentIntelligenceAdministrationClientMixinABC
 ):
-    async def _build_document_model_initial(  # pylint: disable=inconsistent-return-statements
+    async def _build_document_model_initial(  
         self, build_request: Union[_models.BuildDocumentModelRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         error_map: MutableMapping[int, Type[HttpResponseError]] = {
@@ -6505,7 +6505,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_document_model(
         self, build_request: _models.BuildDocumentModelRequest, *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document analysis model.
 
         :param build_request: Build request parameters. Required.
@@ -6613,7 +6613,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_document_model(
         self, build_request: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document analysis model.
 
         :param build_request: Build request parameters. Required.
@@ -6700,7 +6700,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_document_model(
         self, build_request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document analysis model.
 
         :param build_request: Build request parameters. Required.
@@ -6787,7 +6787,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_document_model(
         self, build_request: Union[_models.BuildDocumentModelRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document analysis model.
 
         :param build_request: Build request parameters. Is one of the following types:
@@ -6945,7 +6945,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
             self._client, raw_result, get_long_running_output, polling_method  # type: ignore
         )
 
-    async def _compose_model_initial(  # pylint: disable=inconsistent-return-statements
+    async def _compose_model_initial(  
         self, compose_request: Union[_models.ComposeDocumentModelRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         error_map: MutableMapping[int, Type[HttpResponseError]] = {
@@ -7010,7 +7010,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Creates a new document model from document types of existing document models.
 
         :param compose_request: Compose request parameters. Required.
@@ -7112,7 +7112,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_compose_model(
         self, compose_request: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Creates a new document model from document types of existing document models.
 
         :param compose_request: Compose request parameters. Required.
@@ -7199,7 +7199,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_compose_model(
         self, compose_request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Creates a new document model from document types of existing document models.
 
         :param compose_request: Compose request parameters. Required.
@@ -7286,7 +7286,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_compose_model(
         self, compose_request: Union[_models.ComposeDocumentModelRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Creates a new document model from document types of existing document models.
 
         :param compose_request: Compose request parameters. Is one of the following types:
@@ -7446,7 +7446,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.CopyAuthorization:
-        # pylint: disable=line-too-long
+        
         """Generates authorization to copy a document model to this location with
         specified modelId and optional description.
 
@@ -7491,7 +7491,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def authorize_model_copy(
         self, authorize_copy_request: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.CopyAuthorization:
-        # pylint: disable=line-too-long
+        
         """Generates authorization to copy a document model to this location with
         specified modelId and optional description.
 
@@ -7526,7 +7526,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def authorize_model_copy(
         self, authorize_copy_request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.CopyAuthorization:
-        # pylint: disable=line-too-long
+        
         """Generates authorization to copy a document model to this location with
         specified modelId and optional description.
 
@@ -7561,7 +7561,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def authorize_model_copy(
         self, authorize_copy_request: Union[_models.AuthorizeCopyRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.CopyAuthorization:
-        # pylint: disable=line-too-long
+        
         """Generates authorization to copy a document model to this location with
         specified modelId and optional description.
 
@@ -7657,7 +7657,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
         return deserialized  # type: ignore
 
-    async def _copy_model_to_initial(  # pylint: disable=inconsistent-return-statements
+    async def _copy_model_to_initial(  
         self, model_id: str, copy_to_request: Union[_models.CopyAuthorization, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         error_map: MutableMapping[int, Type[HttpResponseError]] = {
@@ -7724,7 +7724,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Copies document model to the target resource, region, and modelId.
 
         :param model_id: Unique document model name. Required.
@@ -7827,7 +7827,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_copy_model_to(
         self, model_id: str, copy_to_request: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Copies document model to the target resource, region, and modelId.
 
         :param model_id: Unique document model name. Required.
@@ -7916,7 +7916,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_copy_model_to(
         self, model_id: str, copy_to_request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Copies document model to the target resource, region, and modelId.
 
         :param model_id: Unique document model name. Required.
@@ -8005,7 +8005,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_copy_model_to(
         self, model_id: str, copy_to_request: Union[_models.CopyAuthorization, JSON, IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentModelDetails]:
-        # pylint: disable=line-too-long
+        
         """Copies document model to the target resource, region, and modelId.
 
         :param model_id: Unique document model name. Required.
@@ -8161,7 +8161,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace_async
     async def get_model(self, model_id: str, **kwargs: Any) -> _models.DocumentModelDetails:
-        # pylint: disable=line-too-long
+        
         """Gets detailed document model information.
 
         :param model_id: Unique document model name. Required.
@@ -8293,7 +8293,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace
     def list_models(self, **kwargs: Any) -> AsyncIterable["_models.DocumentModelDetails"]:
-        # pylint: disable=line-too-long
+        
         """List all document models.
 
         :return: An iterator like instance of DocumentModelDetails
@@ -8447,7 +8447,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete_model(  # pylint: disable=inconsistent-return-statements
+    async def delete_model(  
         self, model_id: str, **kwargs: Any
     ) -> None:
         """Deletes document model.
@@ -8506,7 +8506,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace_async
     async def get_resource_info(self, **kwargs: Any) -> _models.ResourceDetails:
-        # pylint: disable=line-too-long
+        
         """Return information about the current resource.
 
         :return: ResourceDetails. The ResourceDetails is compatible with MutableMapping
@@ -8581,7 +8581,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace_async
     async def get_operation(self, operation_id: str, **kwargs: Any) -> _models.OperationDetails:
-        # pylint: disable=line-too-long
+        
         """Gets operation info.
 
         :param operation_id: Operation ID. Required.
@@ -8940,7 +8940,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace
     def list_operations(self, **kwargs: Any) -> AsyncIterable["_models.OperationDetails"]:
-        # pylint: disable=line-too-long
+        
         """Lists all operations.
 
         :return: An iterator like instance of OperationDetails
@@ -9320,7 +9320,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
         return AsyncItemPaged(get_next, extract_data)
 
-    async def _build_classifier_initial(  # pylint: disable=inconsistent-return-statements
+    async def _build_classifier_initial(  
         self, build_request: Union[_models.BuildDocumentClassifierRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
         error_map: MutableMapping[int, Type[HttpResponseError]] = {
@@ -9385,7 +9385,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         content_type: str = "application/json",
         **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentClassifierDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document classifier.
 
         :param build_request: Build request parameters. Required.
@@ -9474,7 +9474,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_classifier(
         self, build_request: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentClassifierDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document classifier.
 
         :param build_request: Build request parameters. Required.
@@ -9537,7 +9537,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_classifier(
         self, build_request: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentClassifierDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document classifier.
 
         :param build_request: Build request parameters. Required.
@@ -9600,7 +9600,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
     async def begin_build_classifier(
         self, build_request: Union[_models.BuildDocumentClassifierRequest, JSON, IO[bytes]], **kwargs: Any
     ) -> AsyncLROPoller[_models.DocumentClassifierDetails]:
-        # pylint: disable=line-too-long
+        
         """Builds a custom document classifier.
 
         :param build_request: Build request parameters. Is one of the following types:
@@ -9741,7 +9741,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace_async
     async def get_classifier(self, classifier_id: str, **kwargs: Any) -> _models.DocumentClassifierDetails:
-        # pylint: disable=line-too-long
+        
         """Gets detailed document classifier information.
 
         :param classifier_id: Unique document classifier name. Required.
@@ -9850,7 +9850,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
 
     @distributed_trace
     def list_classifiers(self, **kwargs: Any) -> AsyncIterable["_models.DocumentClassifierDetails"]:
-        # pylint: disable=line-too-long
+        
         """List all document classifiers.
 
         :return: An iterator like instance of DocumentClassifierDetails
@@ -9980,7 +9980,7 @@ class DocumentIntelligenceAdministrationClientOperationsMixin(  # pylint: disabl
         return AsyncItemPaged(get_next, extract_data)
 
     @distributed_trace_async
-    async def delete_classifier(  # pylint: disable=inconsistent-return-statements
+    async def delete_classifier(  
         self, classifier_id: str, **kwargs: Any
     ) -> None:
         """Deletes document classifier.

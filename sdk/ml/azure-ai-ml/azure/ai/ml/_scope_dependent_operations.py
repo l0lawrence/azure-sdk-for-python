@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=protected-access
+
 
 import logging
 from typing import Callable, Dict, Optional, TypeVar, cast

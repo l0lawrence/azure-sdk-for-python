@@ -36,7 +36,7 @@ from ._constants import (
 
 
 if TYPE_CHECKING:
-    # pylint: disable=ungrouped-imports
+    
     from ._transport._base import AmqpTransport
     from ._pyamqp.message import Message as pyamqp_Message
     try:
@@ -85,7 +85,7 @@ class UTC(datetime.tzinfo):
 
 
 try:
-    from datetime import timezone  # pylint: disable=ungrouped-imports
+    from datetime import timezone  
 
     TZ_UTC = timezone.utc  # type: ignore
 except ImportError:
@@ -147,7 +147,7 @@ def set_event_partition_key(
         annotations = {}
     annotations[
         amqp_transport.PROP_PARTITION_KEY_AMQP_SYMBOL
-    ] = partition_key  # pylint:disable=protected-access
+    ] = partition_key  
     if not raw_message.header:
         raw_message.header = AmqpMessageHeader(header=True)
     else:
@@ -267,7 +267,7 @@ def transform_outbound_single_message(
 
 
 def decode_with_recurse(data: Any, encoding: str="UTF-8") -> Any:
-    # pylint:disable=isinstance-second-argument-not-valid-type
+    
     """
     If data is of a compatible type, iterates through nested structure and decodes all binary
         strings with provided encoding.
@@ -284,7 +284,7 @@ def decode_with_recurse(data: Any, encoding: str="UTF-8") -> Any:
         return data.decode(encoding)
     if isinstance(
         data, Mapping
-    ):  # pylint:disable=isinstance-second-argument-not-valid-type
+    ):  
         decoded_mapping = {}
         for k, v in data.items():
             decoded_key = decode_with_recurse(k, encoding)
@@ -293,7 +293,7 @@ def decode_with_recurse(data: Any, encoding: str="UTF-8") -> Any:
         return decoded_mapping
     if isinstance(
         data, Iterable
-    ):  # pylint:disable=isinstance-second-argument-not-valid-type
+    ):  
         decoded_list = []
         for d in data:
             decoded_list.append(decode_with_recurse(d, encoding))

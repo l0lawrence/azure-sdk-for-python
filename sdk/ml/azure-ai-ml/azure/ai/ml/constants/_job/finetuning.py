@@ -3,7 +3,7 @@
 # ---------------------------------------------------------
 
 
-# pylint: disable=protected-access
+
 
 
 class FineTuningConstants:

@@ -24,11 +24,11 @@ from .operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials import TokenCredential
 
 
-class EasmClient:  # pylint: disable=client-accepts-api-version-keyword
+class EasmClient:  
     """Defender EASM discovers and maps your digital attack surface to provide an "outside-in"
     perspective using probes to discover assets. The assets are provided with detailed metadata
     associated, including vulnerabilities, configurations and web components, allowing customers to

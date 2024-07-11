@@ -21,7 +21,7 @@ def default(  # pylint: disable=inconsistent-return-statements
     if status_code == 200:
         return message.value
 
-    amqp_transport.handle_amqp_mgmt_error( # pylint: disable=protected-access
+    amqp_transport.handle_amqp_mgmt_error( 
         _LOGGER, "Service request failed.", condition, description, status_code
     )
 
@@ -35,7 +35,7 @@ def session_lock_renew_op(  # pylint: disable=inconsistent-return-statements
     if status_code == 200:
         return message.value
 
-    amqp_transport.handle_amqp_mgmt_error( # pylint: disable=protected-access
+    amqp_transport.handle_amqp_mgmt_error( 
         _LOGGER, "Session lock renew failed.", condition, description, status_code
     )
 
@@ -50,7 +50,7 @@ def message_lock_renew_op(  # pylint: disable=inconsistent-return-statements
         # TODO: will this always be body type ValueType?
         return message.value
 
-    amqp_transport.handle_amqp_mgmt_error( # pylint: disable=protected-access
+    amqp_transport.handle_amqp_mgmt_error( 
         _LOGGER, "Message lock renew failed.", condition, description, status_code
     )
 
@@ -71,7 +71,7 @@ def peek_op(  # pylint: disable=inconsistent-return-statements
     if status_code in [202, 204]:
         return []
 
-    amqp_transport.handle_amqp_mgmt_error( # pylint: disable=protected-access
+    amqp_transport.handle_amqp_mgmt_error( 
         _LOGGER, "Message peek failed.", condition, description, status_code
     )
 

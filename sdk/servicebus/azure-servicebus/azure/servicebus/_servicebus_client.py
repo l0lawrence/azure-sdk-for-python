@@ -295,7 +295,7 @@ class ServiceBusClient(object): # pylint: disable=client-accepts-api-version-key
                 :caption: Create a new instance of the ServiceBusSender from ServiceBusClient.
 
         """
-        # pylint: disable=protected-access
+        
 
         if self._entity_name and queue_name != self._entity_name:
             raise ValueError(
@@ -423,7 +423,7 @@ class ServiceBusClient(object): # pylint: disable=client-accepts-api-version-key
                 sub_queue
             ):  # If we got here and sub_queue is defined, it's an incorrect value or something unrelated.
                 raise
-        # pylint: disable=protected-access
+        
         handler = ServiceBusReceiver(
             fully_qualified_namespace=self.fully_qualified_namespace,
             entity_name=queue_name,
@@ -589,7 +589,7 @@ class ServiceBusClient(object): # pylint: disable=client-accepts-api-version-key
 
 
         """
-        # pylint: disable=protected-access
+        
 
         if self._entity_name and topic_name != self._entity_name:
             raise ValueError(

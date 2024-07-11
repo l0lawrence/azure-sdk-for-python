@@ -84,7 +84,7 @@ class EventProcessor(
         self._consumer_group = consumer_group
         self._eventhub_client = eventhub_client
         self._namespace = (
-            eventhub_client._address.hostname  # pylint: disable=protected-access
+            eventhub_client._address.hostname  
         )
         self._eventhub_name = eventhub_client.eventhub_name
         self._event_handler = on_event
@@ -252,7 +252,7 @@ class EventProcessor(
                 if isinstance(event, list):
                     is_batch = True
 
-            with receive_context_manager(self._eventhub_client, links=links, start_time=self._last_received_time):  # pylint:disable=protected-access
+            with receive_context_manager(self._eventhub_client, links=links, start_time=self._last_received_time):  
                 self._last_received_time = time.time_ns()
 
             with process_context_manager(self._eventhub_client, links=links, is_batch=is_batch):

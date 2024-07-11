@@ -18,13 +18,13 @@ from ._configuration import ConversationAnalysisClientConfiguration
 from ._operations import ConversationAnalysisClientOperationsMixin
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from azure.core.credentials_async import AsyncTokenCredential
 
 
 class ConversationAnalysisClient(
     ConversationAnalysisClientOperationsMixin
-):  # pylint: disable=client-accepts-api-version-keyword
+):  
     """The language service conversations API is a suite of natural language processing (NLP) skills
     that can be used to analyze structured conversations (textual or spoken). Further documentation
     can be found in https://docs.microsoft.com/azure/cognitive-services/language-service/overview.

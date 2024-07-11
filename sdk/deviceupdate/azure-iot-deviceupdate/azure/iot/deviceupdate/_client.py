@@ -17,13 +17,13 @@ from ._serialization import Deserializer, Serializer
 from .operations import DeviceManagementOperations, DeviceUpdateOperations
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Dict
 
     from azure.core.credentials import TokenCredential
 
 
-class DeviceUpdateClient:  # pylint: disable=client-accepts-api-version-keyword
+class DeviceUpdateClient:  
     """Device Update for IoT Hub is an Azure service that enables customers to publish updates for
     their IoT devices to the cloud, and then deploy that update to their devices (approve updates
     to groups of devices managed and provisioned in IoT Hub). It leverages the proven security and

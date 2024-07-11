@@ -41,7 +41,7 @@ from typing import (
 from ..._common._constants import SchemaFormat
 
 from ._constants import JsonSchemaDraftIdentifier
-from ._utils import (  # pylint: disable=import-error
+from ._utils import (  
     create_message_content,
     parse_message,
     decode_content,

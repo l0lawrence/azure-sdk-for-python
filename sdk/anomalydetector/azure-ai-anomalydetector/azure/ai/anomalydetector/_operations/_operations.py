@@ -33,8 +33,8 @@ from .._vendor import AnomalyDetectorClientMixinABC, _format_url_section
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -875,7 +875,7 @@ class AnomalyDetectorClientOperationsMixin(AnomalyDetectorClientMixinABC):
         _headers = kwargs.pop("headers", {}) or {}
         _params = kwargs.pop("params", {}) or {}
 
-        cls: ClsType[_models._models.ModelList] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models._models.ModelList] = kwargs.pop("cls", None)  
 
         error_map = {
             401: ClientAuthenticationError,

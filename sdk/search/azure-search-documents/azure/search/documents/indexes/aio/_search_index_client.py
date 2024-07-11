@@ -69,7 +69,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
             )
 
     async def __aenter__(self) -> "SearchIndexClient":
-        await self._client.__aenter__()  # pylint:disable=no-member
+        await self._client.__aenter__()  
         return self
 
     async def __aexit__(self, *args: Any) -> None:
@@ -494,7 +494,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         kwargs["headers"] = self._merge_client_headers(kwargs.get("headers"))
         if select:
             kwargs["select"] = ",".join(select)
-        # pylint:disable=protected-access
+        
         return cast(AsyncItemPaged[SearchAlias], self._client.aliases.list(**kwargs))
 
     @distributed_trace
@@ -579,7 +579,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         """
         kwargs["headers"] = self._merge_client_headers(kwargs.get("headers"))
         result = await self._client.aliases.create(alias, **kwargs)
-        return result  # pylint:disable=protected-access
+        return result  
 
     @distributed_trace_async
     async def create_or_update_alias(
@@ -614,7 +614,7 @@ class SearchIndexClient(HeadersMixin):  # pylint:disable=too-many-public-methods
         result = await self._client.aliases.create_or_update(
             alias_name=alias.name, alias=alias, prefer="return=representation", error_map=error_map, **kwargs
         )
-        return result  # pylint:disable=protected-access
+        return result  
 
     @distributed_trace_async
     async def send_request(self, request: HttpRequest, *, stream: bool = False, **kwargs) -> AsyncHttpResponse:

@@ -7,7 +7,7 @@
 
 import os
 
-from typing import Union, Iterable, AnyStr, IO, Any, Dict  # pylint: disable=unused-import
+from typing import Union, Iterable, AnyStr, IO, Any, Dict  
 from ._version import VERSION
 from ._blob_client import BlobClient
 from ._container_client import ContainerClient
@@ -73,7 +73,7 @@ __version__ = VERSION
 def upload_blob_to_url(
         blob_url,  # type: str
         data,  # type: Union[Iterable[AnyStr], IO[AnyStr]]
-        credential=None,  # type: Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, "TokenCredential"]] # pylint: disable=line-too-long
+        credential=None,  # type: Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, "TokenCredential"]] 
         **kwargs):
     # type: (...) -> Dict[str, Any]
     """Upload data to a given URL
@@ -142,7 +142,7 @@ def _download_to_stream(client, handle, **kwargs):
 def download_blob_from_url(
         blob_url,  # type: str
         output,  # type: str
-        credential=None,  # type: Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, "TokenCredential"]] # pylint: disable=line-too-long
+        credential=None,  # type: Optional[Union[str, Dict[str, str], AzureNamedKeyCredential, AzureSasCredential, "TokenCredential"]] 
         **kwargs):
     # type: (...) -> None
     """Download the contents of a blob to a local file or stream.

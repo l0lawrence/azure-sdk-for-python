@@ -721,7 +721,7 @@ class CertificatePolicy(object):
         else:
             issuer_parameters = None
 
-        # pylint:disable=too-many-boolean-expressions
+        
         if (
             self.enabled is not None
             or self.created_on is not None

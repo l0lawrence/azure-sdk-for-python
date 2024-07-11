@@ -47,7 +47,7 @@ class _AsyncChunkDownloader(_ChunkDownloader):
 
     async def _update_progress(self, length):
         if self.progress_lock:
-            async with self.progress_lock:  # pylint: disable=not-async-context-manager
+            async with self.progress_lock:  
                 self.progress_total += length
         else:
             self.progress_total += length
@@ -57,7 +57,7 @@ class _AsyncChunkDownloader(_ChunkDownloader):
 
     async def _write_to_stream(self, chunk_data, chunk_start):
         if self.stream_lock:
-            async with self.stream_lock:  # pylint: disable=not-async-context-manager
+            async with self.stream_lock:  
                 self.stream.seek(self.stream_start + (chunk_start - self.start_index))
                 self.stream.write(chunk_data)
         else:

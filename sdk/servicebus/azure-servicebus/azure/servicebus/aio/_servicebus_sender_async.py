@@ -39,7 +39,7 @@ from ._async_utils import create_authentication
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
     try:
-        # pylint:disable=unused-import
+        
         from uamqp.async_ops.client_async import SendClientAsync as uamqp_SendClientAsync
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAuthAsync
     except ImportError:
@@ -210,7 +210,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
         )
 
     async def _open(self):
-        # pylint: disable=protected-access
+        
         if self._running:
             return
         if self._handler:
@@ -272,7 +272,7 @@ class ServiceBusSender(BaseHandler, SenderMixin):
         """
         if kwargs:
             warnings.warn(f"Unsupported keyword args: {kwargs}")
-        # pylint: disable=protected-access
+        
 
         self._check_live()
         obj_messages = transform_outbound_messages(

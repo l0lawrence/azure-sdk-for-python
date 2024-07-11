@@ -139,7 +139,7 @@ class AsyncDocumentTranslationLROPollingMethod(AsyncLROBasePolling):
             return self._current_body.id
         return self._get_id_from_headers()
 
-    # pylint: disable=arguments-differ
+    
     def from_continuation_token(self, continuation_token: str, **kwargs: Any) -> Tuple:  # type: ignore[override]
         try:
             client = kwargs["client"]
@@ -196,7 +196,7 @@ class DocumentTranslationClient:
     def __init__(
         self,
         endpoint: str,
-        credential: Union[AzureKeyCredential, AsyncTokenCredential],  # pylint: disable=used-before-assignment
+        credential: Union[AzureKeyCredential, AsyncTokenCredential],  
         **kwargs: Any
     ) -> None:
         """DocumentTranslationClient is your interface to the Document Translation service.

@@ -129,8 +129,8 @@ from ...operations._operations import (
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 T = TypeVar("T")
 ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
@@ -162,7 +162,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update an entity.
         Existing entity is matched using its unique guid if
         supplied or by its unique attributes eg: qualifiedName.
@@ -577,7 +577,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update an entity.
         Existing entity is matched using its unique guid if
         supplied or by its unique attributes eg: qualifiedName.
@@ -789,7 +789,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update an entity.
         Existing entity is matched using its unique guid if
         supplied or by its unique attributes eg: qualifiedName.
@@ -1000,7 +1000,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         collection_id: Optional[str] = None,
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update an entity.
         Existing entity is matched using its unique guid if
         supplied or by its unique attributes eg: qualifiedName.
@@ -1469,7 +1469,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         ignore_relationships: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasEntitiesWithExtInfo:
-        # pylint: disable=line-too-long
+        
         """List entities in bulk identified by its GUIDs.
 
         :keyword guid: An array of GUIDs of entities to list. Required.
@@ -1762,7 +1762,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update entities in bulk.
         Existing entity is matched using its unique
         guid if supplied or by its unique attributes eg: qualifiedName.
@@ -2189,7 +2189,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update entities in bulk.
         Existing entity is matched using its unique
         guid if supplied or by its unique attributes eg: qualifiedName.
@@ -2402,7 +2402,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update entities in bulk.
         Existing entity is matched using its unique
         guid if supplied or by its unique attributes eg: qualifiedName.
@@ -2614,7 +2614,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         business_attribute_update_behavior: Optional[Union[str, _models.BusinessAttributeUpdateBehavior]] = None,
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Create or update entities in bulk.
         Existing entity is matched using its unique
         guid if supplied or by its unique attributes eg: qualifiedName.
@@ -3088,7 +3088,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def batch_delete(self, *, guid: List[str], **kwargs: Any) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Delete a list of entities in bulk identified by their GUIDs or unique
         attributes.
 
@@ -3320,10 +3320,10 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def add_classification(  # pylint: disable=inconsistent-return-statements
+    async def add_classification(  
         self, body: _models.ClassificationAssociateOptions, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Associate a classification to multiple entities in bulk.
 
         :param body: Required.
@@ -3370,7 +3370,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_classification(  # pylint: disable=inconsistent-return-statements
+    async def add_classification(  
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Associate a classification to multiple entities in bulk.
@@ -3386,7 +3386,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_classification(  # pylint: disable=inconsistent-return-statements
+    async def add_classification(  
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Associate a classification to multiple entities in bulk.
@@ -3402,10 +3402,10 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_classification(  # pylint: disable=inconsistent-return-statements
+    async def add_classification(  
         self, body: Union[_models.ClassificationAssociateOptions, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Associate a classification to multiple entities in bulk.
 
         :param body: Is one of the following types: ClassificationAssociateOptions, JSON, IO[bytes]
@@ -3506,7 +3506,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         ignore_relationships: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasEntityWithExtInfo:
-        # pylint: disable=line-too-long
+        
         """Get complete definition of an entity given its GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -3780,7 +3780,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def update_attribute_by_id(
         self, guid: str, body: Any, *, name: str, **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Update entity partially - create or update entity attribute identified by its
         GUID.
         Supports only primitive attribute type and entity references.
@@ -4026,7 +4026,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def delete(self, guid: str, **kwargs: Any) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Delete an entity identified by its GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -4260,7 +4260,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def get_classification(
         self, guid: str, classification_name: str, **kwargs: Any
     ) -> _models.AtlasClassification:
-        # pylint: disable=line-too-long
+        
         """Get classification for a given entity represented by a GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -4347,7 +4347,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def remove_classification(  # pylint: disable=inconsistent-return-statements
+    async def remove_classification(  
         self, guid: str, classification_name: str, **kwargs: Any
     ) -> None:
         """Delete a given classification from an existing entity represented by a GUID.
@@ -4403,7 +4403,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_classifications(self, guid: str, **kwargs: Any) -> _models.AtlasClassifications:
-        # pylint: disable=line-too-long
+        
         """List classifications for a given entity represented by a GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -4476,7 +4476,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def add_classifications(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications(  
         self,
         guid: str,
         body: List[_models.AtlasClassification],
@@ -4484,7 +4484,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Add classifications to an existing entity represented by a GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -4530,7 +4530,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_classifications(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications(  
         self, guid: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Add classifications to an existing entity represented by a GUID.
@@ -4548,7 +4548,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_classifications(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications(  
         self, guid: str, body: Union[List[_models.AtlasClassification], IO[bytes]], **kwargs: Any
     ) -> None:
         """Add classifications to an existing entity represented by a GUID.
@@ -4613,7 +4613,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def update_classifications(  # pylint: disable=inconsistent-return-statements
+    async def update_classifications(  
         self,
         guid: str,
         body: List[_models.AtlasClassification],
@@ -4621,7 +4621,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Update classifications to an existing entity represented by a guid.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -4667,7 +4667,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def update_classifications(  # pylint: disable=inconsistent-return-statements
+    async def update_classifications(  
         self, guid: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Update classifications to an existing entity represented by a guid.
@@ -4685,7 +4685,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def update_classifications(  # pylint: disable=inconsistent-return-statements
+    async def update_classifications(  
         self, guid: str, body: Union[List[_models.AtlasClassification], IO[bytes]], **kwargs: Any
     ) -> None:
         """Update classifications to an existing entity represented by a guid.
@@ -4759,7 +4759,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         attribute: Optional[str] = None,
         **kwargs: Any
     ) -> _models.AtlasEntityWithExtInfo:
-        # pylint: disable=line-too-long
+        
         """Get complete definition of an entity given its type and unique attribute.
 
         In
@@ -5057,7 +5057,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Update entity partially - Allow a subset of attributes to be updated on an
         entity which is identified by its type and unique attribute eg:
         Referenceable.qualifiedName. Null updates are not possible.
@@ -5478,7 +5478,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Update entity partially - Allow a subset of attributes to be updated on an
         entity which is identified by its type and unique attribute eg:
         Referenceable.qualifiedName. Null updates are not possible.
@@ -5696,7 +5696,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Update entity partially - Allow a subset of attributes to be updated on an
         entity which is identified by its type and unique attribute eg:
         Referenceable.qualifiedName. Null updates are not possible.
@@ -5913,7 +5913,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         attribute: Optional[str] = None,
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Update entity partially - Allow a subset of attributes to be updated on an
         entity which is identified by its type and unique attribute eg:
         Referenceable.qualifiedName. Null updates are not possible.
@@ -6382,7 +6382,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def delete_by_unique_attribute(
         self, type_name: str, *, attribute: Optional[str] = None, **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Delete an entity identified by its type and unique attributes.
         In addition to
         the typeName path parameter, attribute key-value pair(s) can be provided in the
@@ -6629,7 +6629,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def remove_classification_by_unique_attribute(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def remove_classification_by_unique_attribute(  # pylint: disable=name-too-long
         self, type_name: str, classification_name: str, *, attribute: Optional[str] = None, **kwargs: Any
     ) -> None:
         """Delete a given classification from an entity identified by its type and unique
@@ -6690,7 +6690,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def add_classifications_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications_by_unique_attribute(  
         self,
         type_name: str,
         body: List[_models.AtlasClassification],
@@ -6699,7 +6699,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Add classification to the entity identified by its type and unique attributes.
 
         :param type_name: The name of the type. Required.
@@ -6749,7 +6749,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_classifications_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications_by_unique_attribute(  
         self,
         type_name: str,
         body: IO[bytes],
@@ -6777,7 +6777,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_classifications_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_classifications_by_unique_attribute(  
         self,
         type_name: str,
         body: Union[List[_models.AtlasClassification], IO[bytes]],
@@ -6852,7 +6852,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def update_classifications_unique_by_attribute(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def update_classifications_unique_by_attribute(  # pylint: disable=name-too-long
         self,
         type_name: str,
         body: List[_models.AtlasClassification],
@@ -6861,7 +6861,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Update classification on an entity identified by its type and unique attributes.
 
         :param type_name: The name of the type. Required.
@@ -6911,7 +6911,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def update_classifications_unique_by_attribute(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def update_classifications_unique_by_attribute(  # pylint: disable=name-too-long
         self,
         type_name: str,
         body: IO[bytes],
@@ -6939,7 +6939,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def update_classifications_unique_by_attribute(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def update_classifications_unique_by_attribute(  # pylint: disable=name-too-long
         self,
         type_name: str,
         body: Union[List[_models.AtlasClassification], IO[bytes]],
@@ -7017,7 +7017,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def batch_set_classifications(
         self, body: _models.AtlasEntityHeaders, *, content_type: str = "application/json", **kwargs: Any
     ) -> List[str]:
-        # pylint: disable=line-too-long
+        
         """Set classifications on entities in bulk.
 
         :param body: Required.
@@ -7173,7 +7173,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def batch_set_classifications(
         self, body: Union[_models.AtlasEntityHeaders, JSON, IO[bytes]], **kwargs: Any
     ) -> List[str]:
-        # pylint: disable=line-too-long
+        
         """Set classifications on entities in bulk.
 
         :param body: Is one of the following types: AtlasEntityHeaders, JSON, IO[bytes] Required.
@@ -7646,7 +7646,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_header(self, guid: str, **kwargs: Any) -> _models.AtlasEntityHeader:
-        # pylint: disable=line-too-long
+        
         """Get entity header given its GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -7776,7 +7776,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def remove_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata(  
         self, guid: str, body: Dict[str, Dict[str, Any]], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove business metadata from an entity.
@@ -7804,7 +7804,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def remove_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata(  
         self, guid: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Remove business metadata from an entity.
@@ -7822,7 +7822,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def remove_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata(  
         self, guid: str, body: Union[Dict[str, Dict[str, Any]], IO[bytes]], **kwargs: Any
     ) -> None:
         """Remove business metadata from an entity.
@@ -7887,7 +7887,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def add_or_update_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def add_or_update_business_metadata(  
         self,
         guid: str,
         body: Dict[str, Dict[str, Any]],
@@ -7924,7 +7924,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_or_update_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def add_or_update_business_metadata(  
         self,
         guid: str,
         body: IO[bytes],
@@ -7951,7 +7951,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_or_update_business_metadata(  # pylint: disable=inconsistent-return-statements
+    async def add_or_update_business_metadata(  
         self,
         guid: str,
         body: Union[Dict[str, Dict[str, Any]], IO[bytes]],
@@ -8025,7 +8025,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def remove_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata_attributes(  
         self,
         business_metadata_name: str,
         guid: str,
@@ -8059,7 +8059,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def remove_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata_attributes(  
         self,
         business_metadata_name: str,
         guid: str,
@@ -8085,7 +8085,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def remove_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements
+    async def remove_business_metadata_attributes(  
         self, business_metadata_name: str, guid: str, body: Union[Dict[str, Any], IO[bytes]], **kwargs: Any
     ) -> None:
         """Delete business metadata attributes from an entity.
@@ -8153,7 +8153,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def add_or_update_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def add_or_update_business_metadata_attributes(  # pylint: disable=name-too-long
         self,
         business_metadata_name: str,
         guid: str,
@@ -8187,7 +8187,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_or_update_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def add_or_update_business_metadata_attributes(  # pylint: disable=name-too-long
         self,
         business_metadata_name: str,
         guid: str,
@@ -8213,7 +8213,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_or_update_business_metadata_attributes(  # pylint: disable=inconsistent-return-statements,name-too-long
+    async def add_or_update_business_metadata_attributes(  # pylint: disable=name-too-long
         self, business_metadata_name: str, guid: str, body: Union[Dict[str, Any], IO[bytes]], **kwargs: Any
     ) -> None:
         """Add or update business metadata attributes.
@@ -8509,7 +8509,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def remove_labels(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels(  
         self, guid: str, body: Optional[List[str]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Delete given labels to a given entity.
@@ -8535,7 +8535,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def remove_labels(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels(  
         self, guid: str, body: Optional[IO[bytes]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Delete given labels to a given entity.
@@ -8553,7 +8553,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def remove_labels(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels(  
         self, guid: str, body: Optional[Union[List[str], IO[bytes]]] = None, **kwargs: Any
     ) -> None:
         """Delete given labels to a given entity.
@@ -8621,7 +8621,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def set_labels(  # pylint: disable=inconsistent-return-statements
+    async def set_labels(  
         self, guid: str, body: Optional[List[str]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Set labels to a given entity.
@@ -8647,7 +8647,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def set_labels(  # pylint: disable=inconsistent-return-statements
+    async def set_labels(  
         self, guid: str, body: Optional[IO[bytes]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Set labels to a given entity.
@@ -8665,7 +8665,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def set_labels(  # pylint: disable=inconsistent-return-statements
+    async def set_labels(  
         self, guid: str, body: Optional[Union[List[str], IO[bytes]]] = None, **kwargs: Any
     ) -> None:
         """Set labels to a given entity.
@@ -8733,7 +8733,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def add_label(  # pylint: disable=inconsistent-return-statements
+    async def add_label(  
         self, guid: str, body: Optional[List[str]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Add given labels to a given entity.
@@ -8759,7 +8759,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_label(  # pylint: disable=inconsistent-return-statements
+    async def add_label(  
         self, guid: str, body: Optional[IO[bytes]] = None, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Add given labels to a given entity.
@@ -8777,7 +8777,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_label(  # pylint: disable=inconsistent-return-statements
+    async def add_label(  
         self, guid: str, body: Optional[Union[List[str], IO[bytes]]] = None, **kwargs: Any
     ) -> None:
         """Add given labels to a given entity.
@@ -8845,7 +8845,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def remove_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -8893,7 +8893,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def remove_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[IO[bytes]] = None,
@@ -8933,7 +8933,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def remove_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def remove_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[Union[List[str], IO[bytes]]] = None,
@@ -9023,7 +9023,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def set_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def set_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -9073,7 +9073,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def set_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def set_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[IO[bytes]] = None,
@@ -9115,7 +9115,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def set_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def set_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[Union[List[str], IO[bytes]]] = None,
@@ -9207,7 +9207,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def add_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[List[str]] = None,
@@ -9257,7 +9257,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def add_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[IO[bytes]] = None,
@@ -9299,7 +9299,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def add_labels_by_unique_attribute(  # pylint: disable=inconsistent-return-statements
+    async def add_labels_by_unique_attribute(  
         self,
         type_name: str,
         body: Optional[Union[List[str], IO[bytes]]] = None,
@@ -9399,7 +9399,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Move existing entities to the target collection.
 
         :param body: Required.
@@ -9600,7 +9600,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def move_entities_to_collection(
         self, body: JSON, *, collection_id: str, content_type: str = "application/json", **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Move existing entities to the target collection.
 
         :param body: Required.
@@ -9793,7 +9793,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def move_entities_to_collection(
         self, body: IO[bytes], *, collection_id: str, content_type: str = "application/json", **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Move existing entities to the target collection.
 
         :param body: Required.
@@ -9986,7 +9986,7 @@ class EntityOperations:  # pylint: disable=too-many-public-methods
     async def move_entities_to_collection(
         self, body: Union[_models.MoveEntitiesOptions, JSON, IO[bytes]], *, collection_id: str, **kwargs: Any
     ) -> _models.EntityMutationResult:
-        # pylint: disable=line-too-long
+        
         """Move existing entities to the target collection.
 
         :param body: Is one of the following types: MoveEntitiesOptions, JSON, IO[bytes] Required.
@@ -10265,7 +10265,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         ignore_terms_and_categories: Optional[bool] = None,
         **kwargs: Any
     ) -> List[_models.AtlasGlossary]:
-        # pylint: disable=line-too-long
+        
         """Get all glossaries. Recommend using limit/offset to get pagination result.
         Recommend using 'ignoreTermsAndCategories=true' and fetch terms/categories
         separately using
@@ -10425,7 +10425,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create(
         self, body: _models.AtlasGlossary, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Create a glossary.
 
         :param body: Required.
@@ -10585,7 +10585,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Create a glossary.
 
         :param body: Required.
@@ -10675,7 +10675,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Create a glossary.
 
         :param body: Required.
@@ -10763,7 +10763,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def create(self, body: Union[_models.AtlasGlossary, JSON, IO[bytes]], **kwargs: Any) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Create a glossary.
 
         :param body: Is one of the following types: AtlasGlossary, JSON, IO[bytes] Required.
@@ -10975,7 +10975,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_categories(
         self, body: List[_models.AtlasGlossaryCategory], *, content_type: str = "application/json", **kwargs: Any
     ) -> List[_models.AtlasGlossaryCategory]:
-        # pylint: disable=line-too-long
+        
         """Create glossary category in bulk.
 
         :param body: An array of glossary category definitions to be created. Required.
@@ -11181,7 +11181,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_categories(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> List[_models.AtlasGlossaryCategory]:
-        # pylint: disable=line-too-long
+        
         """Create glossary category in bulk.
 
         :param body: An array of glossary category definitions to be created. Required.
@@ -11294,7 +11294,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_categories(
         self, body: Union[List[_models.AtlasGlossaryCategory], IO[bytes]], **kwargs: Any
     ) -> List[_models.AtlasGlossaryCategory]:
-        # pylint: disable=line-too-long
+        
         """Create glossary category in bulk.
 
         :param body: An array of glossary category definitions to be created. Is either a
@@ -11460,7 +11460,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_category(
         self, body: _models.AtlasGlossaryCategory, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Create a glossary category.
 
         :param body: Required.
@@ -11644,7 +11644,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_category(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Create a glossary category.
 
         :param body: Required.
@@ -11746,7 +11746,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_category(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Create a glossary category.
 
         :param body: Required.
@@ -11848,7 +11848,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def create_category(
         self, body: Union[_models.AtlasGlossaryCategory, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Create a glossary category.
 
         :param body: Is one of the following types: AtlasGlossaryCategory, JSON, IO[bytes] Required.
@@ -12082,7 +12082,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_category(self, category_id: str, **kwargs: Any) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Get specific glossary category by its GUID.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -12232,7 +12232,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary category by its GUID.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -12418,7 +12418,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def update_category(
         self, category_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary category by its GUID.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -12522,7 +12522,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def update_category(
         self, category_id: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary category by its GUID.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -12626,7 +12626,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def update_category(
         self, category_id: str, body: Union[_models.AtlasGlossaryCategory, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary category by its GUID.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -12862,7 +12862,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete_category(  # pylint: disable=inconsistent-return-statements
+    async def delete_category(  
         self, category_id: str, **kwargs: Any
     ) -> None:
         """Delete a glossary category.
@@ -12917,7 +12917,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def partial_update_category(
         self, category_id: str, body: Dict[str, str], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the glossary category partially. So far we only supports partial
         updating shortDescription and longDescription for category.
 
@@ -13028,7 +13028,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def partial_update_category(
         self, category_id: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the glossary category partially. So far we only supports partial
         updating shortDescription and longDescription for category.
 
@@ -13134,7 +13134,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
     async def partial_update_category(
         self, category_id: str, body: Union[Dict[str, str], IO[bytes]], **kwargs: Any
     ) -> _models.AtlasGlossaryCategory:
-        # pylint: disable=line-too-long
+        
         """Update the glossary category partially. So far we only supports partial
         updating shortDescription and longDescription for category.
 
@@ -13393,7 +13393,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.AtlasRelatedTermHeader]:
-        # pylint: disable=line-too-long
+        
         """Get all terms associated with the specific category.
 
         :param category_id: The globally unique identifier of the category. Required.
@@ -13485,7 +13485,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Create a glossary term.
 
         :param body: Required.
@@ -14178,7 +14178,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Create a glossary term.
 
         :param body: Required.
@@ -14538,7 +14538,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Create a glossary term.
 
         :param body: Required.
@@ -14897,7 +14897,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         include_term_hierarchy: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Create a glossary term.
 
         :param body: Is one of the following types: AtlasGlossaryTerm, JSON, IO[bytes] Required.
@@ -15636,7 +15636,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_term(self, term_id: str, **kwargs: Any) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Get a specific glossary term by its GUID.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -16039,7 +16039,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary term by its GUID.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -16735,7 +16735,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary term by its GUID.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -17098,7 +17098,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary term by its GUID.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -17460,7 +17460,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         include_term_hierarchy: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary term by its GUID.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -18202,7 +18202,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete_term(self, term_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete_term(self, term_id: str, **kwargs: Any) -> None:  
         """Delete a glossary term.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -18261,7 +18261,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the glossary term partially. So far we only supports partial updating
         shortDescription, longDescription, abbreviation, usage and status for term.
 
@@ -18631,7 +18631,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the glossary term partially. So far we only supports partial updating
         shortDescription, longDescription, abbreviation, usage and status for term.
 
@@ -18995,7 +18995,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         include_term_hierarchy: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasGlossaryTerm:
-        # pylint: disable=line-too-long
+        
         """Update the glossary term partially. So far we only supports partial updating
         shortDescription, longDescription, abbreviation, usage and status for term.
 
@@ -19414,7 +19414,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.AtlasGlossaryTerm]:
-        # pylint: disable=line-too-long
+        
         """Create glossary terms in bulk.
 
         :param body: An array of glossary term definitions to be created in bulk. Required.
@@ -20183,7 +20183,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> List[_models.AtlasGlossaryTerm]:
-        # pylint: disable=line-too-long
+        
         """Create glossary terms in bulk.
 
         :param body: An array of glossary term definitions to be created in bulk. Required.
@@ -20580,7 +20580,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         include_term_hierarchy: Optional[bool] = None,
         **kwargs: Any
     ) -> List[_models.AtlasGlossaryTerm]:
-        # pylint: disable=line-too-long
+        
         """Create glossary terms in bulk.
 
         :param body: An array of glossary term definitions to be created in bulk. Is either a
@@ -21034,7 +21034,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.AtlasRelatedObjectId]:
-        # pylint: disable=line-too-long
+        
         """List all related objects assigned with the specified term. Recommend using
         limit/offset to get pagination result.
 
@@ -21131,7 +21131,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def assign_term_to_entities(  # pylint: disable=inconsistent-return-statements
+    async def assign_term_to_entities(  
         self,
         term_id: str,
         body: List[_models.AtlasRelatedObjectId],
@@ -21139,7 +21139,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Assign the given term to the provided list of related objects. Recommend using
         small batches with multiple API calls.
 
@@ -21191,7 +21191,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def assign_term_to_entities(  # pylint: disable=inconsistent-return-statements
+    async def assign_term_to_entities(  
         self, term_id: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Assign the given term to the provided list of related objects. Recommend using
@@ -21215,7 +21215,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def assign_term_to_entities(  # pylint: disable=inconsistent-return-statements
+    async def assign_term_to_entities(  
         self, term_id: str, body: Union[List[_models.AtlasRelatedObjectId], IO[bytes]], **kwargs: Any
     ) -> None:
         """Assign the given term to the provided list of related objects. Recommend using
@@ -21286,7 +21286,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
             return cls(pipeline_response, None, {})  # type: ignore
 
     @overload
-    async def delete_term_assignment_from_entities(  # pylint: disable=inconsistent-return-statements
+    async def delete_term_assignment_from_entities(  
         self,
         term_id: str,
         body: List[_models.AtlasRelatedObjectId],
@@ -21294,7 +21294,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Delete the term assignment for the given list of related objects.
 
         :param term_id: The globally unique identifier for glossary term. Required.
@@ -21341,7 +21341,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def delete_term_assignment_from_entities(  # pylint: disable=inconsistent-return-statements
+    async def delete_term_assignment_from_entities(  
         self, term_id: str, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Delete the term assignment for the given list of related objects.
@@ -21360,7 +21360,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def delete_term_assignment_from_entities(  # pylint: disable=inconsistent-return-statements
+    async def delete_term_assignment_from_entities(  
         self, term_id: str, body: Union[List[_models.AtlasRelatedObjectId], IO[bytes]], **kwargs: Any
     ) -> None:
         """Delete the term assignment for the given list of related objects.
@@ -21434,7 +21434,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> Dict[str, List[_models.AtlasRelatedTermHeader]]:
-        # pylint: disable=line-too-long
+        
         """Get all related terms for a specific term by its GUID. Limit, offset, and sort
         parameters are currently not being enabled and won't work even they are passed.
 
@@ -21525,7 +21525,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get(self, glossary_id: str, **kwargs: Any) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Get a specific Glossary by its GUID.
 
         :param glossary_id: The globally unique identifier for glossary. Required.
@@ -21664,7 +21664,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary.
 
         :param glossary_id: The globally unique identifier for glossary. Required.
@@ -21835,7 +21835,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary.
 
         :param glossary_id: The globally unique identifier for glossary. Required.
@@ -21936,7 +21936,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary.
 
         :param glossary_id: The globally unique identifier for glossary. Required.
@@ -22036,7 +22036,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         ignore_terms_and_categories: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the given glossary.
 
         :param glossary_id: The globally unique identifier for glossary. Required.
@@ -22253,7 +22253,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete(self, glossary_id: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, glossary_id: str, **kwargs: Any) -> None:  
         """Delete a glossary. Will delete underlying terms/categories together. Recommend
         separate delete terms and categories.
 
@@ -22313,7 +22313,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.AtlasGlossaryCategory]:
-        # pylint: disable=line-too-long
+        
         """Get the categories belonging to a specific glossary. Recommend using
         limit/offset to get pagination result.
 
@@ -22568,7 +22568,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_detailed(self, glossary_id: str, **kwargs: Any) -> _models.AtlasGlossaryExtInfo:
-        # pylint: disable=line-too-long
+        
         """Get a specific glossary with detailed information. This API is not
         recommend.
 
@@ -23229,7 +23229,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the glossary partially. Some properties such as qualifiedName are not
         allowed to be updated.
 
@@ -23343,7 +23343,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         content_type: str = "application/json",
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the glossary partially. Some properties such as qualifiedName are not
         allowed to be updated.
 
@@ -23451,7 +23451,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         ignore_terms_and_categories: Optional[bool] = None,
         **kwargs: Any
     ) -> _models.AtlasGlossary:
-        # pylint: disable=line-too-long
+        
         """Update the glossary partially. Some properties such as qualifiedName are not
         allowed to be updated.
 
@@ -23615,7 +23615,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.AtlasGlossaryTerm]:
-        # pylint: disable=line-too-long
+        
         """Get terms belonging to a specific glossary. Recommend using limit/offset to get
         pagination result.
 
@@ -24066,7 +24066,7 @@ class GlossaryOperations:  # pylint: disable=too-many-public-methods
         sort: Optional[str] = None,
         **kwargs: Any
     ) -> List[_models.AtlasRelatedTermHeader]:
-        # pylint: disable=line-too-long
+        
         """Get term headers belonging to a specific glossary. Recommend using limit/offset
         to get pagination result.
 
@@ -24172,7 +24172,7 @@ class DiscoveryOperations:
     async def query(
         self, body: _models.QueryOptions, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.QueryResult:
-        # pylint: disable=line-too-long
+        
         """Get data using search.
 
         :param body: Required.
@@ -24398,7 +24398,7 @@ class DiscoveryOperations:
 
     @overload
     async def query(self, body: JSON, *, content_type: str = "application/json", **kwargs: Any) -> _models.QueryResult:
-        # pylint: disable=line-too-long
+        
         """Get data using search.
 
         :param body: Required.
@@ -24582,7 +24582,7 @@ class DiscoveryOperations:
     async def query(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.QueryResult:
-        # pylint: disable=line-too-long
+        
         """Get data using search.
 
         :param body: Required.
@@ -24764,7 +24764,7 @@ class DiscoveryOperations:
 
     @distributed_trace_async
     async def query(self, body: Union[_models.QueryOptions, JSON, IO[bytes]], **kwargs: Any) -> _models.QueryResult:
-        # pylint: disable=line-too-long
+        
         """Get data using search.
 
         :param body: Is one of the following types: QueryOptions, JSON, IO[bytes] Required.
@@ -25045,7 +25045,7 @@ class DiscoveryOperations:
     async def suggest(
         self, body: _models.SuggestOptions, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.SuggestResult:
-        # pylint: disable=line-too-long
+        
         """Get search suggestions by query criteria.
 
         :param body: Required.
@@ -25148,7 +25148,7 @@ class DiscoveryOperations:
     async def suggest(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.SuggestResult:
-        # pylint: disable=line-too-long
+        
         """Get search suggestions by query criteria.
 
         :param body: Required.
@@ -25240,7 +25240,7 @@ class DiscoveryOperations:
     async def suggest(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.SuggestResult:
-        # pylint: disable=line-too-long
+        
         """Get search suggestions by query criteria.
 
         :param body: Required.
@@ -25332,7 +25332,7 @@ class DiscoveryOperations:
     async def suggest(
         self, body: Union[_models.SuggestOptions, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.SuggestResult:
-        # pylint: disable=line-too-long
+        
         """Get search suggestions by query criteria.
 
         :param body: Is one of the following types: SuggestOptions, JSON, IO[bytes] Required.
@@ -25488,7 +25488,7 @@ class DiscoveryOperations:
     async def auto_complete(
         self, body: _models.AutoCompleteOptions, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AutoCompleteResult:
-        # pylint: disable=line-too-long
+        
         """Get auto complete options.
 
         :param body: Required.
@@ -25589,7 +25589,7 @@ class DiscoveryOperations:
     async def auto_complete(
         self, body: Union[_models.AutoCompleteOptions, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.AutoCompleteResult:
-        # pylint: disable=line-too-long
+        
         """Get auto complete options.
 
         :param body: Is one of the following types: AutoCompleteOptions, JSON, IO[bytes] Required.
@@ -25701,7 +25701,7 @@ class LineageOperations:
     async def get(
         self, guid: str, *, direction: Union[str, _models.LineageDirection], depth: Optional[int] = None, **kwargs: Any
     ) -> _models.AtlasLineageInfo:
-        # pylint: disable=line-too-long
+        
         """Get lineage info of the entity specified by GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -25890,7 +25890,7 @@ class LineageOperations:
         limit: Optional[int] = None,
         **kwargs: Any
     ) -> _models.AtlasLineageInfo:
-        # pylint: disable=line-too-long
+        
         """Return immediate next page lineage info about entity with pagination.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -26083,7 +26083,7 @@ class LineageOperations:
         attribute: Optional[str] = None,
         **kwargs: Any
     ) -> _models.AtlasLineageInfo:
-        # pylint: disable=line-too-long
+        
         """Return lineage info about entity.
 
         In addition to the typeName path parameter,
@@ -26980,7 +26980,7 @@ class RelationshipOperations:
     async def get(
         self, guid: str, *, extended_info: Optional[bool] = None, **kwargs: Any
     ) -> _models.AtlasRelationshipWithExtInfo:
-        # pylint: disable=line-too-long
+        
         """Get relationship information between entities by its GUID.
 
         :param guid: The globally unique identifier of the relationship. Required.
@@ -27162,7 +27162,7 @@ class RelationshipOperations:
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete(self, guid: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, guid: str, **kwargs: Any) -> None:  
         """Delete a relationship between entities by its GUID.
 
         :param guid: The globally unique identifier of the relationship. Required.
@@ -27231,7 +27231,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_business_metadata_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasBusinessMetadataDef:
-        # pylint: disable=line-too-long
+        
         """Get the businessMetadata definition for the given guid.
 
         :param guid: businessMetadata guid. Required.
@@ -27401,7 +27401,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_business_metadata_by_name(self, name: str, **kwargs: Any) -> _models.AtlasBusinessMetadataDef:
-        # pylint: disable=line-too-long
+        
         """Get the businessMetadata definition by it's name (unique).
 
         :param name: businessMetadata name. Required.
@@ -27571,7 +27571,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_classification_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasClassificationDef:
-        # pylint: disable=line-too-long
+        
         """Get the classification definition for the given GUID.
 
         :param guid: The globally unique identifier of the classification. Required.
@@ -27759,7 +27759,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_classification_by_name(self, name: str, **kwargs: Any) -> _models.AtlasClassificationDef:
-        # pylint: disable=line-too-long
+        
         """Get the classification definition by its name (unique).
 
         :param name: The name of the classification. Required.
@@ -27947,7 +27947,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_entity_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasEntityDef:
-        # pylint: disable=line-too-long
+        
         """Get the Entity definition for the given GUID.
 
         :param guid: The globally unique identifier of the entity. Required.
@@ -28163,7 +28163,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_entity_by_name(self, name: str, **kwargs: Any) -> _models.AtlasEntityDef:
-        # pylint: disable=line-too-long
+        
         """Get the entity definition by its name (unique).
 
         :param name: The name of the entity. Required.
@@ -28379,7 +28379,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_enum_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasEnumDef:
-        # pylint: disable=line-too-long
+        
         """Get the enum definition for the given GUID.
 
         :param guid: The globally unique identifier of the enum. Required.
@@ -28522,7 +28522,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_enum_by_name(self, name: str, **kwargs: Any) -> _models.AtlasEnumDef:
-        # pylint: disable=line-too-long
+        
         """Get the enum definition by its name (unique).
 
         :param name: The name of the enum. Required.
@@ -28665,7 +28665,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_relationship_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasRelationshipDef:
-        # pylint: disable=line-too-long
+        
         """Get the relationship definition for the given GUID.
 
         :param guid: The globally unique identifier of the relationship. Required.
@@ -28867,7 +28867,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_relationship_by_name(self, name: str, **kwargs: Any) -> _models.AtlasRelationshipDef:
-        # pylint: disable=line-too-long
+        
         """Get the relationship definition by its name (unique).
 
         :param name: The name of the relationship. Required.
@@ -29069,7 +29069,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_struct_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasStructDef:
-        # pylint: disable=line-too-long
+        
         """Get the struct definition for the given GUID.
 
         :param guid: The globally unique identifier of the struct. Required.
@@ -29238,7 +29238,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_struct_by_name(self, name: str, **kwargs: Any) -> _models.AtlasStructDef:
-        # pylint: disable=line-too-long
+        
         """Get the struct definition by its name (unique).
 
         :param name: The name of the struct. Required.
@@ -29407,7 +29407,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_by_id(self, guid: str, **kwargs: Any) -> _models.AtlasTypeDef:
-        # pylint: disable=line-too-long
+        
         """Get the type definition for the given GUID.
 
         :param guid: The globally unique identifier of the type. Required.
@@ -29680,7 +29680,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_by_name(self, name: str, **kwargs: Any) -> _models.AtlasTypeDef:
-        # pylint: disable=line-too-long
+        
         """Get the type definition by its name (unique).
 
         :param name: The name of the type. Required.
@@ -29952,7 +29952,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @distributed_trace_async
-    async def delete(self, name: str, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements
+    async def delete(self, name: str, **kwargs: Any) -> None:  
         """Delete API for type identified by its name.
 
         :param name: The name of the type. Required.
@@ -30009,7 +30009,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         type: Optional[Union[str, _models.TypeCategory]] = None,
         **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """List all type definitions in bulk.
 
         :keyword include_term_template: Whether include termtemplatedef when return all typedefs.
@@ -31027,7 +31027,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_create(
         self, body: _models.AtlasTypesDef, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Create all atlas type definitions in bulk, only new definitions will be
         created.
         Any changes to the existing definitions will be discarded.
@@ -32943,7 +32943,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_create(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Create all atlas type definitions in bulk, only new definitions will be
         created.
         Any changes to the existing definitions will be discarded.
@@ -33912,7 +33912,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_create(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Create all atlas type definitions in bulk, only new definitions will be
         created.
         Any changes to the existing definitions will be discarded.
@@ -34881,7 +34881,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_create(
         self, body: Union[_models.AtlasTypesDef, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Create all atlas type definitions in bulk, only new definitions will be
         created.
         Any changes to the existing definitions will be discarded.
@@ -36849,7 +36849,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_update(
         self, body: _models.AtlasTypesDef, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Update all types in bulk, changes detected in the type definitions would be
         persisted.
 
@@ -38764,7 +38764,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_update(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Update all types in bulk, changes detected in the type definitions would be
         persisted.
 
@@ -39732,7 +39732,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_update(
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Update all types in bulk, changes detected in the type definitions would be
         persisted.
 
@@ -40700,7 +40700,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
     async def batch_update(
         self, body: Union[_models.AtlasTypesDef, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.AtlasTypesDef:
-        # pylint: disable=line-too-long
+        
         """Update all types in bulk, changes detected in the type definitions would be
         persisted.
 
@@ -42664,10 +42664,10 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         return deserialized  # type: ignore
 
     @overload
-    async def batch_delete(  # pylint: disable=inconsistent-return-statements
+    async def batch_delete(  
         self, body: _models.AtlasTypesDef, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Delete API for all types in bulk.
 
         :param body: Required.
@@ -43631,7 +43631,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def batch_delete(  # pylint: disable=inconsistent-return-statements
+    async def batch_delete(  
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Delete API for all types in bulk.
@@ -43647,7 +43647,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         """
 
     @overload
-    async def batch_delete(  # pylint: disable=inconsistent-return-statements
+    async def batch_delete(  
         self, body: IO[bytes], *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Delete API for all types in bulk.
@@ -43663,10 +43663,10 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         """
 
     @distributed_trace_async
-    async def batch_delete(  # pylint: disable=inconsistent-return-statements
+    async def batch_delete(  
         self, body: Union[_models.AtlasTypesDef, JSON, IO[bytes]], **kwargs: Any
     ) -> None:
-        # pylint: disable=line-too-long
+        
         """Delete API for all types in bulk.
 
         :param body: Is one of the following types: AtlasTypesDef, JSON, IO[bytes] Required.
@@ -44682,7 +44682,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
         type: Optional[Union[str, _models.TypeCategory]] = None,
         **kwargs: Any
     ) -> List[_models.AtlasTypeDefHeader]:
-        # pylint: disable=line-too-long
+        
         """List all type definitions returned as a list of minimal information header.
 
         :keyword include_term_template: Whether include termtemplatedef when return all typedefs.
@@ -44763,7 +44763,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_term_template_by_id(self, guid: str, **kwargs: Any) -> _models.TermTemplateDef:
-        # pylint: disable=line-too-long
+        
         """Get the term template definition for the given GUID.
 
         :param guid: The globally unique identifier of the term template. Required.
@@ -44933,7 +44933,7 @@ class TypeDefinitionOperations:  # pylint: disable=too-many-public-methods
 
     @distributed_trace_async
     async def get_term_template_by_name(self, name: str, **kwargs: Any) -> _models.TermTemplateDef:
-        # pylint: disable=line-too-long
+        
         """Get the term template definition by its name (unique).
 
         :param name: The unique name of the term template. Required.

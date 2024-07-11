@@ -64,7 +64,7 @@ from ._async_utils import create_authentication
 
 if TYPE_CHECKING:
     try:
-        # pylint:disable=unused-import
+        
         from uamqp.async_ops.client_async import ReceiveClientAsync as uamqp_ReceiveClientAsync
         from uamqp.authentication import JWTTokenAsync as uamqp_JWTTokenAuthAsync
         from uamqp.message import Message as uamqp_Message
@@ -379,7 +379,7 @@ class ServiceBusReceiver(AsyncIterator, BaseHandler, ReceiverMixin):
         # so the regular _message_received callback should be used. This will ensure that all messages are added
         # to the internal buffer since they cannot be re-received, even if not received during an active receive call.
         if self._prefetch_count == 0 and self._receive_mode == ServiceBusReceiveMode.PEEK_LOCK:
-            # pylint: disable=protected-access
+            
             self._amqp_transport.set_handler_message_received_async(self)
 
     async def _open(self) -> None:

@@ -1250,7 +1250,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
             return cls(pipeline_response, None, {})
 
     @overload
-    def create_alert_configuration(  # pylint: disable=inconsistent-return-statements
+    def create_alert_configuration(  
         self, body: _models.AnomalyAlertConfiguration, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create anomaly alerting configuration.
@@ -1268,7 +1268,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def create_alert_configuration(  # pylint: disable=inconsistent-return-statements
+    def create_alert_configuration(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create anomaly alerting configuration.
@@ -1806,7 +1806,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
             return cls(pipeline_response, None, {})
 
     @overload
-    def create_detection_configuration(  # pylint: disable=inconsistent-return-statements
+    def create_detection_configuration(  
         self, body: _models.AnomalyDetectionConfiguration, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create anomaly detection configuration.
@@ -1824,7 +1824,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def create_detection_configuration(  # pylint: disable=inconsistent-return-statements
+    def create_detection_configuration(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create anomaly detection configuration.
@@ -2565,7 +2565,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def create_datasource_credential(  # pylint: disable=inconsistent-return-statements
+    def create_datasource_credential(  
         self, body: _models.DatasourceCredential, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new data source credential.
@@ -2583,7 +2583,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def create_datasource_credential(  # pylint: disable=inconsistent-return-statements
+    def create_datasource_credential(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new data source credential.
@@ -3015,7 +3015,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def create_data_feed(  # pylint: disable=inconsistent-return-statements
+    def create_data_feed(  
         self, body: _models.DataFeed, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new data feed.
@@ -3033,7 +3033,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def create_data_feed(  # pylint: disable=inconsistent-return-statements
+    def create_data_feed(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new data feed.
@@ -3407,7 +3407,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def add_feedback(  # pylint: disable=inconsistent-return-statements
+    def add_feedback(  
         self, feedback: _models.MetricFeedback, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new metric feedback.
@@ -3425,7 +3425,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def add_feedback(  # pylint: disable=inconsistent-return-statements
+    def add_feedback(  
         self, feedback: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new metric feedback.
@@ -3599,7 +3599,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         return ItemPaged(get_next, extract_data)
 
     @overload
-    def create_hook(  # pylint: disable=inconsistent-return-statements
+    def create_hook(  
         self, body: _models.NotificationHook, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new hook.
@@ -3617,7 +3617,7 @@ class MetricsAdvisorClientOperationsMixin(MixinABC):  # pylint: disable=too-many
         """
 
     @overload
-    def create_hook(  # pylint: disable=inconsistent-return-statements
+    def create_hook(  
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> None:
         """Create a new hook.

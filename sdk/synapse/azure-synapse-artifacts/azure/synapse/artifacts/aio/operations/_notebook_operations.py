@@ -1,4 +1,4 @@
-# pylint: disable=too-many-lines,too-many-statements
+
 # coding=utf-8
 # --------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
@@ -472,7 +472,7 @@ class NotebookOperations:
 
         return deserialized  # type: ignore
 
-    async def _delete_notebook_initial(  # pylint: disable=inconsistent-return-statements
+    async def _delete_notebook_initial(  
         self, notebook_name: str, **kwargs: Any
     ) -> None:
         error_map = {
@@ -570,7 +570,7 @@ class NotebookOperations:
             )
         return AsyncLROPoller[None](self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
-    async def _rename_notebook_initial(  # pylint: disable=inconsistent-return-statements
+    async def _rename_notebook_initial(  
         self, notebook_name: str, new_name: Optional[str] = None, **kwargs: Any
     ) -> None:
         error_map = {

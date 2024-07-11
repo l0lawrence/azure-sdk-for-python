@@ -12,7 +12,7 @@ from . import HTTPPolicy, SansIOHTTPPolicy
 from ...exceptions import ServiceRequestError
 
 if TYPE_CHECKING:
-    # pylint:disable=unused-import
+    
     from azure.core.credentials import (
         AccessToken,
         TokenCredential,

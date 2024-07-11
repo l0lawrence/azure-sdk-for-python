@@ -142,7 +142,7 @@ def _cloud_event_to_generated(cloud_event, **kwargs):
     )
 
 
-def _from_cncf_events(event):  # pylint: disable=inconsistent-return-statements
+def _from_cncf_events(event):  
     """This takes in a CNCF cloudevent and returns a dictionary.
     If cloud events library is not installed, the event is returned back.
 

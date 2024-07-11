@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from ._configuration import MetricsAdvisorClientConfiguration
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from msrest import Deserializer, Serializer
 
     from azure.core import PipelineClient

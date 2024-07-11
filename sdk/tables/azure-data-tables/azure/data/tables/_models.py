@@ -437,7 +437,7 @@ class TableSasPermissions:
         p_update = "u" in permission
 
         parsed = cls(**dict(kwargs, read=p_read, add=p_add, delete=p_delete, update=p_update))
-        parsed._str = permission  # pylint: disable=protected-access,attribute-defined-outside-init
+        parsed._str = permission  
         return parsed
 
 

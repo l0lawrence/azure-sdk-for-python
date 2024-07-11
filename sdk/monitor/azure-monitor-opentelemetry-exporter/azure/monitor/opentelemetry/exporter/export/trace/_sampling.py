@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 from typing import Optional, Sequence
 
-# pylint:disable=no-name-in-module
+
 from fixedint import Int32
 # pylint:disable=W0611
 from opentelemetry.context import Context

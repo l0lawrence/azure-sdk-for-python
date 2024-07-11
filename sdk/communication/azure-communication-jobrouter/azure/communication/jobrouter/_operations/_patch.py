@@ -26,13 +26,13 @@ from ._operations import (
     JobRouterClientOperationsMixin as JobRouterClientOperationsMixinGenerated,
     JobRouterAdministrationClientOperationsMixin as JobRouterAdministrationClientOperationsMixinGenerated,
 )
-from .._model_base import _deserialize_datetime as _convert_str_to_datetime  # pylint:disable=protected-access
+from .._model_base import _deserialize_datetime as _convert_str_to_datetime  
 
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
 else:
-    from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
-JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
+    from typing import MutableMapping  # type: ignore  
+JSON = MutableMapping[str, Any]  
 
 
 class JobRouterAdministrationClientOperationsMixin(
@@ -852,7 +852,7 @@ class JobRouterAdministrationClientOperationsMixin(
                     _models.WeightedAllocationQueueSelectorAttachment,
                 ]
             ]
-        ],  # pylint: disable=line-too-long
+        ],  
         prioritization_rule: Optional[
             Union[
                 _models.StaticRouterRule,
@@ -860,7 +860,7 @@ class JobRouterAdministrationClientOperationsMixin(
                 _models.FunctionRouterRule,
                 _models.WebhookRouterRule,
             ]
-        ],  # pylint: disable=line-too-long
+        ],  
         worker_selectors: Optional[
             List[
                 Union[
@@ -871,7 +871,7 @@ class JobRouterAdministrationClientOperationsMixin(
                     _models.WeightedAllocationWorkerSelectorAttachment,
                 ]
             ]
-        ],  # pylint: disable=line-too-long
+        ],  
         if_unmodified_since: Optional[datetime.datetime] = None,
         etag: Optional[str] = None,
         match_condition: Optional[MatchConditions] = None,
@@ -1949,7 +1949,7 @@ class JobRouterClientOperationsMixin(JobRouterClientOperationsMixinGenerated):
         )
 
     @distributed_trace
-    def reclassify_job(self, job_id: str, **kwargs: Any) -> None:  # pylint: disable=arguments-differ,arguments-renamed
+    def reclassify_job(self, job_id: str, **kwargs: Any) -> None:  
         """Reclassify a job.
 
         :param str job_id: Id of the job.
@@ -1975,7 +1975,7 @@ class JobRouterClientOperationsMixin(JobRouterClientOperationsMixinGenerated):
     @distributed_trace
     def cancel_job(
         self, job_id: str, options: Optional[Union[_models._models.CancelJobOptions, JSON, IO]] = None, **kwargs: Any
-    ) -> None:  # pylint: disable=arguments-differ
+    ) -> None:  
         """Closes a completed job.
 
         :param str job_id: Id of the job.
@@ -2009,7 +2009,7 @@ class JobRouterClientOperationsMixin(JobRouterClientOperationsMixinGenerated):
         assignment_id: str,
         options: Optional[Union[_models._models.CompleteJobOptions, JSON, IO]] = None,
         **kwargs: Any
-    ) -> None:  # pylint: disable=arguments-differ
+    ) -> None:  
         """Completes an assigned job.
 
         :param str job_id: Id of the job.
@@ -2049,7 +2049,7 @@ class JobRouterClientOperationsMixin(JobRouterClientOperationsMixinGenerated):
         assignment_id: str,
         options: Optional[Union[_models._models.CloseJobOptions, JSON, IO]] = None,
         **kwargs: Any
-    ) -> None:  # pylint: disable=arguments-differ
+    ) -> None:  
         """Closes a completed job.
 
         :param str job_id: Id of the job.
@@ -2091,7 +2091,7 @@ class JobRouterClientOperationsMixin(JobRouterClientOperationsMixinGenerated):
         offer_id: str,
         options: Optional[Union[_models._models.DeclineJobOfferOptions, JSON, IO]] = None,
         **kwargs: Any
-    ) -> None:  # pylint: disable=arguments-differ
+    ) -> None:  
         """Declines an offer to work on a job.
 
         :param worker_id: Id of the worker. Required.

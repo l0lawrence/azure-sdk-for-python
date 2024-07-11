@@ -55,13 +55,13 @@ from .operations import (
 )
 
 if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
+    
     from typing import Dict
 
     from azure.core.credentials import TokenCredential
 
 
-class FarmBeatsClient:  # pylint: disable=client-accepts-api-version-keyword,too-many-instance-attributes
+class FarmBeatsClient:  # pylint: disable=too-many-instance-attributes
     """APIs documentation for Azure AgPlatform DataPlane Service.
 
     :ivar application_data: ApplicationDataOperations operations
@@ -160,7 +160,7 @@ class FarmBeatsClient:  # pylint: disable=client-accepts-api-version-keyword,too
         self.application_data = ApplicationDataOperations(
             self._client, self._config, self._serialize, self._deserialize
         )
-        self.attachments = AttachmentsOperations(  # type: ignore  # pylint: disable=abstract-class-instantiated
+        self.attachments = AttachmentsOperations(  # type: ignore  
             self._client, self._config, self._serialize, self._deserialize
         )
         self.boundaries = BoundariesOperations(self._client, self._config, self._serialize, self._deserialize)
@@ -177,7 +177,7 @@ class FarmBeatsClient:  # pylint: disable=client-accepts-api-version-keyword,too
         self.image_processing = ImageProcessingOperations(
             self._client, self._config, self._serialize, self._deserialize
         )
-        self.insight_attachments = InsightAttachmentsOperations(  # type: ignore  # pylint: disable=abstract-class-instantiated
+        self.insight_attachments = InsightAttachmentsOperations(  # type: ignore  
             self._client, self._config, self._serialize, self._deserialize
         )
         self.insights = InsightsOperations(self._client, self._config, self._serialize, self._deserialize)

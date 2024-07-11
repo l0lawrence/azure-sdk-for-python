@@ -94,7 +94,7 @@ class RecognizeEntitiesResult(DictMixin):
     the recognized entities from a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -134,7 +134,7 @@ class RecognizePiiEntitiesResult(DictMixin):
     from a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -179,7 +179,7 @@ class AnalyzeHealthcareEntitiesResult(DictMixin):
     particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -338,7 +338,7 @@ class DetectLanguageResult(DictMixin):
     the detected language of a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -694,7 +694,7 @@ class ExtractKeyPhrasesResult(DictMixin):
     the key phrases found in a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -735,7 +735,7 @@ class RecognizeLinkedEntitiesResult(DictMixin):
     links to a well-known knowledge base, like for example, Wikipedia or Bing.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -775,7 +775,7 @@ class AnalyzeSentimentResult(DictMixin):
     and a per-sentence sentiment prediction with scores.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -853,7 +853,7 @@ class DocumentError(DictMixin):
     the individual document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -923,7 +923,7 @@ class DetectLanguageInput(LanguageInput):
      in the string "none" to not use a country_hint.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Required. Unique, non-empty document identifier."""
     text: str
     """Required. The input text to process."""
@@ -939,7 +939,7 @@ class DetectLanguageInput(LanguageInput):
         id: str,  # pylint: disable=redefined-builtin
         text: str,
         country_hint: Optional[str] = None,
-        **kwargs: Any  # pylint: disable=unused-argument
+        **kwargs: Any  
     ) -> None:
         super().__init__(id=id, text=text, country_hint=country_hint)
         self.id = id
@@ -1073,7 +1073,7 @@ class TextDocumentInput(DictMixin, MultiLanguageInput):
      If not set, uses "en" for English as default.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Required. Unique, non-empty document identifier."""
     text: str
     """Required. The input text to process."""
@@ -1088,7 +1088,7 @@ class TextDocumentInput(DictMixin, MultiLanguageInput):
         id: str,  # pylint: disable=redefined-builtin
         text: str,
         language: Optional[str] = None,
-        **kwargs: Any  # pylint: disable=unused-argument
+        **kwargs: Any  
     ) -> None:
         super().__init__(id=id, text=text, language=language)
         self.id = id
@@ -1240,7 +1240,7 @@ class MinedOpinion(DictMixin):
     @staticmethod
     def _get_assessments(
         relations, results, sentiment
-    ):  # pylint: disable=unused-argument
+    ):  
         if not relations:
             return []
         assessment_relations = [
@@ -1963,7 +1963,7 @@ class RecognizeCustomEntitiesResult(DictMixin):
     the custom recognized entities from a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier that matches the
         document id that was passed in with the request. If not specified
         in the request, an id is assigned for the document."""
@@ -2083,7 +2083,7 @@ class ClassifyDocumentResult(DictMixin):
     the classifications for a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier."""
     classifications: List["ClassificationCategory"]
     """Recognized classification results in the document."""
@@ -2372,9 +2372,9 @@ class ExtractiveSummaryAction(DictMixin):
         )
 
     def _to_generated(self, api_version, task_id):  # pylint: disable=unused-argument
-        return _v2023_04_01_models.ExtractiveSummarizationLROTask(  # pylint: disable=no-member
+        return _v2023_04_01_models.ExtractiveSummarizationLROTask(  
             task_name=task_id,
-            parameters=_v2023_04_01_models.ExtractiveSummarizationTaskParameters(  # pylint: disable=no-member
+            parameters=_v2023_04_01_models.ExtractiveSummarizationTaskParameters(  
                 model_version=self.model_version,
                 string_index_type=string_index_type_compatibility(self.string_index_type),
                 logging_opt_out=self.disable_service_logs,
@@ -2389,7 +2389,7 @@ class ExtractiveSummaryResult(DictMixin):
     the extractive text summarization from a particular document.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier."""
     sentences: List["SummarySentence"]
     """A ranked list of sentences representing the extracted summary."""
@@ -2490,7 +2490,7 @@ class AbstractiveSummaryResult(DictMixin):
         The *AbstractiveSummaryResult* model.
     """
 
-    id: str  # pylint: disable=redefined-builtin
+    id: str  
     """Unique, non-empty document identifier. Required."""
     summaries: List["AbstractiveSummary"]
     """A list of abstractive summaries. Required."""

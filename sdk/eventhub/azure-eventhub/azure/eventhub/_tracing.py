@@ -26,7 +26,7 @@ from .amqp import AmqpAnnotatedMessage
 from ._constants import PROP_TIMESTAMP
 
 if TYPE_CHECKING:
-    # pylint: disable=ungrouped-imports
+    
     from ._transport._base import AmqpTransport
     try:
         from uamqp import Message as uamqp_Message
@@ -211,7 +211,7 @@ def get_span_links_from_received_events(events: Union[EventData, Iterable[EventD
     :rtype: list[~azure.core.tracing.Link]
     :return: A list of span links.
     """
-    # pylint:disable=isinstance-second-argument-not-valid-type
+    
     trace_events = events if isinstance(events, Iterable) else (events,)
     links = []
     try:
