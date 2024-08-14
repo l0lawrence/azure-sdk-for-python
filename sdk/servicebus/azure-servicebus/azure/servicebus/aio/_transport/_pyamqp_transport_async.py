@@ -19,6 +19,7 @@ from ..._pyamqp.aio._connection_async import Connection as ConnectionAsync
 from ..._pyamqp.error import (
     AMQPConnectionError,
     AMQPError,
+    AMQPException,
     MessageException,
     AMQPLinkError,
     ErrorCondition,
@@ -385,8 +386,15 @@ class PyamqpTransportAsync(PyamqpTransport, AmqpTransportAsync):
             raise PyamqpTransportAsync.create_servicebus_exception(logging.getLogger(__name__), le)
             # raise ServiceBusConnectionError(message="Link error occurred during settle operation.") from le
 
-        except AMQPConnectionError as e:
-            raise ServiceBusConnectionError(message="Connection lost during settle operation.") from e
+        except AMQPException as ae:
+            if (
+                ae.condition == ErrorCondition.IllegalState
+            ):
+                raise RuntimeError("Link error occurred during settle operation.") from ae
+
+            raise ServiceBusConnectionError(message="Link error occurred during settle operation.") from ae
+
+
         raise ValueError(
             f"Unsupported settle operation type: {settle_operation}"
         )

@@ -17,7 +17,7 @@ from ..performatives import (
     DispositionFrame,
 )
 from ..outcomes import Received, Accepted, Rejected, Released, Modified
-from ..error import AMQPLinkError, ErrorCondition
+from ..error import AMQPLinkError, ErrorCondition, AMQPException
 
 if TYPE_CHECKING:
     from ..message import _MessageDelivery
@@ -58,8 +58,8 @@ class ReceiverLink(Link):
         self._on_transfer = kwargs.pop("on_transfer")
         self._received_payload = bytearray()
         self._first_frame = None
-        self._received_messages = set()
         self._pending_receipts = []
+        self._received_delivery_tags = set()
 
     @classmethod
     def from_incoming_frame(cls, session, handle, frame):
@@ -106,7 +106,7 @@ class ReceiverLink(Link):
         if self._received_payload or frame[5]:  # more
             self._received_payload.extend(frame[11])
         if not frame[5]:
-            self._received_messages.add(self._first_frame[2])
+            self._received_delivery_tags.add(self._first_frame[2])
             if self._received_payload:
                 message = decode_payload(memoryview(self._received_payload))
                 self._received_payload = bytearray()
@@ -151,8 +151,8 @@ class ReceiverLink(Link):
         disposition_frame = DispositionFrame(
             role=self.role, first=first, last=last, settled=settled, state=state, batchable=batchable
         )
-        if delivery_tag not in self._received_messages:
-            raise AMQPLinkError(condition=ErrorCondition.InternalError, description = "Delivery tag not found.")
+        if delivery_tag not in self._received_delivery_tags:
+            raise AMQPException(condition=ErrorCondition.IllegalState, description = "Delivery tag not found.")
 
         if self.network_trace:
             _LOGGER.debug("-> %r", DispositionFrame(*disposition_frame), extra=self.network_trace_params)
@@ -170,8 +170,8 @@ class ReceiverLink(Link):
             self._pending_receipts.append(delivery)
 
         await self._session._outgoing_disposition(disposition_frame) # pylint: disable=protected-access
-        self._received_messages.remove(delivery_tag)
-
+        self._received_delivery_tags.remove(delivery_tag)
+        
     async def _incoming_disposition(self, frame):
         # If delivery_id is not settled, return
         if not frame[3]:  # settled
@@ -185,6 +185,7 @@ class ReceiverLink(Link):
                 continue
             unsettled.append(delivery)
         self._pending_receipts = unsettled
+        
 
     async def attach(self):
         await super().attach()
