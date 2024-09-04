@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=protected-access,no-member,arguments-renamed,unidiomatic-typecheck
+# pylint: disable=protected-access,arguments-renamed,unidiomatic-typecheck
 
 import logging
 import os

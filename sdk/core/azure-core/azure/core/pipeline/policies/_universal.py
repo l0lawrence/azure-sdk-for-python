@@ -741,7 +741,7 @@ class ProxyPolicy(SansIOHTTPPolicy[HTTPRequestType, HTTPResponseType]):
 
     def __init__(
         self, proxies: Optional[MutableMapping[str, str]] = None, **kwargs: Any
-    ):  # pylint: disable=unused-argument,super-init-not-called
+    ):  # pylint: disable=unused-argument
         self.proxies = proxies
 
     def on_request(self, request: PipelineRequest[HTTPRequestType]) -> None:

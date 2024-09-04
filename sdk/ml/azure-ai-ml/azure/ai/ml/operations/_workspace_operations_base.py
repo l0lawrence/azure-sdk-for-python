@@ -516,7 +516,7 @@ class WorkspaceOperationsBase(ABC):
         module_logger.info("Delete request initiated for workspace: %s\n", name)
         return poller
 
-    # pylint: disable=too-many-statements,too-many-branches,too-many-locals
+    # pylint: disable=too-many-statements,too-many-branches
     def _populate_arm_parameters(self, workspace: Workspace, **kwargs: Any) -> Tuple[dict, dict, dict]:
         """Populates ARM template parameters for use to deploy a workspace resource.
 

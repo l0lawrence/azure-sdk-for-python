@@ -232,7 +232,7 @@ try:
         MAX_MESSAGE_LENGTH_BYTES = constants.MAX_MESSAGE_LENGTH_BYTES
         TIMEOUT_FACTOR = 1000
         # CONNECTION_CLOSING_STATES: Tuple = (  # pylint:disable=protected-access
-        #        c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
+        #        c_uamqp.ConnectionState.CLOSE_RCVD,
         #        c_uamqp.ConnectionState.CLOSE_SENT,  
         #        c_uamqp.ConnectionState.DISCARDING,  
         #        c_uamqp.ConnectionState.END,  
