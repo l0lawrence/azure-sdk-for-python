@@ -461,7 +461,7 @@ class JobRouterAdministrationClientOperationsMixin(
         :raises ~azure.core.exceptions.HttpResponseError:
         """
 
-    def upsert_distribution_policy(  # pylint: disable=docstring-missing-param
+    def upsert_distribution_policy(  # pylint: disable=docstring-missing-param,docstring-should-be-keyword
         self, distribution_policy_id: str, *args: Union[_models.DistributionPolicy, JSON, IO[bytes]], **kwargs: Any
     ) -> _models.DistributionPolicy:
         """Update a distribution policy.

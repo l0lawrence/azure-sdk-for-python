@@ -44,4 +44,4 @@ class MapsGeolocationClientBase:
         return self
 
     def __exit__(self, *args):
-        self._maps_client.__exit__(*args)
+        self._maps_client.__exit__(*args)  # pylint:disable=no-member

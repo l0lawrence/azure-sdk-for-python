@@ -372,4 +372,4 @@ class RemoteRenderingClient:
         return self
 
     def __exit__(self, *args: Any) -> None:
-        self._client.__exit__(*args)
+        self._client.__exit__(*args)  # pylint:disable=no-member

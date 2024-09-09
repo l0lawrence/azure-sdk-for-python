@@ -972,7 +972,7 @@ class ServiceBusReceiver(
         timeout: Optional[float] = None,
         **kwargs: Any,
     ) -> datetime.datetime:
-        # pylint: disable=protected-access
+        # pylint: disable=protected-access,no-member
         """Renew the message lock.
 
         This will maintain the lock on the message to ensure it is not returned to the queue

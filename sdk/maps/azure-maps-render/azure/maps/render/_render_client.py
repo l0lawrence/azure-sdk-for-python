@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import, R0904, C0302
+# pylint: disable=unused-import,ungrouped-imports, R0904, C0302
 from typing import TYPE_CHECKING, overload, Union, Any, List, Optional, Iterator, Tuple
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.exceptions import HttpResponseError

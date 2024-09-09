@@ -211,7 +211,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
 
         """
         return errors.RetryPolicy(
-            retry_total=config.max_retries,
+            retry_total=config.max_retries,  # pylint:disable=protected-access
             retry_backoff_factor=config.backoff_factor,  
             retry_backoff_max=config.backoff_max,  
             retry_mode=config.retry_mode,  

@@ -284,4 +284,4 @@ class AutoMLJob(Job, JobIOMixin, AutoMLNodeIOMixin, ABC):
                 type=AssetTypes.MLTABLE, path=self.validation_data.uri  
             )
         if hasattr(self, "test_data") and isinstance(self.test_data, MLTableJobInput):
-            self.test_data = Input(type=AssetTypes.MLTABLE, path=self.test_data.uri)
+            self.test_data = Input(type=AssetTypes.MLTABLE, path=self.test_data.uri)  # pylint: disable=no-member

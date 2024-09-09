@@ -106,7 +106,7 @@ class BatchEndpoint(Endpoint):
 
     def dump(
         self,
-        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,
+        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,  # pylint: disable=unused-argument
         **kwargs: Any,  
     ) -> Dict[str, Any]:
         context = {BASE_PATH_CONTEXT_KEY: Path(".").parent}
@@ -130,5 +130,5 @@ class BatchEndpoint(Endpoint):
         return res
 
     def _to_dict(self) -> Dict:
-        res: dict = BatchEndpointSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self)
+        res: dict = BatchEndpointSchema(context={BASE_PATH_CONTEXT_KEY: "./"}).dump(self)  # pylint: disable=no-member
         return res

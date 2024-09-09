@@ -593,4 +593,4 @@ class ChatThreadClient(object): # pylint: disable=client-accepts-api-version-key
 
     def __exit__(self, *args):
         # type: (*Any) -> None
-        self._client.__exit__(*args)
+        self._client.__exit__(*args)  # pylint:disable=no-member

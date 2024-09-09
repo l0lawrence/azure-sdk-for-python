@@ -49,5 +49,5 @@ class VSCodeClient(object):
 
 
 def _encode_hex(path: str):
-    vscode_path = re.sub("\\s+", "", path)
+    vscode_path = re.sub("\\s+", "", path)  # pylint: disable=specify-parameter-names-in-call
     return binascii.hexlify(vscode_path.encode()).decode("ascii")

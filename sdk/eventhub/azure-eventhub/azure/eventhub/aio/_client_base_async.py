@@ -473,7 +473,7 @@ class ConsumerProducerMixin(_MIXIN_BASE):
         Open the EventHubConsumer using the supplied connection.
 
         """
-        # pylint: disable=protected-access
+        # pylint: disable=protected-access,line-too-long
         if not self.running:
             if self._handler:
                 await self._handler.close_async()

@@ -5,7 +5,7 @@
 # --------------------------------------------------------------------------
 from urllib.parse import urlparse
 
-# pylint: disable=unused-import
+# pylint: disable=unused-import,ungrouped-imports
 from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union, Tuple
 from datetime import datetime
 

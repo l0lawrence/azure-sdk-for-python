@@ -414,7 +414,7 @@ class KubernetesOnlineEndpoint(OnlineEndpoint):
 
     def dump(
         self,
-        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,
+        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,  # pylint: disable=unused-argument
         **kwargs: Any,  
     ) -> Dict[str, Any]:
         context = {BASE_PATH_CONTEXT_KEY: Path(".").parent}
@@ -540,7 +540,7 @@ class ManagedOnlineEndpoint(OnlineEndpoint):
 
     def dump(
         self,
-        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,
+        dest: Optional[Union[str, PathLike, IO[AnyStr]]] = None,  # pylint: disable=unused-argument
         **kwargs: Any,  
     ) -> Dict[str, Any]:
         context = {BASE_PATH_CONTEXT_KEY: Path(".").parent}

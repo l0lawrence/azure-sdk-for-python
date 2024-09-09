@@ -4,7 +4,7 @@
 # license information.
 # ---------------------------------------------------------------------
 
-# pylint: disable=unused-import, R0904, C0302
+# pylint: disable=unused-import,ungrouped-imports, R0904, C0302
 from typing import AsyncIterator, Any, Union, Tuple, List
 from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.core.exceptions import HttpResponseError

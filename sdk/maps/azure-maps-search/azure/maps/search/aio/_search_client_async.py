@@ -4,7 +4,7 @@
 # license information.
 # ---------------------------------------------------------------------
 
-# pylint: disable=unused-import, R0904, C0302, too-many-function-args, W0212
+# pylint: disable=unused-import,ungrouped-imports, R0904, C0302, too-many-function-args, W0212
 from typing import overload, Any, List, Union, Tuple
 from collections import namedtuple
 from azure.core.tracing.decorator_async import distributed_trace_async

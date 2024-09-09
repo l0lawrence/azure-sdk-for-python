@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import, R0904, C0302
+# pylint: disable=unused-import,ungrouped-imports, R0904, C0302
 from typing import Union, Any, List, Tuple
 from collections import namedtuple
 from azure.core.tracing.decorator import distributed_trace

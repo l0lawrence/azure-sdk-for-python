@@ -61,7 +61,7 @@ else:
     from typing_extensions import Self
 
 if TYPE_CHECKING:
-
+    # pylint: disable=ungrouped-imports
     from azure.core.credentials import TokenCredential
 
 JSON = MutableMapping[str, Any]  
@@ -110,19 +110,19 @@ def load_client(
     # TODO: Remove "completions" and "embedding" once Mistral Large and Cohere fixes their model type
     if model_info.model_type in (_models.ModelType.CHAT, "completion"):
         chat_completion_client = ChatCompletionsClient(endpoint, credential, **kwargs)
-        chat_completion_client._model_info = ( # pylint: disable=protected-access
+        chat_completion_client._model_info = ( # pylint: disable=protected-access,attribute-defined-outside-init
             model_info
         )
         return chat_completion_client
 
     if model_info.model_type in (_models.ModelType.EMBEDDINGS, "embedding"):
         embedding_client = EmbeddingsClient(endpoint, credential, **kwargs)
-        embedding_client._model_info = model_info  # pylint: disable=protected-access
+        embedding_client._model_info = model_info  # pylint: disable=protected-access,attribute-defined-outside-init
         return embedding_client
 
     if model_info.model_type == _models.ModelType.IMAGE_EMBEDDINGS:
         image_embedding_client = ImageEmbeddingsClient(endpoint, credential, **kwargs)
-        image_embedding_client._model_info = (  # pylint: disable=protected-access
+        image_embedding_client._model_info = (  # pylint: disable=protected-access,attribute-defined-outside-init
             model_info
         )
         return image_embedding_client
