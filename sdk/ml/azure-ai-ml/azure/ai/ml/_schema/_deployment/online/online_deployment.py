@@ -42,7 +42,7 @@ class OnlineDeploymentSchema(DeploymentSchema):
     type = StringTransformedEnum(
         required=False,
         allowed_values=[
-            EndpointComputeType.MANAGED.value,  # pylint: disable=no-member
+            EndpointComputeType.MANAGED.value,
             EndpointComputeType.KUBERNETES.value,  
         ],
         casing_transform=camel_to_snake,

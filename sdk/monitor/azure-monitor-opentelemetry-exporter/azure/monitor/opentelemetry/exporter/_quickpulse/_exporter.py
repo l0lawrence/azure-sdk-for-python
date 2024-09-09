@@ -157,7 +157,7 @@ class _QuickpulseExporter(MetricExporter):
                 if header != "true":
                     # User leaving the live metrics page will be treated as an unsuccessful
                     result = MetricExportResult.FAILURE
-        except Exception:  # pylint: disable=broad-except,invalid-name
+        except Exception:  # pylint: disable=broad-except
             _logger.exception("Exception occurred while publishing live metrics.")
             result = MetricExportResult.FAILURE
         finally:
@@ -182,7 +182,7 @@ class _QuickpulseExporter(MetricExporter):
 
     def shutdown(
         self,
-        timeout_millis: float = 30_000,  # pylint: disable=unused-argument
+        timeout_millis: float = 30_000,
         **kwargs: Any,  
     ) -> None:
         """Shuts down the exporter.

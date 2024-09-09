@@ -45,4 +45,4 @@ class MapsRouteClientBase:
         return self
 
     def __exit__(self, *args):
-        self._maps_client.__exit__(*args)  # pylint:disable=no-member
+        self._maps_client.__exit__(*args)

@@ -106,7 +106,7 @@ if uamqp_installed:
         Union["uamqp_ConnectionState", "pyamqp_ConnectionState"],
         Union["uamqp_ConnectionState", "pyamqp_ConnectionState"],
         Optional[Union["uamqp_ConnectionState", "pyamqp_ConnectionState"]]] = (  
-                c_uamqp.ConnectionState.CLOSE_RCVD,  # pylint:disable=c-extension-no-member
+                c_uamqp.ConnectionState.CLOSE_RCVD,
                 c_uamqp.ConnectionState.CLOSE_SENT,  
                 c_uamqp.ConnectionState.DISCARDING,  
                 c_uamqp.ConnectionState.END,  

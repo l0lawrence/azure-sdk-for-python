@@ -332,7 +332,7 @@ class EventHubProducerClient(
                 self._producers[p_id] = None
 
     async def _get_max_message_size(self) -> None:
-        # pylint: disable=protected-access,line-too-long
+        # pylint: disable=protected-access
         async with self._lock:
             if not self._max_message_size_on_link:
                 await cast(

@@ -91,7 +91,7 @@ class PathClient(AsyncStorageAccountHostsMixin, PathClientBase):
                                                                                path=self.path_name,
                                                                                pipeline=self._pipeline)
         api_version = get_api_version(kwargs)
-        self._client._config.version = api_version  # pylint: disable=protected-access
+        self._client._config.version = api_version
         self._datalake_client_for_blob_operation._config.version = api_version  
 
         self._loop = kwargs.get('loop', None)

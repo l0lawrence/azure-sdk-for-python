@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=try-except-raise,line-too-long
+# pylint: disable=try-except-raise
 
 import logging
 

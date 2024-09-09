@@ -214,7 +214,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
         """
         delegation_key = self._blob_service_client.get_user_delegation_key(key_start_time=key_start_time,
                                                                            key_expiry_time=key_expiry_time,
-                                                                           **kwargs)  # pylint: disable=protected-access
+                                                                           **kwargs)
         return UserDelegationKey._from_generated(delegation_key)  
 
     @distributed_trace
@@ -263,7 +263,7 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
         """
         item_paged = self._blob_service_client.list_containers(name_starts_with=name_starts_with,
                                                                include_metadata=include_metadata,
-                                                               **kwargs)  # pylint: disable=protected-access
+                                                               **kwargs)
         item_paged._page_iterator_class = FileSystemPropertiesPaged  
         return item_paged
 
@@ -629,5 +629,5 @@ class DataLakeServiceClient(StorageAccountHostsMixin):
             analytics logging, hour/minute metrics, cors rules, etc.
         :rtype: dict[str, Any]
         """
-        props = self._blob_service_client.get_service_properties(**kwargs)  # pylint: disable=protected-access
+        props = self._blob_service_client.get_service_properties(**kwargs)
         return get_datalake_service_properties(props)

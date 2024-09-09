@@ -47,4 +47,4 @@ class AsyncMapsRouteClientBase:
         return self
 
     async def __aexit__(self, *args):
-        return await self._maps_client.__aexit__(*args)  # pylint:disable=no-member
+        return await self._maps_client.__aexit__(*args)

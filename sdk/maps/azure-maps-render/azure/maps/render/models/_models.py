@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-# pylint: disable=unused-import,ungrouped-imports,super-init-not-called, C0302, C0203
+# pylint: disable=unused-import,super-init-not-called, C0302, C0203
 from typing import NamedTuple, Any, Optional
 from .._generated.models import (
     MapAttribution,

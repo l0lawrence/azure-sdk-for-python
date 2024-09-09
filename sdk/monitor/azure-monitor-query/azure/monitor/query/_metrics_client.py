@@ -196,4 +196,4 @@ class MetricsClient:  # pylint: disable=client-accepts-api-version-keyword
         return self
 
     def __exit__(self, *args: Any) -> None:
-        self._client.__exit__(*args)  # pylint:disable=no-member
+        self._client.__exit__(*args)

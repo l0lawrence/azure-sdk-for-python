@@ -516,7 +516,7 @@ class Model(_MyMutableMapping):
         annotations = {
             k: v
             for mro_class in mros
-            if hasattr(mro_class, "__annotations__")  # pylint: disable=no-member
+            if hasattr(mro_class, "__annotations__")
             for k, v in mro_class.__annotations__.items()  
         }
         for attr, rf in attr_to_rest_field.items():
@@ -531,7 +531,7 @@ class Model(_MyMutableMapping):
 
     def __init_subclass__(cls, discriminator: typing.Optional[str] = None) -> None:
         for base in cls.__bases__:
-            if hasattr(base, "__mapping__"):  # pylint: disable=no-member
+            if hasattr(base, "__mapping__"):
                 base.__mapping__[discriminator or cls.__name__] = cls  # type: ignore  
 
     @classmethod

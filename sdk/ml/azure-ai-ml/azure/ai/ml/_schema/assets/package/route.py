@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-# pylint: disable=unused-argument,bad-mcs-method-argument
+# pylint: disable=unused-argument
 
 import logging
 from marshmallow import fields, post_load
