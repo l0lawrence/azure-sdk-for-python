@@ -778,7 +778,6 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         :rtype: None
         """
         # pylint: disable=protected-access
-        print("reset_link_credit")
         handler._link.flow(link_credit=link_credit, drain=drain)
 
     @staticmethod
@@ -1116,41 +1115,41 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
                     and receiver._amqp_transport.get_current_time(amqp_receive_client)
                     > abs_timeout
                 ):
-                    expired = True
-                    break
+                    # expired = True
+                    # break
                     # If we reach our expired point, send Drain=True and wait for receiving flow to stop.
-                    # if not sent_drain:
-                    #     receiver._amqp_transport.reset_link_credit(amqp_receive_client, max_message_count, drain=True)
-                    #     sent_drain = True
-                    #     time_sent = time.time()
-                    #     break
+                    if not sent_drain:
+                        receiver._amqp_transport.reset_link_credit(amqp_receive_client, max_message_count, drain=True)
+                        sent_drain = True
+                        time_sent = time.time()
+                        break
 
                     # If we have sent a drain and we havent received messages in X time
                     # or gotten back the responding flow, lets close the link
-                    # with receiver._handler._link._drain_lock:
-                    #     if (not receiver._handler._link._received_drain_response and sent_drain) \
-                    #         and (time.time() - time_sent > receive_drain_timeout):
-                    #         expired = True
-                    #         receiver._handler._close_link()
-                    #         # receiver._handler._link.detach(close=True,
-                    #         # error=AMQPError(ErrorCondition.InternalError,
-                    #         # "Drain response not received", None))
-                    #         break
+                    with receiver._handler._link._drain_lock:
+                        if (not receiver._handler._link._received_drain_response and sent_drain) \
+                            and (time.time() - time_sent > receive_drain_timeout):
+                            expired = True
+                            receiver._handler._close_link()
+                            # receiver._handler._link.detach(close=True,
+                            # error=AMQPError(ErrorCondition.InternalError,
+                            # "Drain response not received", None))
+                            break
 
                         # if you have received the drain -> break out of the loop
-                        # if receiver._handler._link._received_drain_response:
-                        #     expired = True
-                        #     break
+                        if receiver._handler._link._received_drain_response:
+                            expired = True
+                            break
 
                 before = amqp_receive_client._received_messages.qsize()
                 if not receiver._handler._connection._transport._incoming_queue.empty():
                     receiver._handler._connection._read_frame()
                 received = amqp_receive_client._received_messages.qsize() - before
 
-                # with receiver._handler._link._drain_lock:
-                #     if received > 0 or receiver._handler._link._still_receiving:
-                #         # If we received messages, reset the drain timeout
-                #         time_sent = time.time()
+                with receiver._handler._link._drain_lock:
+                    if received > 0 or receiver._handler._link._still_receiving:
+                        # If we received messages, reset the drain timeout
+                        time_sent = time.time()
 
                 if (
                     not first_message_received

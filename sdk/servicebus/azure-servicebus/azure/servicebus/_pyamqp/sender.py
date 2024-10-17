@@ -89,7 +89,6 @@ class SenderLink(Link):
         self.update_pending_deliveries()
 
     def _outgoing_transfer(self, delivery):
-        print(f"SenderLink._outgoing_transfer: {threading.current_thread().name}")
         output = bytearray()
         encode_payload(output, delivery.message)
         delivery_count = self.delivery_count + 1

@@ -120,7 +120,6 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
         if self._received_payload or frame[5]:  # more
             self._received_payload.extend(frame[11])
         if not frame[5]:
-            print(f"add delivery tag {threading.current_thread().name}")
             self._received_delivery_tags.add(self._first_frame[2])
             if self._received_payload:
                 message = decode_payload(memoryview(self._received_payload))
@@ -151,7 +150,6 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
         timeout: Optional[float] = None
     ):
         if delivery_tag not in self._received_delivery_tags:
-            print(f"here {threading.current_thread().name}")
             raise AMQPException(condition=ErrorCondition.IllegalState, description = "Delivery tag not found.")
 
         disposition_frame = DispositionFrame(
@@ -174,7 +172,6 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
             self._pending_receipts.append(delivery)
 
         self._session._outgoing_disposition(disposition_frame) # pylint: disable=protected-access
-        print("sent disposition")
         self._received_delivery_tags.remove(delivery_tag)
 
 
@@ -224,7 +221,6 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
         timeout: Optional[float] = None
     ):
         self._check_if_closed()
-        print("SENDING DISPOSITION")
         self._outgoing_disposition(
             first_delivery_id,
             last_delivery_id,
