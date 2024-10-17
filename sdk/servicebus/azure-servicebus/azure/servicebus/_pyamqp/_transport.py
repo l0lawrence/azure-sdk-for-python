@@ -467,7 +467,6 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
                     read_frame_buffer.write(self._read(payload_size, buffer=payload))
                 offset -= 2
                 self._incoming_queue.put((frame_header, channel, payload[offset:]))
-                print("INCOMING MSG")
             except (socket.timeout, TimeoutError) as k:
                 # _LOGGER.info(f"Socket timeout: {k}")
                 time_end = time.time()
@@ -493,7 +492,6 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
                 # new_frame = self._transport.receive_frame(**kwargs)
                 # self._process_incoming_frame(*new_frame)
 
-                print("CALL CALLBACK")
                 # if self._recieve_callback: # todo: WRITE CORRECTLY
                     # receive Frmae
                     # callback = process_the_frame
