@@ -221,6 +221,7 @@ class AMQPClient(
         self._operation_waiting = threading.Event()
         self._creation_event = threading.Event()
         self._creation_done_event = threading.Event()
+        self._auth_refresh_thread = None
 
     def __enter__(self):
         """Run Client in a context manager.
@@ -363,9 +364,10 @@ class AMQPClient(
             self._cbs_authenticator.open()
             # start timer for auth updating
             # TODO: setting interval to be the refresh window of the token
-            self._auth_refresh_thread = threading.Timer(interval=int(float(self._auth.expires_in) * 0.1), function=self.auth_complete)
-            self._auth_refresh_thread.daemon = True
-            self._auth_refresh_thread.start()
+            # self._auth_refresh_thread = threading.Timer(interval=int(float(self._auth.expires_in) * 0.1), function=self.auth_complete)
+            # print(f"Auth refresh thread time: {int(float(self._auth.expires_in) * 0.1)}")
+            # self._auth_refresh_thread.daemon = True
+            # self._auth_refresh_thread.start()
         self._network_trace_params["amqpConnection"] = self._connection._container_id
         self._network_trace_params["amqpSession"] = self._session.name
         self._shutdown = False
@@ -412,14 +414,16 @@ class AMQPClient(
         :return: Whether the authentication handshake is complete.
         :rtype: bool
         """
-        _logger.debug("AUTH_COMPLETE")
-        if self._cbs_authenticator and not self._cbs_authenticator.handle_token():
-            # self._connection.listen(wait=self._socket_timeout)
+        _logger.debug("Call Auth Complete")
+        while self._cbs_authenticator and not self._cbs_authenticator.handle_token():
             if not self._connection._transport._incoming_queue.empty():
                 self._connection._read_frame()
             return False
-        # self._auth_refresh_thread.cancel()
-        # self._auth_refresh_thread.start()
+        # if threading.current_thread() == self._auth_refresh_thread:
+        #     _logger.debug("Auth refresh thread completed")
+        #     self._auth_refresh_thread = threading.Timer(interval=int(float(self._auth.expires_in) * 0.1), function=self.auth_complete)
+        #     self._auth_refresh_thread.daemon = True
+        #     self._auth_refresh_thread.start()
         return True
 
     def client_ready(self):
