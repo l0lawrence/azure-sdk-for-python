@@ -68,6 +68,7 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         self._sender_connected = False
         self._receiver_connected = False
         self._lock = threading.RLock()
+        self._mgmt_operation_event = threading.Event()
 
     def __enter__(self):
         self.open()
@@ -85,13 +86,17 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         )
         if new_state == previous_state:
             return
+        
+        _LOGGER.debug("In sender state changed to %r", new_state, extra=self._network_trace_params)
 
         with self._lock:
+            _LOGGER.debug(f"STATE {self.state} and NEW State {new_state}")
             if self.state == ManagementLinkState.OPENING:
                 if new_state == LinkState.ATTACHED:
                     self._sender_connected = True
                     if self._receiver_connected:
                         self.state = ManagementLinkState.OPEN
+                        _LOGGER.debug("receiver connected", extra=self._network_trace_params)
                         self._on_amqp_management_open_complete(ManagementOpenResult.OK)
                 elif new_state in [LinkState.DETACHED, LinkState.DETACH_SENT, LinkState.DETACH_RCVD, LinkState.ERROR]:
                     self.state = ManagementLinkState.IDLE
@@ -117,12 +122,17 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         )
         if new_state == previous_state:
             return
+        
+        _LOGGER.debug("in receiver state change")
+
         with self._lock:
+            _LOGGER.debug(f"STATE {self.state} and NEW State {new_state}")
             if self.state == ManagementLinkState.OPENING:
                 if new_state == LinkState.ATTACHED:
                     self._receiver_connected = True
                     if self._sender_connected:
                         self.state = ManagementLinkState.OPEN
+                        _LOGGER.debug("sender connected", extra=self._network_trace_params)
                         self._on_amqp_management_open_complete(ManagementOpenResult.OK)
                 elif new_state in [LinkState.DETACHED, LinkState.DETACH_SENT, LinkState.DETACH_RCVD, LinkState.ERROR]:
                     self.state = ManagementLinkState.IDLE
@@ -249,6 +259,7 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
 
         on_send_complete = partial(self._on_send_complete, message_delivery)
 
+        _LOGGER.debug("Management link sending message: %r", message, extra=self._network_trace_params)
         with self._lock:
             self._request_link.send_transfer(
                 message,
@@ -257,6 +268,9 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
             )
             self.next_message_id += 1
             self._pending_operations.append(PendingManagementOperation(message, on_execute_operation_complete))
+            # or can use an event on the mgmt link
+            # self._mgmt_operation_event.wait()
+        # self._session._connection._wait_for_response(wait=True)
 
     def close(self):
         with self._lock:

@@ -30,7 +30,7 @@ from .constants import (
 
 from .session import Session
 from .authentication import JWTTokenAuth, SASTokenAuth
-from threading import RLock
+from threading import RLock, Lock
 import threading
 
 _LOGGER = logging.getLogger(__name__)
@@ -90,10 +90,10 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
 
         self.state = CbsState.CLOSED
         self.auth_state = CbsAuthState.IDLE
-        self.auth_lock = RLock()
+        self.auth_lock = Lock()
 
     def _put_token(self, token: str, token_type: str, audience: str, expires_on: Optional[datetime] = None) -> None:
-        _LOGGER.debug(f"{threading.current_thread().name} - Put token: {token}, expires on: {expires_on}")
+        _LOGGER.debug(f"Put token: expires on: {expires_on}")
         message = Message(  # type: ignore  # TODO: missing positional args header, etc.
             value=token,
             properties=Properties(message_id=self._mgmt_link.next_message_id),  # type: ignore
@@ -239,7 +239,7 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
     def open(self) -> None:
         with self.auth_lock:
             self.state = CbsState.OPENING
-            self._mgmt_link.open()
+        self._mgmt_link.open()
 
     def close(self) -> None:
         self._mgmt_link.close()
@@ -286,9 +286,12 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
             )
 
     def handle_token(self) -> bool:  # pylint: disable=inconsistent-return-statements
-        with self.auth_lock:
+            _LOGGER.debug("In handle token")
             if not self._cbs_link_ready():
+                _LOGGER.debug("cbs link not ready")
                 return False
+            _LOGGER.debug("caling update status")
+            _LOGGER.debug(f"auth state: {self.auth_state}")
             self._update_status()
             if self.auth_state == CbsAuthState.IDLE:
                 self.update_token()

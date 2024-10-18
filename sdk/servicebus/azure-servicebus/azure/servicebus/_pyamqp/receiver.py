@@ -59,11 +59,9 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
         self._received_delivery_tags = set()
         self._pending_receipts = []
         self._still_receiving = False
-        self._receiver_loop = threading.Thread(target=self._loop, name=f"receiver-loop-{name}")
 
     def _loop(self):
         pass
-            
 
     @classmethod
     def from_incoming_frame(cls, session, handle, frame):
