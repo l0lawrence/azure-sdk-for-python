@@ -918,6 +918,11 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
                 on_attach=self._on_attach,
             )
             self._link.attach()
+            self._creation_event.set()
+            self._creation_done_event.wait()
+            self._connection._read_frame()
+            self._creation_event.clear()
+            self._creation_done_event.clear()
             return False
         if self._link.get_state().value != 3:  # ATTACHED
             return False
