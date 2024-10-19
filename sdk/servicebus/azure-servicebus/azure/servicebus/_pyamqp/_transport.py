@@ -197,7 +197,6 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
         self._recieve_callback = kwargs.get('recieve_callback')
         self._lock = threading.RLock() 
         self._negotiating = True
-        self._receive_event = threading.Event()     
 
         self._use_tls = use_tls
 
@@ -414,6 +413,7 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
         while self._run_io_loop:
             # write to the socket if there is anything in the outgoing queue
             if not self._outgoing_queue.empty():
+                _LOGGER.debug("Outgoing queue not empty")
                 try:
                     q_size = self._outgoing_queue.qsize()
                     for _ in range(q_size):
@@ -467,6 +467,7 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
                     read_frame_buffer.write(self._read(payload_size, buffer=payload))
                 offset -= 2
                 self._incoming_queue.put((frame_header, channel, payload[offset:]))
+                _LOGGER.debug("ADDED TO INCOMING QUEUE")
             except (socket.timeout, TimeoutError) as k:
                 # _LOGGER.info(f"Socket timeout: {k}")
                 time_end = time.time()

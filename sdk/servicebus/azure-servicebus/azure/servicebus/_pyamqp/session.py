@@ -197,8 +197,9 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         self._connection._process_outgoing_frame(  # pylint: disable=protected-access
             self.channel, frame
         )
-
+        
     def _incoming_attach(self, frame):
+        _LOGGER.debug("incoming attach session level")
         with self._session_lock:
             _LOGGER.debug("Incoming attach frame: %r", frame, extra=self.network_trace_params)
             try:
@@ -247,8 +248,10 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
                         extra=self.network_trace_params
                 )
                 self._input_handles[frame[1]].detach()
+        print("exiting incoming attach session level")
 
     def _outgoing_flow(self, frame=None):
+        print("outgoing flow")
         link_flow = frame or {}
         link_flow.update(
             {
@@ -264,6 +267,7 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         self._connection._process_outgoing_frame(  # pylint: disable=protected-access
             self.channel, flow_frame
         )
+        print('back from outgoing frame')
 
     def _incoming_flow(self, frame):
         if self.network_trace:
@@ -509,6 +513,7 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
             return link
 
     def create_sender_link(self, target_address, **kwargs):
+        # can we lock here, creating the link requires attaching -- which also needs to be locked
         with self._session_lock:
             assigned_handle = self._get_next_output_handle()
             link = SenderLink(

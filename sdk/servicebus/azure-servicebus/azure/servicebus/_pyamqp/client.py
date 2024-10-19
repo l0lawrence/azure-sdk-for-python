@@ -217,11 +217,10 @@ class AMQPClient(
         # Emulator
         self._use_tls: bool = kwargs.get("use_tls", True)
 
-        # Event waiting
-        self._operation_waiting = threading.Event()
-        self._creation_event = threading.Event()
-        self._creation_done_event = threading.Event()
-        self._auth_refresh_thread = None
+        # Events for link creation
+        self._create_link = threading.Event()
+        self._create_link_done = threading.Event()
+
 
     def __enter__(self):
         """Run Client in a context manager.
@@ -245,17 +244,23 @@ class AMQPClient(
         try:
             while self._connection and not self._shutdown:
                 if not self._connection._transport._incoming_queue.empty():
-                    if self._operation_waiting.isSet():
-                        self._connection._transport._receive_event.set()
-                    if self._creation_event.isSet():
-                        self._creation_done_event.set()
-                    # elif not self._operation_waiting.isSet():
-                    #     self._connection._read_frame()
-                    self._connection._event.set()
+                    # _logger.debug("Incoming Traffic")
+                    # when creating the links, the main thread will be blocked until the link is created
+                    if self._create_link.isSet():
+                        # _logger.debug("Link Creation Event Set")
+                        self._create_link_done.set()
+                    # this will unblock the main thread to process incoming traffic when the link has been established
+                    # after the first attaches 
+                    if self._link and self._link._link_event_triggered.isSet():
+                        # _logger.debug("Link Event Triggered")
+                        self._link._wait_event.set()
 
-                # # TODO: send empty frame if no incoming traffic for a while
-                #     # TODO - this is a placceholder for now mainThread should read from the connection
+                    # TODO if it is a mgmt link we want to trigger when the response link should see something -- how do we get that response link
+                    for mgmt_info in self._mgmt_links.values():
+                        if mgmt_info[1].isSet():
+                            mgmt_info[2].set()
                     
+                # TODO: send empty frame if no incoming traffic for a while
         except Exception as e:  # pylint: disable=broad-except
             _logger.debug("Connection keep-alive for %r failed: %r.", self.__class__.__name__, e)
 
@@ -362,6 +367,8 @@ class AMQPClient(
                 session=self._session, auth=self._auth, auth_timeout=self._auth_timeout
             )
             self._cbs_authenticator.open()
+
+        # self.pump()
             # start timer for auth updating
             # TODO: setting interval to be the refresh window of the token
             # self._auth_refresh_thread = threading.Timer(interval=int(float(self._auth.expires_in) * 0.1), function=self.auth_complete)
@@ -372,6 +379,13 @@ class AMQPClient(
         self._network_trace_params["amqpSession"] = self._session.name
         self._shutdown = False
         _logger.debug("CLIENT OPENED LEAVING FUNC")
+
+    # def pump(self):
+    #     _logger.debug("PUMP intro frames")
+    #     while not self.client_ready():
+    #         if not self._connection._transport._incoming_queue.empty():
+    #             self._connection._read_frame()
+
 
     def close(self):
         """Close the client. This includes closing the Session
@@ -417,6 +431,7 @@ class AMQPClient(
         _logger.debug("Call Auth Complete")
         while self._cbs_authenticator and not self._cbs_authenticator.handle_token():
             if not self._connection._transport._incoming_queue.empty():
+                _logger.debug("calling read frame from auth complete")
                 self._connection._read_frame()
             return False
         # if threading.current_thread() == self._auth_refresh_thread:
@@ -436,8 +451,12 @@ class AMQPClient(
         :rtype: bool
         """
         if not self.auth_complete():
+            _logger.debug("Auth not complete")
             return False
         if not self._client_ready():
+            _logger.debug("Client ready")
+            # while not self._connection._transport._incoming_queue.empty():
+            #     self._connection._read_frame()
             # try:
             #     self._connection.listen(wait=self._socket_timeout)
             # except ValueError:
@@ -486,23 +505,39 @@ class AMQPClient(
         :returns: The response to the management request.
         :rtype: ~pyamqp.message.Message
         """
+        _logger.debug("MGMT REQUEST")
 
         # The method also takes "status_code_field" and "status_description_field"
         # keyword arguments as alternate names for the status code and description
         # in the response body. Those two keyword arguments are used in Azure services only.
         with self._mgmt_link_lock:
             try:
-                mgmt_link = self._mgmt_links[node]
+                (mgmt_link, mgmt_event, mgmt_event_done) = self._mgmt_links[node]
             except KeyError:
                 mgmt_link = ManagementOperation(self._session, endpoint=node, **kwargs)
-                self._mgmt_links[node] = mgmt_link
-                mgmt_link.open()
+                mgmt_event = threading.Event()
+                mgmt_event_done = threading.Event()
+                self._mgmt_links[node] = (mgmt_link, mgmt_event, mgmt_event_done)
+                mgmt_link.open(mgmt_event, mgmt_event_done)
+
+        _logger.debug("MGMT LINK OPENED")
+
+        # TODO: these definitely both don't need to be waiting on an event
+        # if we want to make it easier we could just if not incoming queue empty, read frame
 
         while not self.client_ready():
-            time.sleep(0.05)
+            mgmt_event.set()
+            mgmt_event_done.wait()
+            self._connection._read_frame()
+            mgmt_event.clear()
+            mgmt_event_done.clear()
 
         while not mgmt_link.ready():
-            time.sleep(0.05)
+            mgmt_event.set()
+            mgmt_event_done.wait()
+            self._connection._read_frame()
+            mgmt_event.clear()
+            mgmt_event_done.clear()
             # self._connection.listen(wait=False)
         operation_type = operation_type or b"empty"
         status, description, response = mgmt_link.execute(
@@ -633,13 +668,13 @@ class SendClient(AMQPClient):
                 properties=self._link_properties,
             )
             self._link.attach()
-            _logger.debug("Wait for attach response")
-            self._creation_event.set()
-            self._creation_done_event.wait()
-            self._connection._read_frame()
-            self._creation_event.clear()
-            self._creation_done_event.clear()
-            _logger.debug("Attach response received")
+            # _logger.debug("Wait for attach response")
+            # self._create_link.set()
+            # self._create_link_done.wait()
+            # self._connection._read_frame()
+            # self._create_link.clear()
+            # self._create_link_done.clear()
+            # _logger.debug("Attach response received")
             return False
         if self._link.get_state().value != 3:  # ATTACHED
             return False
@@ -727,11 +762,9 @@ class SendClient(AMQPClient):
         # idea #1
         # sent_message = threading.Event()
 
-        # self._operation_waiting.set()
         self._transfer_message(message_delivery, timeout)
         # self._connection._transport._receive_event.wait()
         # self._connection._read_frame()
-        # self._operation_waiting.clear()
         # self._connection._transport._receive_event.clear()
     
         # idea #2
@@ -910,6 +943,7 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
         """
         # pylint: disable=protected-access
         if not self._link:
+            _logger.debug("Creating receiver link")
             self._link = self._session.create_receiver_link(
                 source_address=self.source,
                 link_credit=0,  # link_credit=0 on flow frame sent before client is ready
@@ -921,15 +955,19 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
                 desired_capabilities=self._desired_capabilities,
                 on_attach=self._on_attach,
             )
+            _logger.debug("attach being called")
             self._link.attach()
-            self._creation_event.set()
-            self._creation_done_event.wait()
-            self._connection._read_frame()
-            self._creation_event.clear()
-            self._creation_done_event.clear()
+            # self._create_link.set()
+            # self._create_link_done.wait()
+            # self._connection._read_frame()
+            # print("READ ATTACH RESPONSE")
+            # self._create_link.clear()
+            # self._create_link_done.clear()
+            # _logger.debug("Attach Done")
             return False
         if self._link.get_state().value != 3:  # ATTACHED
             return False
+        _logger.debug("RECEIVER LINK ATTACHED")
         return True
 
     def _client_run(self, **kwargs):
@@ -1097,11 +1135,11 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
         :rtype: generator[~pyamqp.message.Message]
         """
         self.open()
+        print("got to message generator")
         self._timeout_reached = False
         message = None
         self._last_activity_timestamp = time.time()
         self._timeout = timeout if timeout else self._timeout
-        self._operation_waiting.set()
         try:
             while not self._timeout_reached:
                 if self._timeout > 0:
@@ -1109,6 +1147,7 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
                         self._timeout_reached = True
 
                 if not self._connection._transport._incoming_queue.empty():
+                    _logger.debug("Read iterator frame")
                     self._connection._read_frame()
 
                 while not self._received_messages.empty():
@@ -1118,7 +1157,6 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
                     yield message
 
         finally:
-            self._operation_waiting.clear()
             if self._shutdown:
                 self.close()
 
@@ -1260,7 +1298,7 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
         )
         on_disposition_received = partial(self._on_disposition_received, message_delivery)
 
-        self._operation_waiting.set()
+        # self._operation_waiting.set()
         self._link.send_disposition(
             first_delivery_id=first,
             last_delivery_id=last,
@@ -1272,9 +1310,9 @@ class ReceiveClient(AMQPClient): # pylint:disable=too-many-instance-attributes
             on_disposition=on_disposition_received,
             timeout=timeout
         )
-        self._connection._transport._receive_event.wait()
-        self._connection._read_frame()
-        self._connection._transport._receive_event.clear()
+        # self._connection._transport._receive_event.wait()
+        # self._connection._read_frame()
+        # self._connection._transport._receive_event.clear()
 
 
         # if message_delivery.state not in MESSAGE_DELIVERY_DONE_STATES:

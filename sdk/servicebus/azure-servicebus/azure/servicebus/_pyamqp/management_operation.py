@@ -114,9 +114,9 @@ class ManagementOperation(object):
         response = self._responses.pop(operation_id)
         return response
 
-    def open(self):
+    def open(self, mgmt_event=None, mgmt_event_done=None):
         self._mgmt_link_open_status = ManagementOpenResult.OPENING
-        self._mgmt_link.open()
+        self._mgmt_link.open(mgmt_event, mgmt_event_done)
 
     def ready(self):
         try:

@@ -50,6 +50,7 @@ class SenderLink(Link):
             kwargs["source_address"] = "sender-link-{}".format(name)
         super(SenderLink, self).__init__(session, handle, name, role, target_address=target_address, **kwargs)
         self._pending_deliveries = []
+        self._is_mgmt_link = kwargs.get("is_mgmt_link", False)
 
     @classmethod
     def from_incoming_frame(cls, session, handle, frame):
@@ -60,6 +61,7 @@ class SenderLink(Link):
     # In theory we should not need to purge pending deliveries on attach/dettach - as a link should
     # be resume-able, however this is not yet supported.
     def _incoming_attach(self, frame):
+        _LOGGER.debug("Incoming Attach")
         try:
             super(SenderLink, self)._incoming_attach(frame)
         except AMQPLinkError:
@@ -120,6 +122,8 @@ class SenderLink(Link):
                 sent_and_settled = True
         # elif delivery.transfer_state == SessionTransferState.ERROR:
         # TODO: Session wasn't mapped yet - re-adding to the outgoing delivery queue?
+        print("transfer sent wait for response")
+        self._wait_for_response(requires_response=not self._is_mgmt_link)
         return sent_and_settled
 
     def _incoming_disposition(self, frame):

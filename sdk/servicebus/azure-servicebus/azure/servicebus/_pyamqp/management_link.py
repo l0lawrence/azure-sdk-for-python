@@ -48,7 +48,8 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
             on_link_state_change=self._on_sender_state_change,
             send_settle_mode=SenderSettleMode.Unsettled,
             rcv_settle_mode=ReceiverSettleMode.First,
-            network_trace=kwargs.get("network_trace", False)
+            network_trace=kwargs.get("network_trace", False),
+            is_mgmt_link=True
         )
         self._response_link: ReceiverLink = session.create_receiver_link(
             endpoint,
@@ -57,7 +58,8 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
             on_transfer=self._on_message_received,
             send_settle_mode=SenderSettleMode.Unsettled,
             rcv_settle_mode=ReceiverSettleMode.First,
-            network_trace=kwargs.get("network_trace", False)
+            network_trace=kwargs.get("network_trace", False),
+            is_mgmt_link=True
         )
         self._on_amqp_management_error = kwargs.get('on_amqp_management_error')
         self._on_amqp_management_open_complete = kwargs.get('on_amqp_management_open_complete')
@@ -68,7 +70,8 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         self._sender_connected = False
         self._receiver_connected = False
         self._lock = threading.RLock()
-        self._mgmt_operation_event = threading.Event()
+        self._mgmt_link_event_triggered = None
+        self._mgmt_wait_event = None
 
     def __enter__(self):
         self.open()
@@ -200,13 +203,21 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
                     )
                 )
 
-    def open(self):
+    def open(self, mgmt_event=None, mgmt_event_done=None):
+        _LOGGER.debug("Opening management link")
+        self._mgmt_link_event_triggered = mgmt_event
+        self._mgmt_wait_event = mgmt_event_done
         with self._lock:
             if self.state != ManagementLinkState.IDLE:
                 raise ValueError("Management links are already open or opening.")
             self.state = ManagementLinkState.OPENING
+        # if creating mgmt link, allow both attaches to be sent as pairs
+        self._request_link._creating_auth_link = True
+        self._response_link._creating_auth_link = True
         self._response_link.attach()
         self._request_link.attach()
+        self._request_link._creating_auth_link = False
+        self._response_link._creating_auth_link = False
 
     def execute_operation(
         self,
@@ -258,9 +269,9 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         )
 
         on_send_complete = partial(self._on_send_complete, message_delivery)
-
         _LOGGER.debug("Management link sending message: %r", message, extra=self._network_trace_params)
         with self._lock:
+            _LOGGER.debug("Mgmt link sending transfer")
             self._request_link.send_transfer(
                 message,
                 on_send_complete=on_send_complete,
@@ -270,7 +281,24 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
             self._pending_operations.append(PendingManagementOperation(message, on_execute_operation_complete))
             # or can use an event on the mgmt link
             # self._mgmt_operation_event.wait()
-        # self._session._connection._wait_for_response(wait=True)
+        self._mgmt_wait_for_response()
+
+
+    def _mgmt_wait_for_response(self, requires_response=True, wait_timeout=None):
+        _LOGGER.debug("Waiting for response from mgmt link")
+        _LOGGER.debug("Mgmt event triggered %r", self._mgmt_link_event_triggered)
+
+        ## If we are opening the connection + mgmt link, we don't need to wait for a response
+        if requires_response and self._mgmt_link_event_triggered is not None:
+            # wait on the response link for incoming values
+            self._mgmt_link_event_triggered.set()
+            self._mgmt_wait_event.wait(wait_timeout)
+            print("MGMT LINK READ FRAME")
+            self._session._connection._read_frame() # pylint: disable=protected-access
+            self._mgmt_link_event_triggered.clear()
+            self._mgmt_wait_event.clear()   
+
+            # TODO what to do when this is a mgmt operation like peek messages and we need multiple frames?   
 
     def close(self):
         with self._lock:

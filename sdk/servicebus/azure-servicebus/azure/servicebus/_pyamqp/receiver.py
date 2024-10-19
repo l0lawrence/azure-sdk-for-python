@@ -85,6 +85,8 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
         self.delivery_count = frame[9]
         self.current_link_credit = self.link_credit
         self._outgoing_flow()
+        # TODO do we need update_pending_receipts here?
+        print("update pending receipts")
         self._update_pending_receipts()
 
     def _incoming_flow(self, frame):
@@ -171,6 +173,7 @@ class ReceiverLink(Link): # pylint:disable=too-many-instance-attributes
 
         self._session._outgoing_disposition(disposition_frame) # pylint: disable=protected-access
         self._received_delivery_tags.remove(delivery_tag)
+        self._wait_for_response()
 
 
     def _incoming_disposition(self, frame):

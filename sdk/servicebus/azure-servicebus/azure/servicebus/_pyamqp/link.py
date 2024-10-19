@@ -8,6 +8,7 @@ from threading import Lock
 from typing import Any, Optional, TYPE_CHECKING
 import uuid
 import logging
+import threading
 
 from .error import AMQPError, ErrorCondition, AMQPLinkError, AMQPLinkRedirect, AMQPConnectionError
 from .endpoints import Source, Target
@@ -104,6 +105,13 @@ class Link:  # pylint: disable=too-many-instance-attributes
         self._received_drain_response = False
         self._drain_lock = Lock()
 
+        # wait for response
+        self._wait_event = threading.Event()
+        self._link_event_triggered = threading.Event()
+        self._creating_auth_link = False
+        # lock on link
+        self._link_lock = Lock()
+
     def __enter__(self) -> "Link":
         self.attach()
         return self
@@ -129,6 +137,23 @@ class Link:  # pylint: disable=too-many-instance-attributes
                 raise self._error
             raise AMQPConnectionError(condition=ErrorCondition.InternalError,
                                           description="Link already closed.") from None
+        
+    def _wait_for_response(self, requires_response=True, wait_timeout=None) -> None:
+        
+        ## If we are opening the connection + mgmt link, we don't need to wait for a response
+        if not self._creating_auth_link: 
+            _LOGGER.debug("not creating auth link")
+            # once sending an outgoing frame that requires a response, wait for the response
+            if requires_response:
+                _LOGGER.debug("Waiting for response from link: %r", self.name, extra=self.network_trace_params)
+                self._link_event_triggered.set()
+                _LOGGER.debug("waiting for response on link")
+                self._wait_event.wait(wait_timeout)
+                _LOGGER.debug("calling read frame from the link")
+                self._session._connection._read_frame() # pylint: disable=protected-access
+                self._link_event_triggered.clear()
+                self._wait_event.clear()
+
 
     def _set_state(self, new_state: LinkState) -> None:
         """Update the link state.
@@ -174,33 +199,35 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self.network_trace:
             _LOGGER.debug("-> %r", attach_frame, extra=self.network_trace_params)
         self._session._outgoing_attach(attach_frame) # pylint: disable=protected-access
+        self._wait_for_response(requires_response=False)
 
     def _incoming_attach(self, frame) -> None:
-        if self.network_trace:
-            _LOGGER.debug("<- %r", AttachFrame(*frame), extra=self.network_trace_params)
-        if self._is_closed:
-            raise ValueError("Invalid link")
-        if not frame[5] or not frame[6]:
-            _LOGGER.info("Cannot get source or target. Detaching link", extra=self.network_trace_params)
-            self._set_state(LinkState.DETACHED)
-            raise ValueError("Invalid link")
-        self.remote_handle = frame[1]  # handle
-        self.remote_max_message_size = frame[10]  # max_message_size
-        self.offered_capabilities = frame[11]  # offered_capabilities
-        self.remote_properties = frame[13]  # incoming map of properties about the link
-        if self.state == LinkState.DETACHED:
-            self._set_state(LinkState.ATTACH_RCVD)
-        elif self.state == LinkState.ATTACH_SENT:
-            self._set_state(LinkState.ATTACHED)
-        if self._on_attach:
-            try:
-                if frame[5]:
-                    frame[5] = Source(*frame[5])
-                if frame[6]:
-                    frame[6] = Target(*frame[6])
-                self._on_attach(AttachFrame(*frame))
-            except Exception as e:  # pylint: disable=broad-except
-                _LOGGER.warning("Callback for link attach raised error: %r", e, extra=self.network_trace_params)
+        with self._link_lock:
+            if self.network_trace:
+                _LOGGER.debug("<- %r", AttachFrame(*frame), extra=self.network_trace_params)
+            if self._is_closed:
+                raise ValueError("Invalid link")
+            if not frame[5] or not frame[6]:
+                _LOGGER.info("Cannot get source or target. Detaching link", extra=self.network_trace_params)
+                self._set_state(LinkState.DETACHED)
+                raise ValueError("Invalid link")
+            self.remote_handle = frame[1]  # handle
+            self.remote_max_message_size = frame[10]  # max_message_size
+            self.offered_capabilities = frame[11]  # offered_capabilities
+            self.remote_properties = frame[13]  # incoming map of properties about the link
+            if self.state == LinkState.DETACHED:
+                self._set_state(LinkState.ATTACH_RCVD)
+            elif self.state == LinkState.ATTACH_SENT:
+                self._set_state(LinkState.ATTACHED)
+            if self._on_attach:
+                try:
+                    if frame[5]:
+                        frame[5] = Source(*frame[5])
+                    if frame[6]:
+                        frame[6] = Target(*frame[6])
+                    self._on_attach(AttachFrame(*frame))
+                except Exception as e:  # pylint: disable=broad-except
+                    _LOGGER.warning("Callback for link attach raised error: %r", e, extra=self.network_trace_params)
 
     def _outgoing_flow(self, **kwargs: Any) -> None:
         flow_frame = {
@@ -218,6 +245,13 @@ class Link:  # pylint: disable=too-many-instance-attributes
             if not self._drain_state:
                 self._session._outgoing_flow(flow_frame) # pylint: disable=protected-access
                 self._drain_state = kwargs.get("drain", False)
+                if self._drain_state:
+                    # If we send a drain, we are waiting for a responding drain credit
+                    # we set a wait timeout of 5 seconds
+                    # TODO what if we have really large messages what do we want to do here
+                    print("waiting for drain response")
+                    self._wait_for_response(wait_timeout=5)
+
 
     def _incoming_flow(self, frame):
         pass
@@ -233,6 +267,7 @@ class Link:  # pylint: disable=too-many-instance-attributes
         self._session._outgoing_detach(detach_frame)
         if close:
             self._is_closed = True
+        # TODO: If it is a detach we trigger we want a response
 
     def _incoming_detach(self, frame) -> None:
         if self.network_trace:
@@ -263,6 +298,9 @@ class Link:  # pylint: disable=too-many-instance-attributes
             raise ValueError("Link already closed.")
         self._outgoing_attach()
         self._set_state(LinkState.ATTACH_SENT)
+        # TODO wait for response here if the link is being created -- can cause issues?
+        # TODO we wait for link creation here or on the client.py level?
+        self._wait_for_response()
 
     def detach(self, close: bool = False, error: Optional[AMQPError] = None) -> None:
         if self.state in (LinkState.DETACHED, LinkState.DETACH_SENT, LinkState.ERROR):
@@ -301,3 +339,5 @@ class Link:  # pylint: disable=too-many-instance-attributes
                 self.total_link_credit = 0
                 
             self._outgoing_flow(**kwargs)
+            # TODO wait for incoming flow?
+            # self._wait_for_response()

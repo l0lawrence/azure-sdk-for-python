@@ -201,7 +201,6 @@ class Connection:  # pylint:disable=too-many-instance-attributes
         self._outgoing_endpoints: Dict[int, Session] = {}
         self._incoming_endpoints: Dict[int, Session] = {}
         self._lock = threading.RLock()
-        self._event = threading.Event()
 
     def __enter__(self) -> "Connection":
         self.open()
@@ -305,7 +304,9 @@ class Connection:  # pylint:disable=too-many-instance-attributes
         # TODO: is it possible you just want _process_incoming_frame to be called _directly_ from the transport, rather than
         # rely on the intermediate recieveCallback(<frame_bytes>)
         new_frame = self._transport.receive_frame(**kwargs)
-        return self._process_incoming_frame(*new_frame)
+        result = self._process_incoming_frame(*new_frame)
+        _LOGGER.debug("read frame: %r", result, extra=self._network_trace_params)
+        return result
 
     def _can_write(self) -> bool:
         """Whether the connection is in a state where it is legal to write outgoing frames.
@@ -648,6 +649,7 @@ class Connection:  # pylint:disable=too-many-instance-attributes
                 self._incoming_endpoints[channel]._incoming_attach(  # pylint:disable=protected-access
                     fields
                 )
+                print("exit incoming_frame")
                 return False
             if performative == 22:
                 self._incoming_endpoints[channel]._incoming_detach(  # pylint:disable=protected-access
@@ -718,6 +720,7 @@ class Connection:  # pylint:disable=too-many-instance-attributes
                 wait=False,
             )
             return
+        _LOGGER.debug("send frame")
         self._send_frame(channel, frame)
 
     def _get_remote_timeout(self, now: float) -> bool:
@@ -747,18 +750,19 @@ class Connection:  # pylint:disable=too-many-instance-attributes
         :rtype: None
         """
         if wait is True:
-            _LOGGER.debug("Waiting for response from remote endpoint", extra=self._network_trace_params)
-            self._event.wait()
-            _LOGGER.debug("Waiting for response from remote endpoint done", extra=self._network_trace_params)
-            while not self._transport._incoming_queue.empty():
-                _LOGGER.debug("read frame", extra=self._network_trace_params)
-                self._read_frame()
-            _LOGGER.debug("read frame done", extra=self._network_trace_params)
-            self._event.clear()
-        elif wait:
-            print("read frame wait=false")
-            if not self._transport._incoming_queue.empty():
-                self._read_frame()
+            pass
+            # _LOGGER.debug("Waiting for response from remote endpoint", extra=self._network_trace_params)
+            # self._event.wait()
+            # _LOGGER.debug("Waiting for response from remote endpoint done", extra=self._network_trace_params)
+            # while not self._transport._incoming_queue.empty():
+            #     _LOGGER.debug("read frame", extra=self._network_trace_params)
+            #     self._read_frame()
+            # _LOGGER.debug("read frame done", extra=self._network_trace_params)
+            # self._event.clear()
+        # elif wait:
+        #     print("read frame wait=false")
+        #     if not self._transport._incoming_queue.empty():
+        #         self._read_frame()
 
     def create_session(
             self,

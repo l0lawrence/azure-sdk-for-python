@@ -104,6 +104,8 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
                 CBS_EXPIRATION: expires_on,
             },
         )
+        self._mgmt_link._request_link._creating_auth_link = True
+        self._mgmt_link._response_link._creating_auth_link = True
         self._mgmt_link.execute_operation(
             message,
             self._on_execute_operation_complete,
@@ -112,6 +114,8 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
             type=token_type,
         )
         self._mgmt_link.next_message_id += 1
+        self._mgmt_link._request_link._creating_auth_link = False
+        self._mgmt_link._response_link._creating_auth_link = False
 
     def _on_amqp_management_open_complete(self, management_open_result: ManagementOpenResult) -> None:
         _LOGGER.debug(f"{threading.current_thread().name} - mgmt open complete")

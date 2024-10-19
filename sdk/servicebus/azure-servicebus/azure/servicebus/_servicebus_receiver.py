@@ -398,6 +398,7 @@ class ServiceBusReceiver(
             while not self._handler.client_ready():
                 time.sleep(0.05)
             self._running = True
+            _LOGGER.debug("Opened the Receiver")
         except:
             self._close_handler()
             raise
@@ -443,8 +444,9 @@ class ServiceBusReceiver(
                 and max_message_count >= 1
             ):
                 link_credit_needed = max_message_count - len(batch)
-                self._amqp_transport.reset_link_credit(amqp_receive_client, max_message_count)
+                self._amqp_transport.reset_link_credit(amqp_receive_client, link_credit_needed)
 
+            print("reset link credit")
             return self._amqp_transport.receive_loop(
                 self, amqp_receive_client, max_message_count, batch, abs_timeout, timeout_time)
         finally:

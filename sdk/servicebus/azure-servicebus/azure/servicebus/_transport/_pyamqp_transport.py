@@ -686,6 +686,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
             receiver._receive_context.set()
             receiver._open()
             if receiver._handler._link.current_link_credit <= 0:
+                print("Link credit is 0, resetting link credit.")
                 receiver._amqp_transport.reset_link_credit(
                     receiver._handler, link_credit=receiver._handler._link_credit)
             if not receiver._message_iter or wait_time:
@@ -1108,7 +1109,6 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
         # If we have sent a drain, but have not yet received the drain response, we should continue to receive
         while not expired and len(batch) < max_message_count:
             # an operation is starting on the MainThread we will be listening for frames here
-            receiver._handler._operation_waiting.set()
             while amqp_receive_client._received_messages.qsize() < max_message_count:
                 if (
                     abs_timeout
@@ -1143,6 +1143,7 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
 
                 before = amqp_receive_client._received_messages.qsize()
                 if not receiver._handler._connection._transport._incoming_queue.empty():
+                    print("read off of incoming queue")
                     receiver._handler._connection._read_frame()
                 received = amqp_receive_client._received_messages.qsize() - before
 
@@ -1168,7 +1169,6 @@ class PyamqpTransport(AmqpTransport):   # pylint: disable=too-many-public-method
             ):
                 batch.append(amqp_receive_client._received_messages.get())
                 amqp_receive_client._received_messages.task_done()
-        receiver._handler._operation_waiting.clear()
 
         return [receiver._build_received_message(message) for message in batch]
 
