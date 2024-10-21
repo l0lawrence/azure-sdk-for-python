@@ -284,19 +284,27 @@ class ManagementLink: # pylint:disable=too-many-instance-attributes
         self._mgmt_wait_for_response()
 
 
+    # when sending an outgoing transfer, wait until we get an incoming disposition?
+
     def _mgmt_wait_for_response(self, requires_response=True, wait_timeout=None):
         _LOGGER.debug("Waiting for response from mgmt link")
         _LOGGER.debug("Mgmt event triggered %r", self._mgmt_link_event_triggered)
 
         ## If we are opening the connection + mgmt link, we don't need to wait for a response
         if requires_response and self._mgmt_link_event_triggered is not None:
+            print("WAITING FOR MGMT LINK RESPONSE")
             # wait on the response link for incoming values
+            
+            
             self._mgmt_link_event_triggered.set()
             self._mgmt_wait_event.wait(wait_timeout)
+            # gotten a response of some sort
+            # loop until max_message_count is reached or we hit a timeout?
             print("MGMT LINK READ FRAME")
             self._session._connection._read_frame() # pylint: disable=protected-access
             self._mgmt_link_event_triggered.clear()
-            self._mgmt_wait_event.clear()   
+            self._mgmt_wait_event.clear()
+            print("MGMT LINK RESPONSE RECEIVED")
 
             # TODO what to do when this is a mgmt operation like peek messages and we need multiple frames?   
 

@@ -199,7 +199,6 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self.network_trace:
             _LOGGER.debug("-> %r", attach_frame, extra=self.network_trace_params)
         self._session._outgoing_attach(attach_frame) # pylint: disable=protected-access
-        self._wait_for_response(requires_response=False)
 
     def _incoming_attach(self, frame) -> None:
         with self._link_lock:
