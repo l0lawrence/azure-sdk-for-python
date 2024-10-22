@@ -460,6 +460,7 @@ class ServiceBusReceiver(
                         expired = True
                         break
                     before = received_messages_queue.qsize()
+                    # TODO if we are receiving messages here?? how do we do this with an event to trigger
                     receiving = amqp_receive_client.do_work()
                     received = received_messages_queue.qsize() - before
                     if (

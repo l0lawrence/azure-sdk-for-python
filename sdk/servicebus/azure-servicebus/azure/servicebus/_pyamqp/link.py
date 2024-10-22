@@ -132,9 +132,12 @@ class Link:  # pylint: disable=too-many-instance-attributes
             _LOGGER.debug("Waiting for link response")
             self._link_event_triggered.set()
             wait_output = self._wait_for_link_event.wait(timeout=timeout)
-            _LOGGER.debug("Link response received")
+            # _LOGGER.debug("Link response received")
             if wait_output:
-                self._session._connection._read_frame()
+                 # loop on reading the frames until queue is empty
+                while not self._session._connection._transport._incoming_queue.empty():
+                    _LOGGER.debug("LOOP ON READING FRAMES")
+                    self._session._connection._read_frame()
             self._link_event_triggered.clear()
             self._wait_for_link_event.clear()
 
@@ -233,6 +236,7 @@ class Link:  # pylint: disable=too-many-instance-attributes
             "properties": kwargs.get("properties"),
         }
         self._session._outgoing_flow(flow_frame) # pylint: disable=protected-access
+        self._wait_for_link_response(requires_response=(not self._is_mgmt_link), timeout=.2)
 
     def _incoming_flow(self, frame):
         pass
@@ -283,7 +287,7 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self.state in (LinkState.DETACHED, LinkState.DETACH_SENT, LinkState.ERROR):
             # Even if the link is already detached, we might still need to wait
             # For an incoming detach -- like if we did not see a source/targetS
-            self._wait_for_link_response(timeout=.2)
+            # self._wait_for_link_response(timeout=.2)
             return
         try:
             self._check_if_closed()

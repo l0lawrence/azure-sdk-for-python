@@ -245,9 +245,11 @@ class AMQPClient(
 
                 
                 if not self._connection._transport._incoming_queue.empty():
+                    # TODO one event per class? Anna?
 
                     # for conn/session opening
                     if self._connection._connection_trigger_event.isSet():
+                    # if connection.is_open():
                         self._connection._connection_start_event.set()
 
                     # for link operations
@@ -649,13 +651,14 @@ class SendClient(AMQPClient):
         return True
 
     def _transfer_message(self, message_delivery, timeout=0):
+        # TODO set send_async to false now
         message_delivery.state = MessageDeliveryState.WaitingForSendAck
         on_send_complete = partial(self._on_send_complete, message_delivery)
         delivery = self._link.send_transfer(
             message_delivery.message,
             on_send_complete=on_send_complete,
             timeout=timeout,
-            send_async=True,
+            send_async=False,
         )
         return delivery
 

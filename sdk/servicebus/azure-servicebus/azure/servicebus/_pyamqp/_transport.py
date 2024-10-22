@@ -408,9 +408,10 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
         offset = 0
         
         while self._run_io_loop:
+            _LOGGER.debug("IO LOOP")
             # write to the socket if there is anything in the outgoing queue
             if not self._outgoing_queue.empty():
-                _LOGGER.debug("Outgoing queue not empty")
+                _LOGGER.debug("OUTGOING NOT EMPTY")
                 try:
                     q_size = self._outgoing_queue.qsize()
                     for _ in range(q_size):
@@ -530,7 +531,9 @@ class _AbstractTransport(object):  # pylint: disable=too-many-instance-attribute
 
     def read(self, verify_frame_type=0):
         # take in a frame
+        _LOGGER.debug(f"Incoming Queue Is Empty? {self._incoming_queue.empty()}")
         frame_header, channel, payload = self._incoming_queue.get()
+        _LOGGER.debug(f"Frame header: {frame_header}")
         size = frame_header[0:4]
         if size == AMQP_FRAME:  # (TODO: LIES): Empty frame or AMQP header negotiation TODO
             return frame_header, channel, None
