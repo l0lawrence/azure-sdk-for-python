@@ -7,6 +7,7 @@ import struct
 import uuid
 import logging
 import time
+import threading
 
 from ._encode import encode_payload
 from .link import Link
@@ -27,6 +28,9 @@ class PendingDelivery(object):
         self.timeout = kwargs.get("timeout")
         self.settled = kwargs.get("settled", False)
         self._network_trace_params = kwargs.get('network_trace_params')
+
+        # mgmt link diff
+        self._is_mgmt_link = kwargs.get("is_mgmt_link", False)
 
     def on_settled(self, reason, state):
         if self.on_delivery_settled and not self.settled:
@@ -118,6 +122,8 @@ class SenderLink(Link):
                 sent_and_settled = True
         # elif delivery.transfer_state == SessionTransferState.ERROR:
         # TODO: Session wasn't mapped yet - re-adding to the outgoing delivery queue?
+        print("OUTGOING TRANSFER")
+        self._wait_for_link_response(requires_response=(not self._is_mgmt_link))
         return sent_and_settled
 
     def _incoming_disposition(self, frame):

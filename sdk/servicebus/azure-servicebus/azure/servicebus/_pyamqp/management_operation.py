@@ -105,7 +105,7 @@ class ManagementOperation(object):
                 now = time.time()
                 if (now - start_time) >= timeout:
                     raise TimeoutError("Failed to receive mgmt response in {}ms".format(timeout))
-            self._connection.listen()
+            self._mgmt_link._mgmt_link_wait_for_response()
 
         if self._mgmt_error:
             self._responses.pop(operation_id)

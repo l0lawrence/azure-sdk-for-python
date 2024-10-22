@@ -7,7 +7,7 @@
 import logging
 from datetime import datetime
 from typing import Any, Optional, Tuple, Union
-
+import threading
 from .utils import utc_now, utc_from_timestamp
 from .management_link import ManagementLink
 from .message import Message, Properties
@@ -101,6 +101,7 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
                 CBS_EXPIRATION: expires_on,
             },
         )
+        print("PUT TOKEN")
         self._mgmt_link.execute_operation(
             message,
             self._on_execute_operation_complete,
@@ -108,6 +109,7 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
             operation=CBS_PUT_TOKEN,
             type=token_type,
         )
+        print("PUT TOKEN DONE")
         self._mgmt_link.next_message_id += 1
 
     def _on_amqp_management_open_complete(self, management_open_result: ManagementOpenResult) -> None:
@@ -158,6 +160,7 @@ class CBSAuthenticator:  # pylint:disable=too-many-instance-attributes, disable=
         _,
         error_condition: Optional[str] = None,
     ) -> None:
+        print("EXEC COMPLETE")
         if error_condition:
             _LOGGER.info(
                 "CBS Put token error: %r",

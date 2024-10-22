@@ -9,7 +9,7 @@ import logging
 from functools import partial
 from collections import namedtuple
 from typing import Optional, Union
-
+import threading
 from .sender import SenderLink
 from .receiver import ReceiverLink
 from .constants import (
@@ -47,7 +47,8 @@ class ManagementLink(object): # pylint:disable=too-many-instance-attributes
             on_link_state_change=self._on_sender_state_change,
             send_settle_mode=SenderSettleMode.Unsettled,
             rcv_settle_mode=ReceiverSettleMode.First,
-            network_trace=kwargs.get("network_trace", False)
+            network_trace=kwargs.get("network_trace", False),
+            is_mgmt_link=True,
         )
         self._response_link: ReceiverLink = session.create_receiver_link(
             endpoint,
@@ -56,7 +57,8 @@ class ManagementLink(object): # pylint:disable=too-many-instance-attributes
             on_transfer=self._on_message_received,
             send_settle_mode=SenderSettleMode.Unsettled,
             rcv_settle_mode=ReceiverSettleMode.First,
-            network_trace=kwargs.get("network_trace", False)
+            network_trace=kwargs.get("network_trace", False),
+            is_mgmt_link=True,
         )
         self._on_amqp_management_error = kwargs.get('on_amqp_management_error')
         self._on_amqp_management_open_complete = kwargs.get('on_amqp_management_open_complete')
@@ -66,6 +68,11 @@ class ManagementLink(object): # pylint:disable=too-many-instance-attributes
 
         self._sender_connected = False
         self._receiver_connected = False
+
+        # Wait on mgmt event
+        self._mgmt_event_wait = threading.Event()
+        self._mgmt_event_trigger = threading.Event()
+
 
     def __enter__(self):
         self.open()
@@ -188,7 +195,16 @@ class ManagementLink(object): # pylint:disable=too-many-instance-attributes
             raise ValueError("Management links are already open or opening.")
         self.state = ManagementLinkState.OPENING
         self._response_link.attach()
+        self._mgmt_link_wait_for_response()
         self._request_link.attach()
+        self._mgmt_link_wait_for_response()
+
+    def _mgmt_link_wait_for_response(self):
+        self._mgmt_event_trigger.set()
+        self._mgmt_event_wait.wait()
+        self._session._connection._read_frame()
+        self._mgmt_event_trigger.clear()
+        self._mgmt_event_wait.clear()
 
     def execute_operation(
         self,
@@ -246,6 +262,7 @@ class ManagementLink(object): # pylint:disable=too-many-instance-attributes
             on_send_complete=on_send_complete,
             timeout=timeout
         )
+        self._mgmt_link_wait_for_response()        
         self.next_message_id += 1
         self._pending_operations.append(PendingManagementOperation(message, on_execute_operation_complete))
 

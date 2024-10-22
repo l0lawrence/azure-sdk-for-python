@@ -31,6 +31,9 @@ class ReceiverLink(Link):
         self._first_frame = None
         self._received_delivery_tags = set()
 
+        # mgmt link diff
+        self._is_mgmt_link = kwargs.get("is_mgmt_link", False)
+
     @classmethod
     def from_incoming_frame(cls, session, handle, frame):
         # TODO: Assuming we establish all links for now...
@@ -119,6 +122,7 @@ class ReceiverLink(Link):
             _LOGGER.debug("-> %r", DispositionFrame(*disposition_frame), extra=self.network_trace_params)
         self._session._outgoing_disposition(disposition_frame) # pylint: disable=protected-access
         self._received_delivery_tags.remove(delivery_tag)
+        self._wait_for_link_response()
 
     def attach(self):
         super().attach()
@@ -145,5 +149,5 @@ class ReceiverLink(Link):
             delivery_state,
             batchable
         )
-        if not settled:
-            self._wait_for_response(wait)
+        # if not settled:
+        #     self._wait_for_response(wait)

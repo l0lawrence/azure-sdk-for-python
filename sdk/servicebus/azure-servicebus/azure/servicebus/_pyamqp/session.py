@@ -9,6 +9,7 @@ import uuid
 import logging
 import time
 from typing import Union, Optional
+import threading
 
 from .constants import ConnectionState, SessionState, SessionTransferState, Role
 from .sender import SenderLink
@@ -68,6 +69,9 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         self._output_handles = {}
         self._input_handles = {}
 
+        # Session Lock
+        self._session_lock = threading.RLock()
+
     def __enter__(self):
         self.begin()
         return self
@@ -86,18 +90,19 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         """Update the session state.
         :param ~pyamqp.constants.SessionState new_state: The new state to set.
         """
-        if new_state is None:
-            return
-        previous_state = self.state
-        self.state = new_state
-        _LOGGER.info(
-            "Session state changed: %r -> %r",
-            previous_state,
-            new_state,
-            extra=self.network_trace_params,
-        )
-        for link in self.links.values():
-            link._on_session_state_change()  # pylint: disable=protected-access
+        with self._session_lock:
+            if new_state is None:
+                return
+            previous_state = self.state
+            self.state = new_state
+            _LOGGER.info(
+                "Session state changed: %r -> %r",
+                previous_state,
+                new_state,
+                extra=self.network_trace_params,
+            )
+            for link in self.links.values():
+                link._on_session_state_change()  # pylint: disable=protected-access
 
     def _on_connection_state_change(self):
         if self._connection.state in [ConnectionState.CLOSE_RCVD, ConnectionState.END]:
@@ -112,16 +117,17 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         :returns: The next available outgoing handle number.
         :rtype: int
         """
-        if len(self._output_handles) >= self.handle_max:
-            raise ValueError(
-                "Maximum number of handles ({}) has been reached.".format(
-                    self.handle_max
+        with self._session_lock:
+            if len(self._output_handles) >= self.handle_max:
+                raise ValueError(
+                    "Maximum number of handles ({}) has been reached.".format(
+                        self.handle_max
+                    )
                 )
+            next_handle = next(
+                i for i in range(1, self.handle_max) if i not in self._output_handles
             )
-        next_handle = next(
-            i for i in range(1, self.handle_max) if i not in self._output_handles
-        )
-        return next_handle
+            return next_handle
 
     def _outgoing_begin(self):
         begin_frame = BeginFrame(
@@ -147,20 +153,21 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         )
 
     def _incoming_begin(self, frame):
-        if self.network_trace:
-            _LOGGER.debug("<- %r", BeginFrame(*frame), extra=self.network_trace_params)
-        self.handle_max = frame[4]  # handle_max
-        self.next_incoming_id = frame[1]  # next_outgoing_id
-        self.remote_incoming_window = frame[2]  # incoming_window
-        self.remote_outgoing_window = frame[3]  # outgoing_window
-        self.remote_properties = frame[7] # incoming map of properties about the session
-        if self.state == SessionState.BEGIN_SENT:
-            self.remote_channel = frame[0]  # remote_channel
-            self._set_state(SessionState.MAPPED)
-        elif self.state == SessionState.UNMAPPED:
-            self._set_state(SessionState.BEGIN_RCVD)
-            self._outgoing_begin()
-            self._set_state(SessionState.MAPPED)
+        with self._session_lock:
+            if self.network_trace:
+                _LOGGER.debug("<- %r", BeginFrame(*frame), extra=self.network_trace_params)
+            self.handle_max = frame[4]  # handle_max
+            self.next_incoming_id = frame[1]  # next_outgoing_id
+            self.remote_incoming_window = frame[2]  # incoming_window
+            self.remote_outgoing_window = frame[3]  # outgoing_window
+            self.remote_properties = frame[7] # incoming map of properties about the session
+            if self.state == SessionState.BEGIN_SENT:
+                self.remote_channel = frame[0]  # remote_channel
+                self._set_state(SessionState.MAPPED)
+            elif self.state == SessionState.UNMAPPED:
+                self._set_state(SessionState.BEGIN_RCVD)
+                self._outgoing_begin()
+                self._set_state(SessionState.MAPPED)
 
     def _outgoing_end(self, error=None):
         end_frame = EndFrame(error=error)
@@ -171,19 +178,20 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         )
 
     def _incoming_end(self, frame):
-        if self.network_trace:
-            _LOGGER.debug("<- %r", EndFrame(*frame), extra=self.network_trace_params)
-        if self.state not in [
-            SessionState.END_RCVD,
-            SessionState.END_SENT,
-            SessionState.DISCARDING,
-        ]:
-            self._set_state(SessionState.END_RCVD)
-            for _, link in self.links.items():
-                link.detach()
-            # TODO: handling error
-            self._outgoing_end()
-        self._set_state(SessionState.UNMAPPED)
+        with self._session_lock:
+            if self.network_trace:
+                _LOGGER.debug("<- %r", EndFrame(*frame), extra=self.network_trace_params)
+            if self.state not in [
+                SessionState.END_RCVD,
+                SessionState.END_SENT,
+                SessionState.DISCARDING,
+            ]:
+                self._set_state(SessionState.END_RCVD)
+                for _, link in self.links.items():
+                    link.detach()
+                # TODO: handling error
+                self._outgoing_end()
+            self._set_state(SessionState.UNMAPPED)
 
     def _outgoing_attach(self, frame):
         self._connection._process_outgoing_frame(  # pylint: disable=protected-access
@@ -191,51 +199,54 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
         )
 
     def _incoming_attach(self, frame):
-        try:
-            self._input_handles[frame[1]] = self.links[
-                frame[0].decode("utf-8")
-            ]  # name and handle
-            self._input_handles[frame[1]]._incoming_attach(  # pylint: disable=protected-access
-                frame
-            )
-        except KeyError:
+        with self._session_lock:
             try:
-                outgoing_handle = self._get_next_output_handle()
-            except ValueError:
-                _LOGGER.error(
-                    "Unable to attach new link - cannot allocate more handles.",
-                    extra=self.network_trace_params
+                self._input_handles[frame[1]] = self.links[
+                    frame[0].decode("utf-8")
+                ]  # name and handle
+                self._input_handles[frame[1]]._incoming_attach(  # pylint: disable=protected-access
+                    frame
                 )
-                # detach the link that would have been set.
-                self.links[frame[0].decode("utf-8")].detach(
-                    error=AMQPError(
-                        condition=ErrorCondition.LinkDetachForced,
-                        description="""Cannot allocate more handles, """
-                            """the max number of handles is {}. Detaching link""".format(
-                            self.handle_max
-                        ),
-                        info=None,
+            except KeyError:
+                try:
+                    outgoing_handle = self._get_next_output_handle()
+                except ValueError:
+                    _LOGGER.error(
+                        "Unable to attach new link - cannot allocate more handles.",
+                        extra=self.network_trace_params
                     )
+                    # detach the link that would have been set.
+                    self.links[frame[0].decode("utf-8")].detach(
+                        error=AMQPError(
+                            condition=ErrorCondition.LinkDetachForced,
+                            description="""Cannot allocate more handles, """
+                                """the max number of handles is {}. Detaching link""".format(
+                                self.handle_max
+                            ),
+                            info=None,
+                        )
+                    )
+                    return
+                if frame[2] == Role.Sender:  # role
+                    new_link = ReceiverLink.from_incoming_frame(
+                        self, outgoing_handle, frame
+                    )
+                else:
+                    new_link = SenderLink.from_incoming_frame(self, outgoing_handle, frame)
+                new_link._incoming_attach(frame)  # pylint: disable=protected-access
+                self.links[frame[0]] = new_link
+                self._output_handles[outgoing_handle] = new_link
+                self._input_handles[frame[1]] = new_link
+            except ValueError as e:
+                print("Value Error raised: ", e)
+                # Reject Link
+                _LOGGER.debug(
+                        "Unable to attach new link: %r",
+                        e,
+                        extra=self.network_trace_params
                 )
-                return
-            if frame[2] == Role.Sender:  # role
-                new_link = ReceiverLink.from_incoming_frame(
-                    self, outgoing_handle, frame
-                )
-            else:
-                new_link = SenderLink.from_incoming_frame(self, outgoing_handle, frame)
-            new_link._incoming_attach(frame)  # pylint: disable=protected-access
-            self.links[frame[0]] = new_link
-            self._output_handles[outgoing_handle] = new_link
-            self._input_handles[frame[1]] = new_link
-        except ValueError as e:
-            # Reject Link
-            _LOGGER.debug(
-                    "Unable to attach new link: %r",
-                    e,
-                    extra=self.network_trace_params
-            )
-            self._input_handles[frame[1]].detach()
+                print("Detaching link")
+                self._input_handles[frame[1]].detach()
 
     def _outgoing_flow(self, frame=None):
         link_flow = frame or {}
@@ -435,18 +446,23 @@ class Session(object):  # pylint: disable=too-many-instance-attributes
     def _wait_for_response(self, wait, end_state):
         # type: (Union[bool, float], SessionState) -> None
         if wait is True:
-            self._connection.listen(wait=False)
-            while self.state != end_state:
-                time.sleep(self.idle_wait_time)
-                self._connection.listen(wait=False)
-        elif wait:
-            self._connection.listen(wait=False)
-            timeout = time.time() + wait
-            while self.state != end_state:
-                if time.time() >= timeout:
-                    break
-                time.sleep(self.idle_wait_time)
-                self._connection.listen(wait=False)
+            self._connection._connection_trigger_event.set()
+            self._connection._connection_start_event.wait(2)
+            self._connection._read_frame()
+            self._connection._connection_trigger_event.clear()
+            self._connection._connection_start_event.clear()
+            # self._connection.listen(wait=False)
+            # while self.state != end_state:
+            #     time.sleep(self.idle_wait_time)
+            #     self._connection.listen(wait=False)
+        # elif wait:
+        #     self._connection.listen(wait=False)
+        #     timeout = time.time() + wait
+        #     while self.state != end_state:
+        #         if time.time() >= timeout:
+        #             break
+        #         time.sleep(self.idle_wait_time)
+        #         self._connection.listen(wait=False)
 
     def begin(self, wait=False):
         self._outgoing_begin()

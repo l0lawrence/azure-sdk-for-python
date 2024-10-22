@@ -7,6 +7,7 @@
 from typing import Any, Optional, TYPE_CHECKING
 import uuid
 import logging
+import threading
 
 from .error import AMQPError, ErrorCondition, AMQPLinkError, AMQPLinkRedirect, AMQPConnectionError
 from .endpoints import Source, Target
@@ -99,6 +100,14 @@ class Link:  # pylint: disable=too-many-instance-attributes
         self._error: Optional[AMQPLinkError] = None
         self.total_link_credit = self.link_credit
 
+        # events
+        self._link_event_triggered = threading.Event()
+        self._wait_for_link_event = threading.Event()
+
+        # mgmt link diff
+        self._is_mgmt_link = kwargs.get("is_mgmt_link", False)
+
+
     def __enter__(self) -> "Link":
         self.attach()
         return self
@@ -117,6 +126,17 @@ class Link:  # pylint: disable=too-many-instance-attributes
             raise self._error
 
         return self.state
+    
+    def _wait_for_link_response(self, requires_response=True, timeout=None) -> None:
+        if requires_response:
+            _LOGGER.debug("Waiting for link response")
+            self._link_event_triggered.set()
+            wait_output = self._wait_for_link_event.wait(timeout=timeout)
+            _LOGGER.debug("Link response received")
+            if wait_output:
+                self._session._connection._read_frame()
+            self._link_event_triggered.clear()
+            self._wait_for_link_event.clear()
 
     def _check_if_closed(self) -> None:
         if self._is_closed:
@@ -169,6 +189,11 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self.network_trace:
             _LOGGER.debug("-> %r", attach_frame, extra=self.network_trace_params)
         self._session._outgoing_attach(attach_frame) # pylint: disable=protected-access
+        # TODO: can we wait here because the self._link has not been established yet?
+        # wait for response using a condition variable?
+        print(f"Mgmt link: {self._is_mgmt_link}")
+        self._set_state(LinkState.ATTACH_SENT)
+        self._wait_for_link_response(requires_response=(not self._is_mgmt_link))
 
     def _incoming_attach(self, frame) -> None:
         if self.network_trace:
@@ -222,6 +247,8 @@ class Link:  # pylint: disable=too-many-instance-attributes
         self._session._outgoing_detach(detach_frame) # pylint: disable=protected-access
         if close:
             self._is_closed = True
+        # TODO when to wait on detach response?
+            # self._wait_for_link_response()
 
     def _incoming_detach(self, frame) -> None:
         if self.network_trace:
@@ -251,10 +278,12 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self._is_closed:
             raise ValueError("Link already closed.")
         self._outgoing_attach()
-        self._set_state(LinkState.ATTACH_SENT)
 
     def detach(self, close: bool = False, error: Optional[AMQPError] = None) -> None:
         if self.state in (LinkState.DETACHED, LinkState.DETACH_SENT, LinkState.ERROR):
+            # Even if the link is already detached, we might still need to wait
+            # For an incoming detach -- like if we did not see a source/targetS
+            self._wait_for_link_response(timeout=.2)
             return
         try:
             self._check_if_closed()
