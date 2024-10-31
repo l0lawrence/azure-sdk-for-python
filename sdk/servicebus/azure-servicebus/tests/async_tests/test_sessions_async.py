@@ -1,8 +1,8 @@
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
-#--------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 import asyncio
 import logging
@@ -19,7 +19,7 @@ from azure.servicebus import (
     ServiceBusReceivedMessage,
     ServiceBusReceiveMode,
     NEXT_AVAILABLE_SESSION,
-    ServiceBusSubQueue
+    ServiceBusSubQueue,
 )
 from azure.servicebus.aio import ServiceBusClient, AutoLockRenewer
 from azure.servicebus._common.utils import utc_now
@@ -31,7 +31,7 @@ from azure.servicebus.exceptions import (
     SessionLockLostError,
     MessageLockLostError,
     MessageAlreadySettled,
-    AutoLockRenewTimeout
+    AutoLockRenewTimeout,
 )
 from devtools_testutils import AzureMgmtRecordedTestCase, get_credential
 from tests.servicebus_preparer import (
@@ -41,7 +41,7 @@ from tests.servicebus_preparer import (
     ServiceBusTopicPreparer,
     ServiceBusQueuePreparer,
     ServiceBusSubscriptionPreparer,
-    CachedServiceBusResourceGroupPreparer
+    CachedServiceBusResourceGroupPreparer,
 )
 from tests.utilities import get_logger, print_message, uamqp_transport as get_uamqp_transport, ArgPasserAsync, sleep_until_expired_async
 
@@ -55,18 +55,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_session_client_conn_str_receive_handler_peeklock(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_session_client_conn_str_receive_handler_peeklock(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
             credential=credential,
-            logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -114,21 +118,26 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=1)
                 async with receiver:
                     pass
-    
+
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True, lock_duration='PT10S')
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True, lock_duration="PT10S")
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_queue_client_conn_str_receive_handler_receiveanddelete(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_queue_client_conn_str_receive_handler_receiveanddelete(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -137,7 +146,12 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     await sender.send_messages(message)
 
             messages = []
-            receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE, max_wait_time=10)
+            receiver = sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+                max_wait_time=10,
+            )
             async for message in receiver:
                 messages.append(message)
                 assert session_id == receiver.session.session_id
@@ -153,26 +167,35 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             time.sleep(10)
 
             messages = []
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE, max_wait_time=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+                max_wait_time=10,
+            ) as receiver:
                 async for message in receiver:
                     messages.append(message)
             assert len(messages) == 0
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_session_client_conn_str_receive_handler_with_stop(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_session_client_conn_str_receive_handler_with_stop(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -209,41 +232,57 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
     @pytest.mark.xfail(reason="'Cannot open log' error, potential service bug", raises=ServiceBusError)
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_session_client_conn_str_receive_handler_with_no_session(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_session_client_conn_str_receive_handler_with_no_session(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
-            receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=10)
+            receiver = sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=10
+            )
             with pytest.raises(OperationTimeoutError):
                 await receiver._open_with_retry()
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_session_client_conn_str_receive_handler_with_inactive_session(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_session_client_conn_str_receive_handler_with_inactive_session(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             messages = []
-            receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE, max_wait_time=5)
+            receiver = sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+                max_wait_time=5,
+            )
             async with receiver:
                 async for message in receiver:
                     messages.append(message)
@@ -251,30 +290,38 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             assert not receiver._running
             assert len(messages) == 0
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_complete(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_complete(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             deferred_messages = []
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
-                for message in [ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)]:
+                for message in [
+                    ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)
+                ]:
                     await sender.send_messages(message)
 
             count = 0
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5
+            ) as receiver:
                 async for message in receiver:
                     deferred_messages.append(message.sequence_number)
                     print_message(_logger, message)
@@ -283,7 +330,9 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
 
             assert count == 10
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5
+            ) as receiver:
                 deferred = await receiver.receive_deferred_messages(deferred_messages)
                 assert len(deferred) == 10
                 for message in deferred:
@@ -295,30 +344,38 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                         await receiver.renew_message_lock(message)
                     await receiver.complete_message(message)
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_deadletter(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_deadletter(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             deferred_messages = []
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
-                for message in [ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)]:
+                for message in [
+                    ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)
+                ]:
                     await sender.send_messages(message)
 
             count = 0
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5
+            ) as receiver:
                 async for message in receiver:
                     deferred_messages.append(message.sequence_number)
                     print_message(_logger, message)
@@ -327,51 +384,63 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
 
             assert count == 10
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5
+            ) as receiver:
                 deferred = await receiver.receive_deferred_messages(deferred_messages)
                 assert len(deferred) == 10
                 for message in deferred:
                     assert isinstance(message, ServiceBusReceivedMessage)
-                    await receiver.dead_letter_message(message, reason="Testing reason", error_description="Testing description")
+                    await receiver.dead_letter_message(
+                        message, reason="Testing reason", error_description="Testing description"
+                    )
 
             count = 0
-            async with sb_client.get_queue_receiver(servicebus_queue.name, 
-                                                    sub_queue = ServiceBusSubQueue.DEAD_LETTER,
-                                                    max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, sub_queue=ServiceBusSubQueue.DEAD_LETTER, max_wait_time=5
+            ) as receiver:
                 async for message in receiver:
                     count += 1
                     print_message(_logger, message)
-                    assert message.dead_letter_reason == 'Testing reason'
-                    assert message.dead_letter_error_description == 'Testing description'
-                    assert message.application_properties[b'DeadLetterReason'] == b'Testing reason'
-                    assert message.application_properties[b'DeadLetterErrorDescription'] == b'Testing description'
+                    assert message.dead_letter_reason == "Testing reason"
+                    assert message.dead_letter_error_description == "Testing description"
+                    assert message.application_properties[b"DeadLetterReason"] == b"Testing reason"
+                    assert message.application_properties[b"DeadLetterErrorDescription"] == b"Testing description"
                     await receiver.complete_message(message)
             assert count == 10
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_deletemode(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_receiver_deletemode(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             deferred_messages = []
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
-                for message in [ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)]:
+                for message in [
+                    ServiceBusMessage("Deferred message no. {}".format(i), session_id=session_id) for i in range(10)
+                ]:
                     await sender.send_messages(message)
 
             count = 0
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5
+            ) as receiver:
                 async for message in receiver:
                     deferred_messages.append(message.sequence_number)
                     print_message(_logger, message)
@@ -379,7 +448,12 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     await receiver.defer_message(message)
 
             assert count == 10
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5, receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                max_wait_time=5,
+                receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+            ) as receiver:
                 deferred = await receiver.receive_deferred_messages(deferred_messages)
                 assert len(deferred) == 10
                 for message in deferred:
@@ -389,21 +463,25 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 with pytest.raises(ServiceBusError):
                     deferred = await receiver.receive_deferred_messages(deferred_messages)
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_client(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_iter_messages_with_retrieve_deferred_client(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             deferred_messages = []
             session_id = str(uuid.uuid4())
@@ -426,24 +504,30 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             with pytest.raises(ValueError):
                 await receiver.complete_message(message)
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_fetch_next_with_retrieve_deadletter(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_fetch_next_with_retrieve_deadletter(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5, prefetch_count=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=5, prefetch_count=10
+            ) as receiver:
 
                 async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                     for i in range(10):
@@ -455,22 +539,23 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 while messages:
                     for message in messages:
                         print_message(_logger, message)
-                        await receiver.dead_letter_message(message, reason="Testing reason",
-                                                           error_description="Testing description")
+                        await receiver.dead_letter_message(
+                            message, reason="Testing reason", error_description="Testing description"
+                        )
                         count += 1
                     messages = await receiver.receive_messages()
             assert count == 10
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, 
-                                                    sub_queue = ServiceBusSubQueue.DEAD_LETTER,
-                                                    max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, sub_queue=ServiceBusSubQueue.DEAD_LETTER, max_wait_time=5
+            ) as receiver:
                 count = 0
                 async for message in receiver:
                     print_message(_logger, message)
-                    assert message.dead_letter_reason == 'Testing reason'
-                    assert message.dead_letter_error_description == 'Testing description'
-                    assert message.application_properties[b'DeadLetterReason'] == b'Testing reason'
-                    assert message.application_properties[b'DeadLetterErrorDescription'] == b'Testing description'
+                    assert message.dead_letter_reason == "Testing reason"
+                    assert message.dead_letter_error_description == "Testing description"
+                    assert message.application_properties[b"DeadLetterReason"] == b"Testing reason"
+                    assert message.application_properties[b"DeadLetterErrorDescription"] == b"Testing description"
                     await receiver.complete_message(message)
                     count += 1
             assert count == 10
@@ -478,17 +563,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_browse_messages_client(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_browse_messages_client(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -517,20 +607,27 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_browse_messages_with_receiver(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_browse_messages_with_receiver(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
-            async with sb_client.get_queue_receiver(servicebus_queue.name, max_wait_time=5, session_id=session_id) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, max_wait_time=5, session_id=session_id
+            ) as receiver:
                 async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                     for i in range(5):
                         message = ServiceBusMessage("Test message no. {}".format(i), session_id=session_id)
@@ -547,22 +644,29 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_renew_client_locks(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_renew_client_locks(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             messages = []
             locks = 3
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, prefetch_count=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, prefetch_count=10
+            ) as receiver:
                 async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                     for i in range(locks):
                         message = ServiceBusMessage("Test message no. {}".format(i), session_id=session_id)
@@ -591,21 +695,25 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     with pytest.raises(SessionLockLostError):
                         await receiver.complete_message(messages[2])
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True, lock_duration='PT5S')
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True, lock_duration="PT5S")
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_conn_str_receive_handler_with_autolockrenew(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_conn_str_receive_handler_with_autolockrenew(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
             session_id = str(uuid.uuid4())
 
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -614,6 +722,7 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     await sender.send_messages(message)
 
             results = []
+
             async def lock_lost_callback(renewable, error):
                 results.append(renewable)
 
@@ -654,7 +763,13 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             renewer._renew_period = 1
             session = None
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=5, receive_mode=ServiceBusReceiveMode.PEEK_LOCK, prefetch_count=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                max_wait_time=5,
+                receive_mode=ServiceBusReceiveMode.PEEK_LOCK,
+                prefetch_count=10,
+            ) as receiver:
                 session = receiver.session
                 renewer.register(receiver, session, max_lock_renewal_duration=5, on_lock_renew_failure=lock_lost_callback)
             await sleep_until_expired_async(session)
@@ -663,24 +778,28 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             await renewer.close()
             assert len(messages) == 2
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True, lock_duration='PT10S')
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True, lock_duration="PT10S")
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_conn_str_receive_handler_with_auto_autolockrenew(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
-        if sys.platform.startswith('darwin'):
+    async def test_async_session_by_conn_str_receive_handler_with_auto_autolockrenew(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
+        if sys.platform.startswith("darwin"):
             pytest.skip("Skipping for flakiness on OSX. Need to fix and unskip during MQ. Issue created: #32067.")
 
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
             session_id = str(uuid.uuid4())
 
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -689,6 +808,7 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     await sender.send_messages(message)
 
             results = []
+
             async def lock_lost_callback(renewable, error):
                 results.append(renewable)
 
@@ -733,12 +853,14 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             renewer._renew_period = 1
             session = None
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name,
-                                                    session_id=session_id,
-                                                    max_wait_time=10,
-                                                    receive_mode=ServiceBusReceiveMode.PEEK_LOCK,
-                                                    prefetch_count=10,
-                                                    auto_lock_renewer=renewer) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                max_wait_time=10,
+                receive_mode=ServiceBusReceiveMode.PEEK_LOCK,
+                prefetch_count=10,
+                auto_lock_renewer=renewer,
+            ) as receiver:
                 session = receiver.session
             await sleep_until_expired_async(session)
             assert not results
@@ -752,11 +874,9 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             await sender.send_messages(messages)
 
         renewer = AutoLockRenewer(max_lock_renewal_duration=100)
-        receiver = sb_client.get_queue_receiver(servicebus_queue.name,
-                                            session_id=session_id,
-                                            max_wait_time=10,
-                                            prefetch_count=10,
-                                            auto_lock_renewer=renewer)
+        receiver = sb_client.get_queue_receiver(
+            servicebus_queue.name, session_id=session_id, max_wait_time=10, prefetch_count=10, auto_lock_renewer=renewer
+        )
 
         async with receiver:
             received_msgs = await receiver.receive_messages(max_wait_time=10)
@@ -769,17 +889,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_message_connection_closed(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_message_connection_closed(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
 
@@ -798,17 +923,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_message_expiry(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_message_expiry(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
 
@@ -821,7 +951,7 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 messages = await receiver.receive_messages(max_wait_time=10)
                 assert len(messages) == 1
                 print_message(_logger, messages[0])
-                await asyncio.sleep(60) #TODO: Was 30, but then lock isn't expired.
+                await asyncio.sleep(60)  # TODO: Was 30, but then lock isn't expired.
                 with pytest.raises(TypeError):
                     messages[0]._lock_expired
                 with pytest.raises(TypeError):
@@ -842,18 +972,24 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_schedule_message(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_schedule_message(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
             import uuid
+
             session_id = str(uuid.uuid4())
             enqueue_time = (utc_now() + timedelta(seconds=30)).replace(microsecond=0)
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -883,18 +1019,24 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_schedule_multiple_messages(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_schedule_multiple_messages(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
             import uuid
+
             session_id = str(uuid.uuid4())
             enqueue_time = (utc_now() + timedelta(seconds=30)).replace(microsecond=0)
             messages = []
@@ -925,17 +1067,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_cancel_scheduled_messages(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_cancel_scheduled_messages(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             enqueue_time = (utc_now() + timedelta(minutes=2)).replace(microsecond=0)
@@ -964,47 +1111,59 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @CachedServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @CachedServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_session_receiver_partially_invalid_autolockrenew_mode(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_session_receiver_partially_invalid_autolockrenew_mode(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         session_id = str(uuid.uuid4())
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                 await sender.send_messages(ServiceBusMessage("test_message", session_id=session_id))
 
             failures = 0
+
             async def should_not_run(*args, **kwargs):
                 failures += 1
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name,
-                                              session_id=session_id,
-                                              receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
-                                              auto_lock_renewer=AutoLockRenewer()) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=session_id,
+                receive_mode=ServiceBusReceiveMode.RECEIVE_AND_DELETE,
+                auto_lock_renewer=AutoLockRenewer(),
+            ) as receiver:
                 assert receiver.receive_messages()
                 assert not failures
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_get_set_state_with_receiver(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_get_set_state_with_receiver(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             session_id = str(uuid.uuid4())
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
@@ -1012,7 +1171,9 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     message = ServiceBusMessage("Handler message no. {}".format(i), session_id=session_id)
                     await sender.send_messages(message)
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=10
+            ) as receiver:
                 assert await receiver.session.get_state(timeout=5) == None
                 await receiver.session.set_state("first_state", timeout=5)
                 count = 0
@@ -1020,7 +1181,7 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     assert m.session_id == session_id
                     count += 1
                 state = await receiver.session.get_state()
-                assert state == b'first_state'
+                assert state == b"first_state"
             assert count == 3
 
             session_id = str(uuid.uuid4())
@@ -1029,7 +1190,9 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                     message = ServiceBusMessage("Handler message no. {}".format(i), session_id=session_id)
                     await sender.send_messages(message)
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session_id, max_wait_time=10) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=session_id, max_wait_time=10
+            ) as receiver:
                 assert await receiver.session.get_state(timeout=5) == None
                 await receiver.session.set_state(None, timeout=5)
                 count = 0
@@ -1040,21 +1203,26 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 assert state == None
             assert count == 1
 
-    @pytest.mark.skip(reason='Requires list sessions')
+    @pytest.mark.skip(reason="Requires list sessions")
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_list_sessions_with_receiver(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_list_sessions_with_receiver(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             sessions = []
             start_time = utc_now()
@@ -1070,7 +1238,12 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
                 async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=session) as receiver:
                     await receiver.session.set_state("SESSION {}".format(session))
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=5, receive_mode=ServiceBusReceiveMode.PEEK_LOCK) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name,
+                session_id=NEXT_AVAILABLE_SESSION,
+                max_wait_time=5,
+                receive_mode=ServiceBusReceiveMode.PEEK_LOCK,
+            ) as receiver:
                 current_sessions = await receiver.list_sessions(updated_since=start_time)
                 assert len(current_sessions) == 5
                 assert current_sessions == sessions
@@ -1079,17 +1252,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_list_sessions_with_client(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_by_servicebus_client_list_sessions_with_client(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             sessions = []
             start_time = utc_now()
@@ -1113,19 +1291,24 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
     @pytest.mark.xfail(reason="'Cannot open log' error, potential service bug")
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_by_servicebus_client_session_pool(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
-        
+    async def test_async_session_by_servicebus_client_session_pool(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
+
         messages = []
         errors = []
+
         async def message_processing(sb_client):
             while True:
                 try:
-                    async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=5) as receiver:
+                    async with sb_client.get_queue_receiver(
+                        servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=5
+                    ) as receiver:
                         async for message in receiver:
                             print("ServiceBusMessage: {}".format(message))
                             messages.append(message)
@@ -1142,11 +1325,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, retry_total=1, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            retry_total=1,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             for session_id in sessions:
                 async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
-                    await asyncio.gather(*[sender.send_messages(ServiceBusMessage("Sample message no. {}".format(i), session_id=session_id)) for i in range(20)])
+                    await asyncio.gather(
+                        *[
+                            sender.send_messages(
+                                ServiceBusMessage("Sample message no. {}".format(i), session_id=session_id)
+                            )
+                            for i in range(20)
+                        ]
+                    )
 
             receive_sessions = [message_processing(sb_client) for _ in range(concurrent_receivers)]
             await asyncio.gather(*receive_sessions, return_exceptions=True)
@@ -1154,34 +1348,35 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             assert not errors
             assert len(messages) == 100
 
-    
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusTopicPreparer(name_prefix='servicebustest')
-    @ServiceBusSubscriptionPreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusTopicPreparer(name_prefix="servicebustest")
+    @ServiceBusSubscriptionPreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_basic_topic_subscription_send_and_receive(self, uamqp_transport, *, servicebus_namespace, servicebus_topic, servicebus_subscription, **kwargs):
+    async def test_async_session_basic_topic_subscription_send_and_receive(
+        self, uamqp_transport, *, servicebus_namespace, servicebus_topic, servicebus_subscription, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
-                fully_qualified_namespace=fully_qualified_namespace,
-                credential=credential,
-                logging_enable=False,
-                uamqp_transport=uamqp_transport
+            fully_qualified_namespace=fully_qualified_namespace,
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
         ) as sb_client:
             async with sb_client.get_topic_sender(topic_name=servicebus_topic.name) as sender:
-                message = ServiceBusMessage(b"Sample topic message", session_id='test_session')
+                message = ServiceBusMessage(b"Sample topic message", session_id="test_session")
                 await sender.send_messages(message)
 
             async with sb_client.get_subscription_receiver(
                 topic_name=servicebus_topic.name,
                 subscription_name=servicebus_subscription.name,
-                session_id='test_session',
-                max_wait_time=5
+                session_id="test_session",
+                max_wait_time=5,
             ) as receiver:
                 count = 0
                 async for message in receiver:
@@ -1193,26 +1388,32 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
     @pytest.mark.xfail(reason="'Cannot open log' error, potential service bug", raises=ServiceBusError)
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_connection_failure_is_idempotent(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
-        #Technically this validates for all senders/receivers, not just session, but since it uses session to generate a recoverable failure, putting it in here.
+    async def test_async_session_connection_failure_is_idempotent(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
+        # Technically this validates for all senders/receivers, not just session, but since it uses session to generate a recoverable failure, putting it in here.
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, retry_total=1, uamqp_transport=uamqp_transport) as sb_client:
-    
+            credential=credential,
+            logging_enable=False,
+            retry_total=1,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
+
             # First let's just try the naive failure cases.
             receiver = sb_client.get_queue_receiver("THIS_IS_WRONG_ON_PURPOSE")
             with pytest.raises(ServiceBusAuthenticationError):
                 await receiver._open_with_retry()
             assert not receiver._running
             assert not receiver._handler
-    
+
             sender = sb_client.get_queue_sender("THIS_IS_WRONG_ON_PURPOSE")
             with pytest.raises(ServiceBusAuthenticationError):
                 await sender._open_with_retry()
@@ -1228,7 +1429,9 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                 await sender.send_messages(ServiceBusMessage("test session sender", session_id=session_id))
 
-            async with sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=5) as receiver:
+            async with sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=5
+            ) as receiver:
                 messages = []
                 async for message in receiver:
                     messages.append(message)
@@ -1237,17 +1440,22 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @CachedServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @CachedServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_session_non_session_send_to_session_queue_should_fail(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_session_non_session_send_to_session_queue_should_fail(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
             async with sb_client.get_queue_sender(servicebus_queue.name) as sender:
                 with pytest.raises(ServiceBusError):
@@ -1257,38 +1465,47 @@ class TestServiceBusAsyncSession(AzureMgmtRecordedTestCase):
     @pytest.mark.asyncio
     @pytest.mark.liveTest
     @pytest.mark.live_test_only
-    @CachedServiceBusResourceGroupPreparer(name_prefix='servicebustest')
-    @CachedServiceBusNamespacePreparer(name_prefix='servicebustest')
-    @ServiceBusQueuePreparer(name_prefix='servicebustest', requires_session=True)
+    @CachedServiceBusResourceGroupPreparer(name_prefix="servicebustest")
+    @CachedServiceBusNamespacePreparer(name_prefix="servicebustest")
+    @ServiceBusQueuePreparer(name_prefix="servicebustest", requires_session=True)
     @pytest.mark.parametrize("uamqp_transport", uamqp_transport_params, ids=uamqp_transport_ids)
     @ArgPasserAsync()
-    async def test_async_next_available_session_timeout_value(self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs):
+    async def test_async_next_available_session_timeout_value(
+        self, uamqp_transport, *, servicebus_namespace=None, servicebus_queue=None, **kwargs
+    ):
         if uamqp_transport:
             pytest.skip("This test is for pyamqp only")
         fully_qualified_namespace = f"{servicebus_namespace.name}{SERVICEBUS_ENDPOINT_SUFFIX}"
         credential = get_credential(is_async=True)
         async with ServiceBusClient(
             fully_qualified_namespace=fully_qualified_namespace,
-            credential=credential, logging_enable=False, uamqp_transport=uamqp_transport) as sb_client:
-            
-            receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=10)
-            start_time = time.time()
-            with pytest.raises(OperationTimeoutError):
-                await receiver.receive_messages(max_wait_time=5)
-            assert time.time() - start_time < 65 # Default service timeout value is 65 seconds
-            start_time2 = time.time()
-            with pytest.raises(OperationTimeoutError):
-                async for msg in receiver:
-                    pass
-            assert time.time() - start_time2 < 65 # Default service timeout value is 65 seconds
+            credential=credential,
+            logging_enable=False,
+            uamqp_transport=uamqp_transport,
+        ) as sb_client:
 
-            receiver = sb_client.get_queue_receiver(servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=70)
+            receiver = sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=10
+            )
             start_time = time.time()
             with pytest.raises(OperationTimeoutError):
                 await receiver.receive_messages(max_wait_time=5)
-            assert time.time() - start_time > 65 # Default service timeout value is 65 seconds
+            assert time.time() - start_time < 65  # Default service timeout value is 65 seconds
             start_time2 = time.time()
             with pytest.raises(OperationTimeoutError):
                 async for msg in receiver:
                     pass
-            assert time.time() - start_time2 > 65 # Default service timeout value is 65 seconds
+            assert time.time() - start_time2 < 65  # Default service timeout value is 65 seconds
+
+            receiver = sb_client.get_queue_receiver(
+                servicebus_queue.name, session_id=NEXT_AVAILABLE_SESSION, max_wait_time=70
+            )
+            start_time = time.time()
+            with pytest.raises(OperationTimeoutError):
+                await receiver.receive_messages(max_wait_time=5)
+            assert time.time() - start_time > 65  # Default service timeout value is 65 seconds
+            start_time2 = time.time()
+            with pytest.raises(OperationTimeoutError):
+                async for msg in receiver:
+                    pass
+            assert time.time() - start_time2 > 65  # Default service timeout value is 65 seconds

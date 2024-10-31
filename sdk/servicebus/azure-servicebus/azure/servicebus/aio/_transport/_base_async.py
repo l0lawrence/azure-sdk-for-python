@@ -20,6 +20,7 @@ class AmqpTransportAsync(ABC):  # pylint: disable=too-many-public-methods
     """
     Abstract class that defines a set of common methods needed by sender and receiver.
     """
+
     KIND: str
 
     # define constants
@@ -36,7 +37,7 @@ class AmqpTransportAsync(ABC):  # pylint: disable=too-many-public-methods
     FRAMEWORK_SYMBOL: Union[uamqp_types.AMQPSymbol, Literal["framework"]]
     PLATFORM_SYMBOL: Union[uamqp_types.AMQPSymbol, Literal["platform"]]
     USER_AGENT_SYMBOL: Union[uamqp_types.AMQPSymbol, Literal["user-agent"]]
-    PROP_PARTITION_KEY_AMQP_SYMBOL: Union[uamqp_types.AMQPSymbol, Literal[b'x-opt-partition-key']]
+    PROP_PARTITION_KEY_AMQP_SYMBOL: Union[uamqp_types.AMQPSymbol, Literal[b"x-opt-partition-key"]]
     AMQP_LONG_VALUE: Callable
     AMQP_ARRAY_VALUE: Callable
     AMQP_UINT_VALUE: Callable
@@ -187,9 +188,7 @@ class AmqpTransportAsync(ABC):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @abstractmethod
-    async def iter_contextual_wrapper_async(
-        receiver, max_wait_time=None
-    ):
+    async def iter_contextual_wrapper_async(receiver, max_wait_time=None):
         """The purpose of this wrapper is to allow both state restoration (for multiple concurrent iteration)
         and per-iter argument passing that requires the former.
         :param ~uamqp.ReceiveClientAsync or ~pyamqp.aio.ReceiveClientAsync
@@ -199,9 +198,7 @@ class AmqpTransportAsync(ABC):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @abstractmethod
-    async def iter_next_async(
-        receiver, wait_time=None
-    ):
+    async def iter_next_async(receiver, wait_time=None):
         """
         Used to iterate through received messages.
         :param ~uamqp.ReceiveClientAsync or ~pyamqp.aio.ReceiveClientAsync
@@ -302,16 +299,7 @@ class AmqpTransportAsync(ABC):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     @abstractmethod
-    async def mgmt_client_request_async(
-        mgmt_client,
-        mgmt_msg,
-        *,
-        operation,
-        operation_type,
-        node,
-        timeout,
-        callback
-    ):
+    async def mgmt_client_request_async(mgmt_client, mgmt_msg, *, operation, operation_type, node, timeout, callback):
         """
         Send mgmt request.
         :param AMQPClient mgmt_client: Client to send request with.
