@@ -273,6 +273,8 @@ class AMQPClient(object):  # pylint: disable=too-many-instance-attributes
                     raise TimeoutError("Operation timed out.")
                 return operation(*args, timeout=absolute_timeout, **kwargs)
             except AMQPException as exc:
+                ## If this is a link-detach error and it is retryable, close and open a new link
+                
                 if not self._retry_policy.is_retryable(exc):
                     raise
                 if absolute_timeout >= 0:
