@@ -87,7 +87,7 @@ class ReceiverLink(Link):
         if self._drain_state and drain:
             self._drain_state = False
             self._received_drain_response = True
-            self.current_link_credit = frame[6]  # link_credit
+            self.total_link_credit = frame[6]  # link_credit
 
 
     def _incoming_transfer(self, frame):

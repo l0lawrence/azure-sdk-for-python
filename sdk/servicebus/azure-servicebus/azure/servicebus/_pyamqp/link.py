@@ -223,11 +223,11 @@ class Link:  # pylint: disable=too-many-instance-attributes
         if self.network_trace:
             _LOGGER.debug("-> %r", detach_frame, extra=self.network_trace_params)
         self._session._outgoing_detach(detach_frame)  # pylint: disable=protected-access
-        if close:
-            self._is_closed = True
-            self.links.pop(self.name, None)
-            self._input_handles.pop(self.remote_handle, None)
-            self._output_handles.pop(self.handle, None)
+        # if close:
+        #     self._is_closed = True
+        #     self.links.pop(self.name, None)
+        #     self._input_handles.pop(self.remote_handle, None)
+        #     self._output_handles.pop(self.handle, None)
 
     def _incoming_detach(self, frame) -> None:
         if self.network_trace:
@@ -280,14 +280,24 @@ class Link:  # pylint: disable=too-many-instance-attributes
         # FlowFrame is calculated as follows: The link credit to flow on the wire
         # `self.current_link_credit` is the desired link credit
         # `link_credit` minus the current link credit on the wire `self.total_link_credit`.
+        _LOGGER.debug("link credit: %d", link_credit, extra=self.network_trace_params)
+        _LOGGER.debug("total link credit: %d", self.total_link_credit, extra=self.network_trace_params)
+        _LOGGER.debug("self.link_credit: %d", self.link_credit, extra=self.network_trace_params)
         self.current_link_credit = link_credit - self.total_link_credit if link_credit is not None else self.link_credit
 
+        _LOGGER.debug("Current link credit: %d", self.current_link_credit, extra=self.network_trace_params)
         # If the link credit to flow is greater than 0 (i.e the desired link credit is greater than
         # the current link credit on the wire), then we will send a flow to issue more link credit.
         # Otherwise link credit on the wire is sufficient.
-        if self.current_link_credit > 0:
+        if kwargs.get("drain"):
+            self.current_link_credit = 0
+            _LOGGER.debug("There is sufficient credit but we want to drain the link", extra=self.network_trace_params)
+            self._outgoing_flow(**kwargs)
+        elif self.current_link_credit > 0:
             # Calculate the total link credit on the wire, by adding the credit we will flow to the total link credit.
             self.total_link_credit = (
                 self.current_link_credit + self.total_link_credit if link_credit is not None else self.link_credit
             )
+            _LOGGER.debug("Link credit to flow: %d", self.current_link_credit, extra=self.network_trace_params)
             self._outgoing_flow(**kwargs)
+        

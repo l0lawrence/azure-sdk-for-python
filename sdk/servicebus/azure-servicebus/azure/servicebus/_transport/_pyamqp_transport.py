@@ -1075,7 +1075,9 @@ class PyamqpTransport(AmqpTransport):  # pylint: disable=too-many-public-methods
                 ):
                     # If we reach our expired point, send Drain=True and wait for receiving flow to stop.
                     if not sent_drain:
-                        receiver._amqp_transport.reset_link_credit(amqp_receive_client, max_message_count, drain=True)
+                        _LOGGER.debug("Sending drain=True to stop receiving.")
+                        link_credit_needed = max_message_count - len(batch)
+                        receiver._amqp_transport.reset_link_credit(amqp_receive_client, link_credit_needed, drain=True)
                         sent_drain = True
                         time_sent = time.time()
                         break
@@ -1083,6 +1085,7 @@ class PyamqpTransport(AmqpTransport):  # pylint: disable=too-many-public-methods
                     # If we have sent a drain and we havent received messages in X time or gotten back the responding flow, lets close the link
                     if (not receiver._handler._link._received_drain_response and sent_drain) and (time.time() - time_sent > receive_drain_timeout):
                         expired = True
+                        _LOGGER.debug("Closing link after not receiving drain response in time.")
                         receiver._handler._link.detach(close=True, error="Have not received back drain response in time")
                         break
 
