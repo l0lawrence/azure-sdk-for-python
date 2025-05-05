@@ -18,13 +18,14 @@ Initialize and validate a TypeSpec client library for Azure SDK for Python. Plea
 
 2. After generation is complete, validate the output by:
    - Installing the newly generated package and its dev_requirements in a .venv and installing tox.
-   - Running pylint validation using tox: `tox -e pylint -c [path to tox.ini] --root .`
-   - Running mypy type checking using tox: `tox -e mypy -c [path to tox.ini] --root .`
+   - Running pylint validation using tox: `tox -e pylint -c [path to tox.ini] --root .`. Or use the tox MCP tool from the azure-sdk-validation server.
+   - Running mypy type checking using tox: `tox -e mypy -c [path to tox.ini] --root .`. Or use the tox MCP tool from the azure-sdk-validation server.
+   - Running pyright using tox: `tox -e pyright -c [path to tox.ini] --root .`. Or use the tox MCP tool from the azure-sdk-validation server.
+   - Running verifytypes using tox: `tox -e verifytypes -c [path to tox.ini] --root .`. Or use the tox MCP tool from the azure-sdk-validation server.
 
 3. If any errors or warnings are found, provide guidance on fixing them following Azure SDK best practices.
 
 Please use Python 3.9 for compatibility, and refer to the Azure SDK design guidelines (https://azure.github.io/azure-sdk/python_design.html) for any implementation decisions.
-
 
 
 # Pylint
