@@ -891,3 +891,21 @@ def handle_incompatible_minimum_dev_reqs(
                     cleansed_reqs.append(cleansed_dev_requirement_line)
 
     return cleansed_reqs
+
+
+def get_pip_command(python_exe: Optional[str] = None) -> List[str]:
+    """
+    Determine whether to use 'uv pip' or regular 'pip' based on environment.
+
+    :param str python_exe: The Python executable to use (if not using the default).
+    :return: List of command arguments for pip.
+    :rtype: List[str]
+    
+    """
+    # Check TOX_PIP_IMPL environment variable (aligns with tox.ini configuration)
+    pip_impl = os.environ.get('TOX_PIP_IMPL', 'pip').lower()
+
+    if pip_impl == 'uv':
+        return ["uv", "pip"]
+    else:
+        return [python_exe if python_exe else sys.executable, "-m", "pip"]
