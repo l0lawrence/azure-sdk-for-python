@@ -183,6 +183,16 @@ IF NO PR exists:
 ALWAYS: Display PR summary with status, checks, action items
 ```
 
+### STEP 7: CHECK RELEASE READINESS
+CHECK: the library's health status using the azure-sdk-python-mcp tool
+IF health status is NOT "PASS":
+- INFORM user of release blocking issues
+- PROVIDE detailed health status report
+IF health status is "PASS":
+- INFORM user that the library is ready for release
+- PROVIDE health status report
+- Direct user to the Language - Python Reviews channel for pr review and approval
+
 ### STEP 7: HANDOFF
 ```
 FINAL ACTIONS:
