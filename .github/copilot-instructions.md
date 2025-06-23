@@ -98,21 +98,10 @@ IF commands fail:
     DIRECT user to fix TypeSpec errors in source repo
 ```
 
-
-### STEP 3:  CHECK RELEASE READINESS
-CHECK: the library's health status using the azure-sdk-python-mcp tool
-IF health status is NOT "PASS":
-- INFORM user of release blocking issues
-- PROVIDE detailed health status report
-IF health status is "PASS":
-- INFORM user that the library is ready for release
-- PROVIDE health status report
-- Direct user to the Language - Python Reviews channel for pr review and approval
-
-### STEP 4: STATIC VALIDATION (SEQUENTIAL)
+### STEP 3: STATIC VALIDATION (SEQUENTIAL)
 ```
 TIMING: Inform user: "Static validation will take approximately 3-5 minutes for each step."
-FOR EACH validation step that is FAILING in the health status:
+FOR EACH validation step:
     RUN validation (tox mcp tool)
     IF errors/warnings found:
         FIX issues
@@ -158,7 +147,7 @@ tox -e breaking -c [path to tox.ini] --root .
 - Edit ONLY files with validation errors/warnings
 - Fix each issue before proceeding
 
-### STEP 5: DOCUMENTATION UPDATE
+### STEP 4: DOCUMENTATION UPDATE
 ```
 REQUIRED ACTIONS:
 1. CREATE/UPDATE CHANGELOG.md with changes
@@ -167,7 +156,7 @@ REQUIRED ACTIONS:
 4. SET CHANGELOG entry date to TODAY
 ```
 
-### STEP 6: COMMIT AND PUSH
+### STEP 5: COMMIT AND PUSH
 ```
 ACTION: Show changed files (ignore .github, .vscode)
 IF user confirms:
@@ -180,7 +169,7 @@ IF user rejects:
     GUIDE to fix issues and revalidate
 ```
 
-### STEP 7: PULL REQUEST MANAGEMENT
+### STEP 6: PULL REQUEST MANAGEMENT
 ```
 CHECK: Does PR exist for current branch?
 IF PR exists:
@@ -194,7 +183,17 @@ IF NO PR exists:
 ALWAYS: Display PR summary with status, checks, action items
 ```
 
-### STEP 8: HANDOFF
+### STEP 7: CHECK RELEASE READINESS
+CHECK: the library's health status using the azure-sdk-python-mcp tool
+IF health status is NOT "PASS":
+- INFORM user of release blocking issues
+- PROVIDE detailed health status report
+IF health status is "PASS":
+- INFORM user that the library is ready for release
+- PROVIDE health status report
+- Direct user to the Language - Python Reviews channel for pr review and approval
+
+### STEP 7: HANDOFF
 ```
 FINAL ACTIONS:
 1. RETURN PR URL for review
