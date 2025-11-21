@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "azure-mgmt-unified"
+version = "1.0.0b1"
+description = "Unified Azure Management Plane Client Library for Python"
+readme = "README.md"
+license = {text = "MIT License"}
+authors = [
+    {name = "Microsoft Corporation", email = "azpysdkhelp@microsoft.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "azure-core>=1.30.0",
+    "azure-mgmt-core>=1.6.0",
+    "typing-extensions>=4.6.0",
+    "msrest>=0.7.1",
+]
+
+[project.optional-dependencies]
+# Service-specific dependencies (install only what you need)
+advisor = ["azure-mgmt-advisor>=9.0.0"]
+storage = ["azure-mgmt-storage>=21.0.0"]
+compute = ["azure-mgmt-compute>=30.0.0"]
+network = ["azure-mgmt-network>=25.0.0"]
+all = [
+    "azure-mgmt-advisor>=9.0.0",
+    "azure-mgmt-storage>=21.0.0",
+    "azure-mgmt-compute>=30.0.0",
+    "azure-mgmt-network>=25.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/mgmt-unified/azure-mgmt-unified"
