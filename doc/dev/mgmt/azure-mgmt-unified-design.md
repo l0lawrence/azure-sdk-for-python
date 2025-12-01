@@ -724,10 +724,10 @@ Full static type checking support:
 
 Updating API versions or adding new operations requires only modifying the specification:
 ```python
-# Before: Change API version
+# Example: Change API version
 VIRTUAL_MACHINE_SPEC["api_version"] = "2024-07-01"
 
-# Before: Add new custom operation
+# Example: Add new custom operation
 VIRTUAL_MACHINE_SPEC["custom_operations"].append({
     "name": "restart",
     "http_method": "POST",
