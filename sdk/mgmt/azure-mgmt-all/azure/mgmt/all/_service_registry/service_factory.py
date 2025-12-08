@@ -407,3 +407,41 @@ class ServiceProviderFactory:
             deserialization_callback=get_long_running_output,
             polling_method=polling_method
         )
+    
+    def _create_lro_poller(self, response: HttpResponse, **kwargs: Any) -> LROPoller[Any]:
+        """Create an LRO poller from an HTTP response.
+        
+        :param response: The initial HTTP response from the long-running operation
+        :type response: HttpResponse
+        :keyword polling: Polling method or boolean to indicate if polling should be used
+        :keyword polling_interval: Interval between polling requests in seconds (default 30)
+        :return: An LRO poller for the long-running operation
+        :rtype: LROPoller[Any]
+        """
+        # Set up polling configuration
+        polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
+        lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
+        
+        def get_long_running_output(pipeline_response):
+            """Extract the result from the pipeline response."""
+            response_json = pipeline_response.http_response.json() if hasattr(pipeline_response.http_response, 'json') else {}
+            return response_json
+        
+        if polling is True:
+            polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
+        elif polling is False:
+            polling_method = cast(PollingMethod, NoPolling())
+        else:
+            polling_method = polling
+        
+        # Create a proper pipeline response
+        # We need to create a minimal request for the pipeline response
+        request = HttpRequest("GET", response.request.url)
+        pipeline_response = PipelineResponse(request, response, PipelineContext(None))
+        
+        return LROPoller[Any](
+            client=self.client._client,
+            initial_response=pipeline_response,
+            deserialization_callback=get_long_running_output,
+            polling_method=polling_method
+        )
