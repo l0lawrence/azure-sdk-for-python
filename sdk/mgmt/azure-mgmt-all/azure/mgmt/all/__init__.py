@@ -17,7 +17,7 @@ from .aio import AsyncManagementClient  # type: ignore
 from ._version import VERSION
 
 # Export shared models for convenience
-from ._models import (
+from .models import (
     ApiKey,
     ApiKeyListResult,
     ConfigurationStore,
