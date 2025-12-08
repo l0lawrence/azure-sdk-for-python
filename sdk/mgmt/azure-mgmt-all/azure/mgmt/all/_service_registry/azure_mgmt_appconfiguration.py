@@ -4,7 +4,7 @@ from azure.core.paging import ItemPaged
 from azure.core.polling import LROPoller
 from azure.core.rest import HttpResponse
 from .service_factory import ServiceProviderFactory
-from .._models import (
+from ..models.azure_mgmt_appconfiguration import (
     ApiKey, ApiKeyListResult, ConfigurationStore, ConfigurationStoreListResult
 )
 
