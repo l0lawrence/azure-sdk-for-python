@@ -7,8 +7,8 @@ name = "azure-mgmt-all"
 authors = [
     {name = "Microsoft Corporation", email = "azpysdkhelp@microsoft.com"},
 ]
-description = "Microsoft Corporation Azure Key Vault Keys Client Library for Python"
-keywords = ["azure", "azure sdk"]
+description = "Microsoft Azure Management Client Library for Python - Unified factory for Azure Resource Manager services"
+keywords = ["azure", "azure sdk", "management", "arm", "resource manager"]
 requires-python = ">=3.9"
 license = {text = "MIT License"}
 classifiers = [
