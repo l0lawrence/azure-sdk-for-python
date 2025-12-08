@@ -63,7 +63,8 @@ class AppConfigurationFactory(ServiceProviderFactory):
         result = response.json()
         return cast(ItemPaged[ConfigurationStore], result.get('value', []))
 
-    def get(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> ConfigurationStore:
+    # would be get but overload wont work here 
+    def get_configuration_store(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> ConfigurationStore:
         """Get properties of a configuration store.
         
         :param resource_group_name: The name of the resource group.
