@@ -1,89 +1,133 @@
-# API Compatibility with azure-mgmt-appconfiguration
 
-This document shows how the `azure-mgmt-all` package provides API compatibility with the official `azure-mgmt-appconfiguration` package.
+# Operations List for AppConfig
 
-## Method Mapping
 
-Our factory methods now match the official `ConfigurationStoresOperations` class:
+Configuration Stores
+- def list(self, skip_token: Optional[str] = None, **kwargs: Any) -> ItemPaged["_models.ConfigurationStore"]:
+- def list_by_resource_group(
+        self, resource_group_name: str, skip_token: Optional[str] = None, **kwargs: Any
+    ) -> ItemPaged["_models.ConfigurationStore"]:
+-     def get(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> _models.ConfigurationStore:
+-  def begin_create(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        config_store_creation_parameters: Union[_models.ConfigurationStore, IO[bytes]],
+        **kwargs: Any
+    ) -> LROPoller[_models.ConfigurationStore]:
+-     def begin_delete(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> LROPoller[None]:
+-     def begin_update(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        config_store_update_parameters: Union[_models.ConfigurationStoreUpdateParameters, IO[bytes]],
+        **kwargs: Any
+    ) -> LROPoller[_models.ConfigurationStore]:
+-     def list_keys(
+        self, resource_group_name: str, config_store_name: str, skip_token: Optional[str] = None, **kwargs: Any
+    ) -> ItemPaged["_models.ApiKey"]:
 
-| Official Method | azure-mgmt-all Factory Method |
-|----------------|------------------------------|
-| `list(skip_token=None)` | `list(skip_token=None)` |
-| `list_by_resource_group(resource_group_name, skip_token=None)` | `list_by_resource_group(resource_group_name, skip_token=None)` |
-| `get(resource_group_name, config_store_name)` | `get(resource_group_name, config_store_name)` |
-| `begin_create(resource_group_name, config_store_name, config_store_creation_parameters)` | `begin_create(resource_group_name, config_store_name, config_store_creation_parameters)` |
-| `begin_update(resource_group_name, config_store_name, config_store_update_parameters)` | `begin_update(resource_group_name, config_store_name, config_store_update_parameters)` |
-| `begin_delete(resource_group_name, config_store_name)` | `begin_delete(resource_group_name, config_store_name)` |
-| `list_keys(resource_group_name, config_store_name, skip_token=None)` | `list_keys(resource_group_name, config_store_name, skip_token=None)` |
-| `regenerate_key(resource_group_name, config_store_name, regenerate_key_parameters)` | `regenerate_key(resource_group_name, config_store_name, regenerate_key_parameters)` |
+-     def regenerate_key(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        regenerate_key_parameters: Union[_models.RegenerateKeyParameters, IO[bytes]],
+        **kwargs: Any
+    ) -> _models.ApiKey:
+-  def list_deleted(self, **kwargs: Any) -> ItemPaged["_models.DeletedConfigurationStore"]:
+- def get_deleted(self, location: str, config_store_name: str, **kwargs: Any) -> _models.DeletedConfigurationStore:
+-     def begin_purge_deleted(self, location: str, config_store_name: str, **kwargs: Any) -> LROPoller[None]:
+- 
 
-## Parameter Standardization
+KeyValues Operations
+-     def get(
+        self, resource_group_name: str, config_store_name: str, key_value_name: str, **kwargs: Any
+    ) -> _models.KeyValue:
+-     def create_or_update(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        key_value_name: str,
+        key_value_parameters: Union[_models.KeyValue, IO[bytes]],
+        **kwargs: Any
+    ) -> _models.KeyValue:
+-     def begin_delete(
+        self, resource_group_name: str, config_store_name: str, key_value_name: str, **kwargs: Any
+    ) -> LROPoller[None]:
 
-### Parameter Name Changes
-- `resource_group` → `resource_group_name` (matches official Azure SDK convention)
-- `config_store_data` → `config_store_creation_parameters` (for create operations)
-- `config_store_data` → `config_store_update_parameters` (for update operations)  
-- `key_to_regenerate` → `regenerate_key_parameters` (for key regeneration)
+Operations
 
-### Added Features
-- **Pagination Support**: Added `skip_token` parameter to list operations
-- **LRO Compliance**: All long-running operations use `begin_*` prefix
-- **Type Safety**: Full TypedDict models for request/response types
+-     def check_name_availability(
+        self,
+        check_name_availability_parameters: Union[_models.CheckNameAvailabilityParameters, IO[bytes]],
+        **kwargs: Any
+    ) -> _models.NameAvailabilityStatus:
+-     def list(self, skip_token: Optional[str] = None, **kwargs: Any) -> ItemPaged["_models.OperationDefinition"]:  (list all operations available)
+-     def regional_check_name_availability(
+        self,
+        location: str,
+        check_name_availability_parameters: Union[_models.CheckNameAvailabilityParameters, IO[bytes]],
+        **kwargs: Any
+    ) -> _models.NameAvailabilityStatus:
 
-## Usage Examples
 
-### Migration from azure-mgmt-appconfiguration
+Private Endpoint Connections
+-     def list_by_configuration_store(
+        self, resource_group_name: str, config_store_name: str, **kwargs: Any
+    ) -> ItemPaged["_models.PrivateEndpointConnection"]:
+-     def get(
+        self, resource_group_name: str, config_store_name: str, private_endpoint_connection_name: str, **kwargs: Any
+    ) -> _models.PrivateEndpointConnection:
+-     def begin_create_or_update(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        private_endpoint_connection_name: str,
+        private_endpoint_connection: Union[_models.PrivateEndpointConnection, IO[bytes]],
+        **kwargs: Any
+    ) -> LROPoller[_models.PrivateEndpointConnection]:
+-     def begin_delete(
+        self, resource_group_name: str, config_store_name: str, private_endpoint_connection_name: str, **kwargs: Any
+    ) -> LROPoller[None]:
 
-**Before (official package):**
-```python
-from azure.mgmt.appconfiguration import AppConfigurationManagementClient
+Private Link Resources Operations
+-     def list_by_configuration_store(
+        self, resource_group_name: str, config_store_name: str, **kwargs: Any
+    ) -> ItemPaged["_models.PrivateLinkResource"]:
+-     def get(
+        self, resource_group_name: str, config_store_name: str, group_name: str, **kwargs: Any
+    ) -> _models.PrivateLinkResource:
 
-client = AppConfigurationManagementClient(credential, subscription_id)
-stores = client.configuration_stores.list()
-store = client.configuration_stores.get(resource_group_name="rg", config_store_name="store")
-```
+Replicas Operations
+-     def list_by_configuration_store(
+        self, resource_group_name: str, config_store_name: str, skip_token: Optional[str] = None, **kwargs: Any
+    ) -> ItemPaged["_models.Replica"]:
+-     def get(
+        self, resource_group_name: str, config_store_name: str, replica_name: str, **kwargs: Any
+    ) -> _models.Replica:
+-     def begin_create(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        replica_name: str,
+        replica_creation_parameters: Union[_models.Replica, IO[bytes]],
+        **kwargs: Any
+    ) -> LROPoller[_models.Replica]:
+-     def begin_delete(
+        self, resource_group_name: str, config_store_name: str, replica_name: str, **kwargs: Any
+    ) -> LROPoller[None]:
 
-**After (azure-mgmt-all factory):**
-```python
-from azure.mgmt.all import ManagementClient
+Snapshots Operations
 
-client = ManagementClient(credential, subscription_id)
-app_config = client("Microsoft.AppConfiguration")
-stores = app_config.list()
-store = app_config.get(resource_group_name="rg", config_store_name="store")
-```
+    def get(
+        self, resource_group_name: str, config_store_name: str, snapshot_name: str, **kwargs: Any
+    ) -> _models.Snapshot:
 
-### Async Compatibility
-
-Both sync and async versions provide identical API surfaces:
-
-```python
-# Sync
-from azure.mgmt.all import ManagementClient
-client = ManagementClient(credential, subscription_id)
-app_config = client("Microsoft.AppConfiguration")
-stores = app_config.list()
-
-# Async  
-from azure.mgmt.all.aio import AsyncManagementClient
-async with AsyncManagementClient(credential, subscription_id) as client:
-    app_config = client("Microsoft.AppConfiguration")
-    stores = await app_config.list()
-```
-
-## Benefits
-
-1. **API Consistency**: Method names and parameters match official Azure SDK packages
-2. **Drop-in Replacement**: Easy migration path from service-specific packages  
-3. **Enhanced Features**: Built-in pagination, LRO support, and type safety
-4. **Unified Interface**: Single factory pattern for all Azure services
-5. **Future-proof**: Extensible design for adding new Azure services
-
-## Additional Methods
-
-Beyond the standard operations, we also provide convenience methods:
-
-- `create_configuration_store()`: Direct create without LRO polling
-- Additional specialized factories for other Azure services through the same pattern
-
-This ensures both compatibility with existing code and enhanced functionality for new development.
+        def begin_create(
+        self,
+        resource_group_name: str,
+        config_store_name: str,
+        snapshot_name: str,
+        body: Union[_models.Snapshot, IO[bytes]],
+        **kwargs: Any
+    ) -> LROPoller[_models.Snapshot]:
