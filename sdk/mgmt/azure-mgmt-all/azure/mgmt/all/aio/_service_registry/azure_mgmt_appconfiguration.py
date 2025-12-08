@@ -1,23 +1,23 @@
 from typing import TYPE_CHECKING, Any, Optional, List, Dict, Union, cast
 
-from azure.core.polling import LROPoller
-from azure.core.rest import HttpResponse
-from .service_factory import ServiceProviderFactory
-from .._models import (
+from azure.core.polling import AsyncLROPoller
+from azure.core.rest import AsyncHttpResponse
+from .service_factory import AsyncServiceProviderFactory
+from ..._models import (
     ApiKey, ApiKeyListResult, ConfigurationStore, ConfigurationStoreListResult
 )
 
 if TYPE_CHECKING:
-    from .._client import ManagementClient
+    from .._client import AsyncManagementClient
 
 
-class AppConfigurationFactory(ServiceProviderFactory):
-    """Specialized factory for Microsoft.AppConfiguration resource provider.
+class AsyncAppConfigurationFactory(AsyncServiceProviderFactory):
+    """Async specialized factory for Microsoft.AppConfiguration resource provider.
     
     Provides typed operations and models for App Configuration service management.
     """
     
-    def __init__(self, client: "ManagementClient", service_provider: str, subscription_id: Optional[str] = None, api_version: Optional[str] = None):
+    def __init__(self, client: "AsyncManagementClient", service_provider: str, subscription_id: Optional[str] = None, api_version: Optional[str] = None):
         # Set default API version if none provided
         if api_version is None:
             api_version = "2023-03-01"
@@ -25,18 +25,7 @@ class AppConfigurationFactory(ServiceProviderFactory):
 
     # Typed operations for Configuration Stores
     
-    def get(self, url: str, **kwargs: Any) -> HttpResponse:
-        """Get configuration stores or other resources.
-        
-        :param url: The relative URL (e.g., "configurationStores" to list all stores)
-        :type url: str
-        :keyword bool stream: Whether the response payload will be streamed. Defaults to False.
-        :return: The HTTP response
-        :rtype: HttpResponse
-        """
-        return super().get(url, **kwargs)
-    
-    def list(self, skip_token: Optional[str] = None, **kwargs: Any) -> ConfigurationStoreListResult:
+    async def list(self, skip_token: Optional[str] = None, **kwargs: Any) -> ConfigurationStoreListResult:
         """List all configuration stores in the subscription.
         
         :param skip_token: A skip token for pagination. Default is None.
@@ -48,11 +37,11 @@ class AppConfigurationFactory(ServiceProviderFactory):
         url = "configurationStores"
         if skip_token:
             url += f"?$skipToken={skip_token}"
-        response = self.get(url, **kwargs)
+        response = await self.get(url, **kwargs)
         response.raise_for_status()
         return cast(ConfigurationStoreListResult, response.json())
 
-    def list_by_resource_group(self, resource_group_name: str, skip_token: Optional[str] = None, **kwargs: Any) -> ConfigurationStoreListResult:
+    async def list_by_resource_group(self, resource_group_name: str, skip_token: Optional[str] = None, **kwargs: Any) -> ConfigurationStoreListResult:
         """List configuration stores in a resource group.
         
         :param resource_group_name: The name of the resource group.
@@ -66,11 +55,11 @@ class AppConfigurationFactory(ServiceProviderFactory):
         url = f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores"
         if skip_token:
             url += f"?$skipToken={skip_token}"
-        response = self.get(url, **kwargs)
+        response = await self.get(url, **kwargs)
         response.raise_for_status()
         return cast(ConfigurationStoreListResult, response.json())
 
-    def get(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> ConfigurationStore:
+    async def get(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> ConfigurationStore:
         """Get properties of a configuration store.
         
         :param resource_group_name: The name of the resource group.
@@ -81,11 +70,11 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :return: The configuration store properties
         :rtype: ConfigurationStore
         """
-        response = super().get(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", **kwargs)
+        response = await super().get(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", **kwargs)
         response.raise_for_status()
         return cast(ConfigurationStore, response.json())
 
-    def begin_create(self, resource_group_name: str, config_store_name: str, config_store_creation_parameters: ConfigurationStore, **kwargs: Any) -> LROPoller[ConfigurationStore]:
+    async def begin_create(self, resource_group_name: str, config_store_name: str, config_store_creation_parameters: ConfigurationStore, **kwargs: Any) -> AsyncLROPoller[ConfigurationStore]:
         """Create a configuration store with the specified parameters.
         
         :param resource_group_name: The name of the resource group.
@@ -95,14 +84,14 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :param config_store_creation_parameters: The parameters for creating a configuration store.
         :type config_store_creation_parameters: ConfigurationStore
         :keyword bool stream: Whether the response payload will be streamed. Defaults to False.
-        :return: An LRO poller for the create operation
-        :rtype: LROPoller[ConfigurationStore]
+        :return: An async LRO poller for the create operation
+        :rtype: AsyncLROPoller[ConfigurationStore]
         """
-        response = self.put(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_creation_parameters, **kwargs)
+        response = await self.put(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_creation_parameters, **kwargs)
         return self._create_lro_poller(response, **kwargs)
 
-    def create_configuration_store(self, resource_group_name: str, config_store_name: str, config_store_data: ConfigurationStore, **kwargs: Any) -> ConfigurationStore:
-        """Create or update a configuration store.
+    async def create_configuration_store(self, resource_group_name: str, config_store_name: str, config_store_data: ConfigurationStore, **kwargs: Any) -> ConfigurationStore:
+        """Create or update a configuration store (direct response, not polling).
         
         :param resource_group_name: The name of the resource group.
         :type resource_group_name: str
@@ -114,11 +103,11 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :return: The created/updated configuration store
         :rtype: ConfigurationStore
         """
-        response = self.put(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_data, **kwargs)
+        response = await self.put(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_data, **kwargs)
         response.raise_for_status()
         return cast(ConfigurationStore, response.json())
 
-    def begin_update(self, resource_group_name: str, config_store_name: str, config_store_update_parameters: Dict[str, Any], **kwargs: Any) -> LROPoller[ConfigurationStore]:
+    async def begin_update(self, resource_group_name: str, config_store_name: str, config_store_update_parameters: Dict[str, Any], **kwargs: Any) -> AsyncLROPoller[ConfigurationStore]:
         """Update a configuration store with the specified parameters.
         
         :param resource_group_name: The name of the resource group.
@@ -128,13 +117,13 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :param config_store_update_parameters: The parameters for updating a configuration store.
         :type config_store_update_parameters: Dict[str, Any]
         :keyword bool stream: Whether the response payload will be streamed. Defaults to False.
-        :return: An LRO poller for the update operation
-        :rtype: LROPoller[ConfigurationStore]
+        :return: An async LRO poller for the update operation
+        :rtype: AsyncLROPoller[ConfigurationStore]
         """
-        response = self.patch(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_update_parameters, **kwargs)
+        response = await self.patch(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", model=config_store_update_parameters, **kwargs)
         return self._create_lro_poller(response, **kwargs)
 
-    def begin_delete(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> LROPoller[None]:
+    async def begin_delete(self, resource_group_name: str, config_store_name: str, **kwargs: Any) -> AsyncLROPoller[None]:
         """Delete a configuration store.
         
         :param resource_group_name: The name of the resource group.
@@ -143,14 +132,14 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :type config_store_name: str
         :keyword bool stream: Whether the response payload will be streamed. Defaults to False.
         :return: An LRO poller for the delete operation
-        :rtype: LROPoller[None]
+        :rtype: AsyncLROPoller[None]
         """
-        response = self.delete(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", **kwargs)
-        return self._create_lro_poller(response, **kwargs)
+        response = await self.delete(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}", **kwargs)
+        return await self._create_lro_poller(response, **kwargs)
 
     # API Keys operations
 
-    def list_keys(self, resource_group_name: str, config_store_name: str, skip_token: Optional[str] = None, **kwargs: Any) -> ApiKeyListResult:
+    async def list_keys(self, resource_group_name: str, config_store_name: str, skip_token: Optional[str] = None, **kwargs: Any) -> ApiKeyListResult:
         """List the access key for the specified configuration store.
         
         :param resource_group_name: The name of the resource group.
@@ -166,11 +155,11 @@ class AppConfigurationFactory(ServiceProviderFactory):
         url = f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}/ListKeys"
         if skip_token:
             url += f"?$skipToken={skip_token}"
-        response = self.post(url, **kwargs)
+        response = await self.post(url, **kwargs)
         response.raise_for_status()
         return cast(ApiKeyListResult, response.json())
 
-    def regenerate_key(self, resource_group_name: str, config_store_name: str, regenerate_key_parameters: Dict[str, str], **kwargs: Any) -> ApiKey:
+    async def regenerate_key(self, resource_group_name: str, config_store_name: str, regenerate_key_parameters: Dict[str, str], **kwargs: Any) -> ApiKey:
         """Regenerate an access key for the specified configuration store.
         
         :param resource_group_name: The name of the resource group.
@@ -183,6 +172,6 @@ class AppConfigurationFactory(ServiceProviderFactory):
         :return: The regenerated API key
         :rtype: ApiKey
         """
-        response = self.post(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}/RegenerateKey", model=regenerate_key_parameters, **kwargs)
+        response = await self.post(f"resourceGroups/{resource_group_name}/providers/Microsoft.AppConfiguration/configurationStores/{config_store_name}/RegenerateKey", model=regenerate_key_parameters, **kwargs)
         response.raise_for_status()
         return cast(ApiKey, response.json())

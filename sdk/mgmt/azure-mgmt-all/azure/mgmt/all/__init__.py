@@ -13,11 +13,42 @@ if TYPE_CHECKING:
     from ._patch import *  # pylint: disable=unused-wildcard-import
 
 from ._client import ManagementClient  # type: ignore
+from .aio import AsyncManagementClient  # type: ignore
 from ._version import VERSION
+
+# Export shared models for convenience
+from ._models import (
+    ApiKey,
+    ApiKeyListResult,
+    ConfigurationStore,
+    ConfigurationStoreListResult,
+    Sku,
+    UserIdentity,
+    ResourceIdentity,
+    KeyVaultProperties,
+    EncryptionProperties,
+    SystemData,
+    PrivateEndpointConnectionReference,
+    DataPlaneProxyProperties,
+)
 
 __version__ = VERSION
 
 
 __all__ = [
     "ManagementClient",
+    "AsyncManagementClient",
+    # Models
+    "ApiKey",
+    "ApiKeyListResult", 
+    "ConfigurationStore",
+    "ConfigurationStoreListResult",
+    "Sku",
+    "UserIdentity",
+    "ResourceIdentity", 
+    "KeyVaultProperties",
+    "EncryptionProperties",
+    "SystemData",
+    "PrivateEndpointConnectionReference",
+    "DataPlaneProxyProperties",
 ]

@@ -28,7 +28,11 @@ def test_factory_instantiation():
     resource_group = os.environ["AZURE_RESOURCE_GROUP"]
   
     # create a new configuration store
-    app_config.create_configuration_store(resource_group=resource_group, config_store_name="myconfigstore", config_store_data={"location": "eastus", "sku": {"name": "Standard"}})
+    app_config.create_configuration_store(
+        resource_group_name=resource_group, 
+        config_store_name="myconfigstore", 
+        config_store_data={"location": "eastus", "sku": {"name": "Standard"}}
+    )
 
 if __name__ == "__main__":
     test_factory_instantiation()
