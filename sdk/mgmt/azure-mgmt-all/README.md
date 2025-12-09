@@ -40,8 +40,9 @@ This document describes the architecture and flow of how the `azure-mgmt-all` pa
 2. **Service Provider Factories**  
    Dynamically created factories for specific resource providers (e.g., `"Microsoft.AppConfiguration"`). Each factory provides:
    - HTTP operations (GET, POST, PUT, PATCH, DELETE) 
-   - Specialized methods for common operations
-   - Typed models for request/response data
+    - Specialized methods for common operations
+    - Typed models for request/response data
+    - Route maps (`operations_by_method`, `operations_by_group`, `routes_by_method`) with dynamic dispatch
 
 3. **HTTP Operations**  
    Low-level HTTP methods that automatically handle:
@@ -88,6 +89,13 @@ store = app_config.get(
     resource_group_name="mygroup",
     config_store_name="mystore"
 )
+
+# Access by operation group
+stores_group = app_config.configuration_stores
+stores = stores_group.list()
+
+# Dynamic dispatch via __getattr__ (falls back to routes_by_method)
+replica = app_config.get_replica("rg1", "store1", "replicaA")
 
 # Create with polling
 poller = app_config.begin_create(
@@ -210,7 +218,7 @@ All requests go through the ARM pipeline with:
 - Long Running Operation (LRO) support with polling
 
 ### Long Running Operations (LRO)
-Async clients provide built-in LRO polling support:
+Both sync and async clients expose `begin_*` operations that now wrap HTTP responses with `_create_lro_poller`, so you always receive an `LROPoller` instead of a raw `HttpResponse`.
 
 ```python
 # Async LRO with polling
@@ -220,6 +228,10 @@ result = await poller.result()  # Wait for completion
 # Sync LRO (if implemented)
 poller = app_config.begin_create_configuration_store(...)
 result = poller.result()  # Wait for completion
+
+# Dynamic begin_* also returns a poller via routes_by_method
+poller = app_config.begin_create("rg1", "store1", {"location": "eastus"})
+result = poller.result()
 ```
 
 ---
