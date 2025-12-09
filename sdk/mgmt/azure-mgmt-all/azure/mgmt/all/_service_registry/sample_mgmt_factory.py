@@ -114,6 +114,10 @@ class SampleMgmtFactory(ServiceProviderFactory):
                 ),
             },
         }
+        # Flat index for fast dynamic lookup: name -> (verb, handler)
+        self._route_index: Dict[str, Callable[..., Any]] = {
+            name: handler for _, routes in self.routes_by_method.items() for name, handler in routes.items()
+        }
 
     def _call_route(self, verb: str, operation: str, *args: Any, **kwargs: Any) -> Any:
         try:
@@ -123,13 +127,14 @@ class SampleMgmtFactory(ServiceProviderFactory):
         return handler(*args, **kwargs)
 
     def __getattr__(self, name: str) -> Any:
-        for verb, routes in self.routes_by_method.items():
-            if name in routes:
-                def _bound(*args: Any, **kwargs: Any) -> Any:
-                    return self._call_route(verb, name, *args, **kwargs)
+        handler = self._route_index.get(name)
+        if handler is None:
+            raise AttributeError(f"{type(self).__name__} has no attribute '{name}'")
 
-                return _bound
-        raise AttributeError(f"{type(self).__name__} has no attribute '{name}'")
+        def _bound(*args: Any, **kwargs: Any) -> Any:
+            return handler(*args, **kwargs)
+
+        return _bound
 
     @property
     def widgets(self) -> WidgetsOperations:
