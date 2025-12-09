@@ -35,6 +35,8 @@ class ServiceProviderFactory:
         separator = "&" if "?" in full_url else "?"
         full_url += f"{separator}api-version={api_version}"
         request = HttpRequest("GET", full_url)
+        print(f"Sending GET request to URL: {full_url}")
+        print(f"Request: {request}")
         return self.client._send_request(request, **kwargs)
 
     def post(self, url: str, *, model: Optional[Dict[str, Any]] = None, json: Any = None, data: Any = None, **kwargs: Any) -> HttpResponse:

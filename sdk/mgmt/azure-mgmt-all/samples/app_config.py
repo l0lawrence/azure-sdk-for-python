@@ -5,6 +5,7 @@ Simple test to verify the factory instantiation works correctly.
 
 import os
 from azure.mgmt.all import ManagementClient
+from azure.mgmt.all.models import ConfigurationStore
 from azure.identity import DefaultAzureCredential
 
 def test_factory_instantiation():
@@ -26,13 +27,14 @@ def test_factory_instantiation():
     
 
     resource_group = os.environ["AZURE_RESOURCE_GROUP"]
+
+    # create a new configuration store
+    print("Creating a new configuration store...")
+    config_store = ConfigurationStore(sku={"name": "Standard"}, location="eastus")
+
+    output = app_config.configuration_stores.begin_create(resource_group, "myconfigstore", config_store)
+    print(output)
   
     # create a new configuration store
-    app_config.create_configuration_store(
-        resource_group_name=resource_group, 
-        config_store_name="myconfigstore", 
-        config_store_data={"location": "eastus", "sku": {"name": "Standard"}}
-    )
-
 if __name__ == "__main__":
     test_factory_instantiation()
