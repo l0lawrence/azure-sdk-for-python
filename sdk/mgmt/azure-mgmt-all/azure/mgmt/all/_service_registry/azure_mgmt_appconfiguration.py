@@ -180,21 +180,19 @@ class AppConfigurationFactory(ServiceProviderFactory):
 
         self.routes_by_method: Dict[str, Dict[str, Callable[..., Any]]] = {
             "GET": {
-                "list": lambda skip_token=None, **kw: self.get(
-                    f"configurationStores{f'?$skipToken={skip_token}' if skip_token else ''}", **kw
+                "list": lambda skip_token=None, **kw: self._create_item_paged(
+                    f"configurationStores", skip_token, **kw
                 ),
-                "list_by_resource_group": lambda rg, skip_token=None, **kw: self.get(
-                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores{f'?$skipToken={skip_token}' if skip_token else ''}",
-                    **kw,
+                "list_by_resource_group": lambda rg, skip_token=None, **kw: self._create_item_paged(
+                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores", skip_token, **kw
                 ),
                 "get_configuration_store": lambda rg, name, **kw: self.get(
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}", **kw
                 ),
-                "list_operations": lambda skip_token=None, **kw: self.get(
-                    f"/providers/Microsoft.AppConfiguration/operations{f'?$skipToken={skip_token}' if skip_token else ''}",
-                    **kw,
+                "list_operations": lambda skip_token=None, **kw: self._create_item_paged(
+                    "/providers/Microsoft.AppConfiguration/operations", skip_token, **kw
                 ),
-                "list_deleted": lambda **kw: self.get("deletedConfigurationStores", **kw),
+                "list_deleted": lambda **kw: self._create_item_paged("deletedConfigurationStores", None, **kw),
                 "get_deleted": lambda location, name, **kw: self.get(
                     f"locations/{location}/deletedConfigurationStores/{name}", **kw
                 ),
@@ -202,25 +200,22 @@ class AppConfigurationFactory(ServiceProviderFactory):
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/keyValues/{key}",
                     **kw,
                 ),
-                "list_private_endpoint_connections": lambda rg, name, **kw: self.get(
-                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateEndpointConnections",
-                    **kw,
+                "list_private_endpoint_connections": lambda rg, name, **kw: self._create_item_paged(
+                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateEndpointConnections", None, **kw
                 ),
                 "get_private_endpoint_connection": lambda rg, name, pec, **kw: self.get(
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateEndpointConnections/{pec}",
                     **kw,
                 ),
-                "list_private_link_resources": lambda rg, name, **kw: self.get(
-                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateLinkResources",
-                    **kw,
+                "list_private_link_resources": lambda rg, name, **kw: self._create_item_paged(
+                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateLinkResources", None, **kw
                 ),
                 "get_private_link_resource": lambda rg, name, group_name, **kw: self.get(
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/privateLinkResources/{group_name}",
                     **kw,
                 ),
-                "list_replicas": lambda rg, name, skip_token=None, **kw: self.get(
-                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/replicas{f'?$skipToken={skip_token}' if skip_token else ''}",
-                    **kw,
+                "list_replicas": lambda rg, name, skip_token=None, **kw: self._create_item_paged(
+                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/replicas", skip_token, **kw
                 ),
                 "get_replica": lambda rg, name, replica, **kw: self.get(
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/replicas/{replica}",
@@ -232,9 +227,8 @@ class AppConfigurationFactory(ServiceProviderFactory):
                 ),
             },
             "POST": {
-                "list_keys": lambda rg, name, skip_token=None, **kw: self.post(
-                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/ListKeys{f'?$skipToken={skip_token}' if skip_token else ''}",
-                    **kw,
+                "list_keys": lambda rg, name, skip_token=None, **kw: self._create_item_paged_post(
+                    f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/ListKeys", skip_token, **kw
                 ),
                 "regenerate_key": lambda rg, name, body, **kw: self.post(
                     f"resourceGroups/{rg}/providers/Microsoft.AppConfiguration/configurationStores/{name}/RegenerateKey",

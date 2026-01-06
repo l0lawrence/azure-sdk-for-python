@@ -4,6 +4,7 @@ from azure.core.polling import LROPoller, PollingMethod, NoPolling
 from azure.core.rest import HttpRequest, HttpResponse
 from azure.core.pipeline import PipelineResponse, PipelineContext
 from azure.mgmt.core.polling.arm_polling import ARMPolling
+from azure.core.paging import ItemPaged
 
 
 if TYPE_CHECKING:
@@ -163,252 +164,252 @@ class ServiceProviderFactory:
         request = HttpRequest("OPTIONS", full_url)
         return self.client._send_request(request, **kwargs)
     
-    # Higher-level resource management methods
-    def get_resource(self, resource_type: str, resource_name: Optional[str] = None, resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
-        """Get a resource or list resources of a specific type.
+    # # Higher-level resource management methods
+    # def get_resource(self, resource_type: str, resource_name: Optional[str] = None, resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
+    #     """Get a resource or list resources of a specific type.
         
-        :param resource_type: The type of resource (e.g., 'virtualMachines')
-        :type resource_type: str
-        :param resource_name: Optional name of specific resource
-        :type resource_name: str
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        """
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}"
-        else:
-            url = f"{self.base_url}/{resource_type}"
+    #     :param resource_type: The type of resource (e.g., 'virtualMachines')
+    #     :type resource_type: str
+    #     :param resource_name: Optional name of specific resource
+    #     :type resource_name: str
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     """
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}"
         
-        if resource_name:
-            url += f"/{resource_name}"
-        return self.get(url, **kwargs)
+    #     if resource_name:
+    #         url += f"/{resource_name}"
+    #     return self.get(url, **kwargs)
     
-    def create_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
-        """Create a new resource.
+    # def create_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
+    #     """Create a new resource.
         
-        :param resource_type: The type of resource (e.g., 'virtualMachines')
-        :type resource_type: str
-        :param resource_name: Name of the resource to create
-        :type resource_name: str
-        :param resource_data: Resource configuration data
-        :type resource_data: Dict[str, Any]
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        """
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
-        print(f"Creating resource at URL: {url}")
-        return self.put(url, model=resource_data, **kwargs)
+    #     :param resource_type: The type of resource (e.g., 'virtualMachines')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to create
+    #     :type resource_name: str
+    #     :param resource_data: Resource configuration data
+    #     :type resource_data: Dict[str, Any]
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     """
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     print(f"Creating resource at URL: {url}")
+    #     return self.put(url, model=resource_data, **kwargs)
     
-    def begin_create_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], 
-                            resource_group: Optional[str] = None, output_type: Optional[str] = None, **kwargs: Any) -> LROPoller[Any]:
-        """Begin creating a new resource with long-running operation support.
+    # def begin_create_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], 
+    #                         resource_group: Optional[str] = None, output_type: Optional[str] = None, **kwargs: Any) -> LROPoller[Any]:
+    #     """Begin creating a new resource with long-running operation support.
         
-        :param resource_type: The type of resource (e.g., 'configurationStores')
-        :type resource_type: str
-        :param resource_name: Name of the resource to create
-        :type resource_name: str
-        :param resource_data: Resource configuration data
-        :type resource_data: Dict[str, Any]
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        :param output_type: Optional type name for deserialization
-        :type output_type: str
-        :return: An LROPoller for the long-running operation
-        :rtype: LROPoller[Any]
-        """
-        # Set up polling configuration
-        polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
-        lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
+    #     :param resource_type: The type of resource (e.g., 'configurationStores')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to create
+    #     :type resource_name: str
+    #     :param resource_data: Resource configuration data
+    #     :type resource_data: Dict[str, Any]
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     :param output_type: Optional type name for deserialization
+    #     :type output_type: str
+    #     :return: An LROPoller for the long-running operation
+    #     :rtype: LROPoller[Any]
+    #     """
+    #     # Set up polling configuration
+    #     polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
+    #     lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
         
-        # Create the initial request
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     # Create the initial request
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
         
-        full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
-        request = HttpRequest("PUT", full_url)
-        request.set_json_body(resource_data)
+    #     full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
+    #     request = HttpRequest("PUT", full_url)
+    #     request.set_json_body(resource_data)
         
-        # Add required api-version parameter
-        api_version = kwargs.pop("api_version", self.api_version)
-        request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
+    #     # Add required api-version parameter
+    #     api_version = kwargs.pop("api_version", self.api_version)
+    #     request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
         
-        # Execute the initial request
-        raw_result = self.client._send_request(request, **kwargs)
+    #     # Execute the initial request
+    #     raw_result = self.client._send_request(request, **kwargs)
         
-        def get_long_running_output(pipeline_response):
-            # Extract the result from the pipeline response
-            response_json = pipeline_response.http_response.json() if hasattr(pipeline_response.http_response, 'json') else {}
-            return response_json
+    #     def get_long_running_output(pipeline_response):
+    #         # Extract the result from the pipeline response
+    #         response_json = pipeline_response.http_response.json() if hasattr(pipeline_response.http_response, 'json') else {}
+    #         return response_json
         
-        if polling is True:
-            polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
-        elif polling is False:
-            polling_method = cast(PollingMethod, NoPolling())
-        else:
-            polling_method = polling
+    #     if polling is True:
+    #         polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
+    #     elif polling is False:
+    #         polling_method = cast(PollingMethod, NoPolling())
+    #     else:
+    #         polling_method = polling
         
-        # Create a proper pipeline response
-        pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
+    #     # Create a proper pipeline response
+    #     pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
         
-        return LROPoller[Any](
-            client=self.client._client,
-            initial_response=pipeline_response,
-            deserialization_callback=get_long_running_output,
-            polling_method=polling_method
-        )
+    #     return LROPoller[Any](
+    #         client=self.client._client,
+    #         initial_response=pipeline_response,
+    #         deserialization_callback=get_long_running_output,
+    #         polling_method=polling_method
+    #     )
     
-    def update_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
-        """Update an existing resource.
+    # def update_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
+    #     """Update an existing resource.
         
-        :param resource_type: The type of resource (e.g., 'virtualMachines')
-        :type resource_type: str
-        :param resource_name: Name of the resource to update
-        :type resource_name: str
-        :param resource_data: Resource configuration data
-        :type resource_data: Dict[str, Any]
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        """
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
-        return self.patch(url, model=resource_data, **kwargs)
+    #     :param resource_type: The type of resource (e.g., 'virtualMachines')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to update
+    #     :type resource_name: str
+    #     :param resource_data: Resource configuration data
+    #     :type resource_data: Dict[str, Any]
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     """
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     return self.patch(url, model=resource_data, **kwargs)
     
-    def begin_update_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], 
-                            resource_group: Optional[str] = None, output_type: Optional[str] = None, **kwargs: Any) -> LROPoller[Any]:
-        """Begin updating a resource with long-running operation support.
+    # def begin_update_resource(self, resource_type: str, resource_name: str, resource_data: Dict[str, Any], 
+    #                         resource_group: Optional[str] = None, output_type: Optional[str] = None, **kwargs: Any) -> LROPoller[Any]:
+    #     """Begin updating a resource with long-running operation support.
         
-        :param resource_type: The type of resource (e.g., 'configurationStores')
-        :type resource_type: str
-        :param resource_name: Name of the resource to update
-        :type resource_name: str
-        :param resource_data: Resource configuration data
-        :type resource_data: Dict[str, Any]
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        :param output_type: Optional type name for deserialization
-        :type output_type: str
-        :return: An LROPoller for the long-running operation
-        :rtype: LROPoller[Any]
-        """
-        # Set up polling configuration
-        polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
-        lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
+    #     :param resource_type: The type of resource (e.g., 'configurationStores')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to update
+    #     :type resource_name: str
+    #     :param resource_data: Resource configuration data
+    #     :type resource_data: Dict[str, Any]
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     :param output_type: Optional type name for deserialization
+    #     :type output_type: str
+    #     :return: An LROPoller for the long-running operation
+    #     :rtype: LROPoller[Any]
+    #     """
+    #     # Set up polling configuration
+    #     polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
+    #     lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
         
-        # Create the initial request
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     # Create the initial request
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
         
-        full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
-        request = HttpRequest("PATCH", full_url)
-        request.set_json_body(resource_data)
+    #     full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
+    #     request = HttpRequest("PATCH", full_url)
+    #     request.set_json_body(resource_data)
         
-        # Add required api-version parameter
-        api_version = kwargs.pop("api_version", self.api_version)
-        request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
+    #     # Add required api-version parameter
+    #     api_version = kwargs.pop("api_version", self.api_version)
+    #     request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
         
-        # Execute the initial request
-        raw_result = self.client._send_request(request, **kwargs)
+    #     # Execute the initial request
+    #     raw_result = self.client._send_request(request, **kwargs)
         
-        def get_long_running_output(pipeline_response):
-            # Extract the result from the pipeline response
-            response_json = pipeline_response.http_response.json() if hasattr(pipeline_response.http_response, 'json') else {}
-            return response_json
+    #     def get_long_running_output(pipeline_response):
+    #         # Extract the result from the pipeline response
+    #         response_json = pipeline_response.http_response.json() if hasattr(pipeline_response.http_response, 'json') else {}
+    #         return response_json
         
-        if polling is True:
-            polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
-        elif polling is False:
-            polling_method = cast(PollingMethod, NoPolling())
-        else:
-            polling_method = polling
+    #     if polling is True:
+    #         polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
+    #     elif polling is False:
+    #         polling_method = cast(PollingMethod, NoPolling())
+    #     else:
+    #         polling_method = polling
         
-        # Create a proper pipeline response
-        pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
+    #     # Create a proper pipeline response
+    #     pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
         
-        return LROPoller[Any](
-            client=self.client._client,
-            initial_response=pipeline_response,
-            deserialization_callback=get_long_running_output,
-            polling_method=polling_method
-        )
+    #     return LROPoller[Any](
+    #         client=self.client._client,
+    #         initial_response=pipeline_response,
+    #         deserialization_callback=get_long_running_output,
+    #         polling_method=polling_method
+    #     )
     
-    def delete_resource(self, resource_type: str, resource_name: str, resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
-        """Delete a resource.
+    # def delete_resource(self, resource_type: str, resource_name: str, resource_group: Optional[str] = None, **kwargs: Any) -> HttpResponse:
+    #     """Delete a resource.
         
-        :param resource_type: The type of resource (e.g., 'virtualMachines')
-        :type resource_type: str
-        :param resource_name: Name of the resource to delete
-        :type resource_name: str
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        """
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
-        return self.delete(url, **kwargs)
+    #     :param resource_type: The type of resource (e.g., 'virtualMachines')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to delete
+    #     :type resource_name: str
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     """
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     return self.delete(url, **kwargs)
     
-    def begin_delete_resource(self, resource_type: str, resource_name: str, 
-                            resource_group: Optional[str] = None, **kwargs: Any) -> LROPoller[None]:
-        """Begin deleting a resource with long-running operation support.
+    # def begin_delete_resource(self, resource_type: str, resource_name: str, 
+    #                         resource_group: Optional[str] = None, **kwargs: Any) -> LROPoller[None]:
+    #     """Begin deleting a resource with long-running operation support.
         
-        :param resource_type: The type of resource (e.g., 'configurationStores')
-        :type resource_type: str
-        :param resource_name: Name of the resource to delete
-        :type resource_name: str
-        :param resource_group: Optional resource group name for scoped resources
-        :type resource_group: str
-        :return: An LROPoller for the long-running operation
-        :rtype: LROPoller[None]
-        """
-        # Set up polling configuration
-        polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
-        lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
+    #     :param resource_type: The type of resource (e.g., 'configurationStores')
+    #     :type resource_type: str
+    #     :param resource_name: Name of the resource to delete
+    #     :type resource_name: str
+    #     :param resource_group: Optional resource group name for scoped resources
+    #     :type resource_group: str
+    #     :return: An LROPoller for the long-running operation
+    #     :rtype: LROPoller[None]
+    #     """
+    #     # Set up polling configuration
+    #     polling: Union[bool, PollingMethod] = kwargs.pop("polling", True)
+    #     lro_delay = kwargs.pop("polling_interval", 30)  # Default to 30 seconds
         
-        # Create the initial request
-        if resource_group:
-            url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
-        else:
-            url = f"{self.base_url}/{resource_type}/{resource_name}"
+    #     # Create the initial request
+    #     if resource_group:
+    #         url = f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{self.service_provider}/{resource_type}/{resource_name}"
+    #     else:
+    #         url = f"{self.base_url}/{resource_type}/{resource_name}"
         
-        full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
-        request = HttpRequest("DELETE", full_url)
+    #     full_url = url if url.startswith('/') else f"{self.base_url}/{url}"
+    #     request = HttpRequest("DELETE", full_url)
         
-        # Add required api-version parameter
-        api_version = kwargs.pop("api_version", self.api_version)
-        request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
+    #     # Add required api-version parameter
+    #     api_version = kwargs.pop("api_version", self.api_version)
+    #     request.url += f"?api-version={api_version}" if "?" not in request.url else f"&api-version={api_version}"
         
-        # Execute the initial request
-        raw_result = self.client._send_request(request, **kwargs)
+    #     # Execute the initial request
+    #     raw_result = self.client._send_request(request, **kwargs)
         
-        def get_long_running_output(pipeline_response):
-            # Delete operations return None
-            return None
+    #     def get_long_running_output(pipeline_response):
+    #         # Delete operations return None
+    #         return None
         
-        if polling is True:
-            polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
-        elif polling is False:
-            polling_method = cast(PollingMethod, NoPolling())
-        else:
-            polling_method = polling
+    #     if polling is True:
+    #         polling_method: PollingMethod = cast(PollingMethod, ARMPolling(lro_delay, **kwargs))
+    #     elif polling is False:
+    #         polling_method = cast(PollingMethod, NoPolling())
+    #     else:
+    #         polling_method = polling
         
-        # Create a proper pipeline response
-        pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
+    #     # Create a proper pipeline response
+    #     pipeline_response = PipelineResponse(request, raw_result, PipelineContext(None))
         
-        return LROPoller[None](
-            client=self.client._client,
-            initial_response=pipeline_response,
-            deserialization_callback=get_long_running_output,
-            polling_method=polling_method
-        )
+    #     return LROPoller[None](
+    #         client=self.client._client,
+    #         initial_response=pipeline_response,
+    #         deserialization_callback=get_long_running_output,
+    #         polling_method=polling_method
+    #     )
     
     def _create_lro_poller(self, response: HttpResponse, **kwargs: Any) -> LROPoller[Any]:
         """Create an LRO poller from an HTTP response.
@@ -447,3 +448,87 @@ class ServiceProviderFactory:
             deserialization_callback=get_long_running_output,
             polling_method=polling_method
         )
+    
+    def _create_item_paged(self, path: str, skip_token: Optional[str], **kwargs: Any) -> ItemPaged[Any]:
+        """Create an ItemPaged object for GET operations.
+        
+        :param path: The API path for the pageable operation
+        :type path: str
+        :param skip_token: Skip token for continuation
+        :type skip_token: Optional[str]
+        :return: An ItemPaged object for pagination
+        :rtype: ItemPaged[Any]
+        """
+        def prepare_request(next_link=None):
+            if next_link:
+                # Use next link directly
+                import urllib.parse
+                parsed = urllib.parse.urlparse(next_link)
+                request = HttpRequest("GET", next_link)
+            else:
+                # Build initial request
+                full_url = path if path.startswith('/') else f"{self.base_url}/{path}"
+                query_params = []
+                if skip_token:
+                    query_params.append(f"$skipToken={skip_token}")
+                
+                api_version = kwargs.get("api_version", self.api_version)
+                query_params.append(f"api-version={api_version}")
+                
+                query_string = f"?{'&'.join(query_params)}"
+                request = HttpRequest("GET", f"{full_url}{query_string}")
+            return request
+        
+        def extract_data(pipeline_response):
+            data = pipeline_response.http_response.json()
+            items = data.get("value", [])
+            next_link = data.get("nextLink")
+            return next_link, iter(items)
+        
+        def get_next(next_link=None):
+            request = prepare_request(next_link)
+            return self.client._send_request(request, **kwargs)
+        
+        return ItemPaged(get_next, extract_data)
+    
+    def _create_item_paged_post(self, path: str, skip_token: Optional[str], **kwargs: Any) -> ItemPaged[Any]:
+        """Create an ItemPaged object for POST operations.
+        
+        :param path: The API path for the pageable operation
+        :type path: str
+        :param skip_token: Skip token for continuation
+        :type skip_token: Optional[str]
+        :return: An ItemPaged object for pagination
+        :rtype: ItemPaged[Any]
+        """
+        def prepare_request(next_link=None):
+            if next_link:
+                # Use next link directly (usually as GET)
+                import urllib.parse
+                parsed = urllib.parse.urlparse(next_link)
+                request = HttpRequest("GET", next_link)
+            else:
+                # Build initial request as POST
+                full_url = path if path.startswith('/') else f"{self.base_url}/{path}"
+                query_params = []
+                if skip_token:
+                    query_params.append(f"$skipToken={skip_token}")
+                
+                api_version = kwargs.get("api_version", self.api_version)
+                query_params.append(f"api-version={api_version}")
+                
+                query_string = f"?{'&'.join(query_params)}"
+                request = HttpRequest("POST", f"{full_url}{query_string}")
+            return request
+        
+        def extract_data(pipeline_response):
+            data = pipeline_response.http_response.json()
+            items = data.get("value", [])
+            next_link = data.get("nextLink")
+            return next_link, iter(items)
+        
+        def get_next(next_link=None):
+            request = prepare_request(next_link)
+            return self.client._send_request(request, **kwargs)
+        
+        return ItemPaged(get_next, extract_data)
