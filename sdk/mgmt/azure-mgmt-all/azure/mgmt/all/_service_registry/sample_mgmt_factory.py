@@ -59,6 +59,7 @@ class SampleMgmtFactory(ServiceProviderFactory):
             "widgets": cast(WidgetsOperations, self),
             "widget_keys": cast(WidgetKeyOperations, self),
         }
+        # TODO: URLs have overlapping patterns, maybe the format can be pulled out in the protocols?
         self.routes_by_method: Dict[str, Dict[str, Callable[..., Any]]] = {
             "GET": {
                 # List widgets optionally scoped to a resource group
