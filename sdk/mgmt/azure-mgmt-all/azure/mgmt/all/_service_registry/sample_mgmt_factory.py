@@ -1,11 +1,11 @@
-from typing import Any, Dict, Optional, Protocol, TypedDict, Callable, Union, cast, IO
+from typing import Any, Dict, Optional, Protocol, TypedDict, Callable, Union, cast, IO, runtime_checkable
 
 from azure.core.paging import ItemPaged
 from azure.core.polling import LROPoller
 
 from .service_factory import ServiceProviderFactory
 
-
+@runtime_checkable
 class WidgetsOperations(Protocol):
     def list_widgets(self, resource_group_name: Optional[str] = None, **kwargs: Any) -> ItemPaged[Dict[str, Any]]: ...
 
@@ -21,6 +21,7 @@ class WidgetsOperations(Protocol):
 
     def begin_delete_widget(self, resource_group_name: str, widget_name: str, **kwargs: Any) -> None: ...
 
+@runtime_checkable
 class WidgetKeyOperations(Protocol):
     def list_widget_keys(self, resource_group_name: str, widget_name: str, **kwargs: Any) -> ItemPaged[Dict[str, Any]]: ...
 
@@ -115,7 +116,7 @@ class SampleMgmtFactory(ServiceProviderFactory):
                 ),
             },
         }
-        # Flat index for fast dynamic lookup: name -> (verb, handler)
+
         self._route_index: Dict[str, Callable[..., Any]] = {
             name: handler for _, routes in self.routes_by_method.items() for name, handler in routes.items()
         }
@@ -137,10 +138,10 @@ class SampleMgmtFactory(ServiceProviderFactory):
 
         return _bound
 
-    @property
+
+    # do these need to be properties?
     def widgets(self) -> WidgetsOperations:
         return cast(WidgetsOperations, self)
     
-    @property
     def widget_keys(self) -> WidgetKeyOperations:
         return cast(WidgetKeyOperations, self)
