@@ -130,7 +130,7 @@ class CrudClient:
 
         # Let the resource type build its own URL and path arguments
         url_template = resource_type.get_url_template()
-        path_arguments = resource_type.build_path_arguments(
+        path_arguments = resource_type.build_instance_path_arguments(
             subscription_id=self._config.subscription_id,
             **kwargs
         )
@@ -156,5 +156,4 @@ class CrudClient:
         if response.status_code not in [200]:
             raise HttpResponseError(response=response)
 
-        deserialized = self._deserialize(resource_type, response)
-        return cast(ResourceType, deserialized)
+        return cast(ResourceType, data)

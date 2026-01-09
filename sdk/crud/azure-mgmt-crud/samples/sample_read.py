@@ -23,7 +23,11 @@ def main():
     )
     logger.debug(f"Initialized CrudClient {client}")
 
-    response = client.read(resource_type=BlobContainer())
+    response = client.read(resource_type=BlobContainer(
+        resource_group_name=RESOURCE_GROUP,
+        storage_account_name=STORAGE_ACCOUNT_NAME,
+        container_name=CONTAINER_NAME
+    ))
     print(response)
 
 if __name__ == "__main__":
