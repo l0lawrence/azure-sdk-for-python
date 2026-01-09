@@ -16,6 +16,9 @@ class ResourceType(Generic[T]):
         "type": {"key": "type", "type": "str"},
         "properties": {"key": "properties", "type": T},
     }
+    
+    # Default URL template - should be overridden by subclasses
+    _url_template = "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProvider}/{resourceType}/{resourceName}"
 
     # ^ these are used by serializer might need to adjsut 
 
@@ -26,6 +29,39 @@ class ResourceType(Generic[T]):
         self.type = None
         self.api_version = None
         self.properties: Optional[T] = None 
+    
+    @classmethod
+    def get_url_template(cls) -> str:
+        """Get the URL template for this resource type."""
+        return cls._url_template
+    
+    @classmethod
+    def extract_parameters(cls, **kwargs) -> Dict[str, Any]:
+        """Extract and validate required parameters for this resource type."""
+        required_params = ['resource_group_name', 'resource_name']
+        extracted = {}
+        
+        for param in required_params:
+            if param not in kwargs:
+                raise ValueError(f"{param} is required for {cls.__name__}")
+            extracted[param] = kwargs[param]
+        
+        # Pass through any additional kwargs
+        for key, value in kwargs.items():
+            if key not in required_params:
+                extracted[key] = value
+                
+        return extracted
+    
+    @classmethod
+    def build_path_arguments(cls, subscription_id: str, **kwargs) -> Dict[str, str]:
+        """Build the path format arguments for this resource type."""
+        params = cls.extract_parameters(**kwargs)
+        return {
+            "subscriptionId": subscription_id,
+            "resourceGroupName": params['resource_group_name'],
+            "resourceName": params['resource_name'],
+        } 
 
 class ResourceIdentityType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """The identity type."""
@@ -83,6 +119,8 @@ class CustomLocation(ResourceType[CustomLocationProperties]):
     :paramtype properties: ~azure.mgmt.crud.models.CustomLocationProperties
     """
 
+    # URL template for this resource type
+    _url_template = "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ExtendedLocation/customLocations/{resourceName}"
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -140,7 +178,7 @@ class ImmutableStorageWithVersioning(TypedDict):
     """Immutable storage with versioning properties."""
     enabled: Optional[bool]
     time_stamp: Optional[datetime.datetime]
-    migration_state: Optional[str, MigrationState]
+    migration_state: Optional[Union[str, MigrationState]]
 
 
 class BlobContainerProperties(TypedDict):
@@ -182,6 +220,44 @@ class BlobContainer(ResourceType[BlobContainerProperties]):
     :keyword properties: Properties of a Blob Container resource.
     :paramtype properties: ~azure.mgmt.crud.models.BlobContainerProperties
     """
+
+    # URL template for this resource type
+    _url_template = "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/blobServices/default/containers/{containerName}"
+
+    @classmethod
+    def extract_parameters(cls, **kwargs) -> Dict[str, Any]:
+        """Extract and validate required parameters for BlobContainer."""
+        required_params = ['resource_group_name', 'storage_account_name', 'container_name']
+        extracted = {}
+        
+        for param in required_params:
+            if param not in kwargs:
+                # Allow resource_name as alias for storage_account_name
+                if param == 'storage_account_name' and 'resource_name' in kwargs:
+                    extracted[param] = kwargs['resource_name']
+                else:
+                    raise ValueError(f"{param} is required for BlobContainer")
+            else:
+                extracted[param] = kwargs[param]
+        
+        # Pass through any additional kwargs
+        for key, value in kwargs.items():
+            if key not in required_params and key != 'resource_name':
+                extracted[key] = value
+                
+        return extracted
+        
+    @classmethod
+    def build_path_arguments(cls, subscription_id: str, **kwargs) -> Dict[str, str]:
+        """Build path arguments for blob container."""
+        params = cls.extract_parameters(**kwargs)
+        
+        return {
+            "subscriptionId": subscription_id,
+            "resourceGroupName": params['resource_group_name'],
+            "storageAccountName": params['storage_account_name'],
+            "containerName": params['container_name'],
+        }
 
     _validation = {
         "id": {"readonly": True},

@@ -20,7 +20,6 @@ from . import models as _models
 from .models import ResourceType
 from ._configuration import CrudConfiguration
 from ._serialization import Deserializer, Serializer
-from .operations import CustomLocationsOperations
 from azure.core.utils import case_insensitive_dict
 
 if TYPE_CHECKING:
@@ -79,9 +78,7 @@ class CrudClient:
         self._serialize = Serializer(client_models)
         self._deserialize = Deserializer(client_models)
         self._serialize.client_side_validation = False
-        self.custom_locations = CustomLocationsOperations(
-            self._client, self._config, self._serialize, self._deserialize
-        )
+
 
     def _send_request(self, request: HttpRequest, *, stream: bool = False, **kwargs: Any) -> HttpResponse:
         """Runs the network request through the client's chained policies.
@@ -117,41 +114,44 @@ class CrudClient:
 
     def read(
         self,
-        resource_group_name: str,
-        resource_name: str,
         resource_type: Type[ResourceType],
         **kwargs: Any
     ) -> ResourceType:
-        """Read a resource of the specified type."""
+        """Read a resource of the specified type.
+        
+        :param resource_type: The resource type class
+        :param kwargs: All parameters needed for the resource type (e.g., resource_group_name, resource_name, container_name)
+        """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
         api_version = kwargs.pop("api_version", _params.pop("api-version", getattr(resource_type, "api_version")))
         accept = _headers.pop("Accept", "application/json")
 
-        _url = kwargs.pop(
-            "template_url",
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ExtendedLocation/customLocations/{resourceName}",
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_url_template()
+        path_arguments = resource_type.build_path_arguments(
+            subscription_id=self._config.subscription_id,
+            **kwargs
         )
-        path_format_arguments = {
-            "subscriptionId": _SERIALIZER.url("subscription_id", self._config.subscription_id, "str", min_length=1),
-            "resourceGroupName": _SERIALIZER.url("resource_group_name", resource_group_name, "str", max_length=90, min_length=1),
-            "resourceName": _SERIALIZER.url(
-                "resource_name",
-                resource_name,
-                "str",
-                max_length=63,
-                min_length=1,
-                pattern=r"^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
-            ),
-        }
-        _url = _url.format(**path_format_arguments)
+        
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+        
+        _url = url_template.format(**serialized_path_args)
 
         _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
         _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
 
         request = HttpRequest("GET", _url, params=_params, headers=_headers)
-        response = self._send_request(request, stream=False, **kwargs)
+        response = self._send_request(request, stream=True, **kwargs)
+
+        data = response.read()
+
+        print("Response content: %s", data)
+        print("Finished processing 'CrudClient.read' request.")
 
         if response.status_code not in [200]:
             raise HttpResponseError(response=response)
