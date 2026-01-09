@@ -1,14 +1,14 @@
-from azure.mgmt.crud.models import CustomLocation, BlobContainer
+from azure.mgmt.crud.models import BlobContainer
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
 import os
 import logging
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
 handler = logging.StreamHandler()
 logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 SUBSCRIPTION_ID = os.environ["SUBSCRIPTION_ID"]
 RESOURCE_GROUP = os.environ["RESOURCE_GROUP"] 
@@ -21,14 +21,23 @@ def main():
         credential=DefaultAzureCredential(),
         subscription_id=SUBSCRIPTION_ID
     )
-    logger.debug(f"Initialized CrudClient {client}")
+    logger.info(f"Initialized CrudClient {client}")
 
-    response = client.read(resource_type=BlobContainer(
+    response: BlobContainer = client.read(
+        resource_type=BlobContainer(
         resource_group_name=RESOURCE_GROUP,
         storage_account_name=STORAGE_ACCOUNT_NAME,
-        container_name=CONTAINER_NAME
-    ))
+        container_name=CONTAINER_NAME)
+    )
     print(response)
+
+
+    if response:
+        logger.info("Read BlobContainer successfully.\n")
+        logger.info(f"BlobContainer details: {response} \n")
+        logger.info(f"BlobContainer name: {response.name} \n")
+        logger.info(f"BlobContainer properties: {response.properties} \n")
+        logger.info(f"Is blobContainer {isinstance(response, BlobContainer)} \n")
 
 if __name__ == "__main__":
     main()

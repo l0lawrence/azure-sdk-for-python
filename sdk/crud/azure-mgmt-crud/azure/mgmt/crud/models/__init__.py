@@ -6,6 +6,6 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from .models import ResourceType, CustomLocation, BlobContainer
+from .models import ResourceType, BlobContainer
 
-__all__ = ["ResourceType", "CustomLocation", "BlobContainer"]
+__all__ = ["ResourceType", "BlobContainer"]

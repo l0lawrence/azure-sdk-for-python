@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, Type, cast
+from typing import Any, TYPE_CHECKING, Type, cast, Dict, TypeVar
 from typing_extensions import Self
 
 from azure.core.pipeline import policies
@@ -27,6 +27,9 @@ if TYPE_CHECKING:
 
 _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
+
+# TypeVar for generic resource type returns
+TResource = TypeVar('TResource', bound=ResourceType)
 
 class CrudClient:
     """The CRUD Rest API spec.
@@ -114,13 +117,14 @@ class CrudClient:
 
     def read(
         self,
-        resource_type: Type[ResourceType],
+        resource_type: TResource,
         **kwargs: Any
-    ) -> ResourceType:
+    ) -> TResource:
         """Read a resource of the specified type.
         
         :param resource_type: The resource type class
         :param kwargs: All parameters needed for the resource type (e.g., resource_group_name, resource_name, container_name)
+        :return: Instance of the resource type with the data from Azure
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
@@ -130,9 +134,9 @@ class CrudClient:
 
         # Let the resource type build its own URL and path arguments
         url_template = resource_type.get_url_template()
+        
         path_arguments = resource_type.build_instance_path_arguments(
-            subscription_id=self._config.subscription_id,
-            **kwargs
+            subscription_id=self._config.subscription_id
         )
         
         # Serialize path arguments for URL safety
@@ -150,10 +154,14 @@ class CrudClient:
 
         data = response.read()
 
-        print("Response content: %s", data)
-        print("Finished processing 'CrudClient.read' request.")
-
         if response.status_code not in [200]:
             raise HttpResponseError(response=response)
 
-        return cast(ResourceType, data)
+        # Parse JSON response to dict
+        import json
+        data_dict = json.loads(data.decode('utf-8'))
+        
+        # Create instance using the resource type's from_response method
+        instance = resource_type.from_response(data_dict, **kwargs)
+        
+        return instance
