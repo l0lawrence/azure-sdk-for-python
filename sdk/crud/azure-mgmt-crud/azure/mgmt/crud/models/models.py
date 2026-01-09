@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, TypeVar, Generic, TYPE_CHECKING, Type, Union
 from typing_extensions import TypedDict, Unpack, Required, NotRequired
 from enum import Enum
+import datetime
 from azure.core import CaseInsensitiveEnumMeta
 
 
@@ -87,3 +88,146 @@ class CustomLocation(ResourceType[CustomLocationProperties]):
         super().__init__(**kwargs)
         self.api_version: str = kwargs.get("api_version", "2021-08-15") # use api verison enum?
         self.properties: Optional[CustomLocationProperties] = kwargs.get("properties", None)
+
+class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The ImmutabilityPolicy state defines the mode of the policy. Disabled state disables the
+    policy, Unlocked state allows increase and decrease of immutability retention time and also
+    allows toggling allowProtectedAppendWrites property, Locked state only allows the increase of
+    the immutability retention time. A policy can only be created in a Disabled or Unlocked state
+    and can be toggled between the two states. Only a policy in an Unlocked state can transition to
+    a Locked state which cannot be reverted.
+    """
+
+    UNLOCKED = "Unlocked"
+    LOCKED = "Locked"
+    DISABLED = "Disabled"
+
+class ImmutabilityPolicyProperties(TypedDict):
+    """Properties of an Immutability Policy."""
+    immutability_period_since_creation_in_days: Optional[int]
+    state: Optional[Union[str,AccountImmutabilityPolicyState]]
+    allow_protected_append_writes: Optional[bool]
+
+class TagProperty(TypedDict):
+    """Tag property of a Legal Hold."""
+    tag: Optional[str]
+    timestamp: Optional[datetime.datetime]
+    object_identifier: Optional[str]
+    tenant_id: Optional[str]
+    upn: Optional[str]
+
+class ProtectedAppendWritesHistory(TypedDict):
+    """Protected append writes history."""
+    allow_protected_append_writes_all: Optional[bool]
+    timestamp: Optional[datetime.datetime]
+
+class LegalHoldProperties(TypedDict):
+    """Properties of a Legal Hold."""
+    has_legal_hold: Optional[bool]
+    tags: Optional[List[TagProperty]]
+    protected_append_writes_history: Optional[ProtectedAppendWritesHistory]
+
+
+class MigrationState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """This property denotes the container level immutability to object level immutability migration
+    state.
+    """
+
+    IN_PROGRESS = "InProgress"
+    COMPLETED = "Completed"
+
+class ImmutableStorageWithVersioning(TypedDict):
+    """Immutable storage with versioning properties."""
+    enabled: Optional[bool]
+    time_stamp: Optional[datetime.datetime]
+    migration_state: Optional[str, MigrationState]
+
+
+class BlobContainerProperties(TypedDict):
+    """Properties of a Blob Container resource."""
+    public_access: Optional[str]
+    last_modified_time: Optional[str]
+    etag: Optional[str]
+    version: Optional[str]
+    deleted: Optional[bool]
+    deleted_time: Optional[str]
+    remaining_retention_days: Optional[int]
+    default_encryption_scope: Optional[str]
+    deny_encryption_scope_override: Optional[bool]
+    lease_status: Optional[str]
+    lease_state: Optional[str]
+    lease_duration: Optional[str]
+    metadata: Optional[Dict[str, str]]
+    immutability_policy: Optional[ImmutabilityPolicyProperties]
+    legal_hold: Optional[LegalHoldProperties]
+    has_legal_hold: Optional[bool]
+    has_immutability_policy: Optional[bool]
+    immutable_storage_with_versioning: Optional[ImmutableStorageWithVersioning]
+    enable_nfs_v3_root_squash: Optional[bool]
+    enable_nfs_v3_all_squash: Optional[bool]
+
+class BlobContainer(ResourceType[BlobContainerProperties]):
+    """A Blob Container resource.
+
+    Variables are only populated by the server, and will be ignored when sending a request.
+
+    :keyword id: Resource ID.
+    :paramtype id: str
+    :keyword name: Resource name.
+    :paramtype name: str
+    :keyword type: Resource type.
+    :paramtype type: str
+    :keyword api_version: The API version used to create the resource.
+    :paramtype api_version: str
+    :keyword properties: Properties of a Blob Container resource.
+    :paramtype properties: ~azure.mgmt.crud.models.BlobContainerProperties
+    """
+
+    _validation = {
+        "id": {"readonly": True},
+        "name": {"readonly": True},
+        "type": {"readonly": True},
+        "etag": {"readonly": True},
+        "last_modified_time": {"readonly": True},
+        "deleted": {"readonly": True},
+        "deleted_time": {"readonly": True},
+        "remaining_retention_days": {"readonly": True},
+        "lease_status": {"readonly": True},
+        "lease_state": {"readonly": True},
+        "has_legal_hold": {"readonly": True},
+        "has_immutability_policy": {"readonly": True},
+    }
+    
+    _attribute_map = {
+        "id": {"key": "id", "type": "str"},
+        "name": {"key": "name", "type": "str"},
+        "type": {"key": "type", "type": "str"},
+        "etag": {"key": "etag", "type": "str"},
+        "version": {"key": "properties.version", "type": "str"},
+        "deleted": {"key": "properties.deleted", "type": "bool"},
+        "deleted_time": {"key": "properties.deletedTime", "type": "iso-8601"},
+        "remaining_retention_days": {"key": "properties.remainingRetentionDays", "type": "int"},
+        "default_encryption_scope": {"key": "properties.defaultEncryptionScope", "type": "str"},
+        "deny_encryption_scope_override": {"key": "properties.denyEncryptionScopeOverride", "type": "bool"},
+        "public_access": {"key": "properties.publicAccess", "type": "str"},
+        "last_modified_time": {"key": "properties.lastModifiedTime", "type": "iso-8601"},
+        "lease_status": {"key": "properties.leaseStatus", "type": "str"},
+        "lease_state": {"key": "properties.leaseState", "type": "str"},
+        "lease_duration": {"key": "properties.leaseDuration", "type": "str"},
+        "metadata": {"key": "properties.metadata", "type": "{str}"},
+        "immutability_policy": {"key": "properties.immutabilityPolicy", "type": "ImmutabilityPolicyProperties"},
+        "legal_hold": {"key": "properties.legalHold", "type": "LegalHoldProperties"},
+        "has_legal_hold": {"key": "properties.hasLegalHold", "type": "bool"},
+        "has_immutability_policy": {"key": "properties.hasImmutabilityPolicy", "type": "bool"},
+        "immutable_storage_with_versioning": {
+            "key": "properties.immutableStorageWithVersioning",
+            "type": "ImmutableStorageWithVersioning",
+        },
+        "enable_nfs_v3_root_squash": {"key": "properties.enableNfsV3RootSquash", "type": "bool"},
+        "enable_nfs_v3_all_squash": {"key": "properties.enableNfsV3AllSquash", "type": "bool"},
+    }
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.api_version: str = kwargs.get("api_version", "2025-06-01") # use api verison enum?
+        self.properties: Optional[BlobContainerProperties] = kwargs.get("properties", None)
