@@ -313,22 +313,40 @@ class BlobContainer(ResourceType[BlobContainerProperties]):
 
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> 'BlobContainer':
-        """Create BlobContainer instance from API response data and request parameters.
+        """Create BlobContainer instance from API response data and path arguments.
 
         :param data_dict: The response data dictionary from Azure API
         :type data_dict: Dict[str, Any]
+        :keyword path_arguments: URL path arguments used in the API call
+        :paramtype path_arguments: Dict[str, str]
         :return: Created BlobContainer instance
         :rtype: BlobContainer
         """
         # Create runtime TypedDict instance with validation
         properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobContainerProperties)
 
+        # Extract info from path_arguments if provided, otherwise fallback to kwargs or request_model
+        path_arguments = kwargs.get('path_arguments', {})
+        
+        if path_arguments:
+            # Use info from path arguments
+            resource_group_name = path_arguments.get('resourceGroupName', 'unknown')
+            storage_account_name = path_arguments.get('storageAccountName', 'unknown')
+            container_name = path_arguments.get('containerName', 'unknown')
+        else:
+            # Final fallback to kwargs
+            resource_group_name = kwargs.get('resource_group_name', 'unknown')
+            storage_account_name = kwargs.get('storage_account_name', 'unknown')
+            container_name = kwargs.get('container_name', 'unknown')
+        
+        api_version = kwargs.get('api_version', '2025-06-01')
+
         # Create instance with BlobContainer-specific constructor parameters
         instance = cls(
-            resource_group_name=kwargs.get('resource_group_name', 'unknown'),
-            storage_account_name=kwargs.get('storage_account_name', 'unknown'),
-            container_name=kwargs.get('container_name', 'unknown'),
-            api_version=kwargs.get('api_version'),
+            resource_group_name=resource_group_name,
+            storage_account_name=storage_account_name,
+            container_name=container_name,
+            api_version=api_version,
             properties=properties
         )
 
@@ -466,22 +484,39 @@ class BlobInventoryPolicy(ResourceType[BlobInventoryPolicyProperties]):
     
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> 'BlobInventoryPolicy':
-        """Create BlobInventoryPolicy instance from API response data and request parameters.
+        """Create BlobInventoryPolicy instance from API response data and path arguments.
 
         :param data_dict: The response data dictionary from Azure API
         :type data_dict: Dict[str, Any]
+        :keyword path_arguments: URL path arguments used in the API call
+        :paramtype path_arguments: Dict[str, str]
         :return: Created BlobInventoryPolicy instance
         :rtype: BlobInventoryPolicy
         """
         # Create runtime TypedDict instance with validation
         properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobInventoryPolicyProperties)
 
+        # Extract info from path_arguments if provided, otherwise fallback to kwargs or request_model
+        path_arguments = kwargs.get('path_arguments', {})
+        
+        if path_arguments:
+            # Use info from path arguments
+            resource_group_name = path_arguments.get('resourceGroupName', 'unknown')
+            storage_account_name = path_arguments.get('storageAccountName', 'unknown')
+            blob_inventory_policy_name = path_arguments.get('blobInventoryPolicyName', 'unknown')
+        else:
+            resource_group_name = kwargs.get('resource_group_name', 'unknown')
+            storage_account_name = kwargs.get('storage_account_name', 'unknown')
+            blob_inventory_policy_name = kwargs.get('blob_inventory_policy_name', 'unknown')
+    
+        api_version = kwargs.get('api_version', '2025-06-01')
+
         # Create instance with BlobInventoryPolicy-specific constructor parameters
         instance = cls(
-            resource_group_name=kwargs.get('resource_group_name', 'unknown'),
-            storage_account_name=kwargs.get('storage_account_name', 'unknown'),
-            blob_inventory_policy_name=kwargs.get('blob_inventory_policy_name', 'unknown'),
-            api_version=kwargs.get('api_version'),
+            resource_group_name=resource_group_name,
+            storage_account_name=storage_account_name,
+            blob_inventory_policy_name=blob_inventory_policy_name,
+            api_version=api_version,
             properties=properties
         )
 

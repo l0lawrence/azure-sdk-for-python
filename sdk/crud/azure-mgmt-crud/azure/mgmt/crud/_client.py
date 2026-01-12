@@ -163,6 +163,7 @@ class CrudClient:
         data_dict = json.loads(data.decode('utf-8'))
 
         # Create instance using the resource type's from_response method
-        instance = resource_type.from_response(data_dict, **kwargs)
+        # Pass the path arguments that were used for URL construction
+        instance = resource_type.from_response(data_dict, path_arguments=path_arguments, **kwargs)
 
         return instance
