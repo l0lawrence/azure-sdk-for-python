@@ -7,20 +7,20 @@
 # --------------------------------------------------------------------------
 
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, Type, cast, Dict, TypeVar
-from typing_extensions import Self
+from typing import Any, TYPE_CHECKING, TypeVar, Type
 
 from azure.core.pipeline import policies
 from azure.core.rest import HttpRequest, HttpResponse
 from azure.core.exceptions import HttpResponseError
+from azure.core.utils import case_insensitive_dict
+from azure.core.tracing.decorator import distributed_trace
 from azure.mgmt.core import ARMPipelineClient
 from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
 
 from . import models as _models
 from .models import ResourceType
 from ._configuration import CrudConfiguration
-from ._serialization import Deserializer, Serializer
-from azure.core.utils import case_insensitive_dict
+from ._serialization import Serializer
 
 if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
@@ -77,11 +77,6 @@ class CrudClient:
             ]
         self._client: ARMPipelineClient = ARMPipelineClient(base_url=base_url, policies=_policies, **kwargs)
 
-        client_models = {k: v for k, v in _models.__dict__.items() if isinstance(v, type)}
-        self._serialize = Serializer(client_models)
-        self._deserialize = Deserializer(client_models)
-        self._serialize.client_side_validation = False
-
 
     def _send_request(self, request: HttpRequest, *, stream: bool = False, **kwargs: Any) -> HttpResponse:
         """Runs the network request through the client's chained policies.
@@ -108,46 +103,54 @@ class CrudClient:
     def close(self) -> None:
         self._client.close()
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> "CrudClient":
         self._client.__enter__()
         return self
 
     def __exit__(self, *exc_details: Any) -> None:
         self._client.__exit__(*exc_details)
 
+    @distributed_trace
     def read(
         self,
-        resource_type: TResource,
+        resource_type: Type[TResource],
         **kwargs: Any
     ) -> TResource:
         """Read a resource of the specified type.
-        
+
         :param resource_type: The resource type class
-        :param kwargs: All parameters needed for the resource type (e.g., resource_group_name, resource_name, container_name)
-        :return: Instance of the resource type with the data from Azure
+        :type resource_type: Type[TResource]
+        :return: An instance of the resource type.
+        :rtype: TResource
+        :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
-        api_version = kwargs.pop("api_version", _params.pop("api-version", getattr(resource_type, "api_version")))
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
         accept = _headers.pop("Accept", "application/json")
 
         # Let the resource type build its own URL and path arguments
         url_template = resource_type.get_url_template()
-        
-        path_arguments = resource_type.build_instance_path_arguments(
+
+        # Create a temporary instance to build path arguments
+        temp_instance = resource_type(**kwargs)
+        path_arguments = temp_instance.build_instance_path_arguments(
             subscription_id=self._config.subscription_id
         )
-        
+
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
             serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
-        
+
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
-        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
 
         request = HttpRequest("GET", _url, params=_params, headers=_headers)
         response = self._send_request(request, stream=True, **kwargs)
@@ -158,10 +161,10 @@ class CrudClient:
             raise HttpResponseError(response=response)
 
         # Parse JSON response to dict
-        import json
+        import json  # pylint: disable=import-outside-toplevel
         data_dict = json.loads(data.decode('utf-8'))
-        
+
         # Create instance using the resource type's from_response method
         instance = resource_type.from_response(data_dict, **kwargs)
-        
+
         return instance
