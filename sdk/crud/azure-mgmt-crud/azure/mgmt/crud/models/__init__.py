@@ -18,6 +18,7 @@ from .storage_models import (
     LegalHoldProperties,
     MigrationState,
     ImmutableStorageWithVersioning,
+    BlobInventoryPolicy
 )
 
 __all__ = [
@@ -32,4 +33,5 @@ __all__ = [
     "LegalHoldProperties",
     "MigrationState",
     "ImmutableStorageWithVersioning",
+    "BlobInventoryPolicy"
 ]

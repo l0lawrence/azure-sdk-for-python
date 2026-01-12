@@ -113,7 +113,7 @@ class CrudClient:
     @distributed_trace
     def read(
         self,
-        resource_type: Type[TResource],
+        resource_type: TResource,
         **kwargs: Any
     ) -> TResource:
         """Read a resource of the specified type.
@@ -136,9 +136,7 @@ class CrudClient:
         # Let the resource type build its own URL and path arguments
         url_template = resource_type.get_url_template()
 
-        # Create a temporary instance to build path arguments
-        temp_instance = resource_type(**kwargs)
-        path_arguments = temp_instance.build_instance_path_arguments(
+        path_arguments = resource_type.build_instance_path_arguments(
             subscription_id=self._config.subscription_id
         )
 

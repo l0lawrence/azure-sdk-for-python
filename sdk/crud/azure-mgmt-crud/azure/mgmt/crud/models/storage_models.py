@@ -98,6 +98,7 @@ class BlobContainerParameters(ResourceTypeParameters):
     container_name: Required[str]
 
 class BlobContainer(ResourceType[BlobContainerProperties]):
+
     """A Blob Container resource.
 
     Variables are only populated by the server, and will be ignored when sending a request.
@@ -185,3 +186,155 @@ class BlobContainer(ResourceType[BlobContainerProperties]):
         self.container_name = container_name
         self.api_version: str = kwargs.get("api_version", "2025-06-01")
         self.properties: Optional[BlobContainerProperties] = kwargs.get("properties", None)
+
+class CreatedByType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The type of identity that created the resource."""
+
+    USER = "User"
+    APPLICATION = "Application"
+    MANAGED_IDENTITY = "ManagedIdentity"
+    KEY = "Key"
+
+class SystemData(TypedDict):
+    created_by: Optional[str]
+    created_by_type: Optional[Union[str, CreatedByType]]
+    created_at: Optional[datetime.datetime]
+    last_modified_by: Optional[str]
+    last_modified_by_type: Optional[Union[str, CreatedByType]]
+    last_modified_at: Optional[datetime.datetime]
+
+
+class InventoryRuleType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The valid value is Inventory."""
+
+    INVENTORY = "Inventory"
+
+class Format(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """This is a required field, it specifies the format for the inventory files."""
+
+    CSV = "Csv"
+    PARQUET = "Parquet"
+
+class Schedule(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """This is a required field. This field is used to schedule an inventory formation."""
+
+    DAILY = "Daily"
+    WEEKLY = "Weekly"
+
+class ObjectType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """This is a required field. This field specifies the scope of the inventory created either at the
+    blob or container level.
+    """
+
+    BLOB = "Blob"
+    CONTAINER = "Container"
+
+class BlobInventoryCreationTime(TypedDict):
+    last_n_days: Optional[int]
+
+class BlobInventoryPolicyFilter(TypedDict):
+    prefix_match: Optional[List[str]]
+    exclude_prefix: Optional[List[str]]
+    blob_types: Optional[List[str]]
+    include_blob_versions: Optional[bool]
+    include_snapshots: Optional[bool]
+    include_deleted: Optional[bool]
+    creation_time: Optional[BlobInventoryCreationTime]
+
+class BlobInventoryPolicyDefinition(TypedDict):
+    format: Union[str, Format]
+    schedule: Union[str, Schedule]
+    object_type: Union[str, ObjectType]
+    schema_fields: List[str]
+    filters: Optional[BlobInventoryPolicyFilter]
+
+
+class BlobInventoryPolicyRule(TypedDict):
+    enabled: bool
+    name: str
+    destination: str        
+    definition: BlobInventoryPolicyDefinition
+
+class BlobInventoryPolicySchema(TypedDict):
+    enabled: bool
+    destination: NotRequired[str]
+    type: Union[str, InventoryRuleType]
+    rules: List[BlobInventoryPolicyRule]
+
+class BlobInventoryPolicyProperties(TypedDict):
+    """Properties of a Blob Inventory Policy resource."""
+    system_data: NotRequired[SystemData]
+    last_modified_time: NotRequired[Optional[datetime.datetime]]
+    policy: Optional[BlobInventoryPolicySchema]
+
+
+class BlobInventoryPolicy(ResourceType[BlobInventoryPolicyProperties]):
+
+    """A Blob Inventory Policy resource.
+
+    Variables are only populated by the server, and will be ignored when sending a request.
+
+    :param resource_group_name: The name of the resource group. Required.
+    :type resource_group_name: str
+    :param storage_account_name: The name of the storage account. Required.
+    :type storage_account_name: str
+    :keyword api_version: The API version used to create the resource.
+    :paramtype api_version: str
+    :keyword properties: Properties of a Blob Inventory Policy resource.
+    :paramtype properties: ~azure.mgmt.crud.models.BlobInventoryPolicyProperties
+    """
+
+    # URL template for this resource type
+    _url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/inventoryPolicies/{blobInventoryPolicyName}"
+    )
+
+    def build_instance_path_arguments(self, subscription_id: str) -> Dict[str, str]:
+            """Build path arguments from instance attributes.
+
+            :param subscription_id: The Azure subscription ID
+            :type subscription_id: str
+            :return: Dictionary of path arguments for URL construction
+            :rtype: Dict[str, str]
+            """
+            return {
+                "subscriptionId": subscription_id,
+                "resourceGroupName": self.resource_group_name,
+                "storageAccountName": self.storage_account_name,
+                "blobInventoryPolicyName": self.blob_inventory_policy_name,
+            }
+    
+    @classmethod
+    def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> 'BlobInventoryPolicy':
+        """Create BlobInventoryPolicy instance from API response data and request parameters.
+
+        :param data_dict: The response data dictionary from Azure API
+        :type data_dict: Dict[str, Any]
+        :return: Created BlobInventoryPolicy instance
+        :rtype: BlobInventoryPolicy
+        """
+        properties = data_dict.get('properties', {})
+
+        # Create instance with BlobInventoryPolicy-specific constructor parameters
+        instance = cls(
+            resource_group_name=kwargs.get('resource_group_name', 'unknown'),
+            storage_account_name=kwargs.get('storage_account_name', 'unknown'),
+            blob_inventory_policy_name=kwargs.get('blob_inventory_policy_name', 'unknown'),
+            api_version=kwargs.get('api_version'),
+            properties=properties
+        )
+
+        # Set response data attributes
+        instance.id = data_dict.get('id')
+        instance.name = data_dict.get('name')
+        instance.type = data_dict.get('type')
+
+        return instance
+    
+    def __init__(self, resource_group_name: str, storage_account_name: str, blob_inventory_policy_name: str, **kwargs) -> None:
+        super().__init__()
+        self.resource_group_name = resource_group_name
+        self.storage_account_name = storage_account_name
+        self.blob_inventory_policy_name = blob_inventory_policy_name
+        self.api_version: str = kwargs.get("api_version", "2025-06-01")
+        self.properties: Optional[BlobInventoryPolicyProperties] = kwargs.get("properties", None)
