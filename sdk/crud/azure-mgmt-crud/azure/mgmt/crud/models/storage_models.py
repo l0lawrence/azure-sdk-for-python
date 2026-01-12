@@ -8,11 +8,170 @@
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
-from typing_extensions import TypedDict, Required, NotRequired
+from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args
+from typing_extensions import TypedDict, Required, NotRequired, is_typeddict
 from azure.core import CaseInsensitiveEnumMeta
 
 from .models import ResourceType, ResourceTypeParameters
+
+
+# --------------------------------------------------------------------------
+# Runtime TypedDict validation helpers
+# --------------------------------------------------------------------------
+
+def _parse_datetime_string(value: Any) -> Optional[datetime.datetime]:
+    """Parse datetime from ISO string."""
+    if value is None or isinstance(value, datetime.datetime):
+        return value
+    if isinstance(value, str):
+        try:
+            return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except Exception:
+            return value
+    return value
+
+
+def _parse_enum_value(value: Any, enum_cls: type) -> Any:
+    """Parse enum value from string."""
+    if value is None or isinstance(value, enum_cls):
+        return value
+    if isinstance(value, str) and issubclass(enum_cls, Enum):
+        try:
+            return enum_cls(value)
+        except (ValueError, KeyError):
+            try:
+                return enum_cls[value]
+            except (ValueError, KeyError):
+                return value
+    return value
+
+
+def _validate_typeddict_field(value: Any, field_type: type) -> Any:
+    """Validate and transform a field value based on its type hint."""
+    origin = get_origin(field_type)
+    args = get_args(field_type)
+    
+    # Handle Optional[T] -> Union[T, None]
+    if origin is Union:
+        # Check if this is Optional (Union with None)
+        if len(args) == 2 and type(None) in args:
+            if value is None:
+                return None
+            # Get the non-None type
+            inner_type = next(arg for arg in args if arg is not type(None))
+            return _validate_typeddict_field(value, inner_type)
+        else:
+            # Regular Union - try each type
+            for arg in args:
+                try:
+                    return _validate_typeddict_field(value, arg)
+                except Exception:
+                    continue
+            return value
+    
+    # Handle List[T]
+    elif origin is list or origin is List:
+        if not isinstance(value, list):
+            return value
+        if args:
+            item_type = args[0]
+            return [_validate_typeddict_field(item, item_type) for item in value]
+        return value
+    
+    # Handle Dict[K, V]
+    elif origin is dict or origin is Dict:
+        if not isinstance(value, dict):
+            return value
+        if len(args) >= 2:
+            key_type, value_type = args[0], args[1]
+            return {
+                _validate_typeddict_field(k, key_type): _validate_typeddict_field(v, value_type)
+                for k, v in value.items()
+            }
+        return value
+    
+    # Handle TypedDict
+    elif is_typeddict(field_type):
+        return _create_runtime_typeddict_instance(value, field_type)
+    
+    # Handle Enum
+    elif isinstance(field_type, type) and issubclass(field_type, Enum):
+        return _parse_enum_value(value, field_type)
+    
+    # Handle datetime
+    elif field_type is datetime.datetime:
+        return _parse_datetime_string(value)
+    
+    # Handle basic types
+    elif field_type in (str, int, float, bool):
+        if value is None:
+            return None
+        try:
+            return field_type(value)
+        except (ValueError, TypeError):
+            return value
+    
+    # Return as-is for unknown types
+    return value
+
+
+def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str, Any]:
+    """Validate and transform data according to a TypedDict schema."""
+    if not isinstance(data, dict):
+        data = data or {}
+    
+    hints = get_type_hints(typeddict_class, include_extras=True)
+    result = {}
+    
+    for field_name, field_type in hints.items():
+        if field_name in data:
+            result[field_name] = _validate_typeddict_field(data[field_name], field_type)
+        else:
+            # Check if field is required (not Optional and not NotRequired)
+            origin = get_origin(field_type)
+            if origin is Union:
+                args = get_args(field_type)
+                if len(args) == 2 and type(None) in args:
+                    # Optional field
+                    result[field_name] = None
+            # For NotRequired fields, we don't set them if missing
+    
+    # Include any extra fields that aren't in the TypedDict
+    for key, value in data.items():
+        if key not in hints:
+            result[key] = value
+    
+    return result
+
+
+def _create_runtime_typeddict_instance(data: Any, typeddict_class: type):
+    """Create a runtime instance that behaves like the TypedDict class."""
+    validated_data = _validate_typeddict_properties(data, typeddict_class)
+    
+    # Create a new class that extends dict but identifies as the TypedDict
+    class RuntimeTypedDict(dict):
+        def __class_getitem__(cls, item):
+            return typeddict_class
+        
+        def __repr__(self):
+            return f"{typeddict_class.__name__}({super().__repr__()})"
+    
+    # Set the class name and module to match the TypedDict
+    RuntimeTypedDict.__name__ = typeddict_class.__name__
+    RuntimeTypedDict.__qualname__ = typeddict_class.__qualname__
+    RuntimeTypedDict.__module__ = typeddict_class.__module__
+    
+    # Create instance and populate with validated data
+    instance = RuntimeTypedDict(validated_data)
+    
+    # Make type() return the TypedDict class
+    instance.__class__ = type(typeddict_class.__name__, (dict,), {
+        '__module__': typeddict_class.__module__,
+        '__qualname__': typeddict_class.__qualname__,
+        '__repr__': lambda self: f"{typeddict_class.__name__}({dict.__repr__(self)})"
+    })
+    
+    return instance
 
 
 class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -161,7 +320,8 @@ class BlobContainer(ResourceType[BlobContainerProperties]):
         :return: Created BlobContainer instance
         :rtype: BlobContainer
         """
-        properties = data_dict.get('properties', {})
+        # Create runtime TypedDict instance with validation
+        properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobContainerProperties)
 
         # Create instance with BlobContainer-specific constructor parameters
         instance = cls(
@@ -313,7 +473,8 @@ class BlobInventoryPolicy(ResourceType[BlobInventoryPolicyProperties]):
         :return: Created BlobInventoryPolicy instance
         :rtype: BlobInventoryPolicy
         """
-        properties = data_dict.get('properties', {})
+        # Create runtime TypedDict instance with validation
+        properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobInventoryPolicyProperties)
 
         # Create instance with BlobInventoryPolicy-specific constructor parameters
         instance = cls(
