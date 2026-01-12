@@ -6,6 +6,30 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from .models import ResourceType, BlobContainer
+from .models import ResourceType
+from .storage_models import (
+    BlobContainer,
+    BlobContainerProperties,
+    BlobContainerParameters,
+    AccountImmutabilityPolicyState,
+    ImmutabilityPolicyProperties,
+    TagProperty,
+    ProtectedAppendWritesHistory,
+    LegalHoldProperties,
+    MigrationState,
+    ImmutableStorageWithVersioning,
+)
 
-__all__ = ["ResourceType", "BlobContainer"]
+__all__ = [
+    "ResourceType",
+    "BlobContainer",
+    "BlobContainerProperties", 
+    "BlobContainerParameters",
+    "AccountImmutabilityPolicyState",
+    "ImmutabilityPolicyProperties",
+    "TagProperty",
+    "ProtectedAppendWritesHistory", 
+    "LegalHoldProperties",
+    "MigrationState",
+    "ImmutableStorageWithVersioning",
+]
