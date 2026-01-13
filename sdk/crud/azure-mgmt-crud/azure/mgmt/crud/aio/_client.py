@@ -7,13 +7,14 @@
 # --------------------------------------------------------------------------
 
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, TypeVar, Type, Awaitable
+from typing import Any, TYPE_CHECKING, TypeVar, Type, Awaitable, List, Optional, AsyncIterator
 
 from azure.core.pipeline import policies
 from azure.core.rest import AsyncHttpResponse, HttpRequest
 from azure.core.exceptions import HttpResponseError
 from azure.core.utils import case_insensitive_dict
 from azure.core.tracing.decorator import distributed_trace
+from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.mgmt.core import ARMPipelineClient
 from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
 
@@ -170,3 +171,317 @@ class CrudClient:
         instance = resource_type.from_response(data_dict, **kwargs)
 
         return instance
+
+    @distributed_trace_async
+    async def create(
+        self,
+        resource: TResource,
+        **kwargs: Any
+    ) -> TResource:
+        """Create a resource of the specified type.
+
+        :param resource: The resource instance to create
+        :type resource: TResource
+        :return: The created resource instance.
+        :rtype: TResource
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        resource_type = type(resource)
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        content_type = kwargs.pop("content_type", _headers.pop("Content-Type", "application/json"))
+        accept = _headers.pop("Accept", "application/json")
+
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_url_template()
+        path_arguments = resource.build_instance_path_arguments(
+            subscription_id=self._config.subscription_id
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+
+        # Serialize the resource to JSON
+        import json  # pylint: disable=import-outside-toplevel
+        json_data = json.dumps(resource.to_dict())
+
+        request = HttpRequest("PUT", _url, params=_params, headers=_headers, content=json_data)
+        response = await self._send_request(request, stream=True, **kwargs)
+
+        data = await response.read()
+
+        if response.status_code not in [200, 201]:
+            raise HttpResponseError(response=response)
+
+        # Parse JSON response to dict
+        data_dict = json.loads(data.decode('utf-8'))
+
+        # Create instance using the resource type's from_response method
+        instance = resource_type.from_response(data_dict, **kwargs)
+
+        return instance
+
+    @distributed_trace_async
+    async def update(
+        self,
+        resource: TResource,
+        **kwargs: Any
+    ) -> TResource:
+        """Update a resource of the specified type.
+
+        :param resource: The resource instance to update
+        :type resource: TResource
+        :return: The updated resource instance.
+        :rtype: TResource
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        resource_type = type(resource)
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        content_type = kwargs.pop("content_type", _headers.pop("Content-Type", "application/json"))
+        accept = _headers.pop("Accept", "application/json")
+
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_url_template()
+        path_arguments = resource.build_instance_path_arguments(
+            subscription_id=self._config.subscription_id
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+
+        # Serialize the resource to JSON (PATCH uses partial updates)
+        import json  # pylint: disable=import-outside-toplevel
+        json_data = json.dumps(resource.to_dict())
+
+        request = HttpRequest("PATCH", _url, params=_params, headers=_headers, content=json_data)
+        response = await self._send_request(request, stream=True, **kwargs)
+
+        data = await response.read()
+
+        if response.status_code not in [200]:
+            raise HttpResponseError(response=response)
+
+        # Parse JSON response to dict
+        data_dict = json.loads(data.decode('utf-8'))
+
+        # Create instance using the resource type's from_response method
+        instance = resource_type.from_response(data_dict, **kwargs)
+
+        return instance
+
+    @distributed_trace_async
+    async def delete(
+        self,
+        resource_type: Type[TResource],
+        **kwargs: Any
+    ) -> None:
+        """Delete a resource of the specified type.
+
+        :param resource_type: The resource type class or instance
+        :type resource_type: Type[TResource] or TResource
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        # Handle both Type[TResource] and TResource instances
+        if isinstance(resource_type, type):
+            # It's a class, build path arguments from kwargs
+            api_version = kwargs.pop(
+                "api_version", 
+                _params.pop("api-version", getattr(resource_type, "api_version"))
+            )
+            url_template = resource_type.get_url_template()
+            path_arguments = resource_type.build_instance_path_arguments(
+                subscription_id=self._config.subscription_id,
+                **kwargs
+            )
+        else:
+            # It's an instance
+            resource = resource_type
+            resource_type = type(resource)
+            api_version = kwargs.pop(
+                "api_version", 
+                _params.pop("api-version", getattr(resource_type, "api_version"))
+            )
+            url_template = resource_type.get_url_template()
+            path_arguments = resource.build_instance_path_arguments(
+                subscription_id=self._config.subscription_id
+            )
+
+        accept = _headers.pop("Accept", "application/json")
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+
+        request = HttpRequest("DELETE", _url, params=_params, headers=_headers)
+        response = await self._send_request(request, **kwargs)
+
+        if response.status_code not in [200, 204]:
+            raise HttpResponseError(response=response)
+
+    @distributed_trace
+    async def list(
+        self,
+        resource_type: Type[TResource],
+        **kwargs: Any
+    ) -> AsyncIterator[TResource]:
+        """List resources of the specified type.
+
+        :param resource_type: The resource type class
+        :type resource_type: Type[TResource]
+        :return: An async iterator of resource instances.
+        :rtype: AsyncIterator[TResource]
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        accept = _headers.pop("Accept", "application/json")
+
+        # Get the list URL template (typically at parent level)
+        url_template = resource_type.get_list_url_template()
+        path_arguments = resource_type.build_list_path_arguments(
+            subscription_id=self._config.subscription_id,
+            **kwargs
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+
+        import json  # pylint: disable=import-outside-toplevel
+
+        # Handle pagination
+        next_link = _url
+        while next_link:
+            request = HttpRequest("GET", next_link, params=_params if next_link == _url else {}, headers=_headers)
+            response = await self._send_request(request, stream=True, **kwargs)
+
+            data = await response.read()
+
+            if response.status_code not in [200]:
+                raise HttpResponseError(response=response)
+
+            # Parse JSON response to dict
+            data_dict = json.loads(data.decode('utf-8'))
+
+            # Extract items from the response
+            items = data_dict.get('value', [])
+            for item in items:
+                yield resource_type.from_response(item, **kwargs)
+
+            # Check for next link
+            next_link = data_dict.get('nextLink')
+
+    @distributed_trace_async
+    async def action(
+        self,
+        resource: TResource,
+        action_name: str,
+        parameters: Optional[dict] = None,
+        **kwargs: Any
+    ) -> dict:
+        """Perform an action on a resource.
+
+        :param resource: The resource instance to perform action on
+        :type resource: TResource
+        :param action_name: The name of the action to perform
+        :type action_name: str
+        :param parameters: Optional parameters for the action
+        :type parameters: dict
+        :return: The action response as a dictionary.
+        :rtype: dict
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        resource_type = type(resource)
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        content_type = kwargs.pop("content_type", _headers.pop("Content-Type", "application/json"))
+        accept = _headers.pop("Accept", "application/json")
+
+        # Build action URL
+        url_template = resource_type.get_url_template()
+        path_arguments = resource.build_instance_path_arguments(
+            subscription_id=self._config.subscription_id
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args) + f"/{action_name}"
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+
+        # Serialize parameters to JSON
+        import json  # pylint: disable=import-outside-toplevel
+        json_data = json.dumps(parameters or {})
+
+        request = HttpRequest("POST", _url, params=_params, headers=_headers, content=json_data)
+        response = await self._send_request(request, stream=True, **kwargs)
+
+        data = await response.read()
+
+        if response.status_code not in [200, 202]:
+            raise HttpResponseError(response=response)
+
+        # Parse JSON response to dict
+        if data:
+            result = json.loads(data.decode('utf-8'))
+        else:
+            result = {}
+
+        return result
