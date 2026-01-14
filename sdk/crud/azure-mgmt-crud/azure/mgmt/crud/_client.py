@@ -8,14 +8,23 @@
 import json
 from copy import deepcopy
 from typing import Any, TYPE_CHECKING, TypeVar, Type, List, Optional, Iterator, Mapping
+from collections.abc import MutableMapping
 
 from azure.core.pipeline import policies
 from azure.core.rest import HttpRequest, HttpResponse
-from azure.core.exceptions import HttpResponseError
+from azure.core.exceptions import (
+    HttpResponseError,
+    ClientAuthenticationError,
+    ResourceExistsError,
+    ResourceNotFoundError,
+    ResourceNotModifiedError,
+    map_error,
+)
 from azure.core.utils import case_insensitive_dict
 from azure.core.tracing.decorator import distributed_trace
 from azure.mgmt.core import ARMPipelineClient
 from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
+from azure.mgmt.core.exceptions import ARMErrorFormat
 
 from . import models as _models
 from .models import ResourceType
@@ -233,3 +242,62 @@ class CrudClient:
 
         #TODO what exactly do we return on create
         return None
+
+    @distributed_trace
+    def delete(  # pylint: disable=inconsistent-return-statements
+        self,
+        *,
+        resource_type: ResourceType[Any, PathParamsT],
+        url_params: PathParamsT,
+        **kwargs: Any
+    ) -> None:
+        """Delete a resource of the specified type.
+
+        :param resource_type: The resource type class to delete
+        :type resource_type: Type[TResource]
+        :keyword url_params: URL parameters required by the resource type.
+        :paramtype url_params: PathParamsT
+        :return: None
+        :rtype: None
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map: MutableMapping = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_operation_url("delete", self._config.subscription_id, url_params)
+
+        path_arguments = resource_type.build_instance_path_arguments_from_params(
+            subscription_id=self._config.subscription_id,
+            url_params=url_params,
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+
+        request = HttpRequest("DELETE", _url, params=_params, headers=_headers)
+        _stream = False
+        response = self._send_request(request, stream=_stream, **kwargs)
+
+        if response.status_code not in [200, 204]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response, error_format=ARMErrorFormat)

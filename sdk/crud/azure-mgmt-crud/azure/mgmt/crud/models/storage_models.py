@@ -292,6 +292,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "blobServices/default/containers/{containerName}"
     )
 
+    _delete_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+        "blobServices/default/containers/{containerName}"
+
+    )
+
     
     @classmethod
     def get_operation_url(
@@ -309,6 +316,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             )
         elif operation == "create":
             return cls._create_url_template.format(
+                subscriptionId=subscription_id,
+                resourceGroupName=url_params["resource_group_name"],
+                storageAccountName=url_params["storage_account_name"],
+                containerName=url_params["container_name"],
+            )
+        elif operation == "delete":
+            return cls._delete_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
