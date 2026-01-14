@@ -12,6 +12,7 @@ from collections.abc import MutableMapping
 
 from azure.core.pipeline import policies
 from azure.core.rest import HttpRequest, HttpResponse
+from azure.core.paging import ItemPaged
 from azure.core.exceptions import (
     HttpResponseError,
     ClientAuthenticationError,
@@ -377,3 +378,122 @@ class CrudClient:
 
         return instance
     
+    @distributed_trace
+    def list(
+        self,
+        *,
+        resource_type: ResourceType[Any, PathParamsT],
+        url_params: PathParamsT,
+        **kwargs: Any
+    ) -> ItemPaged[ResourceType[Any, PathParamsT]]:
+        """List resources of the specified type.
+
+        :param resource_type: The resource type class
+        :type resource_type: Type[TResource]
+        :keyword url_params: URL parameters required by the resource type.
+        :paramtype url_params: PathParamsT
+        :return: An iterator of resource instances.
+        :rtype: ItemPaged[TResource]
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        
+        # Extract optional list parameters from url_params
+        # TypedDict requires explicit handling of optional fields
+        maxpagesize = url_params.get("maxpagesize") if isinstance(url_params, dict) else None
+        filter_param = url_params.get("filter") if isinstance(url_params, dict) else None
+        include = url_params.get("include") if isinstance(url_params, dict) else None
+        
+        error_map: MutableMapping = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        def prepare_request(next_link=None):
+            if not next_link:
+                # Let the resource type build its own URL
+                url_template = resource_type.get_operation_url("list", self._config.subscription_id, url_params)
+
+                path_arguments = resource_type.build_instance_path_arguments_from_params(
+                    subscription_id=self._config.subscription_id,
+                    url_params=url_params,
+                )
+
+                # Serialize path arguments for URL safety
+                serialized_path_args = {}
+                for key, value in path_arguments.items():
+                    serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+                _url = url_template.format(**serialized_path_args)
+                
+                _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+                
+                # Add optional query parameters
+                if maxpagesize is not None:
+                    _params["$maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "str")
+                if filter_param is not None:
+                    _params["$filter"] = _SERIALIZER.query("filter", filter_param, "str")
+                if include is not None:
+                    _params["$include"] = _SERIALIZER.query("include", include, "str")
+                
+                _headers["Accept"] = _SERIALIZER.header("accept", "application/json", "str")
+
+                _request = HttpRequest("GET", _url, params=_params, headers=_headers, **kwargs)
+                _request.url = self._client.format_url(_request.url)
+            else:
+                # Handle pagination with next link
+                import urllib.parse
+                _parsed_next_link = urllib.parse.urlparse(next_link)
+                _next_request_params = case_insensitive_dict(
+                    {
+                        key: [urllib.parse.quote(v) for v in value]
+                        for key, value in urllib.parse.parse_qs(_parsed_next_link.query).items()
+                    }
+                )
+                _next_request_params["api-version"] = api_version
+                _request = HttpRequest(
+                    "GET", urllib.parse.urljoin(next_link, _parsed_next_link.path), params=_next_request_params
+                )
+                _request.url = self._client.format_url(_request.url)
+                _request.method = "GET"
+            
+            return _request
+
+        def extract_data(pipeline_response):
+            # Parse the response
+            data = json.loads(pipeline_response.http_response.read().decode('utf-8'))
+            
+            # Extract the list of items and next link
+            list_of_items = data.get("value", [])
+            
+            # Convert each item dict to resource type instance
+            deserialized_items = []
+            for item_dict in list_of_items:
+                instance = resource_type.from_response(item_dict, **kwargs)
+                deserialized_items.append(instance)
+            
+            next_link = data.get("nextLink") or None
+            return next_link, iter(deserialized_items)
+
+        def get_next(next_link=None):
+            _request = prepare_request(next_link)
+            _stream = False
+            pipeline_response = self._client._pipeline.run(_request, stream=_stream, **kwargs)
+            response = pipeline_response.http_response
+
+            if response.status_code not in [200]:
+                map_error(status_code=response.status_code, response=response, error_map=error_map)
+                raise HttpResponseError(response=response, error_format=ARMErrorFormat)
+
+            return pipeline_response
+
+        return ItemPaged(get_next, extract_data)

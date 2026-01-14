@@ -273,7 +273,10 @@ class BlobContainerPathParams(TypedDict):
 
     resource_group_name: str
     storage_account_name: str
-    container_name: Optional[str] # optional because not needed for list operation
+    container_name: NotRequired[Optional[str]] # optional because not needed for list operation
+    maxpagesize: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Specified maximum number of items per page
+    filter: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Filter expression for the list operation
+    include: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Additional data to include (e.g., "deleted")
 
 
 class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
@@ -303,6 +306,12 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
         "blobServices/default/containers/{containerName}"
+    )
+
+    _list_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+        "blobServices/default/containers"
     )
 
     
@@ -340,6 +349,12 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
                 containerName=url_params["container_name"],
+            )
+        elif operation == "list":
+            return cls._list_url_template.format(
+                subscriptionId=subscription_id,
+                resourceGroupName=url_params["resource_group_name"],
+                storageAccountName=url_params["storage_account_name"],
             )
         raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
     
