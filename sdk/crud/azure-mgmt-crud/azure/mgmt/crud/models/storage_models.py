@@ -246,26 +246,26 @@ class ImmutableStorageWithVersioning(TypedDict):
 
 class BlobContainerProperties(TypedDict):
     """Properties of a Blob Container resource."""
-    public_access: Optional[str]
-    last_modified_time: Optional[str]
-    etag: Optional[str]
-    version: Optional[str]
-    deleted: Optional[bool]
-    deleted_time: Optional[str]
-    remaining_retention_days: Optional[int]
-    default_encryption_scope: Optional[str]
-    deny_encryption_scope_override: Optional[bool]
-    lease_status: Optional[str]
-    lease_state: Optional[str]
-    lease_duration: Optional[str]
-    metadata: Optional[Dict[str, str]]
-    immutability_policy: Optional[ImmutabilityPolicyProperties]
-    legal_hold: Optional[LegalHoldProperties]
-    has_legal_hold: Optional[bool]
-    has_immutability_policy: Optional[bool]
-    immutable_storage_with_versioning: Optional[ImmutableStorageWithVersioning]
-    enable_nfs_v3_root_squash: Optional[bool]
-    enable_nfs_v3_all_squash: Optional[bool]
+    public_access: NotRequired[Optional[str]]
+    last_modified_time: NotRequired[Optional[str]]
+    etag: NotRequired[Optional[str]]
+    version: NotRequired[Optional[str]]
+    deleted: NotRequired[Optional[bool]]
+    deleted_time: NotRequired[Optional[str]]
+    remaining_retention_days: NotRequired[Optional[int]]
+    default_encryption_scope: NotRequired[Optional[str]]
+    deny_encryption_scope_override: NotRequired[Optional[bool]]
+    lease_status: NotRequired[Optional[str]]
+    lease_state: NotRequired[Optional[str]]
+    lease_duration: NotRequired[Optional[str]]
+    metadata: NotRequired[Optional[Dict[str, str]]]
+    immutability_policy: NotRequired[Optional[ImmutabilityPolicyProperties]]
+    legal_hold: NotRequired[Optional[LegalHoldProperties]]
+    has_legal_hold: NotRequired[Optional[bool]]
+    has_immutability_policy: NotRequired[Optional[bool]]
+    immutable_storage_with_versioning: NotRequired[Optional[ImmutableStorageWithVersioning]]
+    enable_nfs_v3_root_squash: NotRequired[Optional[bool]]
+    enable_nfs_v3_all_squash: NotRequired[Optional[bool]]
 
 
 class BlobContainerPathParams(TypedDict):
@@ -286,6 +286,12 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "blobServices/default/containers/{containerName}"
     )
 
+    _create_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+        "blobServices/default/containers/{containerName}"
+    )
+
     
     @classmethod
     def get_operation_url(
@@ -296,6 +302,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
     ) -> str:
         if operation == "read":
             return cls._read_url_template.format(
+                subscriptionId=subscription_id,
+                resourceGroupName=url_params["resource_group_name"],
+                storageAccountName=url_params["storage_account_name"],
+                containerName=url_params["container_name"],
+            )
+        elif operation == "create":
+            return cls._create_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],

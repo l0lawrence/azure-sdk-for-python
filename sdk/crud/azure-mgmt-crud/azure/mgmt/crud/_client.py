@@ -171,3 +171,65 @@ class CrudClient:
         )
 
         return instance
+    
+    @distributed_trace
+    def create(
+        self,
+        *,
+        resource_type: ResourceType[Any, PathParamsT],
+        url_params: PathParamsT,
+        **kwargs: Any
+    ) -> None:
+        """Create a resource of the specified type.
+
+        :param resource_type: The resource type class to create
+        :type resource_type: Type[TResource]
+        :keyword url_params: URL parameters required by the resource type.
+        :paramtype url_params: PathParamsT
+        :return: An instance of the resource type.
+        :rtype: TResource
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        accept = _headers.pop("Accept", "application/json")
+        content_type = _headers.pop("Content-Type", "application/json")
+
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_operation_url("create", self._config.subscription_id, url_params)
+
+        path_arguments = resource_type.build_instance_path_arguments_from_params(
+            subscription_id=self._config.subscription_id,
+            url_params=url_params,
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+
+        # Serialize the resource to JSON for the request body
+        body_content = json.dumps(resource_type.properties)
+        # TODO look into this
+
+        request = HttpRequest("PUT", _url, params=_params, headers=_headers, content=body_content)
+        response = self._send_request(request, stream=True, **kwargs)
+
+        data = response.read()
+
+        if response.status_code not in [200, 201]:
+            raise HttpResponseError(response=response)
+
+        #TODO what exactly do we return on create
+        return None
