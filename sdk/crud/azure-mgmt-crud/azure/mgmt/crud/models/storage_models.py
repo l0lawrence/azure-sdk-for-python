@@ -142,9 +142,6 @@ def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str
     hints = get_type_hints(typeddict_class, include_extras=True)
     result = {}
     
-    # Create a mapping of camelCase to snake_case field names
-    camel_to_snake_map = {_snake_to_camel(field_name): field_name for field_name in hints.keys()}
-    
     for field_name, field_type in hints.items():
         # Try snake_case first, then camelCase
         camel_name = _snake_to_camel(field_name)
@@ -172,33 +169,26 @@ def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str
 
 
 def _create_runtime_typeddict_instance(data: Any, typeddict_class: type):
-    """Create a runtime instance that behaves like the TypedDict class."""
+    """Create a runtime instance that behaves like the TypedDict class.
+    
+    Maps camelCase service response keys to snake_case TypedDict keys.
+    Returns a dict-like object that preserves TypedDict type information.
+    """
     validated_data = _validate_typeddict_properties(data, typeddict_class)
     
-    # Create a new class that extends dict but identifies as the TypedDict
-    class RuntimeTypedDict(dict):
-        def __class_getitem__(cls, item):
-            return typeddict_class
+    # Create a custom dict subclass that identifies as the TypedDict for type checking
+    class TypedDictInstance(dict):
+        __annotations__ = getattr(typeddict_class, '__annotations__', {})
         
         def __repr__(self):
-            return f"{typeddict_class.__name__}({super().__repr__()})"
+            return f"{typeddict_class.__name__}({dict.__repr__(self)})"
     
-    # Set the class name and module to match the TypedDict
-    RuntimeTypedDict.__name__ = typeddict_class.__name__
-    RuntimeTypedDict.__qualname__ = typeddict_class.__qualname__
-    RuntimeTypedDict.__module__ = typeddict_class.__module__
+    # Set class metadata to match the TypedDict
+    TypedDictInstance.__name__ = typeddict_class.__name__
+    TypedDictInstance.__module__ = getattr(typeddict_class, '__module__', __name__)
     
-    # Create instance and populate with validated data
-    instance = RuntimeTypedDict(validated_data)
-    
-    # Make type() return the TypedDict class
-    instance.__class__ = type(typeddict_class.__name__, (dict,), {
-        '__module__': typeddict_class.__module__,
-        '__qualname__': typeddict_class.__qualname__,
-        '__repr__': lambda self: f"{typeddict_class.__name__}({dict.__repr__(self)})"
-    })
-    
-    return instance
+    # Create and return the instance
+    return TypedDictInstance(validated_data)
 
 
 class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
