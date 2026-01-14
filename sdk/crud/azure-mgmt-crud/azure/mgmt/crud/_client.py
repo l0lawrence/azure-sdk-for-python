@@ -229,8 +229,7 @@ class CrudClient:
         _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
 
         # Serialize the resource to JSON for the request body
-        body_content = json.dumps(resource_type.properties)
-        # TODO look into this
+        body_content = json.dumps(resource_type.to_dict())
 
         request = HttpRequest("PUT", _url, params=_params, headers=_headers, content=body_content)
         response = self._send_request(request, stream=True, **kwargs)
@@ -301,3 +300,80 @@ class CrudClient:
         if response.status_code not in [200, 204]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response, error_format=ARMErrorFormat)
+        
+    @distributed_trace
+    def update(  # pylint: disable=inconsistent-return-statements
+        self,
+        *,
+        resource_type: ResourceType[Any, PathParamsT],
+        url_params: PathParamsT,
+        **kwargs: Any
+    ) -> ResourceType[Any, PathParamsT]:
+        """Update a resource of the specified type.
+
+        :param resource_type: The resource type class to update
+        :type resource_type: Type[TResource]
+        :keyword url_params: URL parameters required by the resource type.
+        :paramtype url_params: PathParamsT
+        :return: None
+        :rtype: None
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map: MutableMapping = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        accept = _headers.pop("Accept", "application/json")
+        content_type = _headers.pop("Content-Type", "application/json")
+
+        # Let the resource type build its own URL and path arguments
+        url_template = resource_type.get_operation_url("update", self._config.subscription_id, url_params)
+
+        path_arguments = resource_type.build_instance_path_arguments_from_params(
+            subscription_id=self._config.subscription_id,
+            url_params=url_params,
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+
+        # Serialize the resource to JSON for the request body
+        body_content = json.dumps(resource_type.to_dict())
+
+        request = HttpRequest("PATCH", _url, params=_params, headers=_headers, content=body_content)
+        response = self._send_request(request, stream=True, **kwargs)
+
+        data = response.read()
+
+        if response.status_code not in [200, 201]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response, error_format=ARMErrorFormat)
+
+        data_dict = json.loads(data.decode('utf-8'))
+
+        instance = resource_type.from_response(
+            data_dict,
+            **kwargs,
+        )
+
+        return instance
+    

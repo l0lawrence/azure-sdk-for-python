@@ -299,6 +299,12 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
 
     )
 
+    _update_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+        "blobServices/default/containers/{containerName}"
+    )
+
     
     @classmethod
     def get_operation_url(
@@ -323,6 +329,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             )
         elif operation == "delete":
             return cls._delete_url_template.format(
+                subscriptionId=subscription_id,
+                resourceGroupName=url_params["resource_group_name"],
+                storageAccountName=url_params["storage_account_name"],
+                containerName=url_params["container_name"],
+            )
+        elif operation == "update":
+            return cls._update_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
@@ -361,8 +374,39 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
 
     def to_dict(self) -> Dict[str, Any]:
         # Serialize container properties for create/update requests
+        # Convert snake_case Python properties to camelCase JSON properties
+        camel_case_properties = {}
+        
+        # Mapping of Python snake_case to Azure API camelCase
+        property_name_mapping = {
+            "public_access": "publicAccess",
+            "last_modified_time": "lastModifiedTime",
+            "etag": "etag",
+            "version": "version",
+            "deleted": "deleted",
+            "deleted_time": "deletedTime",
+            "remaining_retention_days": "remainingRetentionDays",
+            "default_encryption_scope": "defaultEncryptionScope",
+            "deny_encryption_scope_override": "denyEncryptionScopeOverride",
+            "lease_status": "leaseStatus",
+            "lease_state": "leaseState",
+            "lease_duration": "leaseDuration",
+            "metadata": "metadata",
+            "immutability_policy": "immutabilityPolicy",
+            "legal_hold": "legalHold",
+            "has_legal_hold": "hasLegalHold",
+            "has_immutability_policy": "hasImmutabilityPolicy",
+            "immutable_storage_with_versioning": "immutableStorageWithVersioning",
+            "enable_nfs_v3_root_squash": "enableNfsV3RootSquash",
+            "enable_nfs_v3_all_squash": "enableNfsV3AllSquash",
+        }
+        
+        for python_name, value in self.properties.items():
+            camel_name = property_name_mapping.get(python_name, python_name)
+            camel_case_properties[camel_name] = value
+        
         return {
-            "properties": self.properties,
+            "properties": camel_case_properties,
         }
 
     @classmethod

@@ -1040,6 +1040,7 @@ class BlobContainersOperations:
             params=_params,
         )
         _request.url = self._client.format_url(_request.url)
+        print(_request)
 
         _stream = False
         pipeline_response: PipelineResponse = self._client._pipeline.run(  # pylint: disable=protected-access
