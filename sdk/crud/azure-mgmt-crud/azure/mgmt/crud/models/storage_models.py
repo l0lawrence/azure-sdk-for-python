@@ -8,18 +8,18 @@
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args
+from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args, cast
 from typing_extensions import TypedDict, Required, NotRequired, is_typeddict
 from azure.core import CaseInsensitiveEnumMeta
 
-from .models import ResourceType, ResourceTypeParameters
+from .models import ResourceType
 
 
 # --------------------------------------------------------------------------
 # Runtime TypedDict validation helpers
 # --------------------------------------------------------------------------
 
-def _parse_datetime_string(value: Any) -> Optional[datetime.datetime]:
+def _parse_datetime_string(value: Any) -> Optional[Union[str,datetime.datetime]]:
     """Parse datetime from ISO string."""
     if value is None or isinstance(value, datetime.datetime):
         return value
@@ -115,17 +115,43 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
     return value
 
 
+def _snake_to_camel(snake_str: str) -> str:
+    """Convert snake_case to camelCase."""
+    components = snake_str.split('_')
+    return components[0] + ''.join(x.title() for x in components[1:])
+
+
+def _camel_to_snake(camel_str: str) -> str:
+    """Convert camelCase to snake_case."""
+    result = []
+    for i, char in enumerate(camel_str):
+        if char.isupper() and i > 0:
+            result.append('_')
+        result.append(char.lower())
+    return ''.join(result)
+
+
 def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str, Any]:
-    """Validate and transform data according to a TypedDict schema."""
+    """Validate and transform data according to a TypedDict schema.
+    
+    Maps camelCase keys from service response to snake_case TypedDict fields.
+    """
     if not isinstance(data, dict):
         data = data or {}
     
     hints = get_type_hints(typeddict_class, include_extras=True)
     result = {}
     
+    # Create a mapping of camelCase to snake_case field names
+    camel_to_snake_map = {_snake_to_camel(field_name): field_name for field_name in hints.keys()}
+    
     for field_name, field_type in hints.items():
+        # Try snake_case first, then camelCase
+        camel_name = _snake_to_camel(field_name)
         if field_name in data:
             result[field_name] = _validate_typeddict_field(data[field_name], field_type)
+        elif camel_name in data:
+            result[field_name] = _validate_typeddict_field(data[camel_name], field_type)
         else:
             # Check if field is required (not Optional and not NotRequired)
             origin = get_origin(field_type)
@@ -136,9 +162,10 @@ def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str
                     result[field_name] = None
             # For NotRequired fields, we don't set them if missing
     
-    # Include any extra fields that aren't in the TypedDict
+    # Include any extra fields that aren't in the TypedDict (keep original keys)
     for key, value in data.items():
-        if key not in hints:
+        snake_key = _camel_to_snake(key)
+        if key not in hints and snake_key not in hints:
             result[key] = value
     
     return result
@@ -212,7 +239,6 @@ class LegalHoldProperties(TypedDict):
     tags: Optional[List[TagProperty]]
     protected_append_writes_history: Optional[ProtectedAppendWritesHistory]
 
-
 class MigrationState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """This property denotes the container level immutability to object level immutability migration
     state.
@@ -251,286 +277,104 @@ class BlobContainerProperties(TypedDict):
     enable_nfs_v3_root_squash: Optional[bool]
     enable_nfs_v3_all_squash: Optional[bool]
 
-class BlobContainerParameters(ResourceTypeParameters):
-    """Parameters for BlobContainer resource."""
-    storage_account_name: Required[str]
-    container_name: Required[str]
 
-class BlobContainer(ResourceType[BlobContainerProperties]):
+class BlobContainerPathParams(TypedDict):
+    """URL parameters required to address a blob container."""
 
-    """A Blob Container resource.
+    resource_group_name: str
+    storage_account_name: str
+    container_name: Optional[str] # optional because not needed for list operation
 
-    Variables are only populated by the server, and will be ignored when sending a request.
 
-    :param resource_group_name: The name of the resource group. Required.
-    :type resource_group_name: str
-    :param storage_account_name: The name of the storage account. Required.
-    :type storage_account_name: str
-    :param container_name: The name of the blob container. Required.
-    :type container_name: str
-    :keyword api_version: The API version used to create the resource.
-    :paramtype api_version: str
-    :keyword properties: Properties of a Blob Container resource.
-    :paramtype properties: ~azure.mgmt.crud.models.BlobContainerProperties
-    """
+class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
 
-    # URL template for this resource type
-    _url_template = (
+    """A Blob Container resource."""
+
+    _read_url_template = (
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
         "blobServices/default/containers/{containerName}"
     )
 
-    def build_instance_path_arguments(self, subscription_id: str) -> Dict[str, str]:
-        """Build path arguments from instance attributes.
+    
+    @classmethod
+    def get_operation_url(
+        cls,
+        operation: str,
+        subscription_id: str,
+        url_params: BlobContainerPathParams,
+    ) -> str:
+        if operation == "read":
+            return cls._read_url_template.format(
+                subscriptionId=subscription_id,
+                resourceGroupName=url_params["resource_group_name"],
+                storageAccountName=url_params["storage_account_name"],
+                containerName=url_params["container_name"],
+            )
+        raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
+    
+    @classmethod
+    def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "BlobContainer":
+        properties = _create_runtime_typeddict_instance(
+            data_dict.get("properties", {}), BlobContainerProperties
+        )
 
-        :param subscription_id: The Azure subscription ID
-        :type subscription_id: str
-        :return: Dictionary of path arguments for URL construction
-        :rtype: Dict[str, str]
-        """
+        instance = cls(
+            api_version=kwargs.get("api_version", "2025-06-01"),
+            properties=properties,  
+        )
+
+        instance.id = data_dict.get("id")
+        instance.name = data_dict.get("name")
+        instance.type = data_dict.get("type")
+
+        return instance
+
+    def __init__(
+        self,
+        *,
+        api_version: str = "2025-06-01",
+        properties: Optional[BlobContainerProperties] = None,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(**kwargs)
+        self.api_version = api_version
+        self.properties = properties
+        
+
+    def to_dict(self) -> Dict[str, Any]:
+        # Serialize container properties for create/update requests
         return {
-            "subscriptionId": subscription_id,
-            "resourceGroupName": self.resource_group_name,
-            "storageAccountName": self.storage_account_name,
-            "containerName": self.container_name,
+            "properties": self.properties,
         }
 
-    _validation = {
-        "id": {"readonly": True},
-        "name": {"readonly": True},
-        "type": {"readonly": True},
-        "etag": {"readonly": True},
-        "last_modified_time": {"readonly": True},
-        "deleted": {"readonly": True},
-        "deleted_time": {"readonly": True},
-        "remaining_retention_days": {"readonly": True},
-        "lease_status": {"readonly": True},
-        "lease_state": {"readonly": True},
-        "has_legal_hold": {"readonly": True},
-        "has_immutability_policy": {"readonly": True},
-    }
-
     @classmethod
-    def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> 'BlobContainer':
-        """Create BlobContainer instance from API response data and path arguments.
+    def build_instance_path_arguments_from_params(
+        cls,
+        *,
+        subscription_id: str,
+        url_params: BlobContainerPathParams,
+    ) -> Dict[str, Any]:
+        """Build path arguments dictionary from URL parameters.
 
-        :param data_dict: The response data dictionary from Azure API
-        :type data_dict: Dict[str, Any]
-        :keyword path_arguments: URL path arguments used in the API call
-        :paramtype path_arguments: Dict[str, str]
-        :return: Created BlobContainer instance
-        :rtype: BlobContainer
+        Base resources only use subscription ID. Subclasses should override when
+        they need additional path arguments.
+
+        :param subscription_id: Subscription identifier.
+        :param url_params: URL parameters required by the resource type.
+        :return: Dictionary of path arguments.
         """
-        # Create runtime TypedDict instance with validation
-        properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobContainerProperties)
-
-        # Extract info from path_arguments if provided, otherwise fallback to kwargs or request_model
-        path_arguments = kwargs.get('path_arguments', {})
-        
-        if path_arguments:
-            # Use info from path arguments
-            resource_group_name = path_arguments.get('resourceGroupName', 'unknown')
-            storage_account_name = path_arguments.get('storageAccountName', 'unknown')
-            container_name = path_arguments.get('containerName', 'unknown')
-        else:
-            # Final fallback to kwargs
-            resource_group_name = kwargs.get('resource_group_name', 'unknown')
-            storage_account_name = kwargs.get('storage_account_name', 'unknown')
-            container_name = kwargs.get('container_name', 'unknown')
-        
-        api_version = kwargs.get('api_version', '2025-06-01')
-
-        # Create instance with BlobContainer-specific constructor parameters
-        instance = cls(
-            resource_group_name=resource_group_name,
-            storage_account_name=storage_account_name,
-            container_name=container_name,
-            api_version=api_version,
-            properties=properties
-        )
-
-        # Set response data attributes
-        instance.id = data_dict.get('id')
-        instance.name = data_dict.get('name')
-        instance.type = data_dict.get('type')
-
-        return instance
-
-    def __init__(self, resource_group_name: str, storage_account_name: str, container_name: str, **kwargs) -> None:
-        super().__init__()
-        self.resource_group_name = resource_group_name
-        self.storage_account_name = storage_account_name
-        self.container_name = container_name
-        self.api_version: str = kwargs.get("api_version", "2025-06-01")
-        self.properties: Optional[BlobContainerProperties] = kwargs.get("properties", None)
-
-class CreatedByType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """The type of identity that created the resource."""
-
-    USER = "User"
-    APPLICATION = "Application"
-    MANAGED_IDENTITY = "ManagedIdentity"
-    KEY = "Key"
-
-class SystemData(TypedDict):
-    created_by: Optional[str]
-    created_by_type: Optional[Union[str, CreatedByType]]
-    created_at: Optional[datetime.datetime]
-    last_modified_by: Optional[str]
-    last_modified_by_type: Optional[Union[str, CreatedByType]]
-    last_modified_at: Optional[datetime.datetime]
-
-
-class InventoryRuleType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """The valid value is Inventory."""
-
-    INVENTORY = "Inventory"
-
-class Format(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """This is a required field, it specifies the format for the inventory files."""
-
-    CSV = "Csv"
-    PARQUET = "Parquet"
-
-class Schedule(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """This is a required field. This field is used to schedule an inventory formation."""
-
-    DAILY = "Daily"
-    WEEKLY = "Weekly"
-
-class ObjectType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """This is a required field. This field specifies the scope of the inventory created either at the
-    blob or container level.
-    """
-
-    BLOB = "Blob"
-    CONTAINER = "Container"
-
-class BlobInventoryCreationTime(TypedDict):
-    last_n_days: Optional[int]
-
-class BlobInventoryPolicyFilter(TypedDict):
-    prefix_match: Optional[List[str]]
-    exclude_prefix: Optional[List[str]]
-    blob_types: Optional[List[str]]
-    include_blob_versions: Optional[bool]
-    include_snapshots: Optional[bool]
-    include_deleted: Optional[bool]
-    creation_time: Optional[BlobInventoryCreationTime]
-
-class BlobInventoryPolicyDefinition(TypedDict):
-    format: Union[str, Format]
-    schedule: Union[str, Schedule]
-    object_type: Union[str, ObjectType]
-    schema_fields: List[str]
-    filters: Optional[BlobInventoryPolicyFilter]
-
-
-class BlobInventoryPolicyRule(TypedDict):
-    enabled: bool
-    name: str
-    destination: str        
-    definition: BlobInventoryPolicyDefinition
-
-class BlobInventoryPolicySchema(TypedDict):
-    enabled: bool
-    destination: NotRequired[str]
-    type: Union[str, InventoryRuleType]
-    rules: List[BlobInventoryPolicyRule]
-
-class BlobInventoryPolicyProperties(TypedDict):
-    """Properties of a Blob Inventory Policy resource."""
-    system_data: NotRequired[SystemData]
-    last_modified_time: NotRequired[Optional[datetime.datetime]]
-    policy: Optional[BlobInventoryPolicySchema]
-
-
-class BlobInventoryPolicy(ResourceType[BlobInventoryPolicyProperties]):
-
-    """A Blob Inventory Policy resource.
-
-    Variables are only populated by the server, and will be ignored when sending a request.
-
-    :param resource_group_name: The name of the resource group. Required.
-    :type resource_group_name: str
-    :param storage_account_name: The name of the storage account. Required.
-    :type storage_account_name: str
-    :keyword api_version: The API version used to create the resource.
-    :paramtype api_version: str
-    :keyword properties: Properties of a Blob Inventory Policy resource.
-    :paramtype properties: ~azure.mgmt.crud.models.BlobInventoryPolicyProperties
-    """
-
-    # URL template for this resource type
-    _url_template = (
-        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/inventoryPolicies/{blobInventoryPolicyName}"
-    )
-
-    def build_instance_path_arguments(self, subscription_id: str) -> Dict[str, str]:
-            """Build path arguments from instance attributes.
-
-            :param subscription_id: The Azure subscription ID
-            :type subscription_id: str
-            :return: Dictionary of path arguments for URL construction
-            :rtype: Dict[str, str]
-            """
-            return {
+        if url_params.get("container_name") is None:
+            dict_to_return = {
                 "subscriptionId": subscription_id,
-                "resourceGroupName": self.resource_group_name,
-                "storageAccountName": self.storage_account_name,
-                "blobInventoryPolicyName": self.blob_inventory_policy_name,
+                "resourceGroupName": url_params["resource_group_name"],
+                "storageAccountName": url_params["storage_account_name"],
             }
-    
-    @classmethod
-    def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> 'BlobInventoryPolicy':
-        """Create BlobInventoryPolicy instance from API response data and path arguments.
-
-        :param data_dict: The response data dictionary from Azure API
-        :type data_dict: Dict[str, Any]
-        :keyword path_arguments: URL path arguments used in the API call
-        :paramtype path_arguments: Dict[str, str]
-        :return: Created BlobInventoryPolicy instance
-        :rtype: BlobInventoryPolicy
-        """
-        # Create runtime TypedDict instance with validation
-        properties = _create_runtime_typeddict_instance(data_dict.get('properties', {}), BlobInventoryPolicyProperties)
-
-        # Extract info from path_arguments if provided, otherwise fallback to kwargs or request_model
-        path_arguments = kwargs.get('path_arguments', {})
-        
-        if path_arguments:
-            # Use info from path arguments
-            resource_group_name = path_arguments.get('resourceGroupName', 'unknown')
-            storage_account_name = path_arguments.get('storageAccountName', 'unknown')
-            blob_inventory_policy_name = path_arguments.get('blobInventoryPolicyName', 'unknown')
         else:
-            resource_group_name = kwargs.get('resource_group_name', 'unknown')
-            storage_account_name = kwargs.get('storage_account_name', 'unknown')
-            blob_inventory_policy_name = kwargs.get('blob_inventory_policy_name', 'unknown')
-    
-        api_version = kwargs.get('api_version', '2025-06-01')
-
-        # Create instance with BlobInventoryPolicy-specific constructor parameters
-        instance = cls(
-            resource_group_name=resource_group_name,
-            storage_account_name=storage_account_name,
-            blob_inventory_policy_name=blob_inventory_policy_name,
-            api_version=api_version,
-            properties=properties
-        )
-
-        # Set response data attributes
-        instance.id = data_dict.get('id')
-        instance.name = data_dict.get('name')
-        instance.type = data_dict.get('type')
-
-        return instance
-    
-    def __init__(self, resource_group_name: str, storage_account_name: str, blob_inventory_policy_name: str, **kwargs) -> None:
-        super().__init__()
-        self.resource_group_name = resource_group_name
-        self.storage_account_name = storage_account_name
-        self.blob_inventory_policy_name = blob_inventory_policy_name
-        self.api_version: str = kwargs.get("api_version", "2025-06-01")
-        self.properties: Optional[BlobInventoryPolicyProperties] = kwargs.get("properties", None)
+            dict_to_return = {
+                "subscriptionId": subscription_id,
+                "resourceGroupName": url_params["resource_group_name"],
+                "storageAccountName": url_params["storage_account_name"],
+                "containerName": cast(str, url_params["container_name"]),
+            }
+        return dict_to_return

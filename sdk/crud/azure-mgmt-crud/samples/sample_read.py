@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobInventoryPolicy
+from azure.mgmt.crud.models import BlobContainer, BlobContainerPathParams
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -23,12 +23,12 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
-    response: BlobContainer = client.read(
-        resource_type=BlobContainer(
+    response = client.read(resource_type=BlobContainer(),url_params=BlobContainerPathParams(
         resource_group_name=RESOURCE_GROUP,
         storage_account_name=STORAGE_ACCOUNT_NAME,
-        container_name=CONTAINER_NAME)
-    )
+        container_name=CONTAINER_NAME,
+    ))
+
     print(response)
 
 
@@ -39,16 +39,6 @@ def main():
         logger.info(f"BlobContainer properties: {response.properties} \n")
         logger.info(f"Is blobContainer {isinstance(response, BlobContainer)} \n")
 
-
-    # Get blob Inventory Policy
-    inventory_policy: BlobInventoryPolicy = client.read(
-        resource_type=BlobInventoryPolicy(
-            resource_group_name=RESOURCE_GROUP,
-            storage_account_name=STORAGE_ACCOUNT_NAME,
-            blob_inventory_policy_name="default"
-        )
-    )
-    print(inventory_policy)
 
 if __name__ == "__main__":
     main()

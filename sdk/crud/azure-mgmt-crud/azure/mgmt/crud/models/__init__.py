@@ -10,7 +10,7 @@ from .models import ResourceType
 from .storage_models import (
     BlobContainer,
     BlobContainerProperties,
-    BlobContainerParameters,
+    BlobContainerPathParams,
     AccountImmutabilityPolicyState,
     ImmutabilityPolicyProperties,
     TagProperty,
@@ -18,14 +18,14 @@ from .storage_models import (
     LegalHoldProperties,
     MigrationState,
     ImmutableStorageWithVersioning,
-    BlobInventoryPolicy
+    
 )
 
 __all__ = [
     "ResourceType",
     "BlobContainer",
     "BlobContainerProperties", 
-    "BlobContainerParameters",
+    "BlobContainerPathParams",
     "AccountImmutabilityPolicyState",
     "ImmutabilityPolicyProperties",
     "TagProperty",
@@ -33,5 +33,4 @@ __all__ = [
     "LegalHoldProperties",
     "MigrationState",
     "ImmutableStorageWithVersioning",
-    "BlobInventoryPolicy"
 ]

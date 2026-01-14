@@ -9,6 +9,7 @@
 from copy import deepcopy
 from typing import Any, TYPE_CHECKING, TypeVar, Type, Awaitable, List, Optional, AsyncIterator
 
+from azure.core.async_paging import AsyncItemPaged
 from azure.core.pipeline import policies
 from azure.core.rest import AsyncHttpResponse, HttpRequest
 from azure.core.exceptions import HttpResponseError
@@ -355,17 +356,17 @@ class CrudClient:
             raise HttpResponseError(response=response)
 
     @distributed_trace
-    async def list(
+    def list(
         self,
         resource_type: Type[TResource],
         **kwargs: Any
-    ) -> AsyncIterator[TResource]:
+    ) -> AsyncItemPaged[TResource]:
         """List resources of the specified type.
 
         :param resource_type: The resource type class
         :type resource_type: Type[TResource]
-        :return: An async iterator of resource instances.
-        :rtype: AsyncIterator[TResource]
+        :return: An async iterable of resource instances.
+        :rtype: ~azure.core.async_paging.AsyncItemPaged[TResource]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -396,27 +397,22 @@ class CrudClient:
 
         import json  # pylint: disable=import-outside-toplevel
 
-        # Handle pagination
-        next_link = _url
-        while next_link:
-            request = HttpRequest("GET", next_link, params=_params if next_link == _url else {}, headers=_headers)
-            response = await self._send_request(request, stream=True, **kwargs)
-
+        async def _extract_data(response):
             data = await response.read()
-
             if response.status_code not in [200]:
                 raise HttpResponseError(response=response)
-
-            # Parse JSON response to dict
             data_dict = json.loads(data.decode('utf-8'))
+            return data_dict.get('nextLink'), [resource_type.from_response(item, **kwargs) for item in data_dict.get('value', [])]
 
-            # Extract items from the response
-            items = data_dict.get('value', [])
-            for item in items:
-                yield resource_type.from_response(item, **kwargs)
+        async def _get_next(next_link=None):
+            if next_link is None:
+                request = HttpRequest("GET", _url, params=_params, headers=_headers)
+            else:
+                request = HttpRequest("GET", next_link, headers=_headers)
+            response = await self._send_request(request, stream=True, **kwargs)
+            return response
 
-            # Check for next link
-            next_link = data_dict.get('nextLink')
+        return AsyncItemPaged(_get_next, _extract_data)
 
     @distributed_trace_async
     async def action(

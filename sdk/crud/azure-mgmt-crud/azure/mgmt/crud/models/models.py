@@ -8,21 +8,17 @@
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, TypeVar, Generic, Type, Union
+from typing import Any, Dict, List, Optional, TypeVar, Generic, Type, Union, Mapping
 from typing_extensions import TypedDict, Required, NotRequired
 from azure.core import CaseInsensitiveEnumMeta
 
 
-T = TypeVar("T")  # bound by model?
-TResourceType = TypeVar('TResourceType', bound='ResourceType')
+PropertiesT = TypeVar("PropertiesT")
+PathParamsT = TypeVar("PathParamsT")
+TResourceType = TypeVar("TResourceType", bound="ResourceType[Any, Mapping[str, str]]")
 
-class ResourceTypeParameters(TypedDict):
-    """Base parameters for all resource types."""
-    resource_group_name: Required[str]
-    api_version: NotRequired[str]
-    properties: NotRequired[Optional[Any]]
 
-class ResourceType(Generic[T]):
+class ResourceType(Generic[PropertiesT, PathParamsT]):
     """Common ARM resource fields."""
     _validation = {
         "id": {"readonly": True},
@@ -37,34 +33,52 @@ class ResourceType(Generic[T]):
         "providers/{resourceProvider}/{resourceType}/{resourceName}"
     )
 
+    _list_url_template = _url_template
+
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self.resource_group_name: str
-        self.resource_name: str
+        # Common ARM identity fields
+        self.resource_group_name: str = kwargs.get("resource_group_name", "")
+        self.resource_name: str = kwargs.get("resource_name", "")
         self.id = None
         self.name = None
         self.type = None
-        self.properties: Optional[T] = None
+        self.properties: Optional[PropertiesT] = None
 
     @classmethod
-    def get_url_template(cls) -> str:
-        """Get the URL template for this resource type.
+    def get_operation_url(
+        cls,
+        operation: str,
+        subscription_id: str,
+        url_params: PathParamsT,
+    ) -> str:
+        """Return the URL template for the given operation.
 
-        :return: The URL template string
-        :rtype: str
+        Base resources only support ``read`` and ignore subscription/params in the
+        template construction. Subclasses should override when they need operation-
+        specific templates.
+
+        :param operation: Operation name (e.g. "read").
+        :param subscription_id: Subscription identifier.
+        :param url_params: URL parameters required by the resource type.
+        :return: URL template string.
         """
+        if operation != "read":
+            raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
         return cls._url_template
-
+    
     @classmethod
     def from_response(
-        cls: Type[TResourceType], data_dict: Dict[str, Any], **kwargs
-    ) -> TResourceType:
+        cls, data_dict: Dict[str, Any], **kwargs: Any
+    ) -> "ResourceType":
         """Create instance from API response data and request parameters.
 
         :param cls: The resource type class
         :type cls: Type[TResourceType]
         :param data_dict: The response data dictionary from Azure API
         :type data_dict: Dict[str, Any]
+        :param url_params: URL parameters required by the resource type.
+        :type url_params: PathParamsT
         :return: Created instance of the resource type
         :rtype: TResourceType
         """
@@ -80,18 +94,22 @@ class ResourceType(Generic[T]):
 
         return instance
 
-    def build_instance_path_arguments(self, subscription_id: str) -> Dict[str, str]:
-        """Build path arguments from instance attributes.
+    @classmethod
+    def build_instance_path_arguments_from_params(
+        cls,
+        *,
+        subscription_id: str,
+        url_params: PathParamsT,
+    ) -> Dict[str, Any]:
+        """Build path arguments dictionary from URL parameters.
 
-        :param subscription_id: The Azure subscription ID
-        :type subscription_id: str
-        :return: Dictionary of path arguments for URL construction
-        :rtype: Dict[str, str]
+        Base resources only use subscription ID. Subclasses should override when
+        they need additional path arguments.
+
+        :param subscription_id: Subscription identifier.
+        :param url_params: URL parameters required by the resource type.
+        :return: Dictionary of path arguments.
         """
         return {
             "subscriptionId": subscription_id,
-            "resourceGroupName": self.resource_group_name,
-            "resourceName": self.resource_name,
         }
-
-
