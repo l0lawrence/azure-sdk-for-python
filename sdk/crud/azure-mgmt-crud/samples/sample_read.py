@@ -34,7 +34,7 @@ def main():
 
     if response:
         logger.info("Read BlobContainer successfully.\n")
-        logger.info(f"BlobContainer details: {response} \n")
+        logger.info(f"BlobContainer details: {response.to_dict()} \n")
         logger.info(f"BlobContainer name: {response.name} \n")
         logger.info(f"BlobContainer properties: {response.properties} \n")
         logger.info(f"Is blobContainer {isinstance(response, BlobContainer)} \n")
