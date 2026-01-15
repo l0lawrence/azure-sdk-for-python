@@ -94,6 +94,36 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
 
         return instance
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert the resource to a dictionary for API requests.
+        
+        :return: Dictionary representation of the resource
+        :rtype: Dict[str, Any]
+        """
+        return {
+            "properties": self.properties,
+        }
+    
+    @classmethod
+    def get_action_url(
+        cls,
+        action: str,
+        subscription_id: str,
+        url_params: PathParamsT,
+    ) -> str:
+        """Get the URL for a resource action (POST operation).
+        
+        Base implementation raises an error. Subclasses should override to provide
+        action-specific URL templates.
+        
+        :param action: The action name
+        :param subscription_id: Subscription identifier
+        :param url_params: URL parameters required by the resource type
+        :return: Formatted URL for the action
+        :raises ValueError: If action is not supported
+        """
+        raise ValueError(f"Actions not supported for {cls.__name__}")
+
     @classmethod
     def build_instance_path_arguments_from_params(
         cls,

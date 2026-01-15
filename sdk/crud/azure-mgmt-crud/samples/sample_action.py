@@ -33,7 +33,7 @@ def main():
     
     response = client.action(
         resource_type=BlobContainer(),
-        action_name=BlobContainer.ACTIONS.SET_LEGAL_HOLD,  # or just "setLegalHold"
+        action_name=BlobContainer.ACTIONS.SET_LEGAL_HOLD,
         url_params=BlobContainerPathParams(
             resource_group_name=RESOURCE_GROUP,
             storage_account_name=STORAGE_ACCOUNT_NAME,

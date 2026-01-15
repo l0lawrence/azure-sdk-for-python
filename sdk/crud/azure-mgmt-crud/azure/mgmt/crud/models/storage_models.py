@@ -107,7 +107,14 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
         if value is None:
             return None
         try:
-            return field_type(value)
+            if field_type is str:
+                return str(value)
+            elif field_type is int:
+                return int(value)
+            elif field_type is float:
+                return float(value)
+            elif field_type is bool:
+                return bool(value)
         except (ValueError, TypeError):
             return value
     
@@ -362,28 +369,28 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
-                containerName=url_params["container_name"],
+                containerName=url_params.get("container_name", ""),
             )
         elif operation == "create":
             return cls._create_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
-                containerName=url_params["container_name"],
+                containerName=url_params.get("container_name", ""),
             )
         elif operation == "delete":
             return cls._delete_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
-                containerName=url_params["container_name"],
+                containerName=url_params.get("container_name", ""),
             )
         elif operation == "update":
             return cls._update_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
-                containerName=url_params["container_name"],
+                containerName=url_params.get("container_name", ""),
             )
         elif operation == "list":
             return cls._list_url_template.format(
@@ -414,7 +421,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             subscriptionId=subscription_id,
             resourceGroupName=url_params["resource_group_name"],
             storageAccountName=url_params["storage_account_name"],
-            containerName=url_params["container_name"],
+            containerName=url_params.get("container_name", ""),
         )
     
     @classmethod
@@ -504,9 +511,10 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
     
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "BlobContainer":
-        properties = _create_runtime_typeddict_instance(
-            data_dict.get("properties", {}), BlobContainerProperties
-        )
+        properties_data = data_dict.get("properties", {})
+        properties: BlobContainerProperties = _create_runtime_typeddict_instance(
+            properties_data, BlobContainerProperties
+        )  # type: ignore[assignment]
 
         instance = cls(
             api_version=kwargs.get("api_version", "2025-06-01"),
@@ -560,9 +568,10 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             "enable_nfs_v3_all_squash": "enableNfsV3AllSquash",
         }
         
-        for python_name, value in self.properties.items():
-            camel_name = property_name_mapping.get(python_name, python_name)
-            camel_case_properties[camel_name] = value
+        if self.properties is not None:
+            for python_name, value in self.properties.items():
+                camel_name = property_name_mapping.get(python_name, python_name)
+                camel_case_properties[camel_name] = value
         
         return {
             "properties": camel_case_properties,
@@ -584,7 +593,8 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         :param url_params: URL parameters required by the resource type.
         :return: Dictionary of path arguments.
         """
-        if url_params.get("container_name") is None:
+        container_name = url_params.get("container_name")
+        if container_name is None:
             dict_to_return = {
                 "subscriptionId": subscription_id,
                 "resourceGroupName": url_params["resource_group_name"],
@@ -595,6 +605,6 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
                 "subscriptionId": subscription_id,
                 "resourceGroupName": url_params["resource_group_name"],
                 "storageAccountName": url_params["storage_account_name"],
-                "containerName": cast(str, url_params["container_name"]),
+                "containerName": container_name,
             }
         return dict_to_return

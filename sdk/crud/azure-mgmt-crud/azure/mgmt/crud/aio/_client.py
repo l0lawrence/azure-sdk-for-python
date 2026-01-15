@@ -115,7 +115,7 @@ class CrudClient:
         self._client.__exit__(*exc_details)
 
     @distributed_trace
-    def read(
+    async def read(
         self,
         resource_type: Type[TResource],
         **kwargs: Any
@@ -157,9 +157,9 @@ class CrudClient:
         _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
 
         request = HttpRequest("GET", _url, params=_params, headers=_headers)
-        response = self._send_request(request, stream=True, **kwargs)
+        response = await self._send_request(request, stream=True, **kwargs)
 
-        data = response.read()
+        data = await response.read()
 
         if response.status_code not in [200]:
             raise HttpResponseError(response=response)
