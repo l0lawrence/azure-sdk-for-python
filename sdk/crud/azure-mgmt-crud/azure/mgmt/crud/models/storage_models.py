@@ -279,9 +279,20 @@ class BlobContainerPathParams(TypedDict):
     include: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Additional data to include (e.g., "deleted")
 
 
+class BlobContainerAction(str, Enum):
+    """Available actions for BlobContainer resources."""
+    SET_LEGAL_HOLD = "setLegalHold"
+    CLEAR_LEGAL_HOLD = "clearLegalHold"
+    LEASE = "lease"
+    MIGRATE = "migrate"
+
+
 class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
 
     """A Blob Container resource."""
+
+    # Available actions
+    ACTIONS = BlobContainerAction
 
     _read_url_template = (
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
@@ -313,6 +324,30 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
         "blobServices/default/containers"
     )
+
+    # Action URL templates (POST operations)
+    _action_url_templates = {
+        "setLegalHold": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+            "blobServices/default/containers/{containerName}/setLegalHold"
+        ),
+        "clearLegalHold": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+            "blobServices/default/containers/{containerName}/clearLegalHold"
+        ),
+        "lease": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+            "blobServices/default/containers/{containerName}/lease"
+        ),
+        "migrate": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
+            "blobServices/default/containers/{containerName}/migrate"
+        ),
+    }
 
     
     @classmethod
@@ -357,6 +392,111 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
                 storageAccountName=url_params["storage_account_name"],
             )
         raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
+    
+    @classmethod
+    def get_action_url(
+        cls,
+        action: str,
+        subscription_id: str,
+        url_params: BlobContainerPathParams,
+    ) -> str:
+        """Get the URL for a resource action (POST operation).
+        
+        :param action: The action name (e.g., 'setLegalHold', 'lease', 'migrate')
+        :param subscription_id: Subscription identifier
+        :param url_params: URL parameters required by the resource type
+        :return: Formatted URL for the action
+        """
+        if action not in cls._action_url_templates:
+            raise ValueError(f"Unsupported action '{action}' for {cls.__name__}. Available actions: {list(cls._action_url_templates.keys())}")
+        
+        return cls._action_url_templates[action].format(
+            subscriptionId=subscription_id,
+            resourceGroupName=url_params["resource_group_name"],
+            storageAccountName=url_params["storage_account_name"],
+            containerName=url_params["container_name"],
+        )
+    
+    @classmethod
+    def get_available_actions(cls) -> List[str]:
+        """Get list of available actions for this resource type.
+        
+        :return: List of action names
+        """
+        return [action.value for action in cls.ACTIONS]
+    
+    @classmethod
+    def set_legal_hold_body(cls, tags: List[str]) -> Dict[str, Any]:
+        """Create body for setLegalHold action.
+        
+        :param tags: Array of tag strings to set on the container
+        :return: Request body dictionary
+        
+        Example:
+            body = BlobContainer.set_legal_hold_body(tags=["tag1", "tag2"])
+        """
+        return {"tags": tags}
+    
+    @classmethod
+    def clear_legal_hold_body(cls, tags: List[str]) -> Dict[str, Any]:
+        """Create body for clearLegalHold action.
+        
+        :param tags: Array of tag strings to clear from the container
+        :return: Request body dictionary
+        
+        Example:
+            body = BlobContainer.clear_legal_hold_body(tags=["tag1"])
+        """
+        return {"tags": tags}
+    
+    @classmethod
+    def lease_body(
+        cls,
+        action: str,
+        lease_id: Optional[str] = None,
+        break_period: Optional[int] = None,
+        lease_duration: Optional[int] = None,
+        proposed_lease_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Create body for lease action.
+        
+        :param action: Lease action - "Acquire", "Release", "Renew", "Break", or "Change"
+        :param lease_id: Required for Release, Renew, Change
+        :param break_period: Optional for Break action
+        :param lease_duration: Required for Acquire (-1 for infinite, or 15-60 seconds)
+        :param proposed_lease_id: Optional for Acquire, required for Change
+        :return: Request body dictionary
+        
+        Examples:
+            # Acquire a 60-second lease
+            body = BlobContainer.lease_body(action="Acquire", lease_duration=60)
+            
+            # Release a lease
+            body = BlobContainer.lease_body(action="Release", lease_id="lease-id-here")
+        """
+        body: Dict[str, Any] = {"action": action}
+        
+        if lease_id is not None:
+            body["leaseId"] = lease_id
+        if break_period is not None:
+            body["breakPeriod"] = break_period
+        if lease_duration is not None:
+            body["leaseDuration"] = lease_duration
+        if proposed_lease_id is not None:
+            body["proposedLeaseId"] = proposed_lease_id
+        
+        return body
+    
+    @classmethod
+    def migrate_body(cls) -> None:
+        """Create body for migrate action (object-level WORM migration).
+        
+        :return: None (migrate action has no body)
+        
+        Example:
+            body = BlobContainer.migrate_body()  # Returns None
+        """
+        return None
     
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "BlobContainer":

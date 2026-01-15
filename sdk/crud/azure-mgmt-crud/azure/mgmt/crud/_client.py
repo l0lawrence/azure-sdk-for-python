@@ -497,3 +497,84 @@ class CrudClient:
             return pipeline_response
 
         return ItemPaged(get_next, extract_data)
+    
+    @distributed_trace
+    def action(
+        self,
+        *,
+        resource_type: ResourceType[Any, PathParamsT],
+        action_name: str,
+        url_params: PathParamsT,
+        body: Optional[Dict[str, Any]] = None,
+        **kwargs: Any
+    ) -> Any:
+        """Perform an action (POST operation) on a resource.
+
+        :param resource_type: The resource type class
+        :type resource_type: Type[TResource]
+        :param action_name: The name of the action to perform (e.g., 'setLegalHold', 'lease')
+        :type action_name: str
+        :keyword url_params: URL parameters required by the resource type.
+        :paramtype url_params: PathParamsT
+        :keyword body: Optional request body for the action.
+        :paramtype body: Dict[str, Any]
+        :return: The action response or None
+        :rtype: Any
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map: MutableMapping = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+        api_version = kwargs.pop(
+            "api_version", 
+            _params.pop("api-version", getattr(resource_type, "api_version"))
+        )
+        accept = _headers.pop("Accept", "application/json")
+        
+        # Get the action URL from the resource type
+        url_template = resource_type.get_action_url(action_name, self._config.subscription_id, url_params)
+
+        path_arguments = resource_type.build_instance_path_arguments_from_params(
+            subscription_id=self._config.subscription_id,
+            url_params=url_params,
+        )
+
+        # Serialize path arguments for URL safety
+        serialized_path_args = {}
+        for key, value in path_arguments.items():
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+
+        _url = url_template.format(**serialized_path_args)
+
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+        # Prepare request body if provided
+        body_content = None
+        if body is not None:
+            _headers["Content-Type"] = _SERIALIZER.header("content_type", "application/json", "str")
+            body_content = json.dumps(body)
+
+        request = HttpRequest("POST", _url, params=_params, headers=_headers, content=body_content)
+        response = self._send_request(request, stream=True, **kwargs)
+
+        data = response.read()
+
+        if response.status_code not in [200, 202]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response, error_format=ARMErrorFormat)
+
+        # Parse response if there's content
+        if data:
+            data_dict = json.loads(data.decode('utf-8'))
+            return data_dict
+        
+        return None
