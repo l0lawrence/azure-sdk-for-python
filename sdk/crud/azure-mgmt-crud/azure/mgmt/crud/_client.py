@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 import json
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, TypeVar, Type, List, Optional, Iterator, Mapping
+from typing import Any, TYPE_CHECKING, TypeVar, Type, List, Optional, Iterator, Mapping, Dict
 from collections.abc import MutableMapping
 
 from azure.core.pipeline import policies

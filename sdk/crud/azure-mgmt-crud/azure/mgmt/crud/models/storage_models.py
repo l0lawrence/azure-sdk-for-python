@@ -435,7 +435,9 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         Example:
             body = BlobContainer.set_legal_hold_body(tags=["tag1", "tag2"])
         """
-        return {"tags": tags}
+        # Azure API expects tags as objects with 'tag' property
+        tag_objects = [{"tag": tag} for tag in tags]
+        return {"tags": tag_objects}
     
     @classmethod
     def clear_legal_hold_body(cls, tags: List[str]) -> Dict[str, Any]:
@@ -447,7 +449,9 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         Example:
             body = BlobContainer.clear_legal_hold_body(tags=["tag1"])
         """
-        return {"tags": tags}
+        # Azure API expects tags as objects with 'tag' property
+        tag_objects = [{"tag": tag} for tag in tags]
+        return {"tags": tag_objects}
     
     @classmethod
     def lease_body(
