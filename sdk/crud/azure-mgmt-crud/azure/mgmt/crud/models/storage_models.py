@@ -317,10 +317,6 @@ class BlobContainerPathParams(TypedDict):
     resource_group_name: str
     storage_account_name: str
     container_name: NotRequired[Optional[str]] # optional because not needed for list operation
-    # For LIST OPERATIONS Optional. Specified maximum number of items per page
-    maxpagesize: NotRequired[Optional[str]]
-    filter: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Filter expression for the list operation
-    include: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Additional data to include (e.g., "deleted")
 
 
 class BlobContainerAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):

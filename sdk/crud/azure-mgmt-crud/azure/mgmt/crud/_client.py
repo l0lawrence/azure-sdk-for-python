@@ -386,6 +386,9 @@ class CrudClient:
         *,
         resource_type: ResourceType[Any, PathParamsT],
         url_params: PathParamsT,
+        maxpagesize: Optional[str] = None,
+        filter: Optional[str] = None,
+        include: Optional[str] = None,
         **kwargs: Any
     ) -> ItemPaged[ResourceType[Any, PathParamsT]]:
         """List resources of the specified type.
@@ -394,6 +397,12 @@ class CrudClient:
         :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
+        :keyword maxpagesize: Optional maximum page size for pagination.
+        :paramtype maxpagesize: str
+        :keyword filter: Optional filter parameter.
+        :paramtype filter: str
+        :keyword include: Optional include parameter.
+        :paramtype include: str
         :return: An iterator of resource instances.
         :rtype: ItemPaged[ResourceType[Any, PathParamsT]]
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -405,12 +414,6 @@ class CrudClient:
             "api_version", 
             _params.pop("api-version", getattr(resource_type, "api_version"))
         )
-
-        # Extract optional list parameters from url_params
-        # TypedDict requires explicit handling of optional fields
-        maxpagesize = url_params.get("maxpagesize") if isinstance(url_params, dict) else None
-        filter_param = url_params.get("filter") if isinstance(url_params, dict) else None
-        include = url_params.get("include") if isinstance(url_params, dict) else None
 
         error_map: MutableMapping = {
             401: ClientAuthenticationError,
@@ -442,8 +445,8 @@ class CrudClient:
                 # Add optional query parameters
                 if maxpagesize is not None:
                     _params["$maxpagesize"] = _SERIALIZER.query(name="maxpagesize", obj=maxpagesize, type="str") # pylint:disable=no-value-for-parameter
-                if filter_param is not None:
-                    _params["$filter"] = _SERIALIZER.query(name="filter", obj=filter_param, type="str") # pylint:disable=no-value-for-parameter
+                if filter is not None:
+                    _params["$filter"] = _SERIALIZER.query(name="filter", obj=filter, type="str") # pylint:disable=no-value-for-parameter
                 if include is not None:
                     _params["$include"] = _SERIALIZER.query(name="include", obj=include, type="str") # pylint:disable=no-value-for-parameter
 

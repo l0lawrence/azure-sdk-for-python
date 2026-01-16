@@ -23,11 +23,14 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
-    response = client.list(resource_type=BlobContainer(),url_params=BlobContainerPathParams(
-        resource_group_name=RESOURCE_GROUP,
-        storage_account_name=STORAGE_ACCOUNT_NAME,
+    response = client.list(
+        resource_type=BlobContainer(),
+        url_params=BlobContainerPathParams(
+            resource_group_name=RESOURCE_GROUP,
+            storage_account_name=STORAGE_ACCOUNT_NAME,
+        ),
         maxpagesize="2",
-    ))
+    )
 
     for i in response:
         print(f"Blob container item: {i}")
