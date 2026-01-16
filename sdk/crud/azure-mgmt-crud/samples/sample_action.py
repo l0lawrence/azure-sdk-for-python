@@ -11,7 +11,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 SUBSCRIPTION_ID = os.environ["SUBSCRIPTION_ID"]
-RESOURCE_GROUP = os.environ["RESOURCE_GROUP"] 
+RESOURCE_GROUP = os.environ["RESOURCE_GROUP"]
 CONTAINER_NAME = os.environ["CONTAINER_NAME"]
 STORAGE_ACCOUNT_NAME = os.environ["STORAGE_ACCOUNT_NAME"]
 
@@ -28,7 +28,7 @@ def main():
         action="Acquire",
         lease_duration=60  # 60 seconds
     )
-    
+
     lease_response = client.action(
         resource_type=BlobContainer(),
         action_name=BlobContainer.ACTIONS.LEASE,
@@ -43,6 +43,6 @@ def main():
     lease_id = lease_response.get("leaseId") if lease_response else None
     print(f"Acquired lease ID: {lease_id}")
 
-  
+
 if __name__ == "__main__":
     main()

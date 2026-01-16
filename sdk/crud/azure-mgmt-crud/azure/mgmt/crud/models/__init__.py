@@ -15,11 +15,9 @@ from .storage_models import (
     ImmutabilityPolicyProperties,
     TagProperty,
     ProtectedAppendWritesHistory,
-    LegalHoldProperties,
     MigrationState,
     ImmutableStorageWithVersioning,
     LegalHoldProperties,
-    
 )
 
 __all__ = [
@@ -31,7 +29,6 @@ __all__ = [
     "ImmutabilityPolicyProperties",
     "TagProperty",
     "ProtectedAppendWritesHistory", 
-    "LegalHoldProperties",
     "MigrationState",
     "ImmutableStorageWithVersioning",
     "LegalHoldProperties",

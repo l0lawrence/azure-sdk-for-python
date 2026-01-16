@@ -11,7 +11,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 SUBSCRIPTION_ID = os.environ["SUBSCRIPTION_ID"]
-RESOURCE_GROUP = os.environ["RESOURCE_GROUP"] 
+RESOURCE_GROUP = os.environ["RESOURCE_GROUP"]
 CONTAINER_NAME = os.environ["CONTAINER_NAME"]
 STORAGE_ACCOUNT_NAME = os.environ["STORAGE_ACCOUNT_NAME"]
 

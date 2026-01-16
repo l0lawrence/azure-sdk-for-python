@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 import json
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, TypeVar, Type, List, Optional, Iterator, Mapping, Dict
+from typing import Any, TYPE_CHECKING, TypeVar, Optional, Dict
 from collections.abc import MutableMapping
 
 from azure.core.pipeline import policies
@@ -129,12 +129,12 @@ class CrudClient:
     ) -> ResourceType[Any, PathParamsT]:
         """Read a resource of the specified type.
 
-        :param resource_type: The resource type class
-        :type resource_type: Type[TResource]
+        :keyword resource_type: The resource type class
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
         :return: An instance of the resource type.
-        :rtype: TResource
+        :rtype: ResourceType[Any, PathParamsT]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -147,7 +147,8 @@ class CrudClient:
         accept = _headers.pop("Accept", "application/json")
 
         # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url("read", self._config.subscription_id, url_params)
+        url_template = resource_type.get_operation_url(
+            operation="read", subscription_id=self._config.subscription_id, url_params=url_params)
 
         path_arguments = resource_type.build_instance_path_arguments_from_params(
             subscription_id=self._config.subscription_id,
@@ -157,7 +158,7 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str") # pylint: disable=no-value-for-parameter
 
         _url = url_template.format(**serialized_path_args)
 
@@ -181,7 +182,7 @@ class CrudClient:
         )
 
         return instance
-    
+
     @distributed_trace
     def create(
         self,
@@ -192,12 +193,12 @@ class CrudClient:
     ) -> None:
         """Create a resource of the specified type.
 
-        :param resource_type: The resource type class to create
-        :type resource_type: Type[TResource]
+        :keyword resource_type: The resource type class to create
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
-        :return: An instance of the resource type.
-        :rtype: TResource
+        :return: None
+        :rtype: None
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -211,7 +212,9 @@ class CrudClient:
         content_type = _headers.pop("Content-Type", "application/json")
 
         # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url("create", self._config.subscription_id, url_params)
+        url_template = resource_type.get_operation_url(
+            operation="create", subscription_id=self._config.subscription_id, url_params=url_params
+        )
 
         path_arguments = resource_type.build_instance_path_arguments_from_params(
             subscription_id=self._config.subscription_id,
@@ -221,13 +224,13 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
-        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
-        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint: disable=no-value-for-parameter
+        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint: disable=no-value-for-parameter
+        _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj=content_type, type="str") # pylint: disable=no-value-for-parameter
 
         # Serialize the resource to JSON for the request body
         body_content = json.dumps(resource_type.to_dict())
@@ -235,13 +238,10 @@ class CrudClient:
         request = HttpRequest("PUT", _url, params=_params, headers=_headers, content=body_content)
         response = self._send_request(request, stream=True, **kwargs)
 
-        data = response.read()
+        response.read()
 
         if response.status_code not in [200, 201]:
             raise HttpResponseError(response=response)
-
-        #TODO what exactly do we return on create
-        return None
 
     @distributed_trace
     def delete(  # pylint: disable=inconsistent-return-statements
@@ -253,8 +253,8 @@ class CrudClient:
     ) -> None:
         """Delete a resource of the specified type.
 
-        :param resource_type: The resource type class to delete
-        :type resource_type: Type[TResource]
+        :keyword resource_type: The resource type class to delete
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
         :return: None
@@ -278,7 +278,8 @@ class CrudClient:
         )
 
         # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url("delete", self._config.subscription_id, url_params)
+        url_template = resource_type.get_operation_url(
+            operation="delete", subscription_id=self._config.subscription_id, url_params=url_params)
 
         path_arguments = resource_type.build_instance_path_arguments_from_params(
             subscription_id=self._config.subscription_id,
@@ -288,11 +289,11 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
+        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
 
         request = HttpRequest("DELETE", _url, params=_params, headers=_headers)
         _stream = False
@@ -301,7 +302,7 @@ class CrudClient:
         if response.status_code not in [200, 204]:
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response, error_format=ARMErrorFormat)
-        
+
     @distributed_trace
     def update(  # pylint: disable=inconsistent-return-statements
         self,
@@ -312,12 +313,12 @@ class CrudClient:
     ) -> ResourceType[Any, PathParamsT]:
         """Update a resource of the specified type.
 
-        :param resource_type: The resource type class to update
-        :type resource_type: Type[TResource]
+        :keyword resource_type: The resource type class to update
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
-        :return: None
-        :rtype: None
+        :return: An instance of the resource type.
+        :rtype: ResourceType[Any, PathParamsT]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
@@ -339,7 +340,8 @@ class CrudClient:
         content_type = _headers.pop("Content-Type", "application/json")
 
         # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url("update", self._config.subscription_id, url_params)
+        url_template = resource_type.get_operation_url(
+            operation="update", subscription_id=self._config.subscription_id, url_params=url_params)
 
         path_arguments = resource_type.build_instance_path_arguments_from_params(
             subscription_id=self._config.subscription_id,
@@ -349,13 +351,13 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
-        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
-        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str") # pylint: disable=specify-parameter-names-in-call
+        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
+        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint:disable=no-value-for-parameter
+        _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj=content_type, type="str") # pylint:disable=no-value-for-parameter
 
         # Serialize the resource to JSON for the request body
         body_content = json.dumps(resource_type.to_dict())
@@ -377,7 +379,7 @@ class CrudClient:
         )
 
         return instance
-    
+
     @distributed_trace
     def list(
         self,
@@ -388,12 +390,12 @@ class CrudClient:
     ) -> ItemPaged[ResourceType[Any, PathParamsT]]:
         """List resources of the specified type.
 
-        :param resource_type: The resource type class
-        :type resource_type: Type[TResource]
+        :keyword resource_type: The resource type class
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
         :return: An iterator of resource instances.
-        :rtype: ItemPaged[TResource]
+        :rtype: ItemPaged[ResourceType[Any, PathParamsT]]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = kwargs.pop("headers", {}) or {}
@@ -403,13 +405,13 @@ class CrudClient:
             "api_version", 
             _params.pop("api-version", getattr(resource_type, "api_version"))
         )
-        
+
         # Extract optional list parameters from url_params
         # TypedDict requires explicit handling of optional fields
         maxpagesize = url_params.get("maxpagesize") if isinstance(url_params, dict) else None
         filter_param = url_params.get("filter") if isinstance(url_params, dict) else None
         include = url_params.get("include") if isinstance(url_params, dict) else None
-        
+
         error_map: MutableMapping = {
             401: ClientAuthenticationError,
             404: ResourceNotFoundError,
@@ -431,21 +433,21 @@ class CrudClient:
                 # Serialize path arguments for URL safety
                 serialized_path_args = {}
                 for key, value in path_arguments.items():
-                    serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+                    serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
 
                 _url = url_template.format(**serialized_path_args)
-                
-                _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
-                
+
+                _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
+
                 # Add optional query parameters
                 if maxpagesize is not None:
-                    _params["$maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "str")
+                    _params["$maxpagesize"] = _SERIALIZER.query(name="maxpagesize", obj=maxpagesize, type="str") # pylint:disable=no-value-for-parameter
                 if filter_param is not None:
-                    _params["$filter"] = _SERIALIZER.query("filter", filter_param, "str")
+                    _params["$filter"] = _SERIALIZER.query(name="filter", obj=filter_param, type="str") # pylint:disable=no-value-for-parameter
                 if include is not None:
-                    _params["$include"] = _SERIALIZER.query("include", include, "str")
-                
-                _headers["Accept"] = _SERIALIZER.header("accept", "application/json", "str")
+                    _params["$include"] = _SERIALIZER.query(name="include", obj=include, type="str") # pylint:disable=no-value-for-parameter
+
+                _headers["Accept"] = _SERIALIZER.header(name="accept", obj="application/json", type="str") # pylint:disable=no-value-for-parameter
 
                 _request = HttpRequest("GET", _url, params=_params, headers=_headers, **kwargs)
                 _request.url = self._client.format_url(_request.url)
@@ -465,29 +467,31 @@ class CrudClient:
                 )
                 _request.url = self._client.format_url(_request.url)
                 _request.method = "GET"
-            
+
             return _request
 
         def extract_data(pipeline_response):
             # Parse the response
             data = json.loads(pipeline_response.http_response.read().decode('utf-8'))
-            
+
             # Extract the list of items and next link
             list_of_items = data.get("value", [])
-            
+
             # Convert each item dict to resource type instance
             deserialized_items = []
             for item_dict in list_of_items:
                 instance = resource_type.from_response(item_dict, **kwargs)
                 deserialized_items.append(instance)
-            
+
             next_link = data.get("nextLink") or None
             return next_link, iter(deserialized_items)
 
         def get_next(next_link=None):
             _request = prepare_request(next_link)
             _stream = False
-            pipeline_response = self._client._pipeline.run(_request, stream=_stream, **kwargs)
+            pipeline_response = self._client.pipeline.run(  # pylint: disable=protected-access,no-member #TODO: investigate no-member
+                _request, stream=_stream, **kwargs
+            )
             response = pipeline_response.http_response
 
             if response.status_code not in [200]:
@@ -497,7 +501,7 @@ class CrudClient:
             return pipeline_response
 
         return ItemPaged(get_next, extract_data)
-    
+
     @distributed_trace
     def action(
         self,
@@ -510,10 +514,10 @@ class CrudClient:
     ) -> Any:
         """Perform an action (POST operation) on a resource.
 
-        :param resource_type: The resource type class
-        :type resource_type: Type[TResource]
-        :param action_name: The name of the action to perform (e.g., 'setLegalHold', 'lease')
-        :type action_name: str
+        :keyword resource_type: The resource type class
+        :paramtype resource_type: ResourceType[Any, PathParamsT]
+        :keyword action_name: The name of the action to perform (e.g., 'setLegalHold', 'lease')
+        :paramtype action_name: str
         :keyword url_params: URL parameters required by the resource type.
         :paramtype url_params: PathParamsT
         :keyword body: Optional request body for the action.
@@ -538,9 +542,10 @@ class CrudClient:
             _params.pop("api-version", getattr(resource_type, "api_version"))
         )
         accept = _headers.pop("Accept", "application/json")
-        
+
         # Get the action URL from the resource type
-        url_template = resource_type.get_action_url(action_name, self._config.subscription_id, url_params)
+        url_template = resource_type.get_action_url(action=action_name,
+                                                    subscription_id=self._config.subscription_id, url_params=url_params)
 
         path_arguments = resource_type.build_instance_path_arguments_from_params(
             subscription_id=self._config.subscription_id,
@@ -550,17 +555,17 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
+            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
-        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
+        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint:disable=no-value-for-parameter
 
         # Prepare request body if provided
         body_content = None
         if body is not None:
-            _headers["Content-Type"] = _SERIALIZER.header("content_type", "application/json", "str")
+            _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj="application/json", type="str") # pylint:disable=no-value-for-parameter
             body_content = json.dumps(body)
 
         request = HttpRequest("POST", _url, params=_params, headers=_headers, content=body_content)
@@ -576,5 +581,5 @@ class CrudClient:
         if data:
             data_dict = json.loads(data.decode('utf-8'))
             return data_dict
-        
+
         return None

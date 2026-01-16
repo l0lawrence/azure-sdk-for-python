@@ -7,21 +7,20 @@
 # --------------------------------------------------------------------------
 
 from copy import deepcopy
-from typing import Any, TYPE_CHECKING, TypeVar, Type, Awaitable, List, Optional, AsyncIterator
+from typing import Any, TYPE_CHECKING, TypeVar, Type, Awaitable, Optional
 
 from azure.core.async_paging import AsyncItemPaged
 from azure.core.pipeline import policies
 from azure.core.rest import AsyncHttpResponse, HttpRequest
 from azure.core.exceptions import HttpResponseError
 from azure.core.utils import case_insensitive_dict
-from azure.core.tracing.decorator import distributed_trace
 from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.mgmt.core import ARMPipelineClient
 from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
 
-from .models import ResourceType
+from ..models import ResourceType
 from ._configuration import CrudConfiguration
-from ._serialization import Serializer
+from .._serialization import Serializer
 
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
@@ -113,7 +112,7 @@ class CrudClient:
     def __exit__(self, *exc_details: Any) -> None:
         self._client.__exit__(*exc_details)
 
-    @distributed_trace
+    @distributed_trace_async
     async def read(
         self,
         resource_type: Type[TResource],
@@ -354,8 +353,8 @@ class CrudClient:
         if response.status_code not in [200, 204]:
             raise HttpResponseError(response=response)
 
-    @distributed_trace
-    def list(
+    @distributed_trace_async
+    async def list(
         self,
         resource_type: Type[TResource],
         **kwargs: Any
@@ -401,7 +400,8 @@ class CrudClient:
             if response.status_code not in [200]:
                 raise HttpResponseError(response=response)
             data_dict = json.loads(data.decode('utf-8'))
-            return data_dict.get('nextLink'), [resource_type.from_response(item, **kwargs) for item in data_dict.get('value', [])]
+            return data_dict.get('nextLink'), \
+            [resource_type.from_response(item, **kwargs) for item in data_dict.get('value', [])]
 
         async def _get_next(next_link=None):
             if next_link is None:

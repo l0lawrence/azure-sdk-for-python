@@ -6,11 +6,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-import datetime
-from enum import Enum
-from typing import Any, Dict, List, Optional, TypeVar, Generic, Type, Union, Mapping
-from typing_extensions import TypedDict, Required, NotRequired
-from azure.core import CaseInsensitiveEnumMeta
+from typing import Any, Dict, Optional, TypeVar, Generic, Mapping # pylint: disable=unused-import
 
 
 PropertiesT = TypeVar("PropertiesT")
@@ -46,7 +42,7 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         self.properties: Optional[PropertiesT] = None
 
     @classmethod
-    def get_operation_url(
+    def get_operation_url( # pylint: disable=unused-argument
         cls,
         operation: str,
         subscription_id: str,
@@ -58,15 +54,16 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         template construction. Subclasses should override when they need operation-
         specific templates.
 
-        :param operation: Operation name (e.g. "read").
-        :param subscription_id: Subscription identifier.
-        :param url_params: URL parameters required by the resource type.
+        :param str operation: Operation name (e.g. "read").
+        :param str subscription_id: Subscription identifier.
+        :param PathParamsT url_params: URL parameters required by the resource type.
         :return: URL template string.
+        :rtype: str
         """
         if operation != "read":
             raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
         return cls._url_template
-    
+
     @classmethod
     def from_response(
         cls, data_dict: Dict[str, Any], **kwargs: Any
@@ -77,8 +74,6 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         :type cls: Type[TResourceType]
         :param data_dict: The response data dictionary from Azure API
         :type data_dict: Dict[str, Any]
-        :param url_params: URL parameters required by the resource type.
-        :type url_params: PathParamsT
         :return: Created instance of the resource type
         :rtype: TResourceType
         """
@@ -103,7 +98,7 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         return {
             "properties": self.properties,
         }
-    
+
     @classmethod
     def get_action_url(
         cls,
@@ -116,29 +111,31 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         Base implementation raises an error. Subclasses should override to provide
         action-specific URL templates.
         
-        :param action: The action name
-        :param subscription_id: Subscription identifier
-        :param url_params: URL parameters required by the resource type
+        :param str action: The action name
+        :param str subscription_id: Subscription identifier
+        :param PathParamsT url_params: URL parameters required by the resource type
         :return: Formatted URL for the action
         :raises ValueError: If action is not supported
+        :rtype: str
         """
         raise ValueError(f"Actions not supported for {cls.__name__}")
 
     @classmethod
-    def build_instance_path_arguments_from_params(
+    def build_instance_path_arguments_from_params( # pylint: disable=name-too-long
         cls,
         *,
         subscription_id: str,
-        url_params: PathParamsT,
+        url_params: PathParamsT, # pylint: disable=unused-argument
     ) -> Dict[str, Any]:
         """Build path arguments dictionary from URL parameters.
 
         Base resources only use subscription ID. Subclasses should override when
         they need additional path arguments.
 
-        :param subscription_id: Subscription identifier.
-        :param url_params: URL parameters required by the resource type.
+        :keyword str subscription_id: Subscription identifier.
+        :keyword PathParamsT url_params: URL parameters required by the resource type.
         :return: Dictionary of path arguments.
+        :rtype: Dict[str, Any]
         """
         return {
             "subscriptionId": subscription_id,

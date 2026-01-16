@@ -8,8 +8,8 @@
 
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args, cast
-from typing_extensions import TypedDict, Required, NotRequired, is_typeddict
+from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args
+from typing_extensions import TypedDict, NotRequired, is_typeddict
 from azure.core import CaseInsensitiveEnumMeta
 
 from .models import ResourceType
@@ -20,19 +20,30 @@ from .models import ResourceType
 # --------------------------------------------------------------------------
 
 def _parse_datetime_string(value: Any) -> Optional[Union[str,datetime.datetime]]:
-    """Parse datetime from ISO string."""
+    """Parse datetime from ISO string.
+    
+    :param Any value: The value to parse
+    :return: Parsed datetime or original value if parsing fails
+    :rtype: Optional[Union[str,datetime.datetime]]
+    """
     if value is None or isinstance(value, datetime.datetime):
         return value
     if isinstance(value, str):
         try:
             return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
-        except Exception:
+        except Exception: # pylint: disable=broad-exception-caught
             return value
     return value
 
 
 def _parse_enum_value(value: Any, enum_cls: type) -> Any:
-    """Parse enum value from string."""
+    """Parse enum value from string.
+    
+    :param Any value: The value to parse
+    :param type enum_cls: The Enum class to parse into
+    :return: Parsed enum value or original value if parsing fails
+    :rtype: Any
+    """
     if value is None or isinstance(value, enum_cls):
         return value
     if isinstance(value, str) and issubclass(enum_cls, Enum):
@@ -46,13 +57,20 @@ def _parse_enum_value(value: Any, enum_cls: type) -> Any:
     return value
 
 
-def _validate_typeddict_field(value: Any, field_type: type) -> Any:
-    """Validate and transform a field value based on its type hint."""
+def _validate_typeddict_field(value: Any, field_type: type) -> Any: # pylint: disable=too-many-branches,too-many-return-statements
+    """Validate and transform a field value based on its type hint.
+
+
+    :param Any value: The field value to validate
+    :param type field_type: The type hint for the field
+    :return: Validated and transformed field value
+    :rtype: Any
+    """
     origin = get_origin(field_type)
     args = get_args(field_type)
-    
+
     # Handle Optional[T] -> Union[T, None]
-    if origin is Union:
+    if origin is Union: # pylint: disable=no-else-return
         # Check if this is Optional (Union with None)
         if len(args) == 2 and type(None) in args:
             if value is None:
@@ -60,15 +78,14 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
             # Get the non-None type
             inner_type = next(arg for arg in args if arg is not type(None))
             return _validate_typeddict_field(value, inner_type)
-        else:
-            # Regular Union - try each type
-            for arg in args:
-                try:
-                    return _validate_typeddict_field(value, arg)
-                except Exception:
-                    continue
-            return value
-    
+        # Regular Union - try each type
+        for arg in args:
+            try:
+                return _validate_typeddict_field(value, arg)
+            except Exception: # pylint: disable=broad-exception-caught
+                continue
+        return value
+
     # Handle List[T]
     elif origin is list or origin is List:
         if not isinstance(value, list):
@@ -77,7 +94,7 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
             item_type = args[0]
             return [_validate_typeddict_field(item, item_type) for item in value]
         return value
-    
+
     # Handle Dict[K, V]
     elif origin is dict or origin is Dict:
         if not isinstance(value, dict):
@@ -89,25 +106,25 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
                 for k, v in value.items()
             }
         return value
-    
+
     # Handle TypedDict
     elif is_typeddict(field_type):
         return _create_runtime_typeddict_instance(value, field_type)
-    
+
     # Handle Enum
     elif isinstance(field_type, type) and issubclass(field_type, Enum):
         return _parse_enum_value(value, field_type)
-    
+
     # Handle datetime
     elif field_type is datetime.datetime:
         return _parse_datetime_string(value)
-    
+
     # Handle basic types
     elif field_type in (str, int, float, bool):
         if value is None:
             return None
         try:
-            if field_type is str:
+            if field_type is str: # pylint: disable=no-else-return
                 return str(value)
             elif field_type is int:
                 return int(value)
@@ -117,19 +134,29 @@ def _validate_typeddict_field(value: Any, field_type: type) -> Any:
                 return bool(value)
         except (ValueError, TypeError):
             return value
-    
+
     # Return as-is for unknown types
     return value
 
 
 def _snake_to_camel(snake_str: str) -> str:
-    """Convert snake_case to camelCase."""
+    """Convert snake_case to camelCase.
+    
+    :param str snake_str: Input snake_case string
+    :return: camelCase string
+    :rtype: str
+    """
     components = snake_str.split('_')
     return components[0] + ''.join(x.title() for x in components[1:])
 
 
 def _camel_to_snake(camel_str: str) -> str:
-    """Convert camelCase to snake_case."""
+    """Convert camelCase to snake_case.
+    
+    :param str camel_str: Input camelCase string
+    :return: snake_case string
+    :rtype: str
+    """
     result = []
     for i, char in enumerate(camel_str):
         if char.isupper() and i > 0:
@@ -142,13 +169,17 @@ def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str
     """Validate and transform data according to a TypedDict schema.
     
     Maps camelCase keys from service response to snake_case TypedDict fields.
+    :param Any data: Input data dictionary
+    :param type typeddict_class: The TypedDict class to validate
+    :return: Validated dictionary with keys matching the TypedDict fields
+    :rtype: Dict[str, Any]
     """
     if not isinstance(data, dict):
         data = data or {}
-    
+
     hints = get_type_hints(typeddict_class, include_extras=True)
     result = {}
-    
+
     for field_name, field_type in hints.items():
         # Try snake_case first, then camelCase
         camel_name = _snake_to_camel(field_name)
@@ -165,13 +196,13 @@ def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str
                     # Optional field
                     result[field_name] = None
             # For NotRequired fields, we don't set them if missing
-    
+
     # Include any extra fields that aren't in the TypedDict (keep original keys)
     for key, value in data.items():
         snake_key = _camel_to_snake(key)
         if key not in hints and snake_key not in hints:
             result[key] = value
-    
+
     return result
 
 
@@ -180,20 +211,25 @@ def _create_runtime_typeddict_instance(data: Any, typeddict_class: type):
     
     Maps camelCase service response keys to snake_case TypedDict keys.
     Returns a dict-like object that preserves TypedDict type information.
+    :param Any data: Input data dictionary
+    :param type typeddict_class: The TypedDict class to instantiate
+    :return: Instance of the TypedDict class
+
+    :rtype: TypedDictInstance
     """
     validated_data = _validate_typeddict_properties(data, typeddict_class)
-    
+
     # Create a custom dict subclass that identifies as the TypedDict for type checking
     class TypedDictInstance(dict):
         __annotations__ = getattr(typeddict_class, '__annotations__', {})
-        
+
         def __repr__(self):
             return f"{typeddict_class.__name__}({dict.__repr__(self)})"
-    
+
     # Set class metadata to match the TypedDict
     TypedDictInstance.__name__ = typeddict_class.__name__
     TypedDictInstance.__module__ = getattr(typeddict_class, '__module__', __name__)
-    
+
     # Create and return the instance
     return TypedDictInstance(validated_data)
 
@@ -281,12 +317,13 @@ class BlobContainerPathParams(TypedDict):
     resource_group_name: str
     storage_account_name: str
     container_name: NotRequired[Optional[str]] # optional because not needed for list operation
-    maxpagesize: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Specified maximum number of items per page
+    # For LIST OPERATIONS Optional. Specified maximum number of items per page
+    maxpagesize: NotRequired[Optional[str]]
     filter: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Filter expression for the list operation
     include: NotRequired[Optional[str]]  # For LIST OPERATIONS Optional. Additional data to include (e.g., "deleted")
 
 
-class BlobContainerAction(str, Enum):
+class BlobContainerAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Available actions for BlobContainer resources."""
     SET_LEGAL_HOLD = "setLegalHold"
     CLEAR_LEGAL_HOLD = "clearLegalHold"
@@ -356,7 +393,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         ),
     }
 
-    
+
     @classmethod
     def get_operation_url(
         cls,
@@ -364,7 +401,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         subscription_id: str,
         url_params: BlobContainerPathParams,
     ) -> str:
-        if operation == "read":
+        if operation == "read": # pylint: disable=no-else-return
             return cls._read_url_template.format(
                 subscriptionId=subscription_id,
                 resourceGroupName=url_params["resource_group_name"],
@@ -398,8 +435,9 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
                 resourceGroupName=url_params["resource_group_name"],
                 storageAccountName=url_params["storage_account_name"],
             )
-        raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
-    
+        else:
+            raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
+
     @classmethod
     def get_action_url(
         cls,
@@ -409,35 +447,39 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
     ) -> str:
         """Get the URL for a resource action (POST operation).
         
-        :param action: The action name (e.g., 'setLegalHold', 'lease', 'migrate')
-        :param subscription_id: Subscription identifier
-        :param url_params: URL parameters required by the resource type
+        :param str action: The action name (e.g., 'setLegalHold', 'lease', 'migrate')
+        :param str subscription_id: Subscription identifier
+        :param BlobContainerPathParams url_params: URL parameters required by the resource type
         :return: Formatted URL for the action
+        :rtype: str
         """
         if action not in cls._action_url_templates:
-            raise ValueError(f"Unsupported action '{action}' for {cls.__name__}. Available actions: {list(cls._action_url_templates.keys())}")
-        
+            raise ValueError(f"Unsupported action '{action}' for {cls.__name__}. "
+                             f"Available actions: {list(cls._action_url_templates.keys())}")
+
         return cls._action_url_templates[action].format(
             subscriptionId=subscription_id,
             resourceGroupName=url_params["resource_group_name"],
             storageAccountName=url_params["storage_account_name"],
             containerName=url_params.get("container_name", ""),
         )
-    
+
     @classmethod
     def get_available_actions(cls) -> List[str]:
         """Get list of available actions for this resource type.
         
         :return: List of action names
+        :rtype: List[str]
         """
         return [action.value for action in cls.ACTIONS]
-    
+
     @classmethod
     def set_legal_hold_body(cls, tags: List[str]) -> Dict[str, Any]:
         """Create body for setLegalHold action.
         
-        :param tags: Array of tag strings to set on the container
+        :param list[str] tags: Array of tag strings to set on the container
         :return: Request body dictionary
+        :rtype: Dict[str, Any]
         
         Example:
             body = BlobContainer.set_legal_hold_body(tags=["tag1", "tag2"])
@@ -445,13 +487,14 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         # Azure API expects tags as objects with 'tag' property
         tag_objects = [{"tag": tag} for tag in tags]
         return {"tags": tag_objects}
-    
+
     @classmethod
     def clear_legal_hold_body(cls, tags: List[str]) -> Dict[str, Any]:
         """Create body for clearLegalHold action.
         
-        :param tags: Array of tag strings to clear from the container
+        :param list[str] tags: Array of tag strings to clear from the container
         :return: Request body dictionary
+        :rtype: Dict[str, Any]
         
         Example:
             body = BlobContainer.clear_legal_hold_body(tags=["tag1"])
@@ -459,7 +502,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         # Azure API expects tags as objects with 'tag' property
         tag_objects = [{"tag": tag} for tag in tags]
         return {"tags": tag_objects}
-    
+
     @classmethod
     def lease_body(
         cls,
@@ -471,12 +514,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
     ) -> Dict[str, Any]:
         """Create body for lease action.
         
-        :param action: Lease action - "Acquire", "Release", "Renew", "Break", or "Change"
-        :param lease_id: Required for Release, Renew, Change
-        :param break_period: Optional for Break action
-        :param lease_duration: Required for Acquire (-1 for infinite, or 15-60 seconds)
-        :param proposed_lease_id: Optional for Acquire, required for Change
+        :param str action: Lease action - "Acquire", "Release", "Renew", "Break", or "Change"
+        :param str or None lease_id: Required for Release, Renew, Change
+        :param int or None break_period: Optional for Break action
+        :param int or None lease_duration: Required for Acquire (-1 for infinite, or 15-60 seconds)
+        :param str or None proposed_lease_id: Optional for Acquire, required for Change
         :return: Request body dictionary
+        :rtype: Dict[str, Any]
         
         Examples:
             # Acquire a 60-second lease
@@ -486,7 +530,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             body = BlobContainer.lease_body(action="Release", lease_id="lease-id-here")
         """
         body: Dict[str, Any] = {"action": action}
-        
+
         if lease_id is not None:
             body["leaseId"] = lease_id
         if break_period is not None:
@@ -495,9 +539,9 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             body["leaseDuration"] = lease_duration
         if proposed_lease_id is not None:
             body["proposedLeaseId"] = proposed_lease_id
-        
+
         return body
-    
+
     @classmethod
     def migrate_body(cls) -> None:
         """Create body for migrate action (object-level WORM migration).
@@ -508,7 +552,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             body = BlobContainer.migrate_body()  # Returns None
         """
         return None
-    
+
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "BlobContainer":
         properties_data = data_dict.get("properties", {})
@@ -518,7 +562,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
 
         instance = cls(
             api_version=kwargs.get("api_version", "2025-06-01"),
-            properties=properties,  
+            properties=properties,
         )
 
         instance.id = data_dict.get("id")
@@ -537,13 +581,13 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         super().__init__(**kwargs)
         self.api_version = api_version
         self.properties = properties
-        
+
 
     def to_dict(self) -> Dict[str, Any]:
         # Serialize container properties for create/update requests
         # Convert snake_case Python properties to camelCase JSON properties
         camel_case_properties = {}
-        
+
         # Mapping of Python snake_case to Azure API camelCase
         property_name_mapping = {
             "public_access": "publicAccess",
@@ -567,18 +611,18 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             "enable_nfs_v3_root_squash": "enableNfsV3RootSquash",
             "enable_nfs_v3_all_squash": "enableNfsV3AllSquash",
         }
-        
+
         if self.properties is not None:
             for python_name, value in self.properties.items():
                 camel_name = property_name_mapping.get(python_name, python_name)
                 camel_case_properties[camel_name] = value
-        
+
         return {
             "properties": camel_case_properties,
         }
 
     @classmethod
-    def build_instance_path_arguments_from_params(
+    def build_instance_path_arguments_from_params( # pylint: disable=name-too-long
         cls,
         *,
         subscription_id: str,
@@ -589,9 +633,10 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         Base resources only use subscription ID. Subclasses should override when
         they need additional path arguments.
 
-        :param subscription_id: Subscription identifier.
-        :param url_params: URL parameters required by the resource type.
+        :keyword subscription_id: Subscription identifier.
+        :keyword url_params: URL parameters required by the resource type.
         :return: Dictionary of path arguments.
+        :rtype: Dict[str, Any]
         """
         container_name = url_params.get("container_name")
         if container_name is None:
