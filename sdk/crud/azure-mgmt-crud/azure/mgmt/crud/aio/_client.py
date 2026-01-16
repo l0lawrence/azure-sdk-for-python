@@ -19,7 +19,6 @@ from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.mgmt.core import ARMPipelineClient
 from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
 
-from . import models as _models
 from .models import ResourceType
 from ._configuration import CrudConfiguration
 from ._serialization import Serializer
