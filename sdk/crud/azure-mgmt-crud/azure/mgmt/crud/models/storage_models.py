@@ -15,6 +15,72 @@ from azure.core import CaseInsensitiveEnumMeta
 from .models import ResourceType, ResourceId
 
 
+class StorageAccountSkuName(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The SKU name for the storage account."""
+    STANDARD_LRS = "Standard_LRS"
+    STANDARD_GRS = "Standard_GRS"
+    STANDARD_RAGRS = "Standard_RAGRS"
+    STANDARD_ZRS = "Standard_ZRS"
+    PREMIUM_LRS = "Premium_LRS"
+    PREMIUM_ZRS = "Premium_ZRS"
+    STANDARD_GZRS = "Standard_GZRS"
+    STANDARD_RAGZRS = "Standard_RAGZRS"
+
+
+class StorageAccountKind(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The kind of storage account."""
+    STORAGE = "Storage"
+    STORAGE_V2 = "StorageV2"
+    BLOB_STORAGE = "BlobStorage"
+    FILE_STORAGE = "FileStorage"
+    BLOCK_BLOB_STORAGE = "BlockBlobStorage"
+
+
+class AccessTier(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The access tier for the storage account."""
+    HOT = "Hot"
+    COOL = "Cool"
+
+
+class ProvisioningState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """The provisioning state of the storage account."""
+    CREATING = "Creating"
+    RESOLVING_DNS = "ResolvingDNS"
+    SUCCEEDED = "Succeeded"
+
+
+class StorageAccountSku(TypedDict):
+    """SKU of the storage account."""
+    name: Union[str, StorageAccountSkuName]
+    tier: NotRequired[Optional[str]]
+
+
+class StorageAccountProperties(TypedDict):
+    """Properties of a Storage Account resource."""
+    provisioningState: NotRequired[Optional[Union[str, ProvisioningState]]]
+    primaryEndpoints: NotRequired[Optional[Dict[str, str]]]
+    primaryLocation: NotRequired[Optional[str]]
+    statusOfPrimary: NotRequired[Optional[str]]
+    secondaryLocation: NotRequired[Optional[str]]
+    statusOfSecondary: NotRequired[Optional[str]]
+    creationTime: NotRequired[Optional[str]]
+    customDomain: NotRequired[Optional[Dict[str, Any]]]
+    encryption: NotRequired[Optional[Dict[str, Any]]]
+    accessTier: NotRequired[Optional[Union[str, AccessTier]]]
+    networkAcls: NotRequired[Optional[Dict[str, Any]]]
+    isHnsEnabled: NotRequired[Optional[bool]]
+    supportsHttpsTrafficOnly: NotRequired[Optional[bool]]
+    minimumTlsVersion: NotRequired[Optional[str]]
+    allowBlobPublicAccess: NotRequired[Optional[bool]]
+    allowSharedKeyAccess: NotRequired[Optional[bool]]
+
+
+class StorageAccountPathParams(TypedDict):
+    """URL parameters required to address a storage account."""
+    resourceGroupName: str
+    accountName: str
+
+
 class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """The ImmutabilityPolicy state defines the mode of the policy. Disabled state disables the
     policy, Unlocked state allows increase and decrease of immutability retention time and also
@@ -434,3 +500,380 @@ class BlobContainer(ResourceType[BlobContainerProperties]):
         return {
             "properties": self.properties or {},
         }
+
+
+class StorageAccountResourceId(ResourceId):
+    """Resource identity for Storage Account resources.
+    
+    Encapsulates the identity information required to address a specific
+    storage account instance within Azure.
+    """
+    
+    # URL templates for storage account operations
+    _read_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{accountName}"
+    )
+
+    _create_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{accountName}"
+    )
+
+    _delete_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{accountName}"
+    )
+
+    _update_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts/{accountName}"
+    )
+
+    _list_url_template = (
+        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+        "providers/Microsoft.Storage/storageAccounts"
+    )
+    
+    # Action URL templates (POST operations)
+    _action_url_templates = {
+        "listKeys": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{accountName}/listKeys"
+        ),
+        "regenerateKey": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{accountName}/regenerateKey"
+        ),
+        "listAccountSas": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{accountName}/listAccountSas"
+        ),
+        "listServiceSas": (
+            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
+            "providers/Microsoft.Storage/storageAccounts/{accountName}/listServiceSas"
+        ),
+    }
+    
+    def __init__(
+        self,
+        *,
+        resource_group_name: str,
+        account_name: str,
+    ) -> None:
+        """Initialize a StorageAccountResourceId.
+        
+        :param resource_group_name: Name of the resource group
+        :type resource_group_name: str
+        :param account_name: Name of the storage account
+        :type account_name: str
+        """
+        self.resource_group_name = resource_group_name
+        self.account_name = account_name
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to StorageAccountPathParams TypedDict.
+        
+        :return: PathParams dictionary
+        :rtype: Dict[str, Any]
+        """
+        return {
+            "resourceGroupName": self.resource_group_name,
+            "accountName": self.account_name,
+        }
+    
+    @classmethod
+    def from_dict(cls, params: Dict[str, Any]) -> "StorageAccountResourceId":
+        """Create from StorageAccountPathParams TypedDict.
+        
+        :param params: URL parameters dictionary
+        :type params: Dict[str, Any]
+        :return: New StorageAccountResourceId instance
+        :rtype: StorageAccountResourceId
+        """
+        return cls(
+            resource_group_name=params["resourceGroupName"],
+            account_name=params["accountName"],
+        )
+    
+    @classmethod
+    def from_resource_id(cls, resource_id: str) -> "StorageAccountResourceId":
+        """Parse an ARM resource ID string for a storage account.
+        
+        Expected format:
+        /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{accountName}
+        
+        :param resource_id: Full ARM resource ID string
+        :type resource_id: str
+        :return: New StorageAccountResourceId instance
+        :rtype: StorageAccountResourceId
+        :raises ValueError: If the resource ID format is invalid
+        """
+        pattern = (
+            r"^/subscriptions/[^/]+/resourceGroups/(?P<resourceGroupName>[^/]+)/"
+            r"providers/Microsoft\.Storage/storageAccounts/(?P<accountName>[^/]+)$"
+        )
+        
+        match = re.match(pattern, resource_id, re.IGNORECASE)
+        if not match:
+            raise ValueError(
+                f"Invalid storage account resource ID format: {resource_id}. "
+                f"Expected format: /subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroupName}}/"
+                f"providers/Microsoft.Storage/storageAccounts/{{accountName}}"
+            )
+        
+        return cls(
+            resource_group_name=match.group("resourceGroupName"),
+            account_name=match.group("accountName"),
+        )
+    
+    def build_path_arguments(self, subscription_id: str) -> Dict[str, Any]:
+        """Build path arguments dictionary for URL formatting.
+        
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :return: Dictionary of path arguments
+        :rtype: Dict[str, Any]
+        """
+        return {
+            "subscriptionId": subscription_id,
+            "resourceGroupName": self.resource_group_name,
+            "accountName": self.account_name,
+        }
+    
+    @classmethod
+    def get_operation_url(
+        cls,
+        operation: str,
+        subscription_id: str,
+        resource_id: "ResourceId",
+    ) -> str:
+        """Get the URL template for the given operation.
+        
+        :param operation: Operation name
+        :type operation: str
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :param resource_id: ResourceId instance
+        :type resource_id: ResourceId
+        :return: URL template string
+        :rtype: str
+        :raises ValueError: If operation is not supported
+        """
+        if operation == "read":
+            return cls._read_url_template
+        elif operation == "create":
+            return cls._create_url_template
+        elif operation == "delete":
+            return cls._delete_url_template
+        elif operation == "update":
+            return cls._update_url_template
+        elif operation == "list":
+            return cls._list_url_template
+        else:
+            raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
+
+
+class StorageAccountAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Available actions for StorageAccount resources."""
+    LIST_KEYS = "listKeys"
+    REGENERATE_KEY = "regenerateKey"
+    LIST_ACCOUNT_SAS = "listAccountSas"
+    LIST_SERVICE_SAS = "listServiceSas"
+
+
+class StorageAccount(ResourceType[StorageAccountProperties]):
+    """A Storage Account resource."""
+
+    # API version
+    api_version = "2025-06-01"
+
+    # Available actions
+    ACTIONS = StorageAccountAction
+
+    @classmethod
+    def get_available_actions(cls) -> List[str]:
+        """Get list of available actions for this resource type.
+        
+        :return: List of action names
+        :rtype: List[str]
+        """
+        return [action.value for action in cls.ACTIONS]
+
+    @classmethod
+    def list_keys_body(cls) -> None:
+        """Create body for listKeys action.
+        
+        :return: None (listKeys action has no body)
+        
+        Example:
+            body = StorageAccount.list_keys_body()  # Returns None
+        """
+        return None
+
+    @classmethod
+    def regenerate_key_body(cls, key_name: str) -> Dict[str, Any]:
+        """Create body for regenerateKey action.
+        
+        :param str key_name: The name of the storage account key to regenerate (e.g., "key1", "key2")
+        :return: Request body dictionary
+        :rtype: Dict[str, Any]
+        
+        Example:
+            body = StorageAccount.regenerate_key_body(key_name="key1")
+        """
+        return {"keyName": key_name}
+
+    @classmethod
+    def list_account_sas_body(
+        cls,
+        services: str,
+        resource_types: str,
+        permissions: str,
+        expiry: str,
+        start: Optional[str] = None,
+        ip_address_or_range: Optional[str] = None,
+        protocols: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Create body for listAccountSas action.
+        
+        :param str services: The signed services (Blob, Queue, Table, File). E.g., "bqtf"
+        :param str resource_types: The signed resource types (Service, Container, Object). E.g., "sco"
+        :param str permissions: The signed permissions (Read, Write, Delete, List, Add, Create, Update, Process). E.g., "rwdlacup"
+        :param str expiry: The time at which the SAS becomes invalid (ISO 8601 format)
+        :param str or None start: Optional. The time at which the SAS becomes valid (ISO 8601 format)
+        :param str or None ip_address_or_range: Optional. IP address or range of addresses. E.g., "168.1.5.60-168.1.5.70"
+        :param str or None protocols: Optional. The protocol permitted ("https" or "https,http")
+        :return: Request body dictionary
+        :rtype: Dict[str, Any]
+        
+        Example:
+            body = StorageAccount.list_account_sas_body(
+                services="b",
+                resource_types="sco",
+                permissions="rl",
+                expiry="2026-01-22T00:00:00Z"
+            )
+        """
+        body: Dict[str, Any] = {
+            "signedServices": services,
+            "signedResourceTypes": resource_types,
+            "signedPermission": permissions,
+            "signedExpiry": expiry,
+        }
+        
+        if start is not None:
+            body["signedStart"] = start
+        if ip_address_or_range is not None:
+            body["signedIp"] = ip_address_or_range
+        if protocols is not None:
+            body["signedProtocol"] = protocols
+        
+        return body
+
+    @classmethod
+    def list_service_sas_body(
+        cls,
+        canonicalized_resource: str,
+        permissions: str,
+        expiry: str,
+        resource: Optional[str] = None,
+        start: Optional[str] = None,
+        ip_address_or_range: Optional[str] = None,
+        protocols: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Create body for listServiceSas action.
+        
+        :param str canonicalized_resource: The canonical path to the signed resource
+        :param str permissions: The signed permissions (Read, Write, Delete, List, Add, Create). E.g., "rwdlac"
+        :param str expiry: The time at which the SAS becomes invalid (ISO 8601 format)
+        :param str or None resource: Optional. The signed resource type ("b" for blob, "c" for container, "f" for file, "s" for share)
+        :param str or None start: Optional. The time at which the SAS becomes valid (ISO 8601 format)
+        :param str or None ip_address_or_range: Optional. IP address or range of addresses
+        :param str or None protocols: Optional. The protocol permitted ("https" or "https,http")
+        :return: Request body dictionary
+        :rtype: Dict[str, Any]
+        
+        Example:
+            body = StorageAccount.list_service_sas_body(
+                canonicalized_resource="/blob/myaccount/mycontainer",
+                permissions="rl",
+                expiry="2026-01-22T00:00:00Z",
+                resource="c"
+            )
+        """
+        body: Dict[str, Any] = {
+            "canonicalizedResource": canonicalized_resource,
+            "signedPermission": permissions,
+            "signedExpiry": expiry,
+        }
+        
+        if resource is not None:
+            body["signedResource"] = resource
+        if start is not None:
+            body["signedStart"] = start
+        if ip_address_or_range is not None:
+            body["signedIp"] = ip_address_or_range
+        if protocols is not None:
+            body["signedProtocol"] = protocols
+        
+        return body
+
+    @classmethod
+    def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "StorageAccount":
+        properties: StorageAccountProperties = data_dict.get("properties", {})  # type: ignore[assignment]
+
+        instance = cls(
+            api_version=kwargs.get("api_version", "2025-06-01"),
+            sku=data_dict.get("sku"),
+            kind=data_dict.get("kind"),
+            location=data_dict.get("location"),
+            tags=data_dict.get("tags"),
+            properties=properties,
+        )
+
+        instance.id = data_dict.get("id")
+        instance.name = data_dict.get("name")
+        instance.type = data_dict.get("type")
+
+        return instance
+
+    def __init__(
+        self,
+        *,
+        api_version: str = "2025-06-01",
+        sku: Optional[StorageAccountSku] = None,
+        kind: Optional[Union[str, StorageAccountKind]] = None,
+        location: Optional[str] = None,
+        tags: Optional[Dict[str, str]] = None,
+        properties: Optional[StorageAccountProperties] = None,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(**kwargs)
+        self.api_version = api_version
+        self.sku = sku
+        self.kind = kind
+        self.location = location
+        self.tags = tags
+        self.properties = properties
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize storage account for create/update requests.
+        
+        :return: Serialized dictionary
+        :rtype: Dict[str, Any]
+        """
+        result: Dict[str, Any] = {}
+        
+        if self.sku is not None:
+            result["sku"] = self.sku
+        if self.kind is not None:
+            result["kind"] = self.kind
+        if self.location is not None:
+            result["location"] = self.location
+        if self.tags is not None:
+            result["tags"] = self.tags
+        if self.properties is not None:
+            result["properties"] = self.properties
+        
+        return result

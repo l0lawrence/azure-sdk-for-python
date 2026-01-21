@@ -33,7 +33,7 @@ def main():
     client.create(
         resource_id=resource_id,
         resource_type=BlobContainer(
-            properties=BlobContainerProperties(has_immutability_policy=False)
+            properties=BlobContainerProperties(hasImmutabilityPolicy=False)
         )
     )
 

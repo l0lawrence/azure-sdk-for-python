@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobContainerResourceId
+from azure.mgmt.crud.models import BlobContainer, StorageAccountResourceId
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -24,10 +24,9 @@ def main():
     logger.info(f"Initialized CrudClient {client}")
 
     # Create resource ID for listing containers in a storage account
-    resource_id = BlobContainerResourceId(
+    resource_id = StorageAccountResourceId(
         resource_group_name=RESOURCE_GROUP,
-        storage_account_name=STORAGE_ACCOUNT_NAME,
-        container_name="",  # Required but can be empty for list operations
+        account_name=STORAGE_ACCOUNT_NAME,
     )
 
     response = client.list(
