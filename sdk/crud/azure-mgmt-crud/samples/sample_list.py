@@ -24,15 +24,15 @@ def main():
     logger.info(f"Initialized CrudClient {client}")
 
     # Create resource ID for listing containers in a storage account
-    # Note: container_name is not specified for list operations
     resource_id = BlobContainerResourceId(
         resource_group_name=RESOURCE_GROUP,
         storage_account_name=STORAGE_ACCOUNT_NAME,
+        container_name="",  # Required but can be empty for list operations
     )
 
     response = client.list(
         resource_id=resource_id,
-        resource_type=BlobContainer(),
+        resource_type=BlobContainer,
         maxpagesize="2",
     )
 

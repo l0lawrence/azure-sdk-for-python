@@ -155,12 +155,12 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str") # pylint: disable=no-value-for-parameter
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str") # pylint: disable=specify-parameter-names-in-call
-        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str") # pylint: disable=specify-parameter-names-in-call
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
 
         request = HttpRequest("GET", _url, params=_params, headers=_headers)
         response = self._send_request(request, stream=True, **kwargs)
@@ -218,13 +218,13 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint: disable=no-value-for-parameter
-        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint: disable=no-value-for-parameter
-        _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj=content_type, type="str") # pylint: disable=no-value-for-parameter
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
 
         # Serialize the resource to JSON for the request body
         body_content = json.dumps(resource_type.to_dict())
@@ -278,11 +278,11 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
 
         request = HttpRequest("DELETE", _url, params=_params, headers=_headers)
         _stream = False
@@ -337,13 +337,13 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
-        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint:disable=no-value-for-parameter
-        _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj=content_type, type="str") # pylint:disable=no-value-for-parameter
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
 
         # Serialize the resource to JSON for the request body
         body_content = json.dumps(resource_type.to_dict())
@@ -419,21 +419,21 @@ class CrudClient:
                 # Serialize path arguments for URL safety
                 serialized_path_args = {}
                 for key, value in path_arguments.items():
-                    serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
+                    serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
                 _url = url_template.format(**serialized_path_args)
 
-                _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
+                _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
 
                 # Add optional query parameters
                 if maxpagesize is not None:
-                    _params["$maxpagesize"] = _SERIALIZER.query(name="maxpagesize", obj=maxpagesize, type="str") # pylint:disable=no-value-for-parameter
+                    _params["$maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "str")
                 if filter is not None:
-                    _params["$filter"] = _SERIALIZER.query(name="filter", obj=filter, type="str") # pylint:disable=no-value-for-parameter
+                    _params["$filter"] = _SERIALIZER.query("filter", filter, "str")
                 if include is not None:
-                    _params["$include"] = _SERIALIZER.query(name="include", obj=include, type="str") # pylint:disable=no-value-for-parameter
+                    _params["$include"] = _SERIALIZER.query("include", include, "str")
 
-                _headers["Accept"] = _SERIALIZER.header(name="accept", obj="application/json", type="str") # pylint:disable=no-value-for-parameter
+                _headers["Accept"] = _SERIALIZER.header("accept", "application/json", "str")
 
                 _request = HttpRequest("GET", _url, params=_params, headers=_headers, **kwargs)
                 _request.url = self._client.format_url(_request.url)
@@ -475,7 +475,7 @@ class CrudClient:
         def get_next(next_link=None):
             _request = prepare_request(next_link)
             _stream = False
-            pipeline_response = self._client.pipeline.run(  # pylint: disable=protected-access,no-member #TODO: investigate no-member
+            pipeline_response = self._client._pipeline.run(
                 _request, stream=_stream, **kwargs
             )
             response = pipeline_response.http_response
@@ -537,17 +537,17 @@ class CrudClient:
         # Serialize path arguments for URL safety
         serialized_path_args = {}
         for key, value in path_arguments.items():
-            serialized_path_args[key] = _SERIALIZER.url(name=key.lower(), obj=value, type="str") # pylint: disable=no-value-for-parameter
+            serialized_path_args[key] = _SERIALIZER.url(key.lower(), value, "str")
 
         _url = url_template.format(**serialized_path_args)
 
-        _params["api-version"] = _SERIALIZER.query(name="api_version", obj=api_version, type="str") # pylint:disable=no-value-for-parameter
-        _headers["Accept"] = _SERIALIZER.header(name="accept", obj=accept, type="str") # pylint:disable=no-value-for-parameter
+        _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+        _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
 
         # Prepare request body if provided
         body_content = None
         if body is not None:
-            _headers["Content-Type"] = _SERIALIZER.header(name="content_type", obj="application/json", type="str") # pylint:disable=no-value-for-parameter
+            _headers["Content-Type"] = _SERIALIZER.header("content_type", "application/json", "str")
             body_content = json.dumps(body)
 
         request = HttpRequest("POST", _url, params=_params, headers=_headers, content=body_content)
