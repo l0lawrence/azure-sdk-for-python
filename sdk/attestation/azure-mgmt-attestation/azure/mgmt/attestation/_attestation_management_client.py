@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
 
 
-class AttestationManagementClient:  # pylint: disable=client-accepts-api-version-keyword
+class AttestationMntClient:  # pylint: disable=client-accepts-api-version-keyword
     """Various APIs for managing resources in attestation service. This primarily encompasses
     per-provider management.
 
