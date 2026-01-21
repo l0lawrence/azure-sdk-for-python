@@ -7,232 +7,12 @@
 # --------------------------------------------------------------------------
 
 import re
-import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args, Type
-from typing_extensions import TypedDict, NotRequired, is_typeddict
+from typing import Any, Dict, List, Optional, Union
+from typing_extensions import TypedDict, NotRequired
 from azure.core import CaseInsensitiveEnumMeta
 
 from .models import ResourceType, ResourceId
-
-
-# --------------------------------------------------------------------------
-# Runtime TypedDict validation helpers
-# --------------------------------------------------------------------------
-
-def _parse_datetime_string(value: Any) -> Optional[Union[str,datetime.datetime]]:
-    """Parse datetime from ISO string.
-    
-    :param Any value: The value to parse
-    :return: Parsed datetime or original value if parsing fails
-    :rtype: Optional[Union[str,datetime.datetime]]
-    """
-    if value is None or isinstance(value, datetime.datetime):
-        return value
-    if isinstance(value, str):
-        try:
-            return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
-        except Exception: # pylint: disable=broad-exception-caught
-            return value
-    return value
-
-
-def _parse_enum_value(value: Any, enum_cls: type) -> Any:
-    """Parse enum value from string.
-    
-    :param Any value: The value to parse
-    :param type enum_cls: The Enum class to parse into
-    :return: Parsed enum value or original value if parsing fails
-    :rtype: Any
-    """
-    if value is None or isinstance(value, enum_cls):
-        return value
-    if isinstance(value, str) and issubclass(enum_cls, Enum):
-        try:
-            return enum_cls(value)
-        except (ValueError, KeyError):
-            try:
-                return enum_cls[value]
-            except (ValueError, KeyError):
-                return value
-    return value
-
-
-def _validate_typeddict_field(value: Any, field_type: type) -> Any: # pylint: disable=too-many-branches,too-many-return-statements
-    """Validate and transform a field value based on its type hint.
-
-
-    :param Any value: The field value to validate
-    :param type field_type: The type hint for the field
-    :return: Validated and transformed field value
-    :rtype: Any
-    """
-    origin = get_origin(field_type)
-    args = get_args(field_type)
-
-    # Handle Optional[T] -> Union[T, None]
-    if origin is Union: # pylint: disable=no-else-return
-        # Check if this is Optional (Union with None)
-        if len(args) == 2 and type(None) in args:
-            if value is None:
-                return None
-            # Get the non-None type
-            inner_type = next(arg for arg in args if arg is not type(None))
-            return _validate_typeddict_field(value, inner_type)
-        # Regular Union - try each type
-        for arg in args:
-            try:
-                return _validate_typeddict_field(value, arg)
-            except Exception: # pylint: disable=broad-exception-caught
-                continue
-        return value
-
-    # Handle List[T]
-    elif origin is list or origin is List:
-        if not isinstance(value, list):
-            return value
-        if args:
-            item_type = args[0]
-            return [_validate_typeddict_field(item, item_type) for item in value]
-        return value
-
-    # Handle Dict[K, V]
-    elif origin is dict or origin is Dict:
-        if not isinstance(value, dict):
-            return value
-        if len(args) >= 2:
-            key_type, value_type = args[0], args[1]
-            return {
-                _validate_typeddict_field(k, key_type): _validate_typeddict_field(v, value_type)
-                for k, v in value.items()
-            }
-        return value
-
-    # Handle TypedDict
-    elif is_typeddict(field_type):
-        return _create_runtime_typeddict_instance(value, field_type)
-
-    # Handle Enum
-    elif isinstance(field_type, type) and issubclass(field_type, Enum):
-        return _parse_enum_value(value, field_type)
-
-    # Handle datetime
-    elif field_type is datetime.datetime:
-        return _parse_datetime_string(value)
-
-    # Handle basic types
-    elif field_type in (str, int, float, bool):
-        if value is None:
-            return None
-        try:
-            if field_type is str: # pylint: disable=no-else-return
-                return str(value)
-            elif field_type is int:
-                return int(value)
-            elif field_type is float:
-                return float(value)
-            elif field_type is bool:
-                return bool(value)
-        except (ValueError, TypeError):
-            return value
-
-    # Return as-is for unknown types
-    return value
-
-
-def _snake_to_camel(snake_str: str) -> str:
-    """Convert snake_case to camelCase.
-    
-    :param str snake_str: Input snake_case string
-    :return: camelCase string
-    :rtype: str
-    """
-    components = snake_str.split('_')
-    return components[0] + ''.join(x.title() for x in components[1:])
-
-
-def _camel_to_snake(camel_str: str) -> str:
-    """Convert camelCase to snake_case.
-    
-    :param str camel_str: Input camelCase string
-    :return: snake_case string
-    :rtype: str
-    """
-    result = []
-    for i, char in enumerate(camel_str):
-        if char.isupper() and i > 0:
-            result.append('_')
-        result.append(char.lower())
-    return ''.join(result)
-
-
-def _validate_typeddict_properties(data: Any, typeddict_class: type) -> Dict[str, Any]:
-    """Validate and transform data according to a TypedDict schema.
-    
-    Maps camelCase keys from service response to snake_case TypedDict fields.
-    :param Any data: Input data dictionary
-    :param type typeddict_class: The TypedDict class to validate
-    :return: Validated dictionary with keys matching the TypedDict fields
-    :rtype: Dict[str, Any]
-    """
-    if not isinstance(data, dict):
-        data = data or {}
-
-    hints = get_type_hints(typeddict_class, include_extras=True)
-    result = {}
-
-    for field_name, field_type in hints.items():
-        # Try snake_case first, then camelCase
-        camel_name = _snake_to_camel(field_name)
-        if field_name in data:
-            result[field_name] = _validate_typeddict_field(data[field_name], field_type)
-        elif camel_name in data:
-            result[field_name] = _validate_typeddict_field(data[camel_name], field_type)
-        else:
-            # Check if field is required (not Optional and not NotRequired)
-            origin = get_origin(field_type)
-            if origin is Union:
-                args = get_args(field_type)
-                if len(args) == 2 and type(None) in args:
-                    # Optional field
-                    result[field_name] = None
-            # For NotRequired fields, we don't set them if missing
-
-    # Include any extra fields that aren't in the TypedDict (keep original keys)
-    for key, value in data.items():
-        snake_key = _camel_to_snake(key)
-        if key not in hints and snake_key not in hints:
-            result[key] = value
-
-    return result
-
-
-def _create_runtime_typeddict_instance(data: Any, typeddict_class: type):
-    """Create a runtime instance that behaves like the TypedDict class.
-    
-    Maps camelCase service response keys to snake_case TypedDict keys.
-    Returns a dict-like object that preserves TypedDict type information.
-    :param Any data: Input data dictionary
-    :param type typeddict_class: The TypedDict class to instantiate
-    :return: Instance of the TypedDict class
-
-    :rtype: TypedDictInstance
-    """
-    validated_data = _validate_typeddict_properties(data, typeddict_class)
-
-    # Create a custom dict subclass that identifies as the TypedDict for type checking
-    class TypedDictInstance(dict):
-        __annotations__ = getattr(typeddict_class, '__annotations__', {})
-
-        def __repr__(self):
-            return f"{typeddict_class.__name__}({dict.__repr__(self)})"
-
-    # Set class metadata to match the TypedDict
-    TypedDictInstance.__name__ = typeddict_class.__name__
-    TypedDictInstance.__module__ = getattr(typeddict_class, '__module__', __name__)
-
-    # Create and return the instance
-    return TypedDictInstance(validated_data)
 
 
 class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -250,28 +30,28 @@ class AccountImmutabilityPolicyState(str, Enum, metaclass=CaseInsensitiveEnumMet
 
 class ImmutabilityPolicyProperties(TypedDict):
     """Properties of an Immutability Policy."""
-    immutability_period_since_creation_in_days: Optional[int]
+    immutabilityPeriodSinceCreationInDays: Optional[int]
     state: Optional[Union[str,AccountImmutabilityPolicyState]]
-    allow_protected_append_writes: Optional[bool]
+    allowProtectedAppendWrites: Optional[bool]
 
 class TagProperty(TypedDict):
     """Tag property of a Legal Hold."""
     tag: Optional[str]
-    timestamp: Optional[datetime.datetime]
-    object_identifier: Optional[str]
-    tenant_id: Optional[str]
+    timestamp: Optional[str]
+    objectIdentifier: Optional[str]
+    tenantId: Optional[str]
     upn: Optional[str]
 
 class ProtectedAppendWritesHistory(TypedDict):
     """Protected append writes history."""
-    allow_protected_append_writes_all: Optional[bool]
-    timestamp: Optional[datetime.datetime]
+    allowProtectedAppendWritesAll: Optional[bool]
+    timestamp: Optional[str]
 
 class LegalHoldProperties(TypedDict):
     """Properties of a Legal Hold."""
-    has_legal_hold: Optional[bool]
+    hasLegalHold: Optional[bool]
     tags: Optional[List[TagProperty]]
-    protected_append_writes_history: Optional[ProtectedAppendWritesHistory]
+    protectedAppendWritesHistory: Optional[ProtectedAppendWritesHistory]
 
 class MigrationState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """This property denotes the container level immutability to object level immutability migration
@@ -284,43 +64,43 @@ class MigrationState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 class ImmutableStorageWithVersioning(TypedDict):
     """Immutable storage with versioning properties."""
     enabled: Optional[bool]
-    time_stamp: Optional[datetime.datetime]
-    migration_state: Optional[Union[str, MigrationState]]
+    timeStamp: Optional[str]
+    migrationState: Optional[Union[str, MigrationState]]
 
 
 class BlobContainerProperties(TypedDict):
     """Properties of a Blob Container resource."""
-    public_access: NotRequired[Optional[str]]
-    last_modified_time: NotRequired[Optional[str]]
+    publicAccess: NotRequired[Optional[str]]
+    lastModifiedTime: NotRequired[Optional[str]]
     etag: NotRequired[Optional[str]]
     version: NotRequired[Optional[str]]
     deleted: NotRequired[Optional[bool]]
-    deleted_time: NotRequired[Optional[str]]
-    remaining_retention_days: NotRequired[Optional[int]]
-    default_encryption_scope: NotRequired[Optional[str]]
-    deny_encryption_scope_override: NotRequired[Optional[bool]]
-    lease_status: NotRequired[Optional[str]]
-    lease_state: NotRequired[Optional[str]]
-    lease_duration: NotRequired[Optional[str]]
+    deletedTime: NotRequired[Optional[str]]
+    remainingRetentionDays: NotRequired[Optional[int]]
+    defaultEncryptionScope: NotRequired[Optional[str]]
+    denyEncryptionScopeOverride: NotRequired[Optional[bool]]
+    leaseStatus: NotRequired[Optional[str]]
+    leaseState: NotRequired[Optional[str]]
+    leaseDuration: NotRequired[Optional[str]]
     metadata: NotRequired[Optional[Dict[str, str]]]
-    immutability_policy: NotRequired[Optional[ImmutabilityPolicyProperties]]
-    legal_hold: NotRequired[Optional[LegalHoldProperties]]
-    has_legal_hold: NotRequired[Optional[bool]]
-    has_immutability_policy: NotRequired[Optional[bool]]
-    immutable_storage_with_versioning: NotRequired[Optional[ImmutableStorageWithVersioning]]
-    enable_nfs_v3_root_squash: NotRequired[Optional[bool]]
-    enable_nfs_v3_all_squash: NotRequired[Optional[bool]]
+    immutabilityPolicy: NotRequired[Optional[ImmutabilityPolicyProperties]]
+    legalHold: NotRequired[Optional[LegalHoldProperties]]
+    hasLegalHold: NotRequired[Optional[bool]]
+    hasImmutabilityPolicy: NotRequired[Optional[bool]]
+    immutableStorageWithVersioning: NotRequired[Optional[ImmutableStorageWithVersioning]]
+    enableNfsV3RootSquash: NotRequired[Optional[bool]]
+    enableNfsV3AllSquash: NotRequired[Optional[bool]]
 
 
 class BlobContainerPathParams(TypedDict):
     """URL parameters required to address a blob container."""
 
-    resource_group_name: str
-    storage_account_name: str
-    container_name: NotRequired[Optional[str]] # optional because not needed for list operation
+    resourceGroupName: str
+    storageAccountName: str
+    containerName: str
 
 
-class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
+class BlobContainerResourceId(ResourceId):
     """Resource identity for Blob Container resources.
     
     Encapsulates the identity information required to address a specific
@@ -387,7 +167,7 @@ class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
         *,
         resource_group_name: str,
         storage_account_name: str,
-        container_name: Optional[str] = None,
+        container_name: str,
     ) -> None:
         """Initialize a BlobContainerResourceId.
         
@@ -395,40 +175,38 @@ class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
         :type resource_group_name: str
         :param storage_account_name: Name of the storage account
         :type storage_account_name: str
-        :param container_name: Name of the container (optional for list operations)
-        :type container_name: Optional[str]
+        :param container_name: Name of the container
+        :type container_name: str
         """
         self.resource_group_name = resource_group_name
         self.storage_account_name = storage_account_name
         self.container_name = container_name
     
-    def to_dict(self) -> BlobContainerPathParams:
+    def to_dict(self) -> Dict[str, Any]:
         """Convert to BlobContainerPathParams TypedDict.
         
         :return: PathParams dictionary
-        :rtype: BlobContainerPathParams
+        :rtype: Dict[str, Any]
         """
-        result: BlobContainerPathParams = {
-            "resource_group_name": self.resource_group_name,
-            "storage_account_name": self.storage_account_name,
+        return {
+            "resourceGroupName": self.resource_group_name,
+            "storageAccountName": self.storage_account_name,
+            "containerName": self.container_name,
         }
-        if self.container_name is not None:
-            result["container_name"] = self.container_name
-        return result
     
     @classmethod
-    def from_dict(cls, params: BlobContainerPathParams) -> "BlobContainerResourceId":
+    def from_dict(cls, params: Dict[str, Any]) -> "BlobContainerResourceId":
         """Create from BlobContainerPathParams TypedDict.
         
         :param params: URL parameters dictionary
-        :type params: BlobContainerPathParams
+        :type params: Dict[str, Any]
         :return: New BlobContainerResourceId instance
         :rtype: BlobContainerResourceId
         """
         return cls(
-            resource_group_name=params["resource_group_name"],
-            storage_account_name=params["storage_account_name"],
-            container_name=params.get("container_name"),
+            resource_group_name=params["resourceGroupName"],
+            storage_account_name=params["storageAccountName"],
+            container_name=params["containerName"],
         )
     
     @classmethod
@@ -473,23 +251,19 @@ class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
         :return: Dictionary of path arguments
         :rtype: Dict[str, Any]
         """
-        path_args = {
+        return {
             "subscriptionId": subscription_id,
             "resourceGroupName": self.resource_group_name,
             "storageAccountName": self.storage_account_name,
+            "containerName": self.container_name,
         }
-        
-        if self.container_name is not None:
-            path_args["containerName"] = self.container_name
-        
-        return path_args
     
     @classmethod
     def get_operation_url(
         cls,
         operation: str,
         subscription_id: str,
-        resource_id: "ResourceId[BlobContainerPathParams]",
+        resource_id: "ResourceId",
     ) -> str:
         """Get the URL template for the given operation.
         
@@ -498,7 +272,7 @@ class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
         :param subscription_id: Azure subscription ID
         :type subscription_id: str
         :param resource_id: ResourceId instance
-        :type resource_id: ResourceId[BlobContainerPathParams]
+        :type resource_id: ResourceId
         :return: URL template string
         :rtype: str
         :raises ValueError: If operation is not supported
@@ -525,9 +299,12 @@ class BlobContainerAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     MIGRATE = "migrate"
 
 
-class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
+class BlobContainer(ResourceType[BlobContainerProperties]):
 
     """A Blob Container resource."""
+
+    # API version
+    api_version = "2025-06-01"
 
     # Available actions
     ACTIONS = BlobContainerAction
@@ -623,10 +400,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
 
     @classmethod
     def from_response(cls, data_dict: Dict[str, Any], **kwargs) -> "BlobContainer":
-        properties_data = data_dict.get("properties", {})
-        properties: BlobContainerProperties = _create_runtime_typeddict_instance(
-            properties_data, BlobContainerProperties
-        )  # type: ignore[assignment]
+        properties: BlobContainerProperties = data_dict.get("properties", {})  # type: ignore[assignment]
 
         instance = cls(
             api_version=kwargs.get("api_version", "2025-06-01"),
@@ -652,39 +426,11 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
 
 
     def to_dict(self) -> Dict[str, Any]:
-        # Serialize container properties for create/update requests
-        # Convert snake_case Python properties to camelCase JSON properties
-        camel_case_properties = {}
-
-        # Mapping of Python snake_case to Azure API camelCase
-        property_name_mapping = {
-            "public_access": "publicAccess",
-            "last_modified_time": "lastModifiedTime",
-            "etag": "etag",
-            "version": "version",
-            "deleted": "deleted",
-            "deleted_time": "deletedTime",
-            "remaining_retention_days": "remainingRetentionDays",
-            "default_encryption_scope": "defaultEncryptionScope",
-            "deny_encryption_scope_override": "denyEncryptionScopeOverride",
-            "lease_status": "leaseStatus",
-            "lease_state": "leaseState",
-            "lease_duration": "leaseDuration",
-            "metadata": "metadata",
-            "immutability_policy": "immutabilityPolicy",
-            "legal_hold": "legalHold",
-            "has_legal_hold": "hasLegalHold",
-            "has_immutability_policy": "hasImmutabilityPolicy",
-            "immutable_storage_with_versioning": "immutableStorageWithVersioning",
-            "enable_nfs_v3_root_squash": "enableNfsV3RootSquash",
-            "enable_nfs_v3_all_squash": "enableNfsV3AllSquash",
-        }
-
-        if self.properties is not None:
-            for python_name, value in self.properties.items():
-                camel_name = property_name_mapping.get(python_name, python_name)
-                camel_case_properties[camel_name] = value
-
+        """Serialize container for create/update requests.
+        
+        :return: Serialized dictionary
+        :rtype: Dict[str, Any]
+        """
         return {
-            "properties": camel_case_properties,
+            "properties": self.properties or {},
         }

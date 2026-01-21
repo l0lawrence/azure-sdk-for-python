@@ -32,7 +32,7 @@ def main():
 
     response = client.read(
         resource_id=resource_id,
-        resource_type=BlobContainer()
+        resource_type=BlobContainer
     )
 
     print(response)

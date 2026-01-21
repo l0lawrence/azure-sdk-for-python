@@ -38,7 +38,6 @@ if TYPE_CHECKING:
 _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 
-PathParamsT = TypeVar("PathParamsT")
 PropertiesT = TypeVar("PropertiesT")
 
 class CrudClient:
@@ -124,18 +123,18 @@ class CrudClient:
     def read(
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
-        resource_type: ResourceType[Any, PathParamsT],
+        resource_id: ResourceId,
+        resource_type: type[ResourceType[PropertiesT]],
         **kwargs: Any
-    ) -> ResourceType[Any, PathParamsT]:
+    ) -> ResourceType[PropertiesT]:
         """Read a resource of the specified type.
 
         :keyword resource_id: The resource ID identifying which resource to read
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword resource_type: The resource type class for response deserialization
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
+        :paramtype resource_type: type[ResourceType[PropertiesT]]
         :return: An instance of the resource type.
-        :rtype: ResourceType[Any, PathParamsT]
+        :rtype: ResourceType[PropertiesT]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -185,16 +184,16 @@ class CrudClient:
     def create(
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
-        resource_type: ResourceType[PropertiesT, PathParamsT],
+        resource_id: ResourceId,
+        resource_type: ResourceType[PropertiesT],
         **kwargs: Any
     ) -> None:
         """Create a resource of the specified type.
 
         :keyword resource_id: The resource ID identifying where to create the resource
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword resource_type: The resource type class containing properties to create
-        :paramtype resource_type: ResourceType[PropertiesT, PathParamsT]
+        :paramtype resource_type: ResourceType[PropertiesT]
         :return: None
         :rtype: None
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -242,14 +241,14 @@ class CrudClient:
     def delete(  # pylint: disable=inconsistent-return-statements
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
+        resource_id: ResourceId,
         api_version: Optional[str] = None,
         **kwargs: Any
     ) -> None:
         """Delete a resource of the specified type.
 
         :keyword resource_id: The resource ID identifying which resource to delete
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword api_version: API version to use for the request
         :paramtype api_version: Optional[str]
         :return: None
@@ -297,18 +296,18 @@ class CrudClient:
     def update(  # pylint: disable=inconsistent-return-statements
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
-        resource_type: ResourceType[PropertiesT, PathParamsT],
+        resource_id: ResourceId,
+        resource_type: ResourceType[PropertiesT],
         **kwargs: Any
-    ) -> ResourceType[PropertiesT, PathParamsT]:
+    ) -> ResourceType[PropertiesT]:
         """Update a resource of the specified type.
 
         :keyword resource_id: The resource ID identifying which resource to update
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword resource_type: The resource type class containing properties to update
-        :paramtype resource_type: ResourceType[PropertiesT, PathParamsT]
+        :paramtype resource_type: ResourceType[PropertiesT]
         :return: An instance of the resource type.
-        :rtype: ResourceType[PropertiesT, PathParamsT]
+        :rtype: ResourceType[PropertiesT]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
@@ -371,19 +370,19 @@ class CrudClient:
     def list(
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
-        resource_type: ResourceType[Any, PathParamsT],
+        resource_id: ResourceId,
+        resource_type: type[ResourceType[PropertiesT]],
         maxpagesize: Optional[str] = None,
         filter: Optional[str] = None,
         include: Optional[str] = None,
         **kwargs: Any
-    ) -> ItemPaged[ResourceType[Any, PathParamsT]]:
+    ) -> ItemPaged[ResourceType[PropertiesT]]:
         """List resources of the specified type.
 
         :keyword resource_id: The resource ID identifying the scope to list resources
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword resource_type: The resource type class for response deserialization
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
+        :paramtype resource_type: type[ResourceType[PropertiesT]]
         :keyword maxpagesize: Optional maximum page size for pagination.
         :paramtype maxpagesize: str
         :keyword filter: Optional filter parameter.
@@ -391,7 +390,7 @@ class CrudClient:
         :keyword include: Optional include parameter.
         :paramtype include: str
         :return: An iterator of resource instances.
-        :rtype: ItemPaged[ResourceType[Any, PathParamsT]]
+        :rtype: ItemPaged[ResourceType[PropertiesT]]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = kwargs.pop("headers", {}) or {}
@@ -493,7 +492,7 @@ class CrudClient:
     def action(
         self,
         *,
-        resource_id: ResourceId[PathParamsT],
+        resource_id: ResourceId,
         action_name: str,
         body: Optional[Dict[str, Any]] = None,
         api_version: Optional[str] = None,
@@ -502,7 +501,7 @@ class CrudClient:
         """Perform an action (POST operation) on a resource.
 
         :keyword resource_id: The resource ID identifying which resource to perform the action on
-        :paramtype resource_id: ResourceId[PathParamsT]
+        :paramtype resource_id: ResourceId
         :keyword action_name: The name of the action to perform (e.g., 'setLegalHold', 'lease')
         :paramtype action_name: str
         :keyword body: Optional request body for the action.

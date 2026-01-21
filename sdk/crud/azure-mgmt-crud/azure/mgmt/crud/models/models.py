@@ -12,12 +12,11 @@ from typing import Any, Dict, Optional, TypeVar, Generic, Mapping, Type # pylint
 
 
 PropertiesT = TypeVar("PropertiesT")
-PathParamsT = TypeVar("PathParamsT")
-TResourceType = TypeVar("TResourceType", bound="ResourceType[Any, Mapping[str, str]]")
-TResourceId = TypeVar("TResourceId", bound="ResourceId[Any]")
+TResourceType = TypeVar("TResourceType", bound="ResourceType[Any]")
+TResourceId = TypeVar("TResourceId", bound="ResourceId")
 
 
-class ResourceId(ABC, Generic[PathParamsT]):
+class ResourceId(ABC):
     """Base class for resource identity and URL building.
     
     ResourceId encapsulates the identity information required to address
@@ -32,21 +31,21 @@ class ResourceId(ABC, Generic[PathParamsT]):
     _action_url_templates: Dict[str, str] = {}
     
     @abstractmethod
-    def to_dict(self) -> PathParamsT:
-        """Convert this ResourceId to its PathParams TypedDict representation.
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert this ResourceId to its PathParams dictionary representation.
         
         :return: PathParams dictionary with all URL parameter values
-        :rtype: PathParamsT
+        :rtype: Dict[str, Any]
         """
         ...
     
     @classmethod
     @abstractmethod
-    def from_dict(cls: Type[TResourceId], params: PathParamsT) -> TResourceId:
-        """Create a ResourceId from a PathParams TypedDict.
+    def from_dict(cls: Type[TResourceId], params: Dict[str, Any]) -> TResourceId:
+        """Create a ResourceId from a PathParams dictionary.
         
         :param params: URL parameters dictionary
-        :type params: PathParamsT
+        :type params: Dict[str, Any]
         :return: New ResourceId instance
         :rtype: TResourceId
         """
@@ -84,7 +83,7 @@ class ResourceId(ABC, Generic[PathParamsT]):
         cls,
         operation: str,
         subscription_id: str,
-        resource_id: "ResourceId[PathParamsT]",
+        resource_id: "ResourceId",
     ) -> str:
         """Get the URL template for the given operation.
         
@@ -93,7 +92,7 @@ class ResourceId(ABC, Generic[PathParamsT]):
         :param subscription_id: Azure subscription ID
         :type subscription_id: str
         :param resource_id: ResourceId instance containing identity information
-        :type resource_id: ResourceId[PathParamsT]
+        :type resource_id: ResourceId
         :return: Formatted URL for the operation
         :rtype: str
         :raises ValueError: If operation is not supported
@@ -109,7 +108,7 @@ class ResourceId(ABC, Generic[PathParamsT]):
         cls,
         action: str,
         subscription_id: str,
-        resource_id: "ResourceId[PathParamsT]",
+        resource_id: "ResourceId",
     ) -> str:
         """Get the URL for a resource action (POST operation).
         
@@ -118,7 +117,7 @@ class ResourceId(ABC, Generic[PathParamsT]):
         :param subscription_id: Azure subscription ID
         :type subscription_id: str
         :param resource_id: ResourceId instance containing identity information
-        :type resource_id: ResourceId[PathParamsT]
+        :type resource_id: ResourceId
         :return: Formatted URL for the action
         :rtype: str
         :raises ValueError: If action is not supported
@@ -131,7 +130,7 @@ class ResourceId(ABC, Generic[PathParamsT]):
         return cls._action_url_templates[action]
 
 
-class ResourceType(Generic[PropertiesT, PathParamsT]):
+class ResourceType(Generic[PropertiesT]):
     """Common ARM resource fields.
     
     ResourceType represents the properties and response data of an Azure resource,
