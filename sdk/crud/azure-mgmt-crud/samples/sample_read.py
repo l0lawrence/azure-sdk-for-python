@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobContainerPathParams
+from azure.mgmt.crud.models import BlobContainer, BlobContainerResourceId
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -23,11 +23,17 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
-    response = client.read(resource_type=BlobContainer(),url_params=BlobContainerPathParams(
+    # Create resource ID to identify the container
+    resource_id = BlobContainerResourceId(
         resource_group_name=RESOURCE_GROUP,
         storage_account_name=STORAGE_ACCOUNT_NAME,
         container_name=CONTAINER_NAME,
-    ))
+    )
+
+    response = client.read(
+        resource_id=resource_id,
+        resource_type=BlobContainer()
+    )
 
     print(response)
 

@@ -6,13 +6,14 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
+import re
 import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args
+from typing import Any, Dict, List, Optional, Union, get_type_hints, get_origin, get_args, Type
 from typing_extensions import TypedDict, NotRequired, is_typeddict
 from azure.core import CaseInsensitiveEnumMeta
 
-from .models import ResourceType
+from .models import ResourceType, ResourceId
 
 
 # --------------------------------------------------------------------------
@@ -319,21 +320,14 @@ class BlobContainerPathParams(TypedDict):
     container_name: NotRequired[Optional[str]] # optional because not needed for list operation
 
 
-class BlobContainerAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Available actions for BlobContainer resources."""
-    SET_LEGAL_HOLD = "setLegalHold"
-    CLEAR_LEGAL_HOLD = "clearLegalHold"
-    LEASE = "lease"
-    MIGRATE = "migrate"
-
-
-class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
-
-    """A Blob Container resource."""
-
-    # Available actions
-    ACTIONS = BlobContainerAction
-
+class BlobContainerResourceId(ResourceId[BlobContainerPathParams]):
+    """Resource identity for Blob Container resources.
+    
+    Encapsulates the identity information required to address a specific
+    blob container instance within Azure Storage.
+    """
+    
+    # URL templates for blob container operations
     _read_url_template = (
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
@@ -350,7 +344,6 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
         "blobServices/default/containers/{containerName}"
-
     )
 
     _update_url_template = (
@@ -364,7 +357,7 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         "providers/Microsoft.Storage/storageAccounts/{storageAccountName}/"
         "blobServices/default/containers"
     )
-
+    
     # Action URL templates (POST operations)
     _action_url_templates = {
         "setLegalHold": (
@@ -388,77 +381,156 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
             "blobServices/default/containers/{containerName}/migrate"
         ),
     }
-
-
+    
+    def __init__(
+        self,
+        *,
+        resource_group_name: str,
+        storage_account_name: str,
+        container_name: Optional[str] = None,
+    ) -> None:
+        """Initialize a BlobContainerResourceId.
+        
+        :param resource_group_name: Name of the resource group
+        :type resource_group_name: str
+        :param storage_account_name: Name of the storage account
+        :type storage_account_name: str
+        :param container_name: Name of the container (optional for list operations)
+        :type container_name: Optional[str]
+        """
+        self.resource_group_name = resource_group_name
+        self.storage_account_name = storage_account_name
+        self.container_name = container_name
+    
+    def to_dict(self) -> BlobContainerPathParams:
+        """Convert to BlobContainerPathParams TypedDict.
+        
+        :return: PathParams dictionary
+        :rtype: BlobContainerPathParams
+        """
+        result: BlobContainerPathParams = {
+            "resource_group_name": self.resource_group_name,
+            "storage_account_name": self.storage_account_name,
+        }
+        if self.container_name is not None:
+            result["container_name"] = self.container_name
+        return result
+    
+    @classmethod
+    def from_dict(cls, params: BlobContainerPathParams) -> "BlobContainerResourceId":
+        """Create from BlobContainerPathParams TypedDict.
+        
+        :param params: URL parameters dictionary
+        :type params: BlobContainerPathParams
+        :return: New BlobContainerResourceId instance
+        :rtype: BlobContainerResourceId
+        """
+        return cls(
+            resource_group_name=params["resource_group_name"],
+            storage_account_name=params["storage_account_name"],
+            container_name=params.get("container_name"),
+        )
+    
+    @classmethod
+    def from_resource_id(cls, resource_id: str) -> "BlobContainerResourceId":
+        """Parse an ARM resource ID string for a blob container.
+        
+        Expected format:
+        /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{accountName}/blobServices/default/containers/{containerName}
+        
+        :param resource_id: Full ARM resource ID string
+        :type resource_id: str
+        :return: New BlobContainerResourceId instance
+        :rtype: BlobContainerResourceId
+        :raises ValueError: If the resource ID format is invalid
+        """
+        pattern = (
+            r"^/subscriptions/[^/]+/resourceGroups/(?P<resourceGroupName>[^/]+)/"
+            r"providers/Microsoft\.Storage/storageAccounts/(?P<storageAccountName>[^/]+)/"
+            r"blobServices/default/containers/(?P<containerName>[^/]+)$"
+        )
+        
+        match = re.match(pattern, resource_id, re.IGNORECASE)
+        if not match:
+            raise ValueError(
+                f"Invalid blob container resource ID format: {resource_id}. "
+                f"Expected format: /subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroupName}}/"
+                f"providers/Microsoft.Storage/storageAccounts/{{accountName}}/blobServices/default/"
+                f"containers/{{containerName}}"
+            )
+        
+        return cls(
+            resource_group_name=match.group("resourceGroupName"),
+            storage_account_name=match.group("storageAccountName"),
+            container_name=match.group("containerName"),
+        )
+    
+    def build_path_arguments(self, subscription_id: str) -> Dict[str, Any]:
+        """Build path arguments dictionary for URL formatting.
+        
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :return: Dictionary of path arguments
+        :rtype: Dict[str, Any]
+        """
+        path_args = {
+            "subscriptionId": subscription_id,
+            "resourceGroupName": self.resource_group_name,
+            "storageAccountName": self.storage_account_name,
+        }
+        
+        if self.container_name is not None:
+            path_args["containerName"] = self.container_name
+        
+        return path_args
+    
     @classmethod
     def get_operation_url(
         cls,
         operation: str,
         subscription_id: str,
-        url_params: BlobContainerPathParams,
+        resource_id: "ResourceId[BlobContainerPathParams]",
     ) -> str:
-        if operation == "read": # pylint: disable=no-else-return
-            return cls._read_url_template.format(
-                subscriptionId=subscription_id,
-                resourceGroupName=url_params["resource_group_name"],
-                storageAccountName=url_params["storage_account_name"],
-                containerName=url_params.get("container_name", ""),
-            )
+        """Get the URL template for the given operation.
+        
+        :param operation: Operation name
+        :type operation: str
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :param resource_id: ResourceId instance
+        :type resource_id: ResourceId[BlobContainerPathParams]
+        :return: URL template string
+        :rtype: str
+        :raises ValueError: If operation is not supported
+        """
+        if operation == "read":
+            return cls._read_url_template
         elif operation == "create":
-            return cls._create_url_template.format(
-                subscriptionId=subscription_id,
-                resourceGroupName=url_params["resource_group_name"],
-                storageAccountName=url_params["storage_account_name"],
-                containerName=url_params.get("container_name", ""),
-            )
+            return cls._create_url_template
         elif operation == "delete":
-            return cls._delete_url_template.format(
-                subscriptionId=subscription_id,
-                resourceGroupName=url_params["resource_group_name"],
-                storageAccountName=url_params["storage_account_name"],
-                containerName=url_params.get("container_name", ""),
-            )
+            return cls._delete_url_template
         elif operation == "update":
-            return cls._update_url_template.format(
-                subscriptionId=subscription_id,
-                resourceGroupName=url_params["resource_group_name"],
-                storageAccountName=url_params["storage_account_name"],
-                containerName=url_params.get("container_name", ""),
-            )
+            return cls._update_url_template
         elif operation == "list":
-            return cls._list_url_template.format(
-                subscriptionId=subscription_id,
-                resourceGroupName=url_params["resource_group_name"],
-                storageAccountName=url_params["storage_account_name"],
-            )
+            return cls._list_url_template
         else:
             raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
 
-    @classmethod
-    def get_action_url(
-        cls,
-        action: str,
-        subscription_id: str,
-        url_params: BlobContainerPathParams,
-    ) -> str:
-        """Get the URL for a resource action (POST operation).
-        
-        :param str action: The action name (e.g., 'setLegalHold', 'lease', 'migrate')
-        :param str subscription_id: Subscription identifier
-        :param BlobContainerPathParams url_params: URL parameters required by the resource type
-        :return: Formatted URL for the action
-        :rtype: str
-        """
-        if action not in cls._action_url_templates:
-            raise ValueError(f"Unsupported action '{action}' for {cls.__name__}. "
-                             f"Available actions: {list(cls._action_url_templates.keys())}")
 
-        return cls._action_url_templates[action].format(
-            subscriptionId=subscription_id,
-            resourceGroupName=url_params["resource_group_name"],
-            storageAccountName=url_params["storage_account_name"],
-            containerName=url_params.get("container_name", ""),
-        )
+class BlobContainerAction(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Available actions for BlobContainer resources."""
+    SET_LEGAL_HOLD = "setLegalHold"
+    CLEAR_LEGAL_HOLD = "clearLegalHold"
+    LEASE = "lease"
+    MIGRATE = "migrate"
+
+
+class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParams]):
+
+    """A Blob Container resource."""
+
+    # Available actions
+    ACTIONS = BlobContainerAction
 
     @classmethod
     def get_available_actions(cls) -> List[str]:
@@ -616,36 +688,3 @@ class BlobContainer(ResourceType[BlobContainerProperties, BlobContainerPathParam
         return {
             "properties": camel_case_properties,
         }
-
-    @classmethod
-    def build_instance_path_arguments_from_params( # pylint: disable=name-too-long
-        cls,
-        *,
-        subscription_id: str,
-        url_params: BlobContainerPathParams,
-    ) -> Dict[str, Any]:
-        """Build path arguments dictionary from URL parameters.
-
-        Base resources only use subscription ID. Subclasses should override when
-        they need additional path arguments.
-
-        :keyword subscription_id: Subscription identifier.
-        :keyword url_params: URL parameters required by the resource type.
-        :return: Dictionary of path arguments.
-        :rtype: Dict[str, Any]
-        """
-        container_name = url_params.get("container_name")
-        if container_name is None:
-            dict_to_return = {
-                "subscriptionId": subscription_id,
-                "resourceGroupName": url_params["resource_group_name"],
-                "storageAccountName": url_params["storage_account_name"],
-            }
-        else:
-            dict_to_return = {
-                "subscriptionId": subscription_id,
-                "resourceGroupName": url_params["resource_group_name"],
-                "storageAccountName": url_params["storage_account_name"],
-                "containerName": container_name,
-            }
-        return dict_to_return

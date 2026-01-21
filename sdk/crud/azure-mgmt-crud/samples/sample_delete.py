@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobContainerPathParams, BlobContainerProperties
+from azure.mgmt.crud.models import BlobContainerResourceId
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -23,14 +23,13 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
-
-    client.delete(
-        resource_type=BlobContainer(),
-        url_params=BlobContainerPathParams(
-            resource_group_name=RESOURCE_GROUP,
-            storage_account_name=STORAGE_ACCOUNT_NAME,
-            container_name=CONTAINER_NAME,
-        )
+    # Create resource ID to identify which container to delete
+    resource_id = BlobContainerResourceId(
+        resource_group_name=RESOURCE_GROUP,
+        storage_account_name=STORAGE_ACCOUNT_NAME,
+        container_name=CONTAINER_NAME,
     )
+
+    client.delete(resource_id=resource_id)
 
 main()

@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobContainerPathParams
+from azure.mgmt.crud.models import BlobContainer, BlobContainerResourceId
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -23,6 +23,13 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
+    # Create resource ID to identify which container to perform action on
+    resource_id = BlobContainerResourceId(
+        resource_group_name=RESOURCE_GROUP,
+        storage_account_name=STORAGE_ACCOUNT_NAME,
+        container_name=CONTAINER_NAME
+    )
+
     print("\n--- Acquiring Lease ---")
     lease_body = BlobContainer.lease_body(
         action="Acquire",
@@ -30,13 +37,8 @@ def main():
     )
 
     lease_response = client.action(
-        resource_type=BlobContainer(),
+        resource_id=resource_id,
         action_name=BlobContainer.ACTIONS.LEASE,
-        url_params=BlobContainerPathParams(
-            resource_group_name=RESOURCE_GROUP,
-            storage_account_name=STORAGE_ACCOUNT_NAME,
-            container_name=CONTAINER_NAME
-        ),
         body=lease_body
     )
     print(f"Lease response: {lease_response}")

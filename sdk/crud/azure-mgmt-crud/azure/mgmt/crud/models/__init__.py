@@ -6,11 +6,13 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from .models import ResourceType
+from .models import ResourceType, ResourceId
 from .storage_models import (
     BlobContainer,
+    BlobContainerResourceId,
     BlobContainerProperties,
     BlobContainerPathParams,
+    BlobContainerAction,
     AccountImmutabilityPolicyState,
     ImmutabilityPolicyProperties,
     TagProperty,
@@ -22,9 +24,12 @@ from .storage_models import (
 
 __all__ = [
     "ResourceType",
+    "ResourceId",
     "BlobContainer",
+    "BlobContainerResourceId",
     "BlobContainerProperties", 
     "BlobContainerPathParams",
+    "BlobContainerAction",
     "AccountImmutabilityPolicyState",
     "ImmutabilityPolicyProperties",
     "TagProperty",

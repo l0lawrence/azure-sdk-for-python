@@ -1,4 +1,4 @@
-from azure.mgmt.crud.models import BlobContainer, BlobContainerPathParams, BlobContainerProperties, LegalHoldProperties
+from azure.mgmt.crud.models import BlobContainer, BlobContainerResourceId, BlobContainerProperties, LegalHoldProperties
 from azure.mgmt.crud import CrudClient
 
 from azure.identity import DefaultAzureCredential
@@ -23,15 +23,17 @@ def main():
     )
     logger.info(f"Initialized CrudClient {client}")
 
+    # Create resource ID to identify which container to update
+    resource_id = BlobContainerResourceId(
+        resource_group_name=RESOURCE_GROUP,
+        storage_account_name=STORAGE_ACCOUNT_NAME,
+        container_name=CONTAINER_NAME,
+    )
 
     updated_blob = client.update(
+        resource_id=resource_id,
         resource_type=BlobContainer(
             properties=BlobContainerProperties(enable_nfs_v3_root_squash=True),
-        ),
-        url_params=BlobContainerPathParams(
-            resource_group_name=RESOURCE_GROUP,
-            storage_account_name=STORAGE_ACCOUNT_NAME,
-            container_name=CONTAINER_NAME,
         )
     )
 

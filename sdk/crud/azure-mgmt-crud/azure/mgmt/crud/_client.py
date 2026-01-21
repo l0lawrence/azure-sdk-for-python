@@ -28,7 +28,7 @@ from azure.mgmt.core.policies import ARMAutoResourceProviderRegistrationPolicy
 from azure.mgmt.core.exceptions import ARMErrorFormat
 
 from . import models as _models
-from .models import ResourceType
+from .models import ResourceType, ResourceId
 from ._configuration import CrudConfiguration
 from ._serialization import Serializer
 
@@ -39,6 +39,7 @@ _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 
 PathParamsT = TypeVar("PathParamsT")
+PropertiesT = TypeVar("PropertiesT")
 
 class CrudClient:
     """The CRUD Rest API spec.
@@ -123,16 +124,16 @@ class CrudClient:
     def read(
         self,
         *,
+        resource_id: ResourceId[PathParamsT],
         resource_type: ResourceType[Any, PathParamsT],
-        url_params: PathParamsT,
         **kwargs: Any
     ) -> ResourceType[Any, PathParamsT]:
         """Read a resource of the specified type.
 
-        :keyword resource_type: The resource type class
+        :keyword resource_id: The resource ID identifying which resource to read
+        :paramtype resource_id: ResourceId[PathParamsT]
+        :keyword resource_type: The resource type class for response deserialization
         :paramtype resource_type: ResourceType[Any, PathParamsT]
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
         :return: An instance of the resource type.
         :rtype: ResourceType[Any, PathParamsT]
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -146,14 +147,11 @@ class CrudClient:
         )
         accept = _headers.pop("Accept", "application/json")
 
-        # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url(
-            operation="read", subscription_id=self._config.subscription_id, url_params=url_params)
+        # Get URL template and path arguments from resource_id
+        url_template = resource_id.get_operation_url(
+            operation="read", subscription_id=self._config.subscription_id, resource_id=resource_id)
 
-        path_arguments = resource_type.build_instance_path_arguments_from_params(
-            subscription_id=self._config.subscription_id,
-            url_params=url_params,
-        )
+        path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
         # Serialize path arguments for URL safety
         serialized_path_args = {}
@@ -187,16 +185,16 @@ class CrudClient:
     def create(
         self,
         *,
-        resource_type: ResourceType[Any, PathParamsT],
-        url_params: PathParamsT,
+        resource_id: ResourceId[PathParamsT],
+        resource_type: ResourceType[PropertiesT, PathParamsT],
         **kwargs: Any
     ) -> None:
         """Create a resource of the specified type.
 
-        :keyword resource_type: The resource type class to create
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
+        :keyword resource_id: The resource ID identifying where to create the resource
+        :paramtype resource_id: ResourceId[PathParamsT]
+        :keyword resource_type: The resource type class containing properties to create
+        :paramtype resource_type: ResourceType[PropertiesT, PathParamsT]
         :return: None
         :rtype: None
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -211,15 +209,12 @@ class CrudClient:
         accept = _headers.pop("Accept", "application/json")
         content_type = _headers.pop("Content-Type", "application/json")
 
-        # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url(
-            operation="create", subscription_id=self._config.subscription_id, url_params=url_params
+        # Get URL template and path arguments from resource_id
+        url_template = resource_id.get_operation_url(
+            operation="create", subscription_id=self._config.subscription_id, resource_id=resource_id
         )
 
-        path_arguments = resource_type.build_instance_path_arguments_from_params(
-            subscription_id=self._config.subscription_id,
-            url_params=url_params,
-        )
+        path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
         # Serialize path arguments for URL safety
         serialized_path_args = {}
@@ -247,16 +242,16 @@ class CrudClient:
     def delete(  # pylint: disable=inconsistent-return-statements
         self,
         *,
-        resource_type: ResourceType[Any, PathParamsT],
-        url_params: PathParamsT,
+        resource_id: ResourceId[PathParamsT],
+        api_version: Optional[str] = None,
         **kwargs: Any
     ) -> None:
         """Delete a resource of the specified type.
 
-        :keyword resource_type: The resource type class to delete
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
+        :keyword resource_id: The resource ID identifying which resource to delete
+        :paramtype resource_id: ResourceId[PathParamsT]
+        :keyword api_version: API version to use for the request
+        :paramtype api_version: Optional[str]
         :return: None
         :rtype: None
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -272,19 +267,14 @@ class CrudClient:
         _headers = kwargs.pop("headers", {}) or {}
         _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
-        api_version = kwargs.pop(
-            "api_version", 
-            _params.pop("api-version", getattr(resource_type, "api_version"))
-        )
+        if api_version is None:
+            api_version = _params.pop("api-version", "2025-06-01")
 
-        # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url(
-            operation="delete", subscription_id=self._config.subscription_id, url_params=url_params)
+        # Get URL template and path arguments from resource_id
+        url_template = resource_id.get_operation_url(
+            operation="delete", subscription_id=self._config.subscription_id, resource_id=resource_id)
 
-        path_arguments = resource_type.build_instance_path_arguments_from_params(
-            subscription_id=self._config.subscription_id,
-            url_params=url_params,
-        )
+        path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
         # Serialize path arguments for URL safety
         serialized_path_args = {}
@@ -307,18 +297,18 @@ class CrudClient:
     def update(  # pylint: disable=inconsistent-return-statements
         self,
         *,
-        resource_type: ResourceType[Any, PathParamsT],
-        url_params: PathParamsT,
+        resource_id: ResourceId[PathParamsT],
+        resource_type: ResourceType[PropertiesT, PathParamsT],
         **kwargs: Any
-    ) -> ResourceType[Any, PathParamsT]:
+    ) -> ResourceType[PropertiesT, PathParamsT]:
         """Update a resource of the specified type.
 
-        :keyword resource_type: The resource type class to update
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
+        :keyword resource_id: The resource ID identifying which resource to update
+        :paramtype resource_id: ResourceId[PathParamsT]
+        :keyword resource_type: The resource type class containing properties to update
+        :paramtype resource_type: ResourceType[PropertiesT, PathParamsT]
         :return: An instance of the resource type.
-        :rtype: ResourceType[Any, PathParamsT]
+        :rtype: ResourceType[PropertiesT, PathParamsT]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         error_map: MutableMapping = {
@@ -339,14 +329,11 @@ class CrudClient:
         accept = _headers.pop("Accept", "application/json")
         content_type = _headers.pop("Content-Type", "application/json")
 
-        # Let the resource type build its own URL and path arguments
-        url_template = resource_type.get_operation_url(
-            operation="update", subscription_id=self._config.subscription_id, url_params=url_params)
+        # Get URL template and path arguments from resource_id
+        url_template = resource_id.get_operation_url(
+            operation="update", subscription_id=self._config.subscription_id, resource_id=resource_id)
 
-        path_arguments = resource_type.build_instance_path_arguments_from_params(
-            subscription_id=self._config.subscription_id,
-            url_params=url_params,
-        )
+        path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
         # Serialize path arguments for URL safety
         serialized_path_args = {}
@@ -384,8 +371,8 @@ class CrudClient:
     def list(
         self,
         *,
+        resource_id: ResourceId[PathParamsT],
         resource_type: ResourceType[Any, PathParamsT],
-        url_params: PathParamsT,
         maxpagesize: Optional[str] = None,
         filter: Optional[str] = None,
         include: Optional[str] = None,
@@ -393,10 +380,10 @@ class CrudClient:
     ) -> ItemPaged[ResourceType[Any, PathParamsT]]:
         """List resources of the specified type.
 
-        :keyword resource_type: The resource type class
+        :keyword resource_id: The resource ID identifying the scope to list resources
+        :paramtype resource_id: ResourceId[PathParamsT]
+        :keyword resource_type: The resource type class for response deserialization
         :paramtype resource_type: ResourceType[Any, PathParamsT]
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
         :keyword maxpagesize: Optional maximum page size for pagination.
         :paramtype maxpagesize: str
         :keyword filter: Optional filter parameter.
@@ -425,13 +412,10 @@ class CrudClient:
 
         def prepare_request(next_link=None):
             if not next_link:
-                # Let the resource type build its own URL
-                url_template = resource_type.get_operation_url("list", self._config.subscription_id, url_params)
+                # Get URL template from resource_id
+                url_template = resource_id.get_operation_url("list", self._config.subscription_id, resource_id)
 
-                path_arguments = resource_type.build_instance_path_arguments_from_params(
-                    subscription_id=self._config.subscription_id,
-                    url_params=url_params,
-                )
+                path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
                 # Serialize path arguments for URL safety
                 serialized_path_args = {}
@@ -509,22 +493,22 @@ class CrudClient:
     def action(
         self,
         *,
-        resource_type: ResourceType[Any, PathParamsT],
+        resource_id: ResourceId[PathParamsT],
         action_name: str,
-        url_params: PathParamsT,
         body: Optional[Dict[str, Any]] = None,
+        api_version: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
         """Perform an action (POST operation) on a resource.
 
-        :keyword resource_type: The resource type class
-        :paramtype resource_type: ResourceType[Any, PathParamsT]
+        :keyword resource_id: The resource ID identifying which resource to perform the action on
+        :paramtype resource_id: ResourceId[PathParamsT]
         :keyword action_name: The name of the action to perform (e.g., 'setLegalHold', 'lease')
         :paramtype action_name: str
-        :keyword url_params: URL parameters required by the resource type.
-        :paramtype url_params: PathParamsT
         :keyword body: Optional request body for the action.
         :paramtype body: Dict[str, Any]
+        :keyword api_version: API version to use for the request
+        :paramtype api_version: Optional[str]
         :return: The action response or None
         :rtype: Any
         :raises ~azure.core.exceptions.HttpResponseError:
@@ -540,20 +524,16 @@ class CrudClient:
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
-        api_version = kwargs.pop(
-            "api_version", 
-            _params.pop("api-version", getattr(resource_type, "api_version"))
-        )
+        if api_version is None:
+            api_version = _params.pop("api-version", "2025-06-01")
+        
         accept = _headers.pop("Accept", "application/json")
 
-        # Get the action URL from the resource type
-        url_template = resource_type.get_action_url(action=action_name,
-                                                    subscription_id=self._config.subscription_id, url_params=url_params)
+        # Get the action URL from the resource_id
+        url_template = resource_id.get_action_url(action=action_name,
+                                                    subscription_id=self._config.subscription_id, resource_id=resource_id)
 
-        path_arguments = resource_type.build_instance_path_arguments_from_params(
-            subscription_id=self._config.subscription_id,
-            url_params=url_params,
-        )
+        path_arguments = resource_id.build_path_arguments(subscription_id=self._config.subscription_id)
 
         # Serialize path arguments for URL safety
         serialized_path_args = {}

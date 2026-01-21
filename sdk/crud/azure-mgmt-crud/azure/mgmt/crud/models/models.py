@@ -6,16 +6,137 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from typing import Any, Dict, Optional, TypeVar, Generic, Mapping # pylint: disable=unused-import
+import re
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional, TypeVar, Generic, Mapping, Type # pylint: disable=unused-import
 
 
 PropertiesT = TypeVar("PropertiesT")
 PathParamsT = TypeVar("PathParamsT")
 TResourceType = TypeVar("TResourceType", bound="ResourceType[Any, Mapping[str, str]]")
+TResourceId = TypeVar("TResourceId", bound="ResourceId[Any]")
+
+
+class ResourceId(ABC, Generic[PathParamsT]):
+    """Base class for resource identity and URL building.
+    
+    ResourceId encapsulates the identity information required to address
+    a specific Azure resource instance (e.g., resource group, resource name).
+    It handles URL template formatting and provides methods to parse ARM
+    resource ID strings.
+    """
+    
+    # URL templates - should be overridden by subclasses
+    _url_template: str = ""
+    _list_url_template: str = ""
+    _action_url_templates: Dict[str, str] = {}
+    
+    @abstractmethod
+    def to_dict(self) -> PathParamsT:
+        """Convert this ResourceId to its PathParams TypedDict representation.
+        
+        :return: PathParams dictionary with all URL parameter values
+        :rtype: PathParamsT
+        """
+        ...
+    
+    @classmethod
+    @abstractmethod
+    def from_dict(cls: Type[TResourceId], params: PathParamsT) -> TResourceId:
+        """Create a ResourceId from a PathParams TypedDict.
+        
+        :param params: URL parameters dictionary
+        :type params: PathParamsT
+        :return: New ResourceId instance
+        :rtype: TResourceId
+        """
+        ...
+    
+    @classmethod
+    @abstractmethod
+    def from_resource_id(cls: Type[TResourceId], resource_id: str) -> TResourceId:
+        """Parse an ARM resource ID string and create a ResourceId.
+        
+        ARM resource IDs follow the pattern:
+        /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{provider}/{type}/{name}
+        
+        :param resource_id: Full ARM resource ID string
+        :type resource_id: str
+        :return: New ResourceId instance
+        :rtype: TResourceId
+        :raises ValueError: If the resource ID format is invalid
+        """
+        ...
+    
+    @abstractmethod
+    def build_path_arguments(self, subscription_id: str) -> Dict[str, Any]:
+        """Build path arguments dictionary for URL formatting.
+        
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :return: Dictionary of path arguments for URL template formatting
+        :rtype: Dict[str, Any]
+        """
+        ...
+    
+    @classmethod
+    def get_operation_url(
+        cls,
+        operation: str,
+        subscription_id: str,
+        resource_id: "ResourceId[PathParamsT]",
+    ) -> str:
+        """Get the URL template for the given operation.
+        
+        :param operation: Operation name (e.g., "read", "create", "delete", "update", "list")
+        :type operation: str
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :param resource_id: ResourceId instance containing identity information
+        :type resource_id: ResourceId[PathParamsT]
+        :return: Formatted URL for the operation
+        :rtype: str
+        :raises ValueError: If operation is not supported
+        """
+        # Subclasses can override for operation-specific templates
+        # Base implementation uses _url_template for all operations except list
+        if operation == "list":
+            return cls._list_url_template
+        return cls._url_template
+    
+    @classmethod
+    def get_action_url(
+        cls,
+        action: str,
+        subscription_id: str,
+        resource_id: "ResourceId[PathParamsT]",
+    ) -> str:
+        """Get the URL for a resource action (POST operation).
+        
+        :param action: The action name
+        :type action: str
+        :param subscription_id: Azure subscription ID
+        :type subscription_id: str
+        :param resource_id: ResourceId instance containing identity information
+        :type resource_id: ResourceId[PathParamsT]
+        :return: Formatted URL for the action
+        :rtype: str
+        :raises ValueError: If action is not supported
+        """
+        if action not in cls._action_url_templates:
+            raise ValueError(
+                f"Unsupported action '{action}' for {cls.__name__}. "
+                f"Available actions: {list(cls._action_url_templates.keys())}"
+            )
+        return cls._action_url_templates[action]
 
 
 class ResourceType(Generic[PropertiesT, PathParamsT]):
-    """Common ARM resource fields."""
+    """Common ARM resource fields.
+    
+    ResourceType represents the properties and response data of an Azure resource,
+    separate from its identity information (which is handled by ResourceId).
+    """
     _validation = {
         "id": {"readonly": True},
         "name": {"readonly": True},
@@ -23,46 +144,13 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         "properties": {"readonly": False}
     }
 
-    # Default URL template - should be overridden by subclasses
-    _url_template = (
-        "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/"
-        "providers/{resourceProvider}/{resourceType}/{resourceName}"
-    )
-
-    _list_url_template = _url_template
-
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        # Common ARM identity fields
-        self.resource_group_name: str = kwargs.get("resource_group_name", "")
-        self.resource_name: str = kwargs.get("resource_name", "")
+        # ARM resource response fields (populated from API responses)
         self.id = None
         self.name = None
         self.type = None
         self.properties: Optional[PropertiesT] = None
-
-    @classmethod
-    def get_operation_url( # pylint: disable=unused-argument
-        cls,
-        operation: str,
-        subscription_id: str,
-        url_params: PathParamsT,
-    ) -> str:
-        """Return the URL template for the given operation.
-
-        Base resources only support ``read`` and ignore subscription/params in the
-        template construction. Subclasses should override when they need operation-
-        specific templates.
-
-        :param str operation: Operation name (e.g. "read").
-        :param str subscription_id: Subscription identifier.
-        :param PathParamsT url_params: URL parameters required by the resource type.
-        :return: URL template string.
-        :rtype: str
-        """
-        if operation != "read":
-            raise ValueError(f"Unsupported operation '{operation}' for {cls.__name__}")
-        return cls._url_template
 
     @classmethod
     def from_response(
@@ -97,46 +185,4 @@ class ResourceType(Generic[PropertiesT, PathParamsT]):
         """
         return {
             "properties": self.properties,
-        }
-
-    @classmethod
-    def get_action_url(
-        cls,
-        action: str,
-        subscription_id: str,
-        url_params: PathParamsT,
-    ) -> str:
-        """Get the URL for a resource action (POST operation).
-        
-        Base implementation raises an error. Subclasses should override to provide
-        action-specific URL templates.
-        
-        :param str action: The action name
-        :param str subscription_id: Subscription identifier
-        :param PathParamsT url_params: URL parameters required by the resource type
-        :return: Formatted URL for the action
-        :raises ValueError: If action is not supported
-        :rtype: str
-        """
-        raise ValueError(f"Actions not supported for {cls.__name__}")
-
-    @classmethod
-    def build_instance_path_arguments_from_params( # pylint: disable=name-too-long
-        cls,
-        *,
-        subscription_id: str,
-        url_params: PathParamsT, # pylint: disable=unused-argument
-    ) -> Dict[str, Any]:
-        """Build path arguments dictionary from URL parameters.
-
-        Base resources only use subscription ID. Subclasses should override when
-        they need additional path arguments.
-
-        :keyword str subscription_id: Subscription identifier.
-        :keyword PathParamsT url_params: URL parameters required by the resource type.
-        :return: Dictionary of path arguments.
-        :rtype: Dict[str, Any]
-        """
-        return {
-            "subscriptionId": subscription_id,
         }
