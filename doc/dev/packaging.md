@@ -13,7 +13,7 @@ Namespace packaging is complicated in Python, here's a few reading if you still 
 - https://github.com/pypa/sample-namespace-packages
 
 Note:
-While this article provides an example using setup.py, this can also be achieved with setup.cfg or other methods, as long as the constraints on the final wheels/sdist are met.
+While this article provides an example using setup.py and an example using pyproject.toml, this can also be achieved with setup.cfg or other methods, as long as the constraints on the final wheels/sdist are met. For the purposes of this repository, we recommend using pyproject.toml.
 
 *This page has been updated to be Python 3 only packages as we do not recommend supporting Python 2 after January 1st 2022.* If you still want to support Python 2 for some reasons, there is a section at the bottom with some details (or you have the Github history, to read the page as it was on November 1st 2021).
 
@@ -21,7 +21,7 @@ While this article provides an example using setup.py, this can also be achieved
 
 We want to build sdist and wheels in order to follow the following constraints:
 - Solution should work with *recent* versions of pip and setuptools (not the very latest only, but not archaeology either)
-- Wheels must work with Python 3.8+
+- Wheels must work with Python 3.9+
 - mixed dev installation and PyPI installation should be explicitly addressed
 
 # What do I do in my files to achieve that
@@ -29,7 +29,7 @@ We want to build sdist and wheels in order to follow the following constraints:
 The minimal files to have:
 - azure/\_\_init\_\_.py
 - MANIFEST.in
-- setup.py
+- pyproject.toml or setup.py
 
 The file "azure/\_\_init\_\_.py" must contain exactly this:
 ```python
@@ -46,6 +46,7 @@ include azure/__init__.py
 recursive-include tests *.py
 recursive-include samples *.py *.md
 ```
+```
 In your setup.py:
 
 The "packages" section MUST EXCLUDE the `azure` package. Example:
@@ -59,7 +60,63 @@ The "packages" section MUST EXCLUDE the `azure` package. Example:
 
 Since the package is Python 3 only, you must notify it in the setup.py as well:
 ```python
-    python_requires=">=3.8",
+    python_requires=">=3.9",
+```
+or in the pyproject.toml:
+```python
+    requires-python = ">=3.9",
+```
+
+Example of a full pyproject.toml
+```python
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "azure-eventhub"
+authors = [
+    {name = "Microsoft Corporation", email = "azpysdkhelp@microsoft.com"},
+]
+description = "Microsoft Azure Event Hubs Client Library for Python"
+keywords = ["azure", "azure sdk"]
+requires-python = ">=3.9"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "azure-core>=1.27.0",
+    "typing-extensions>=4.0.1",
+]
+dynamic = ["version", "readme"]
+
+[project.urls]
+repository = "https://github.com/Azure/azure-sdk-for-python/tree/main/sdk"
+
+[tool.setuptools.dynamic]
+version = {attr = "azure.eventhub._version.VERSION"}
+readme = {file = ["README.md"], content-type = "text/markdown"}
+
+[tool.setuptools.packages.find]
+exclude = ["samples*", "tests*", "doc*", "stress*", "azure"]
+
+[tool.setuptools.package-data]
+pytyped = ["py.typed"]
+
+[tool.azure-sdk-build]
+pyright = false
+type_check_samples = true
+verifytypes = true
+pylint = true
 ```
 
 Example of a full setup.py
@@ -144,47 +201,3 @@ Since the package is Python 3 only, do NOT make this wheel universal. This usual
 - wheel file must NOT contain a `azure/__init__.py` file (you can open it with a zip util to check)
 - wheel file name suffix is `py3-none-any`, and NOT `py2.py3-none-any`.
 - sdist must contain a `azure/__init__.py` file that declares `azure` as a namespace package using the `pkgutil` syntax
-
-# I already have a package that supports Python 2, can I get short version on how to udpate to Python 3 only?
-
-- Remove "universal" from setup.cfg, or completely remove the file if it was the only option
-- In setup.py:
-  - Remove `extra_requires`
-  - Add `python_requires=">=3.8",`
-  - Remove the Python 2 and 3.5/3.6 classifiers
-  - Add classifier `Programming Language :: Python :: 3 :: Only`
-  - Remove the "azure" check if applicable (see next note)
-
-# Note on checking old Azure packages
-
-You may see code in `setup.py` looking like this:
-```python
-# azure v0.x is not compatible with this package
-# azure v0.x used to have a __version__ attribute (newer versions don't)
-try:
-    import azure
-
-    try:
-        VER = azure.__version__  # type: ignore
-        raise Exception(
-            "This package is incompatible with azure=={}. ".format(VER) + 'Uninstall it with "pip uninstall azure".'
-        )
-    except AttributeError:
-        pass
-except ImportError:
-    pass
-```
-
-This was to prevent some difficult update scenario 6 years ago, and can be safely removed from your setup.py
-
-# Note on Python 2
-
-The "extras_requires" section MUST include a conditional dependency on "azure-nspkg" for Python 2. Example:
-
-```python
-    extras_require={
-        ":python_version<'3.0'": ['azure-nspkg'],
-    }
-```
-
-An additional verification is that wheels installs `azure-nspkg` ONLY on Python 2.

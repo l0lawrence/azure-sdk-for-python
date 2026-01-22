@@ -1,33 +1,26 @@
 baseBranch: main
 workspaceType: pip
+packagePatterns:
+  - sdk/*/*
+  - sdk/
 
 changeKinds:
-  internal:
-    versionType: none
-    title: Internal
-    description: Internal changes that are not user facing
-
-  fix:
-    versionType: patch
-    title: Bug Fix
-    description: Fixes to existing features
-
-  dependencies:
-    versionType: patch
-    title: Bump dependencies
-    description: Bumps dependencies
+  breaking:
+    versionType: major
+    title: Breaking Changes
+    description: Changes that break existing features
 
   feature:
     versionType: minor
-    title: Feature
+    title: Features Added
     description: Adds new features
 
-  deprecation:
-    versionType: minor
-    title: Deprecation
-    description: Change that deprecate an existing feature but is not breaking.
+  bugFix:
+    versionType: patch
+    title: Bug Fixes
+    description: Fixes to existing features
 
-  breaking:
-    versionType: major
-    title: Breaking Change
-    description: Changes that break existing features
+  other:
+    versionType: patch
+    title: Other Changes
+    description: Other Changes
