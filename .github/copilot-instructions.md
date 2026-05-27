@@ -164,6 +164,17 @@ These rules apply to management-plane SDK packages located at `sdk/*/azure-mgmt-
 
 ---
 
+## Copilot Code Review - Security
+
+When performing a code review, we must check for common security issues. This includes, but is not limited to:
+- Hardcoded secrets (e.g., API keys, connection strings)
+- Insecure dependencies (e.g., known vulnerable packages)
+- Insecure coding patterns (e.g., using `eval()`, unsanitized inputs)
+- Inadequate error handling (e.g., exposing stack traces, not handling exceptions)
+- Insecure configurations (e.g., overly permissive CORS settings, weak encryption settings)
+- Ensure that any security-sensitive code follows best practices and guidelines as outlined in the [Azure SDK Python Design Guidelines](https://azure.github.io/azure-sdk/python_design.html) and other relevant documentation.
+---
+
 ## SDK release
 
 For detailed workflow instructions, see [SDK Release](skills/azsdk-common-sdk-release/SKILL.md).
